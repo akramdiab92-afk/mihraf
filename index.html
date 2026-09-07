@@ -1,0 +1,500 @@
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مِهراف | MIHRAF</title>  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f8fc;
+      color: #1f2937;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: auto;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #374151;
+      font-size: 15px;
+    }
+
+    nav a:hover {
+      color: #2563eb;
+    }
+
+    .language {
+      border: 1px solid #d1d5db;
+      background: white;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .hero {
+      max-width: 1200px;
+      margin: auto;
+      padding: 80px 20px 60px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 46px;
+      margin-bottom: 15px;
+      color: #111827;
+    }
+
+    .hero h1 span {
+      color: #2563eb;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: 0 auto 30px;
+      font-size: 19px;
+      color: #6b7280;
+    }
+
+    .search {
+      max-width: 700px;
+      margin: auto;
+      display: flex;
+      background: white;
+      padding: 6px;
+      border: 1px solid #dbe1ea;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }
+
+    .search input {
+      flex: 1;
+      border: 0;
+      outline: none;
+      padding: 15px;
+      font-size: 16px;
+      background: transparent;
+    }
+
+    .search button {
+      border: 0;
+      background: #2563eb;
+      color: white;
+      padding: 0 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .section {
+      max-width: 1200px;
+      margin: auto;
+      padding: 45px 20px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .section-title h2 {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .section-title p {
+      color: #6b7280;
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .category {
+      background: white;
+      padding: 25px 15px;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .category:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+    }
+
+    .category .icon {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .card-image {
+      height: 180px;
+      background: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+    }
+
+    .card-content {
+      padding: 20px;
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .card p {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .price {
+      font-weight: bold;
+      color: #2563eb;
+    }
+
+    .cta {
+      background: #111827;
+      color: white;
+      text-align: center;
+      padding: 60px 20px;
+      margin-top: 30px;
+    }
+
+    .cta h2 {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .cta p {
+      color: #d1d5db;
+      margin-bottom: 25px;
+    }
+
+    .cta a {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      padding: 13px 25px;
+      border-radius: 8px;
+      text-decoration: none;
+    }
+
+    footer {
+      background: #0b1220;
+      color: #cbd5e1;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    footer strong {
+      color: white;
+      font-size: 20px;
+    }
+
+    @media (max-width: 800px) {
+      nav a {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 55px;
+      }
+
+      .hero h1 {
+        font-size: 34px;
+      }
+
+      .categories {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .search {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .search button {
+        padding: 13px;
+      }
+    }
+  </style></head><body><header>
+  <div class="nav">
+    <a href="#" class="logo">مِهراف</a><nav>
+  <a href="#services" data-key="services">الخدمات</a>
+  <a href="#projects" data-key="projects">المشاريع</a>
+  <a href="#professionals" data-key="professionals">المحترفون</a>
+  <a href="#" data-key="login">تسجيل الدخول</a>
+</nav>
+
+<select class="language" id="language">
+  <option value="ar">العربية</option>
+  <option value="en">English</option>
+  <option value="fr">Français</option>
+  <option value="tr">Türkçe</option>
+  <option value="ru">Русский</option>
+</select>
+
+  </div>
+</header><section class="hero">
+  <h1><span>مِهراف</span> — مهارتك تستحق الفرصة</h1>  <p data-key="heroText">
+    منصة تجمع أصحاب المشاريع بالمستقلين والمحترفين لتنفيذ الخدمات والأعمال بسهولة.
+  </p>  <div class="search">
+    <input
+      type="text"
+      data-placeholder="searchPlaceholder"
+      placeholder="ابحث عن خدمة أو مهارة..."
+    >
+    <button data-key="searchButton">بحث</button>
+  </div>
+</section><section class="section">
+  <div class="section-title">
+    <h2 data-key="categoriesTitle">استكشف الخدمات</h2>
+    <p data-key="categoriesText">اختر المجال الذي تحتاج إليه</p>
+  </div>  <div class="categories">
+    <div class="category"><div class="icon">🎨</div>تصميم</div>
+    <div class="category"><div class="icon">✍️</div>كتابة وترجمة</div>
+    <div class="category"><div class="icon">💻</div>برمجة وتقنية</div>
+    <div class="category"><div class="icon">📊</div>تسويق وأعمال</div>
+    <div class="category"><div class="icon">📁</div>إدخال بيانات</div>
+    <div class="category"><div class="icon">🎬</div>فيديو وصوت</div>
+    <div class="category"><div class="icon">⚖️</div>استشارات</div>
+    <div class="category"><div class="icon">🛠️</div>خدمات أخرى</div>
+  </div>
+</section><section class="section" id="services">
+  <div class="section-title">
+    <h2 data-key="featuredTitle">خدمات مميزة</h2>
+    <p data-key="featuredText">اكتشف خدمات يقدمها محترفون</p>
+  </div>  <div class="cards"><div class="card">
+  <div class="card-image">صورة الخدمة</div>
+  <div class="card-content">
+    <h3>تصميم إعلان احترافي</h3>
+    <p>تصميم إعلان جذاب مناسب لمواقع التواصل الاجتماعي.</p>
+    <div class="price">ابتداءً من $5</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-image">صورة الخدمة</div>
+  <div class="card-content">
+    <h3>إدخال وتنسيق البيانات</h3>
+    <p>تنظيم البيانات وتحويل الملفات وتنسيقها بشكل احترافي.</p>
+    <div class="price">ابتداءً من $5</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-image">صورة الخدمة</div>
+  <div class="card-content">
+    <h3>تحسين وتعديل الصور</h3>
+    <p>تحسين جودة الصور والألوان والخلفيات بشكل احترافي.</p>
+    <div class="price">ابتداءً من $5</div>
+  </div>
+</div>
+
+  </div>
+</section><section class="section" id="projects">
+  <div class="section-title">
+    <h2>أحدث المشاريع</h2>
+    <p>مشاريع يبحث أصحابها عن محترفين لتنفيذها</p>
+  </div>  <div class="cards">
+    <div class="card">
+      <div class="card-content">
+        <h3>تصميم هوية بصرية</h3>
+        <p>أبحث عن مصمم لإنشاء هوية بصرية لمشروع جديد.</p>
+        <div class="price">$50 - $100</div>
+      </div>
+    </div><div class="card">
+  <div class="card-content">
+    <h3>كتابة محتوى لموقع</h3>
+    <p>مطلوب كاتب محتوى لكتابة صفحات موقع إلكتروني.</p>
+    <div class="price">$30 - $70</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-content">
+    <h3>تنظيم بيانات</h3>
+    <p>تحويل وترتيب بيانات من ملفات متعددة.</p>
+    <div class="price">$20 - $50</div>
+  </div>
+</div>
+
+  </div>
+</section><section class="cta">
+  <h2>هل لديك مهارة؟</h2>
+  <p>أنشئ حسابك وابدأ بعرض خدماتك على مِهراف.</p>
+  <a href="#">ابدأ الآن</a>
+</section><footer>
+  <strong>مِهراف | MIHRAF</strong>
+  <p>منصة للخدمات والمشاريع والمستقلين</p>
+  <p>© 2026 MIHRAF</p>
+</footer><script>
+
+const translations = {
+
+  ar: {
+    services: "الخدمات",
+    projects: "المشاريع",
+    professionals: "المحترفون",
+    login: "تسجيل الدخول",
+    heroText: "منصة تجمع أصحاب المشاريع بالمستقلين والمحترفين لتنفيذ الخدمات والأعمال بسهولة.",
+    searchPlaceholder: "ابحث عن خدمة أو مهارة...",
+    searchButton: "بحث",
+    categoriesTitle: "استكشف الخدمات",
+    categoriesText: "اختر المجال الذي تحتاج إليه",
+    featuredTitle: "خدمات مميزة",
+    featuredText: "اكتشف خدمات يقدمها محترفون"
+  },
+
+  en: {
+    services: "Services",
+    projects: "Projects",
+    professionals: "Professionals",
+    login: "Login",
+    heroText: "A platform connecting clients with freelancers and professionals to get work done easily.",
+    searchPlaceholder: "Search for a service or skill...",
+    searchButton: "Search",
+    categoriesTitle: "Explore Services",
+    categoriesText: "Choose the field you need",
+    featuredTitle: "Featured Services",
+    featuredText: "Discover services from professionals"
+  },
+
+  fr: {
+    services: "Services",
+    projects: "Projets",
+    professionals: "Professionnels",
+    login: "Connexion",
+    heroText: "Une plateforme qui met en relation les clients avec des freelances et des professionnels.",
+    searchPlaceholder: "Rechercher un service ou une compétence...",
+    searchButton: "Rechercher",
+    categoriesTitle: "Explorer les services",
+    categoriesText: "Choisissez le domaine dont vous avez besoin",
+    featuredTitle: "Services en vedette",
+    featuredText: "Découvrez les services proposés par des professionnels"
+  },
+
+  tr: {
+    services: "Hizmetler",
+    projects: "Projeler",
+    professionals: "Profesyoneller",
+    login: "Giriş",
+    heroText: "Müşterileri serbest çalışanlar ve profesyonellerle buluşturan platform.",
+    searchPlaceholder: "Bir hizmet veya beceri arayın...",
+    searchButton: "Ara",
+    categoriesTitle: "Hizmetleri Keşfet",
+    categoriesText: "İhtiyacınız olan alanı seçin",
+    featuredTitle: "Öne Çıkan Hizmetler",
+    featuredText: "Profesyoneller tarafından sunulan hizmetleri keşfedin"
+  },
+
+  ru: {
+    services: "Услуги",
+    projects: "Проекты",
+    professionals: "Профессионалы",
+    login: "Войти",
+    heroText: "Платформа, которая соединяет клиентов с фрилансерами и профессионалами.",
+    searchPlaceholder: "Найти услугу или навык...",
+    searchButton: "Поиск",
+    categoriesTitle: "Изучить услуги",
+    categoriesText: "Выберите нужную вам область",
+    featuredTitle: "Популярные услуги",
+    featuredText: "Услуги от профессионалов"
+  }
+
+};
+
+const language = document.getElementById("language");
+
+language.addEventListener("change", function () {
+
+  const lang = this.value;
+  const t = translations[lang];
+
+  document.documentElement.lang = lang;
+
+  if (lang === "ar") {
+    document.documentElement.dir = "rtl";
+  } else {
+    document.documentElement.dir = "ltr";
+  }
+
+  document.querySelectorAll("[data-key]").forEach(element => {
+    const key = element.getAttribute("data-key");
+
+    if (t[key]) {
+      element.textContent = t[key];
+    }
+  });
+
+  document.querySelectorAll("[data-placeholder]").forEach(element => {
+    const key = element.getAttribute("data-placeholder");
+
+    if (t[key]) {
+      element.placeholder = t[key];
+    }
+  });
+
+});
+
+</script></body>
+    </html>
