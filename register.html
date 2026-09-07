@@ -266,20 +266,61 @@
   </div>
 
   <script>
-    function registerUser(event) {
-      event.preventDefault();
+async function registerUser(event) {
+  event.preventDefault();
 
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirmPassword").value;
+  const form = event.target;
 
-      if (password !== confirmPassword) {
-        alert("كلمتا المرور غير متطابقتين.");
-        return;
-      }
+  const fullName = document.getElementById("fullName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
 
-      alert("تم إرسال طلب إنشاء الحساب بنجاح.");
+  const roleElement = document.querySelector('input[name="role"]:checked');
+  const role = roleElement ? roleElement.value : "";
+
+  if (password !== confirmPassword) {
+    alert("كلمتا المرور غير متطابقتين.");
+    return;
+  }
+
+  if (password.length < 8) {
+    alert("كلمة المرور يجب أن تكون 8 أحرف على الأقل.");
+    return;
+  }
+
+  if (!role) {
+    alert("اختر نوع الحساب.");
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        full_name: fullName,
+        email: email,
+        password: password,
+        role: role
+      })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      alert(result.message || "حدث خطأ أثناء إنشاء الحساب.");
+      return;
     }
-  </script>
 
-</body>
-</html>
+    alert("تم إنشاء حسابك بنجاح 🎉");
+
+    window.location.href = "login.html";
+
+  } catch (error) {
+    alert("تعذر الاتصال بالخادم. حاول مرة أخرى.");
+  }
+}
+</script>
