@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إنشاء حساب | مِهراف</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #071a33, #0d3b66);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .register-box {
+      width: 100%;
+      max-width: 470px;
+      background: white;
+      border-radius: 22px;
+      padding: 32px 25px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .logo h1 {
+      color: #0d3b66;
+      font-size: 34px;
+      margin-bottom: 8px;
+    }
+
+    .logo p {
+      color: #777;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 17px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: #222;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 11px;
+      font-size: 15px;
+      outline: none;
+      background: #fafafa;
+    }
+
+    input:focus, select:focus {
+      border-color: #0d3b66;
+      background: white;
+    }
+
+    .account-types {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .type-option {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 15px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .type-option:hover {
+      border-color: #0d3b66;
+    }
+
+    .type-option input {
+      width: auto;
+      margin-left: 5px;
+    }
+
+    .terms {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      margin: 18px 0;
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .terms input {
+      width: auto;
+      margin-top: 4px;
+    }
+
+    .register-btn {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      background: #0d3b66;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .register-btn:hover {
+      background: #092b4b;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: #0d3b66;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      color: #777;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    @media (max-width: 450px) {
+      .register-box {
+        padding: 27px 18px;
+      }
+
+      .account-types {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="register-box">
+
+    <div class="logo">
+      <h1>مِهراف</h1>
+      <p>أنشئ حسابك وابدأ رحلتك معنا</p>
+    </div>
+
+    <form onsubmit="registerUser(event)">
+
+      <div class="form-group">
+        <label>الاسم الكامل</label>
+        <input
+          type="text"
+          id="name"
+          placeholder="اكتب اسمك الكامل"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>البريد الإلكتروني</label>
+        <input
+          type="email"
+          id="email"
+          placeholder="example@email.com"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="8 أحرف على الأقل"
+          minlength="8"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>تأكيد كلمة المرور</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          placeholder="أعد كتابة كلمة المرور"
+          minlength="8"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label>نوع الحساب</label>
+
+        <div class="account-types">
+
+          <label class="type-option">
+            <input
+              type="radio"
+              name="accountType"
+              value="client"
+              checked
+            >
+            👤 أريد شراء الخدمات
+          </label>
+
+          <label class="type-option">
+            <input
+              type="radio"
+              name="accountType"
+              value="freelancer"
+            >
+            💼 أريد تقديم الخدمات
+          </label>
+
+        </div>
+      </div>
+
+      <label class="terms">
+        <input type="checkbox" id="terms" required>
+        <span>أوافق على شروط الاستخدام وسياسة الخصوصية الخاصة بمنصة مِهراف.</span>
+      </label>
+
+      <button class="register-btn" type="submit">
+        إنشاء الحساب
+      </button>
+
+    </form>
+
+    <div class="login-link">
+      لديك حساب بالفعل؟
+      <a href="login.html">تسجيل الدخول</a>
+    </div>
+
+    <a class="back" href="index.html">
+      ← العودة إلى الصفحة الرئيسية
+    </a>
+
+  </div>
+
+  <script>
+    function registerUser(event) {
+      event.preventDefault();
+
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      if (password !== confirmPassword) {
+        alert("كلمتا المرور غير متطابقتين.");
+        return;
+      }
+
+      alert("تم إرسال طلب إنشاء الحساب بنجاح.");
+    }
+  </script>
+
+</body>
+</html>
