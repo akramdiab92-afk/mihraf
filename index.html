@@ -43,7 +43,7 @@
 
     nav {
       display: flex;
-      gap: 18px;
+      gap: 10px;
       align-items: center;
     }
 
@@ -51,10 +51,23 @@
       text-decoration: none;
       color: #374151;
       font-size: 15px;
+      padding: 9px 12px;
+      border-radius: 8px;
     }
 
     nav a:hover {
       color: #2563eb;
+      background: #eff6ff;
+    }
+
+    .register-link {
+      background: #2563eb;
+      color: white !important;
+    }
+
+    .register-link:hover {
+      background: #1d4ed8 !important;
+      color: white !important;
     }
 
     .language {
@@ -87,6 +100,33 @@
       margin: 0 auto 30px;
       font-size: 19px;
       color: #6b7280;
+    }
+
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .hero-buttons a {
+      display: inline-block;
+      padding: 13px 25px;
+      border-radius: 9px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .primary-btn {
+      background: #2563eb;
+      color: white;
+    }
+
+    .secondary-btn {
+      background: white;
+      color: #2563eb;
+      border: 1px solid #2563eb;
     }
 
     .search {
@@ -247,7 +287,7 @@
     }
 
     @media (max-width: 800px) {
-      nav a {
+      nav a:not(.register-link) {
         display: none;
       }
 
@@ -277,12 +317,14 @@
       }
     }
   </style></head><body><header>
-  <div class="nav">
-    <a href="#" class="logo">مِهراف</a><nav>
-  <a href="#services" data-key="services">الخدمات</a>
-  <a href="#projects" data-key="projects">المشاريع</a>
-  <a href="#professionals" data-key="professionals">المحترفون</a>
-  <a href="#" data-key="login">تسجيل الدخول</a>
+  <div class="nav"><a href="index.html" class="logo">مِهراف</a>
+
+<nav>
+  <a href="#services">الخدمات</a>
+  <a href="#projects">المشاريع</a>
+  <a href="#professionals">المحترفون</a>
+  <a href="login.html">تسجيل الدخول</a>
+  <a href="register.html" class="register-link">إنشاء حساب</a>
 </nav>
 
 <select class="language" id="language">
@@ -294,35 +336,64 @@
 </select>
 
   </div>
-</header><section class="hero">
-  <h1><span>مِهراف</span> — مهارتك تستحق الفرصة</h1>  <p data-key="heroText">
+</header><section class="hero">  <h1><span>مِهراف</span> — مهارتك تستحق الفرصة</h1>  <p>
     منصة تجمع أصحاب المشاريع بالمستقلين والمحترفين لتنفيذ الخدمات والأعمال بسهولة.
-  </p>  <div class="search">
+  </p>  <div class="hero-buttons">
+    <a href="register.html" class="primary-btn">إنشاء حساب</a>
+    <a href="login.html" class="secondary-btn">تسجيل الدخول</a>
+  </div>  <div class="search">
     <input
       type="text"
-      data-placeholder="searchPlaceholder"
+      id="searchInput"
       placeholder="ابحث عن خدمة أو مهارة..."
     >
-    <button data-key="searchButton">بحث</button>
-  </div>
-</section><section class="section">
-  <div class="section-title">
-    <h2 data-key="categoriesTitle">استكشف الخدمات</h2>
-    <p data-key="categoriesText">اختر المجال الذي تحتاج إليه</p>
-  </div>  <div class="categories">
-    <div class="category"><div class="icon">🎨</div>تصميم</div>
-    <div class="category"><div class="icon">✍️</div>كتابة وترجمة</div>
-    <div class="category"><div class="icon">💻</div>برمجة وتقنية</div>
-    <div class="category"><div class="icon">📊</div>تسويق وأعمال</div>
-    <div class="category"><div class="icon">📁</div>إدخال بيانات</div>
-    <div class="category"><div class="icon">🎬</div>فيديو وصوت</div>
-    <div class="category"><div class="icon">⚖️</div>استشارات</div>
-    <div class="category"><div class="icon">🛠️</div>خدمات أخرى</div>
-  </div>
-</section><section class="section" id="services">
-  <div class="section-title">
-    <h2 data-key="featuredTitle">خدمات مميزة</h2>
-    <p data-key="featuredText">اكتشف خدمات يقدمها محترفون</p>
+    <button onclick="searchServices()">بحث</button>
+  </div></section><section class="section">  <div class="section-title">
+    <h2>استكشف الخدمات</h2>
+    <p>اختر المجال الذي تحتاج إليه</p>
+  </div>  <div class="categories"><div class="category">
+  <div class="icon">🎨</div>
+  تصميم
+</div>
+
+<div class="category">
+  <div class="icon">✍️</div>
+  كتابة وترجمة
+</div>
+
+<div class="category">
+  <div class="icon">💻</div>
+  برمجة وتقنية
+</div>
+
+<div class="category">
+  <div class="icon">📊</div>
+  تسويق وأعمال
+</div>
+
+<div class="category">
+  <div class="icon">📁</div>
+  إدخال بيانات
+</div>
+
+<div class="category">
+  <div class="icon">🎬</div>
+  فيديو وصوت
+</div>
+
+<div class="category">
+  <div class="icon">⚖️</div>
+  استشارات
+</div>
+
+<div class="category">
+  <div class="icon">🛠️</div>
+  خدمات أخرى
+</div>
+
+  </div></section><section class="section" id="services">  <div class="section-title">
+    <h2>خدمات مميزة</h2>
+    <p>اكتشف خدمات يقدمها محترفون</p>
   </div>  <div class="cards"><div class="card">
   <div class="card-image">صورة الخدمة</div>
   <div class="card-content">
@@ -350,19 +421,18 @@
   </div>
 </div>
 
-  </div>
-</section><section class="section" id="projects">
-  <div class="section-title">
+  </div></section><section class="section" id="projects">  <div class="section-title">
     <h2>أحدث المشاريع</h2>
     <p>مشاريع يبحث أصحابها عن محترفين لتنفيذها</p>
-  </div>  <div class="cards">
-    <div class="card">
-      <div class="card-content">
-        <h3>تصميم هوية بصرية</h3>
-        <p>أبحث عن مصمم لإنشاء هوية بصرية لمشروع جديد.</p>
-        <div class="price">$50 - $100</div>
-      </div>
-    </div><div class="card">
+  </div>  <div class="cards"><div class="card">
+  <div class="card-content">
+    <h3>تصميم هوية بصرية</h3>
+    <p>أبحث عن مصمم لإنشاء هوية بصرية لمشروع جديد.</p>
+    <div class="price">$50 - $100</div>
+  </div>
+</div>
+
+<div class="card">
   <div class="card-content">
     <h3>كتابة محتوى لموقع</h3>
     <p>مطلوب كاتب محتوى لكتابة صفحات موقع إلكتروني.</p>
@@ -378,123 +448,40 @@
   </div>
 </div>
 
-  </div>
-</section><section class="cta">
-  <h2>هل لديك مهارة؟</h2>
-  <p>أنشئ حسابك وابدأ بعرض خدماتك على مِهراف.</p>
-  <a href="#">ابدأ الآن</a>
-</section><footer>
-  <strong>مِهراف | MIHRAF</strong>
-  <p>منصة للخدمات والمشاريع والمستقلين</p>
-  <p>© 2026 MIHRAF</p>
-</footer><script>
+  </div></section><section class="cta">  <h2>هل لديك مهارة؟</h2>  <p>
+    أنشئ حسابك وابدأ بعرض خدماتك على مِهراف.
+  </p><a href="register.html">ابدأ الآن</a>
 
-const translations = {
+</section><footer><strong>مِهراف | MIHRAF</strong>
 
-  ar: {
-    services: "الخدمات",
-    projects: "المشاريع",
-    professionals: "المحترفون",
-    login: "تسجيل الدخول",
-    heroText: "منصة تجمع أصحاب المشاريع بالمستقلين والمحترفين لتنفيذ الخدمات والأعمال بسهولة.",
-    searchPlaceholder: "ابحث عن خدمة أو مهارة...",
-    searchButton: "بحث",
-    categoriesTitle: "استكشف الخدمات",
-    categoriesText: "اختر المجال الذي تحتاج إليه",
-    featuredTitle: "خدمات مميزة",
-    featuredText: "اكتشف خدمات يقدمها محترفون"
-  },
+  <p>منصة للخدمات والمشاريع والمستقلين</p>  <p>© 2026 MIHRAF</p></footer><script>
 
-  en: {
-    services: "Services",
-    projects: "Projects",
-    professionals: "Professionals",
-    login: "Login",
-    heroText: "A platform connecting clients with freelancers and professionals to get work done easily.",
-    searchPlaceholder: "Search for a service or skill...",
-    searchButton: "Search",
-    categoriesTitle: "Explore Services",
-    categoriesText: "Choose the field you need",
-    featuredTitle: "Featured Services",
-    featuredText: "Discover services from professionals"
-  },
+function searchServices() {
+  const input = document.getElementById("searchInput").value.trim();
 
-  fr: {
-    services: "Services",
-    projects: "Projets",
-    professionals: "Professionnels",
-    login: "Connexion",
-    heroText: "Une plateforme qui met en relation les clients avec des freelances et des professionnels.",
-    searchPlaceholder: "Rechercher un service ou une compétence...",
-    searchButton: "Rechercher",
-    categoriesTitle: "Explorer les services",
-    categoriesText: "Choisissez le domaine dont vous avez besoin",
-    featuredTitle: "Services en vedette",
-    featuredText: "Découvrez les services proposés par des professionnels"
-  },
-
-  tr: {
-    services: "Hizmetler",
-    projects: "Projeler",
-    professionals: "Profesyoneller",
-    login: "Giriş",
-    heroText: "Müşterileri serbest çalışanlar ve profesyonellerle buluşturan platform.",
-    searchPlaceholder: "Bir hizmet veya beceri arayın...",
-    searchButton: "Ara",
-    categoriesTitle: "Hizmetleri Keşfet",
-    categoriesText: "İhtiyacınız olan alanı seçin",
-    featuredTitle: "Öne Çıkan Hizmetler",
-    featuredText: "Profesyoneller tarafından sunulan hizmetleri keşfedin"
-  },
-
-  ru: {
-    services: "Услуги",
-    projects: "Проекты",
-    professionals: "Профессионалы",
-    login: "Войти",
-    heroText: "Платформа, которая соединяет клиентов с фрилансерами и профессионалами.",
-    searchPlaceholder: "Найти услугу или навык...",
-    searchButton: "Поиск",
-    categoriesTitle: "Изучить услуги",
-    categoriesText: "Выберите нужную вам область",
-    featuredTitle: "Популярные услуги",
-    featuredText: "Услуги от профессионалов"
+  if (!input) {
+    alert("اكتب الخدمة أو المهارة التي تبحث عنها.");
+    return;
   }
 
-};
+  alert("ميزة البحث سيتم ربطها بالخدمات الحقيقية في الخطوة القادمة.");
+}
 
 const language = document.getElementById("language");
 
 language.addEventListener("change", function () {
 
   const lang = this.value;
-  const t = translations[lang];
-
-  document.documentElement.lang = lang;
 
   if (lang === "ar") {
+    document.documentElement.lang = "ar";
     document.documentElement.dir = "rtl";
   } else {
+    document.documentElement.lang = lang;
     document.documentElement.dir = "ltr";
   }
-
-  document.querySelectorAll("[data-key]").forEach(element => {
-    const key = element.getAttribute("data-key");
-
-    if (t[key]) {
-      element.textContent = t[key];
-    }
-  });
-
-  document.querySelectorAll("[data-placeholder]").forEach(element => {
-    const key = element.getAttribute("data-placeholder");
-
-    if (t[key]) {
-      element.placeholder = t[key];
-    }
-  });
 
 });
 
 </script></body>
-    </html>
+</html>
