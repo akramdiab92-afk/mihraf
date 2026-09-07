@@ -59,7 +59,7 @@
       font-size: 14px;
     }
 
-    input, select {
+    input {
       width: 100%;
       padding: 14px;
       border: 1px solid #ddd;
@@ -69,7 +69,7 @@
       background: #fafafa;
     }
 
-    input:focus, select:focus {
+    input:focus {
       border-color: #0d3b66;
       background: white;
     }
@@ -129,6 +129,11 @@
       background: #092b4b;
     }
 
+    .register-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
     .login-link {
       text-align: center;
       margin-top: 20px;
@@ -175,43 +180,47 @@
     <form onsubmit="registerUser(event)">
 
       <div class="form-group">
-        <label>الاسم الكامل</label>
+        <label for="name">الاسم الكامل</label>
         <input
           type="text"
           id="name"
           placeholder="اكتب اسمك الكامل"
+          autocomplete="name"
           required
         >
       </div>
 
       <div class="form-group">
-        <label>البريد الإلكتروني</label>
+        <label for="email">البريد الإلكتروني</label>
         <input
           type="email"
           id="email"
           placeholder="example@email.com"
+          autocomplete="email"
           required
         >
       </div>
 
       <div class="form-group">
-        <label>كلمة المرور</label>
+        <label for="password">كلمة المرور</label>
         <input
           type="password"
           id="password"
           placeholder="8 أحرف على الأقل"
           minlength="8"
+          autocomplete="new-password"
           required
         >
       </div>
 
       <div class="form-group">
-        <label>تأكيد كلمة المرور</label>
+        <label for="confirmPassword">تأكيد كلمة المرور</label>
         <input
           type="password"
           id="confirmPassword"
           placeholder="أعد كتابة كلمة المرور"
           minlength="8"
+          autocomplete="new-password"
           required
         >
       </div>
@@ -266,61 +275,92 @@
   </div>
 
   <script>
-async function registerUser(event) {
-  event.preventDefault();
+    async function registerUser(event) {
+      event.preventDefault();
 
-  const form = event.target;
+      const fullName = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
 
-  const fullName = document.getElementById("fullName").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-  const confirmPassword = document.getElementById("confirmPassword").value;
+      const roleElement = document.querySelector(
+        'input[name="accountType"]:checked'
+      );
 
-  const roleElement = document.querySelector('input[name="role"]:checked');
-  const role = roleElement ? roleElement.value : "";
+      const role = roleElement ? roleElement.value : "";
 
-  if (password !== confirmPassword) {
-    alert("كلمتا المرور غير متطابقتين.");
-    return;
-  }
+      const terms = document.getElementById("terms").checked;
 
-  if (password.length < 8) {
-    alert("كلمة المرور يجب أن تكون 8 أحرف على الأقل.");
-    return;
-  }
+      if (!fullName || !email || !password || !confirmPassword) {
+        alert("يرجى تعبئة جميع الحقول.");
+        return;
+      }
 
-  if (!role) {
-    alert("اختر نوع الحساب.");
-    return;
-  }
+      if (password !== confirmPassword) {
+        alert("كلمتا المرور غير متطابقتين.");
+        return;
+      }
 
-  try {
-    const response = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        full_name: fullName,
-        email: email,
-        password: password,
-        role: role
-      })
-    });
+      if (password.length < 8) {
+        alert("كلمة المرور يجب أن تكون 8 أحرف على الأقل.");
+        return;
+      }
 
-    const result = await response.json();
+      if (!role) {
+        alert("اختر نوع الحساب.");
+        return;
+      }
 
-    if (!response.ok || !result.success) {
-      alert(result.message || "حدث خطأ أثناء إنشاء الحساب.");
-      return;
+      if (!terms) {
+        alert("يجب الموافقة على شروط الاستخدام.");
+        return;
+      }
+
+      const button = document.querySelector(".register-btn");
+
+      button.disabled = true;
+      button.textContent = "جار إنشاء الحساب...";
+
+      try {
+        const response = await fetch("/api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            full_name: fullName,
+            email: email,
+            password: password,
+            role: role
+          })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          alert(
+            result.message || "حدث خطأ أثناء إنشاء الحساب."
+          );
+
+          button.disabled = false;
+          button.textContent = "إنشاء الحساب";
+          return;
+        }
+
+        alert("تم إنشاء حسابك بنجاح 🎉");
+
+        window.location.href = "login.html";
+
+      } catch (error) {
+        console.error(error);
+
+        alert("تعذر الاتصال بالخادم. حاول مرة أخرى.");
+
+        button.disabled = false;
+        button.textContent = "إنشاء الحساب";
+      }
     }
+  </script>
 
-    alert("تم إنشاء حسابك بنجاح 🎉");
-
-    window.location.href = "login.html";
-
-  } catch (error) {
-    alert("تعذر الاتصال بالخادم. حاول مرة أخرى.");
-  }
-}
-</script>
+</body>
+</html>
