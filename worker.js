@@ -14,6 +14,7 @@ export default {
 
     const url = new URL(request.url);
 
+
     // ================================
     // المستخدمون
     // ================================
@@ -51,7 +52,6 @@ export default {
     // الخدمات
     // ================================
 
-    // إنشاء خدمة
     if (
       url.pathname === "/api/services" &&
       request.method === "POST"
@@ -59,8 +59,6 @@ export default {
       return createService(request, env);
     }
 
-
-    // جلب جميع الخدمات
     if (
       url.pathname === "/api/services" &&
       request.method === "GET"
@@ -68,8 +66,6 @@ export default {
       return getServices(request, env);
     }
 
-
-    // تعديل / حذف خدمة
     if (
       url.pathname.startsWith("/api/services/") &&
       request.method === "PUT"
@@ -84,13 +80,60 @@ export default {
       return deleteService(request, env);
     }
 
-
-    // خدمات المستخدم الحالي
     if (
       url.pathname === "/api/my-services" &&
       request.method === "GET"
     ) {
       return getMyServices(request, env);
+    }
+
+
+    // ================================
+    // المشاريع
+    // ================================
+
+    // إنشاء مشروع
+    if (
+      url.pathname === "/api/projects" &&
+      request.method === "POST"
+    ) {
+      return createProject(request, env);
+    }
+
+
+    // المشاريع المفتوحة
+    if (
+      url.pathname === "/api/projects" &&
+      request.method === "GET"
+    ) {
+      return getProjects(request, env);
+    }
+
+
+    // مشاريع العميل الحالي
+    if (
+      url.pathname === "/api/my-projects" &&
+      request.method === "GET"
+    ) {
+      return getMyProjects(request, env);
+    }
+
+
+    // تعديل مشروع
+    if (
+      url.pathname.startsWith("/api/projects/") &&
+      request.method === "PUT"
+    ) {
+      return updateProject(request, env);
+    }
+
+
+    // إلغاء مشروع
+    if (
+      url.pathname.startsWith("/api/projects/") &&
+      request.method === "DELETE"
+    ) {
+      return deleteProject(request, env);
     }
 
 
@@ -119,17 +162,27 @@ export default {
           .first();
 
 
+        const projectsResult = await env.DB
+          .prepare(
+            "SELECT COUNT(*) AS count FROM projects"
+          )
+          .first();
+
+
         return Response.json({
 
           success: true,
 
           database: true,
 
-          users: result.count,
+          users: Number(result?.count || 0),
 
-          services: servicesResult.count
+          services: Number(servicesResult?.count || 0),
+
+          projects: Number(projectsResult?.count || 0)
 
         });
+
 
       } catch (error) {
 
@@ -185,8 +238,6 @@ async function register(request, env) {
     const role =
       String(data.role || "");
 
-
-    // التحقق من البيانات
 
     if (
       !fullName ||
@@ -259,8 +310,6 @@ async function register(request, env) {
     }
 
 
-    // التأكد أن البريد غير مستخدم
-
     const existing =
       await env.DB
         .prepare(
@@ -286,13 +335,9 @@ async function register(request, env) {
     }
 
 
-    // إنشاء Salt
-
     const salt =
       randomBytes(16);
 
-
-    // تشفير كلمة المرور
 
     const passwordHash =
       await hashPassword(
@@ -300,8 +345,6 @@ async function register(request, env) {
         salt
       );
 
-
-    // إنشاء المستخدم
 
     const result =
       await env.DB
@@ -397,8 +440,6 @@ async function login(request, env) {
     }
 
 
-    // البحث عن المستخدم
-
     const user =
       await env.DB
         .prepare(`
@@ -433,15 +474,11 @@ async function login(request, env) {
     }
 
 
-    // تحويل Salt
-
     const salt =
       hexToBytes(
         user.password_salt
       );
 
-
-    // حساب Hash
 
     const passwordHash =
       await hashPassword(
@@ -449,8 +486,6 @@ async function login(request, env) {
         salt
       );
 
-
-    // مقارنة آمنة
 
     if (
       !constantTimeEqual(
@@ -473,8 +508,6 @@ async function login(request, env) {
     }
 
 
-    // إنشاء Session Token
-
     const sessionToken =
       randomToken(32);
 
@@ -484,8 +517,6 @@ async function login(request, env) {
         sessionToken
       );
 
-
-    // تاريخ انتهاء الجلسة
 
     const expiresAt =
       new Date(
@@ -498,8 +529,6 @@ async function login(request, env) {
       ).toISOString();
 
 
-    // حذف الجلسات القديمة
-
     await env.DB
       .prepare(`
         DELETE FROM sessions
@@ -508,8 +537,6 @@ async function login(request, env) {
       .bind(user.id)
       .run();
 
-
-    // إنشاء الجلسة
 
     await env.DB
       .prepare(`
@@ -528,8 +555,6 @@ async function login(request, env) {
       )
       .run();
 
-
-    // Cookie
 
     const cookie =
       `mihraf_session=${sessionToken}; ` +
@@ -682,8 +707,6 @@ async function getCurrentUser(
 
     }
 
-
-    // التأكد من انتهاء الجلسة
 
     if (
       new Date(
@@ -870,8 +893,6 @@ async function createService(
 
   try {
 
-    // الحصول على المستخدم
-
     const user =
       await authenticateUser(
         request,
@@ -894,8 +915,6 @@ async function createService(
 
     }
 
-
-    // يجب أن يكون مستقل
 
     if (
       user.role !== "freelancer"
@@ -934,8 +953,6 @@ async function createService(
     const price =
       Number(data.price);
 
-
-    // التحقق من البيانات
 
     if (
       !title ||
@@ -1005,8 +1022,6 @@ async function createService(
 
     }
 
-
-    // حفظ الخدمة
 
     const result =
       await env.DB
@@ -1329,9 +1344,7 @@ async function updateService(
 
 
     const serviceId =
-      getIdFromPath(
-        request
-      );
+      getIdFromPath(request);
 
 
     if (!serviceId) {
@@ -1349,8 +1362,6 @@ async function updateService(
 
     }
 
-
-    // التأكد أن الخدمة ملك للمستخدم
 
     const service =
       await env.DB
@@ -1590,9 +1601,7 @@ async function deleteService(
 
 
     const serviceId =
-      getIdFromPath(
-        request
-      );
+      getIdFromPath(request);
 
 
     if (!serviceId) {
@@ -1660,8 +1669,6 @@ async function deleteService(
     }
 
 
-    // حذف منطقي بدل حذف السجل نهائيًا
-
     await env.DB
       .prepare(`
         UPDATE services
@@ -1697,6 +1704,883 @@ async function deleteService(
         success: false,
         message:
           "حدث خطأ أثناء حذف الخدمة"
+      },
+      {
+        status: 500
+      }
+    );
+
+  }
+
+}
+
+
+// ==================================================
+// إنشاء مشروع
+// ==================================================
+
+async function createProject(
+  request,
+  env
+) {
+
+  try {
+
+    const user =
+      await authenticateUser(
+        request,
+        env
+      );
+
+
+    if (!user) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "يجب تسجيل الدخول أولًا"
+        },
+        {
+          status: 401
+        }
+      );
+
+    }
+
+
+    // المشاريع ينشرها العميل
+
+    if (
+      user.role !== "client"
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "فقط العميل يستطيع نشر مشروع"
+        },
+        {
+          status: 403
+        }
+      );
+
+    }
+
+
+    const data =
+      await request.json();
+
+
+    const title =
+      String(data.title || "").trim();
+
+
+    const description =
+      String(data.description || "").trim();
+
+
+    const category =
+      String(data.category || "").trim();
+
+
+    const budget =
+      Number(data.budget);
+
+
+    if (
+      !title ||
+      !description ||
+      !category ||
+      !Number.isFinite(budget)
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "جميع بيانات المشروع مطلوبة"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    if (title.length < 3) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "عنوان المشروع قصير جدًا"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    if (description.length < 10) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "وصف المشروع قصير جدًا"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    if (budget <= 0) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "الميزانية يجب أن تكون أكبر من صفر"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    const result =
+      await env.DB
+        .prepare(`
+          INSERT INTO projects
+          (
+            user_id,
+            title,
+            description,
+            budget,
+            category
+          )
+          VALUES (?, ?, ?, ?, ?)
+        `)
+        .bind(
+          user.id,
+          title,
+          description,
+          budget,
+          category
+        )
+        .run();
+
+
+    return Response.json({
+
+      success: true,
+
+      message:
+        "تم نشر المشروع بنجاح",
+
+      project_id:
+        result.meta.last_row_id
+
+    });
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    return Response.json(
+      {
+        success: false,
+        message:
+          "حدث خطأ أثناء إنشاء المشروع"
+      },
+      {
+        status: 500
+      }
+    );
+
+  }
+
+}
+
+
+// ==================================================
+// جلب المشاريع المفتوحة
+// ==================================================
+
+async function getProjects(
+  request,
+  env
+) {
+
+  try {
+
+    const url =
+      new URL(request.url);
+
+
+    const category =
+      String(
+        url.searchParams.get("category") || ""
+      ).trim();
+
+
+    let result;
+
+
+    if (category) {
+
+      result =
+        await env.DB
+          .prepare(`
+            SELECT
+              projects.id,
+              projects.title,
+              projects.description,
+              projects.budget,
+              projects.category,
+              projects.status,
+              projects.created_at,
+              users.id AS client_id,
+              users.full_name AS client_name
+            FROM projects
+            INNER JOIN users
+              ON users.id = projects.user_id
+            WHERE
+              projects.status = 'open'
+              AND projects.category = ?
+            ORDER BY projects.id DESC
+          `)
+          .bind(category)
+          .all();
+
+    } else {
+
+      result =
+        await env.DB
+          .prepare(`
+            SELECT
+              projects.id,
+              projects.title,
+              projects.description,
+              projects.budget,
+              projects.category,
+              projects.status,
+              projects.created_at,
+              users.id AS client_id,
+              users.full_name AS client_name
+            FROM projects
+            INNER JOIN users
+              ON users.id = projects.user_id
+            WHERE projects.status = 'open'
+            ORDER BY projects.id DESC
+          `)
+          .all();
+
+    }
+
+
+    return Response.json({
+
+      success: true,
+
+      projects:
+        result.results || []
+
+    });
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    return Response.json(
+      {
+        success: false,
+        message:
+          "حدث خطأ أثناء جلب المشاريع"
+      },
+      {
+        status: 500
+      }
+    );
+
+  }
+
+}
+
+
+// ==================================================
+// جلب مشاريع العميل الحالي
+// ==================================================
+
+async function getMyProjects(
+  request,
+  env
+) {
+
+  try {
+
+    const user =
+      await authenticateUser(
+        request,
+        env
+      );
+
+
+    if (!user) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "يجب تسجيل الدخول أولًا"
+        },
+        {
+          status: 401
+        }
+      );
+
+    }
+
+
+    if (
+      user.role !== "client"
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "هذه الصفحة للعملاء فقط"
+        },
+        {
+          status: 403
+        }
+      );
+
+    }
+
+
+    const result =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            title,
+            description,
+            budget,
+            category,
+            status,
+            created_at,
+            updated_at
+          FROM projects
+          WHERE user_id = ?
+          ORDER BY id DESC
+        `)
+        .bind(user.id)
+        .all();
+
+
+    return Response.json({
+
+      success: true,
+
+      projects:
+        result.results || []
+
+    });
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    return Response.json(
+      {
+        success: false,
+        message:
+          "حدث خطأ أثناء جلب مشاريعك"
+      },
+      {
+        status: 500
+      }
+    );
+
+  }
+
+}
+
+
+// ==================================================
+// تعديل مشروع
+// ==================================================
+
+async function updateProject(
+  request,
+  env
+) {
+
+  try {
+
+    const user =
+      await authenticateUser(
+        request,
+        env
+      );
+
+
+    if (!user) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "يجب تسجيل الدخول أولًا"
+        },
+        {
+          status: 401
+        }
+      );
+
+    }
+
+
+    if (
+      user.role !== "client"
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "فقط العميل يستطيع تعديل المشروع"
+        },
+        {
+          status: 403
+        }
+      );
+
+    }
+
+
+    const projectId =
+      getIdFromPath(request);
+
+
+    if (!projectId) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "رقم المشروع غير صحيح"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    const project =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            user_id,
+            status
+          FROM projects
+          WHERE id = ?
+          LIMIT 1
+        `)
+        .bind(projectId)
+        .first();
+
+
+    if (!project) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "المشروع غير موجود"
+        },
+        {
+          status: 404
+        }
+      );
+
+    }
+
+
+    if (
+      Number(project.user_id) !==
+      Number(user.id)
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "لا يمكنك تعديل هذا المشروع"
+        },
+        {
+          status: 403
+        }
+      );
+
+    }
+
+
+    if (
+      project.status !== "open"
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "لا يمكن تعديل مشروع غير مفتوح"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    const data =
+      await request.json();
+
+
+    const title =
+      String(data.title || "").trim();
+
+
+    const description =
+      String(data.description || "").trim();
+
+
+    const category =
+      String(data.category || "").trim();
+
+
+    const budget =
+      Number(data.budget);
+
+
+    if (
+      !title ||
+      !description ||
+      !category ||
+      !Number.isFinite(budget)
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "جميع بيانات المشروع مطلوبة"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    if (title.length < 3) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "عنوان المشروع قصير جدًا"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    if (description.length < 10) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "وصف المشروع قصير جدًا"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    if (budget <= 0) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "الميزانية يجب أن تكون أكبر من صفر"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    await env.DB
+      .prepare(`
+        UPDATE projects
+        SET
+          title = ?,
+          description = ?,
+          budget = ?,
+          category = ?,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+          AND user_id = ?
+          AND status = 'open'
+      `)
+      .bind(
+        title,
+        description,
+        budget,
+        category,
+        projectId,
+        user.id
+      )
+      .run();
+
+
+    return Response.json({
+
+      success: true,
+
+      message:
+        "تم تعديل المشروع بنجاح"
+
+    });
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    return Response.json(
+      {
+        success: false,
+        message:
+          "حدث خطأ أثناء تعديل المشروع"
+      },
+      {
+        status: 500
+      }
+    );
+
+  }
+
+}
+
+
+// ==================================================
+// إلغاء مشروع
+// ==================================================
+
+async function deleteProject(
+  request,
+  env
+) {
+
+  try {
+
+    const user =
+      await authenticateUser(
+        request,
+        env
+      );
+
+
+    if (!user) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "يجب تسجيل الدخول أولًا"
+        },
+        {
+          status: 401
+        }
+      );
+
+    }
+
+
+    if (
+      user.role !== "client"
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "فقط العميل يستطيع إلغاء المشروع"
+        },
+        {
+          status: 403
+        }
+      );
+
+    }
+
+
+    const projectId =
+      getIdFromPath(request);
+
+
+    if (!projectId) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "رقم المشروع غير صحيح"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    const project =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            user_id,
+            status
+          FROM projects
+          WHERE id = ?
+          LIMIT 1
+        `)
+        .bind(projectId)
+        .first();
+
+
+    if (!project) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "المشروع غير موجود"
+        },
+        {
+          status: 404
+        }
+      );
+
+    }
+
+
+    if (
+      Number(project.user_id) !==
+      Number(user.id)
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "لا يمكنك إلغاء هذا المشروع"
+        },
+        {
+          status: 403
+        }
+      );
+
+    }
+
+
+    if (
+      project.status !== "open"
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "هذا المشروع ليس مفتوحًا"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    await env.DB
+      .prepare(`
+        UPDATE projects
+        SET
+          status = 'cancelled',
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+          AND user_id = ?
+          AND status = 'open'
+      `)
+      .bind(
+        projectId,
+        user.id
+      )
+      .run();
+
+
+    return Response.json({
+
+      success: true,
+
+      message:
+        "تم إلغاء المشروع بنجاح"
+
+    });
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    return Response.json(
+      {
+        success: false,
+        message:
+          "حدث خطأ أثناء إلغاء المشروع"
       },
       {
         status: 500
@@ -1764,8 +2648,6 @@ async function authenticateUser(
     }
 
 
-    // الجلسة منتهية
-
     if (
       new Date(
         session.expires_at
@@ -1814,7 +2696,7 @@ async function authenticateUser(
 
 
 // ==================================================
-// استخراج رقم الخدمة من الرابط
+// استخراج الرقم من الرابط
 // ==================================================
 
 function getIdFromPath(
