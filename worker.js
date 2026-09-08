@@ -3,17 +3,13 @@ const encoder = new TextEncoder();
 const SESSION_DAYS = 7;
 const SESSION_MAX_AGE = SESSION_DAYS * 24 * 60 * 60;
 
-
 // ==================================================
 // Worker
 // ==================================================
 
 export default {
-
   async fetch(request, env) {
-
     const url = new URL(request.url);
-
 
     // ================================
     // المستخدمون
@@ -46,7 +42,6 @@ export default {
     ) {
       return logout(request, env);
     }
-
 
     // ================================
     // الخدمات
@@ -87,12 +82,10 @@ export default {
       return getMyServices(request, env);
     }
 
-
     // ================================
     // المشاريع
     // ================================
 
-    // إنشاء مشروع
     if (
       url.pathname === "/api/projects" &&
       request.method === "POST"
@@ -100,8 +93,6 @@ export default {
       return createProject(request, env);
     }
 
-
-    // المشاريع المفتوحة
     if (
       url.pathname === "/api/projects" &&
       request.method === "GET"
@@ -109,8 +100,6 @@ export default {
       return getProjects(request, env);
     }
 
-
-    // تقديم عرض على مشروع
     if (
       /^\/api\/projects\/\d+\/proposals$/.test(url.pathname) &&
       request.method === "POST"
@@ -118,8 +107,13 @@ export default {
       return createProposal(request, env);
     }
 
+    if (
+      /^\/api\/projects\/\d+\/proposals$/.test(url.pathname) &&
+      request.method === "GET"
+    ) {
+      return getProjectProposals(request, env);
+    }
 
-    // مشاريع العميل الحالي
     if (
       url.pathname === "/api/my-projects" &&
       request.method === "GET"
@@ -127,8 +121,27 @@ export default {
       return getMyProjects(request, env);
     }
 
+    if (
+      /^\/api\/my-proposals$/.test(url.pathname) &&
+      request.method === "GET"
+    ) {
+      return getMyProposals(request, env);
+    }
 
-    // تعديل مشروع
+    if (
+      /^\/api\/proposals\/\d+\/accept$/.test(url.pathname) &&
+      request.method === "PUT"
+    ) {
+      return acceptProposal(request, env);
+    }
+
+    if (
+      /^\/api\/proposals\/\d+\/reject$/.test(url.pathname) &&
+      request.method === "PUT"
+    ) {
+      return rejectProposal(request, env);
+    }
+
     if (
       url.pathname.startsWith("/api/projects/") &&
       request.method === "PUT"
@@ -136,15 +149,12 @@ export default {
       return updateProject(request, env);
     }
 
-
-    // إلغاء مشروع
     if (
       url.pathname.startsWith("/api/projects/") &&
       request.method === "DELETE"
     ) {
       return deleteProject(request, env);
     }
-
 
     // ================================
     // اختبار قاعدة البيانات
@@ -154,56 +164,32 @@ export default {
       url.pathname === "/api/test" &&
       request.method === "GET"
     ) {
-
       try {
-
         const result = await env.DB
-          .prepare(
-            "SELECT COUNT(*) AS count FROM users"
-          )
+          .prepare("SELECT COUNT(*) AS count FROM users")
           .first();
-
 
         const servicesResult = await env.DB
-          .prepare(
-            "SELECT COUNT(*) AS count FROM services"
-          )
+          .prepare("SELECT COUNT(*) AS count FROM services")
           .first();
-
 
         const projectsResult = await env.DB
-          .prepare(
-            "SELECT COUNT(*) AS count FROM projects"
-          )
+          .prepare("SELECT COUNT(*) AS count FROM projects")
           .first();
-
 
         const proposalsResult = await env.DB
-          .prepare(
-            "SELECT COUNT(*) AS count FROM proposals"
-          )
+          .prepare("SELECT COUNT(*) AS count FROM proposals")
           .first();
 
-
         return Response.json({
-
           success: true,
-
           database: true,
-
           users: Number(result?.count || 0),
-
           services: Number(servicesResult?.count || 0),
-
           projects: Number(projectsResult?.count || 0),
-
           proposals: Number(proposalsResult?.count || 0)
-
         });
-
-
       } catch (error) {
-
         console.error(error);
 
         return Response.json(
@@ -215,31 +201,19 @@ export default {
             status: 500
           }
         );
-
       }
-
     }
 
-
-    // ================================
-    // باقي صفحات الموقع
-    // ================================
-
     return env.ASSETS.fetch(request);
-
   }
-
 };
-
 
 // ==================================================
 // تسجيل حساب جديد
 // ==================================================
 
 async function register(request, env) {
-
   try {
-
     const data = await request.json();
 
     const fullName =
@@ -256,14 +230,12 @@ async function register(request, env) {
     const role =
       String(data.role || "");
 
-
     if (
       !fullName ||
       !email ||
       !password ||
       !role
     ) {
-
       return Response.json(
         {
           success: false,
@@ -273,14 +245,11 @@ async function register(request, env) {
           status: 400
         }
       );
-
     }
-
 
     if (
       !["client", "freelancer"].includes(role)
     ) {
-
       return Response.json(
         {
           success: false,
@@ -290,12 +259,9 @@ async function register(request, env) {
           status: 400
         }
       );
-
     }
 
-
     if (password.length < 8) {
-
       return Response.json(
         {
           success: false,
@@ -306,14 +272,11 @@ async function register(request, env) {
           status: 400
         }
       );
-
     }
-
 
     if (
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     ) {
-
       return Response.json(
         {
           success: false,
@@ -324,9 +287,7 @@ async function register(request, env) {
           status: 400
         }
       );
-
     }
-
 
     const existing =
       await env.DB
@@ -336,9 +297,7 @@ async function register(request, env) {
         .bind(email)
         .first();
 
-
     if (existing) {
-
       return Response.json(
         {
           success: false,
@@ -349,20 +308,16 @@ async function register(request, env) {
           status: 409
         }
       );
-
     }
-
 
     const salt =
       randomBytes(16);
-
 
     const passwordHash =
       await hashPassword(
         password,
         salt
       );
-
 
     const result =
       await env.DB
@@ -386,22 +341,14 @@ async function register(request, env) {
         )
         .run();
 
-
     return Response.json({
-
       success: true,
-
       message:
         "تم إنشاء الحساب بنجاح",
-
       user_id:
         result.meta.last_row_id
-
     });
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -414,36 +361,27 @@ async function register(request, env) {
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // تسجيل الدخول
 // ==================================================
 
 async function login(request, env) {
-
   try {
-
     const data =
       await request.json();
-
 
     const email =
       String(data.email || "")
         .trim()
         .toLowerCase();
 
-
     const password =
       String(data.password || "");
 
-
     if (!email || !password) {
-
       return Response.json(
         {
           success: false,
@@ -454,9 +392,7 @@ async function login(request, env) {
           status: 400
         }
       );
-
     }
-
 
     const user =
       await env.DB
@@ -475,9 +411,7 @@ async function login(request, env) {
         .bind(email)
         .first();
 
-
     if (!user) {
-
       return Response.json(
         {
           success: false,
@@ -488,15 +422,12 @@ async function login(request, env) {
           status: 401
         }
       );
-
     }
-
 
     const salt =
       hexToBytes(
         user.password_salt
       );
-
 
     const passwordHash =
       await hashPassword(
@@ -504,14 +435,12 @@ async function login(request, env) {
         salt
       );
 
-
     if (
       !constantTimeEqual(
         passwordHash,
         user.password_hash
       )
     ) {
-
       return Response.json(
         {
           success: false,
@@ -522,19 +451,15 @@ async function login(request, env) {
           status: 401
         }
       );
-
     }
-
 
     const sessionToken =
       randomToken(32);
-
 
     const sessionTokenHash =
       await sha256Hex(
         sessionToken
       );
-
 
     const expiresAt =
       new Date(
@@ -546,7 +471,6 @@ async function login(request, env) {
         1000
       ).toISOString();
 
-
     await env.DB
       .prepare(`
         DELETE FROM sessions
@@ -554,7 +478,6 @@ async function login(request, env) {
       `)
       .bind(user.id)
       .run();
-
 
     await env.DB
       .prepare(`
@@ -573,7 +496,6 @@ async function login(request, env) {
       )
       .run();
 
-
     const cookie =
       `mihraf_session=${sessionToken}; ` +
       `HttpOnly; ` +
@@ -582,55 +504,33 @@ async function login(request, env) {
       `Path=/; ` +
       `Max-Age=${SESSION_MAX_AGE}`;
 
-
     return new Response(
-
       JSON.stringify({
-
         success: true,
-
         message:
           "تم تسجيل الدخول بنجاح",
-
         user: {
-
           id:
             user.id,
-
           full_name:
             user.full_name,
-
           email:
             user.email,
-
           role:
             user.role
-
         }
-
       }),
-
       {
-
         status: 200,
-
         headers: {
-
           "Content-Type":
             "application/json; charset=UTF-8",
-
           "Set-Cookie":
             cookie
-
         }
-
       }
-
     );
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -643,11 +543,8 @@ async function login(request, env) {
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // المستخدم الحالي
@@ -657,21 +554,16 @@ async function getCurrentUser(
   request,
   env
 ) {
-
   try {
-
     const cookies =
       parseCookies(
         request.headers.get("Cookie") || ""
       );
 
-
     const sessionToken =
       cookies.mihraf_session;
 
-
     if (!sessionToken) {
-
       return Response.json(
         {
           success: false,
@@ -681,15 +573,12 @@ async function getCurrentUser(
           status: 401
         }
       );
-
     }
-
 
     const tokenHash =
       await sha256Hex(
         sessionToken
       );
-
 
     const session =
       await env.DB
@@ -710,9 +599,7 @@ async function getCurrentUser(
         .bind(tokenHash)
         .first();
 
-
     if (!session) {
-
       return Response.json(
         {
           success: false,
@@ -722,16 +609,13 @@ async function getCurrentUser(
           status: 401
         }
       );
-
     }
-
 
     if (
       new Date(
         session.expires_at
       ).getTime() <= Date.now()
     ) {
-
       await env.DB
         .prepare(`
           DELETE FROM sessions
@@ -739,7 +623,6 @@ async function getCurrentUser(
         `)
         .bind(tokenHash)
         .run();
-
 
       return Response.json(
         {
@@ -752,37 +635,23 @@ async function getCurrentUser(
           status: 401
         }
       );
-
     }
 
-
     return Response.json({
-
       success: true,
-
       logged_in: true,
-
       user: {
-
         id:
           session.id,
-
         full_name:
           session.full_name,
-
         email:
           session.email,
-
         role:
           session.role
-
       }
-
     });
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -795,11 +664,8 @@ async function getCurrentUser(
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // تسجيل الخروج
@@ -809,26 +675,20 @@ async function logout(
   request,
   env
 ) {
-
   try {
-
     const cookies =
       parseCookies(
         request.headers.get("Cookie") || ""
       );
 
-
     const sessionToken =
       cookies.mihraf_session;
 
-
     if (sessionToken) {
-
       const tokenHash =
         await sha256Hex(
           sessionToken
         );
-
 
       await env.DB
         .prepare(`
@@ -837,9 +697,7 @@ async function logout(
         `)
         .bind(tokenHash)
         .run();
-
     }
-
 
     const cookie =
       "mihraf_session=; " +
@@ -849,39 +707,23 @@ async function logout(
       "Path=/; " +
       "Max-Age=0";
 
-
     return new Response(
-
       JSON.stringify({
-
         success: true,
-
         message:
           "تم تسجيل الخروج"
-
       }),
-
       {
-
         status: 200,
-
         headers: {
-
           "Content-Type":
             "application/json; charset=UTF-8",
-
           "Set-Cookie":
             cookie
-
         }
-
       }
-
     );
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -894,11 +736,8 @@ async function logout(
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // إنشاء خدمة
@@ -908,18 +747,14 @@ async function createService(
   request,
   env
 ) {
-
   try {
-
     const user =
       await authenticateUser(
         request,
         env
       );
 
-
     if (!user) {
-
       return Response.json(
         {
           success: false,
@@ -930,14 +765,11 @@ async function createService(
           status: 401
         }
       );
-
     }
-
 
     if (
       user.role !== "freelancer"
     ) {
-
       return Response.json(
         {
           success: false,
@@ -948,29 +780,22 @@ async function createService(
           status: 403
         }
       );
-
     }
-
 
     const data =
       await request.json();
 
-
     const title =
       String(data.title || "").trim();
-
 
     const description =
       String(data.description || "").trim();
 
-
     const category =
       String(data.category || "").trim();
 
-
     const price =
       Number(data.price);
-
 
     if (
       !title ||
@@ -978,7 +803,6 @@ async function createService(
       !category ||
       !Number.isFinite(price)
     ) {
-
       return Response.json(
         {
           success: false,
@@ -989,12 +813,9 @@ async function createService(
           status: 400
         }
       );
-
     }
 
-
     if (title.length < 3) {
-
       return Response.json(
         {
           success: false,
@@ -1005,12 +826,9 @@ async function createService(
           status: 400
         }
       );
-
     }
 
-
     if (description.length < 10) {
-
       return Response.json(
         {
           success: false,
@@ -1021,12 +839,9 @@ async function createService(
           status: 400
         }
       );
-
     }
 
-
     if (price <= 0) {
-
       return Response.json(
         {
           success: false,
@@ -1037,9 +852,7 @@ async function createService(
           status: 400
         }
       );
-
     }
-
 
     const result =
       await env.DB
@@ -1063,22 +876,14 @@ async function createService(
         )
         .run();
 
-
     return Response.json({
-
       success: true,
-
       message:
         "تم نشر الخدمة بنجاح",
-
       service_id:
         result.meta.last_row_id
-
     });
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -1091,11 +896,8 @@ async function createService(
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // جلب جميع الخدمات
@@ -1105,14 +907,9 @@ async function getServices(
   request,
   env
 ) {
-
   try {
-
     const url =
-      new URL(
-        request.url
-      );
-
+      new URL(request.url);
 
     const category =
       String(
@@ -1121,12 +918,9 @@ async function getServices(
         ) || ""
       ).trim();
 
-
     let result;
 
-
     if (category) {
-
       result =
         await env.DB
           .prepare(`
@@ -1150,9 +944,7 @@ async function getServices(
           `)
           .bind(category)
           .all();
-
     } else {
-
       result =
         await env.DB
           .prepare(`
@@ -1173,22 +965,14 @@ async function getServices(
             ORDER BY services.id DESC
           `)
           .all();
-
     }
 
-
     return Response.json({
-
       success: true,
-
       services:
         result.results || []
-
     });
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -1201,11 +985,8 @@ async function getServices(
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // جلب خدمات المستخدم الحالي
@@ -1215,18 +996,14 @@ async function getMyServices(
   request,
   env
 ) {
-
   try {
-
     const user =
       await authenticateUser(
         request,
         env
       );
 
-
     if (!user) {
-
       return Response.json(
         {
           success: false,
@@ -1237,14 +1014,11 @@ async function getMyServices(
           status: 401
         }
       );
-
     }
-
 
     if (
       user.role !== "freelancer"
     ) {
-
       return Response.json(
         {
           success: false,
@@ -1255,9 +1029,7 @@ async function getMyServices(
           status: 403
         }
       );
-
     }
-
 
     const result =
       await env.DB
@@ -1278,19 +1050,12 @@ async function getMyServices(
         .bind(user.id)
         .all();
 
-
     return Response.json({
-
       success: true,
-
       services:
         result.results || []
-
     });
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -1303,11 +1068,8 @@ async function getMyServices(
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // تعديل خدمة
@@ -1317,18 +1079,14 @@ async function updateService(
   request,
   env
 ) {
-
   try {
-
     const user =
       await authenticateUser(
         request,
         env
       );
 
-
     if (!user) {
-
       return Response.json(
         {
           success: false,
@@ -1339,14 +1097,11 @@ async function updateService(
           status: 401
         }
       );
-
     }
-
 
     if (
       user.role !== "freelancer"
     ) {
-
       return Response.json(
         {
           success: false,
@@ -1357,16 +1112,12 @@ async function updateService(
           status: 403
         }
       );
-
     }
-
 
     const serviceId =
       getIdFromPath(request);
 
-
     if (!serviceId) {
-
       return Response.json(
         {
           success: false,
@@ -1377,9 +1128,7 @@ async function updateService(
           status: 400
         }
       );
-
     }
-
 
     const service =
       await env.DB
@@ -1394,9 +1143,7 @@ async function updateService(
         .bind(serviceId)
         .first();
 
-
     if (!service) {
-
       return Response.json(
         {
           success: false,
@@ -1407,15 +1154,12 @@ async function updateService(
           status: 404
         }
       );
-
     }
-
 
     if (
       Number(service.user_id) !==
       Number(user.id)
     ) {
-
       return Response.json(
         {
           success: false,
@@ -1426,35 +1170,27 @@ async function updateService(
           status: 403
         }
       );
-
     }
-
 
     const data =
       await request.json();
 
-
     const title =
       String(data.title || "").trim();
-
 
     const description =
       String(data.description || "").trim();
 
-
     const category =
       String(data.category || "").trim();
 
-
     const price =
       Number(data.price);
-
 
     const status =
       String(
         data.status || "active"
       );
-
 
     if (
       !title ||
@@ -1462,7 +1198,6 @@ async function updateService(
       !category ||
       !Number.isFinite(price)
     ) {
-
       return Response.json(
         {
           success: false,
@@ -1473,12 +1208,9 @@ async function updateService(
           status: 400
         }
       );
-
     }
 
-
     if (price <= 0) {
-
       return Response.json(
         {
           success: false,
@@ -1489,14 +1221,11 @@ async function updateService(
           status: 400
         }
       );
-
     }
-
 
     if (
       !["active", "paused"].includes(status)
     ) {
-
       return Response.json(
         {
           success: false,
@@ -1507,9 +1236,7 @@ async function updateService(
           status: 400
         }
       );
-
     }
-
 
     await env.DB
       .prepare(`
@@ -1535,19 +1262,12 @@ async function updateService(
       )
       .run();
 
-
     return Response.json({
-
       success: true,
-
       message:
         "تم تعديل الخدمة بنجاح"
-
     });
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -1560,11 +1280,8 @@ async function updateService(
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // حذف خدمة
@@ -1574,18 +1291,14 @@ async function deleteService(
   request,
   env
 ) {
-
   try {
-
     const user =
       await authenticateUser(
         request,
         env
       );
 
-
     if (!user) {
-
       return Response.json(
         {
           success: false,
@@ -1596,14 +1309,11 @@ async function deleteService(
           status: 401
         }
       );
-
     }
-
 
     if (
       user.role !== "freelancer"
     ) {
-
       return Response.json(
         {
           success: false,
@@ -1614,16 +1324,12 @@ async function deleteService(
           status: 403
         }
       );
-
     }
-
 
     const serviceId =
       getIdFromPath(request);
 
-
     if (!serviceId) {
-
       return Response.json(
         {
           success: false,
@@ -1634,9 +1340,7 @@ async function deleteService(
           status: 400
         }
       );
-
     }
-
 
     const service =
       await env.DB
@@ -1651,9 +1355,7 @@ async function deleteService(
         .bind(serviceId)
         .first();
 
-
     if (!service) {
-
       return Response.json(
         {
           success: false,
@@ -1664,15 +1366,12 @@ async function deleteService(
           status: 404
         }
       );
-
     }
-
 
     if (
       Number(service.user_id) !==
       Number(user.id)
     ) {
-
       return Response.json(
         {
           success: false,
@@ -1683,9 +1382,7 @@ async function deleteService(
           status: 403
         }
       );
-
     }
-
 
     await env.DB
       .prepare(`
@@ -1702,19 +1399,12 @@ async function deleteService(
       )
       .run();
 
-
     return Response.json({
-
       success: true,
-
       message:
         "تم حذف الخدمة بنجاح"
-
     });
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -1727,11 +1417,8 @@ async function deleteService(
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // إنشاء مشروع
@@ -1741,18 +1428,14 @@ async function createProject(
   request,
   env
 ) {
-
   try {
-
     const user =
       await authenticateUser(
         request,
         env
       );
 
-
     if (!user) {
-
       return Response.json(
         {
           success: false,
@@ -1763,16 +1446,11 @@ async function createProject(
           status: 401
         }
       );
-
     }
-
-
-    // المشاريع ينشرها العميل
 
     if (
       user.role !== "client"
     ) {
-
       return Response.json(
         {
           success: false,
@@ -1783,29 +1461,22 @@ async function createProject(
           status: 403
         }
       );
-
     }
-
 
     const data =
       await request.json();
 
-
     const title =
       String(data.title || "").trim();
-
 
     const description =
       String(data.description || "").trim();
 
-
     const category =
       String(data.category || "").trim();
 
-
     const budget =
       Number(data.budget);
-
 
     if (
       !title ||
@@ -1813,7 +1484,6 @@ async function createProject(
       !category ||
       !Number.isFinite(budget)
     ) {
-
       return Response.json(
         {
           success: false,
@@ -1824,12 +1494,9 @@ async function createProject(
           status: 400
         }
       );
-
     }
 
-
     if (title.length < 3) {
-
       return Response.json(
         {
           success: false,
@@ -1840,12 +1507,9 @@ async function createProject(
           status: 400
         }
       );
-
     }
 
-
     if (description.length < 10) {
-
       return Response.json(
         {
           success: false,
@@ -1856,12 +1520,9 @@ async function createProject(
           status: 400
         }
       );
-
     }
 
-
     if (budget <= 0) {
-
       return Response.json(
         {
           success: false,
@@ -1872,9 +1533,7 @@ async function createProject(
           status: 400
         }
       );
-
     }
-
 
     const result =
       await env.DB
@@ -1898,22 +1557,14 @@ async function createProject(
         )
         .run();
 
-
     return Response.json({
-
       success: true,
-
       message:
         "تم نشر المشروع بنجاح",
-
       project_id:
         result.meta.last_row_id
-
     });
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -1926,11 +1577,8 @@ async function createProject(
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // جلب المشاريع المفتوحة
@@ -1940,24 +1588,18 @@ async function getProjects(
   request,
   env
 ) {
-
   try {
-
     const url =
       new URL(request.url);
-
 
     const category =
       String(
         url.searchParams.get("category") || ""
       ).trim();
 
-
     let result;
 
-
     if (category) {
-
       result =
         await env.DB
           .prepare(`
@@ -1981,9 +1623,7 @@ async function getProjects(
           `)
           .bind(category)
           .all();
-
     } else {
-
       result =
         await env.DB
           .prepare(`
@@ -2004,22 +1644,14 @@ async function getProjects(
             ORDER BY projects.id DESC
           `)
           .all();
-
     }
 
-
     return Response.json({
-
       success: true,
-
       projects:
         result.results || []
-
     });
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -2032,11 +1664,8 @@ async function getProjects(
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // تقديم عرض على مشروع
@@ -2046,18 +1675,14 @@ async function createProposal(
   request,
   env
 ) {
-
   try {
-
     const user =
       await authenticateUser(
         request,
         env
       );
 
-
     if (!user) {
-
       return Response.json(
         {
           success: false,
@@ -2068,16 +1693,11 @@ async function createProposal(
           status: 401
         }
       );
-
     }
-
-
-    // تقديم العروض للمستقلين فقط
 
     if (
       user.role !== "freelancer"
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2088,29 +1708,23 @@ async function createProposal(
           status: 403
         }
       );
-
     }
-
 
     const url =
       new URL(request.url);
-
 
     const parts =
       url.pathname
         .split("/")
         .filter(Boolean);
 
-
     const projectId =
       Number(parts[2]);
-
 
     if (
       !Number.isInteger(projectId) ||
       projectId <= 0
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2121,31 +1735,24 @@ async function createProposal(
           status: 400
         }
       );
-
     }
-
 
     const data =
       await request.json();
 
-
     const price =
       Number(data.price);
-
 
     const deliveryDays =
       Number(data.delivery_days);
 
-
     const message =
       String(data.message || "").trim();
-
 
     if (
       !Number.isFinite(price) ||
       price <= 0
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2156,15 +1763,12 @@ async function createProposal(
           status: 400
         }
       );
-
     }
-
 
     if (
       !Number.isInteger(deliveryDays) ||
       deliveryDays <= 0
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2175,14 +1779,11 @@ async function createProposal(
           status: 400
         }
       );
-
     }
-
 
     if (
       message.length < 10
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2193,9 +1794,7 @@ async function createProposal(
           status: 400
         }
       );
-
     }
-
 
     const project =
       await env.DB
@@ -2211,9 +1810,7 @@ async function createProposal(
         .bind(projectId)
         .first();
 
-
     if (!project) {
-
       return Response.json(
         {
           success: false,
@@ -2224,14 +1821,11 @@ async function createProposal(
           status: 404
         }
       );
-
     }
-
 
     if (
       project.status !== "open"
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2242,17 +1836,12 @@ async function createProposal(
           status: 400
         }
       );
-
     }
-
-
-    // منع صاحب المشروع من تقديم عرض على مشروعه
 
     if (
       Number(project.user_id) ===
       Number(user.id)
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2263,11 +1852,7 @@ async function createProposal(
           status: 400
         }
       );
-
     }
-
-
-    // منع تقديم عرضين معلقين على نفس المشروع
 
     const existing =
       await env.DB
@@ -2278,7 +1863,7 @@ async function createProposal(
           WHERE
             project_id = ?
             AND freelancer_id = ?
-            AND status = 'pending'
+            AND status IN ('pending', 'accepted')
           LIMIT 1
         `)
         .bind(
@@ -2287,22 +1872,18 @@ async function createProposal(
         )
         .first();
 
-
     if (existing) {
-
       return Response.json(
         {
           success: false,
           message:
-            "لقد قدمت عرضًا على هذا المشروع بالفعل"
+            "لديك عرض موجود بالفعل على هذا المشروع"
         },
         {
           status: 400
         }
       );
-
     }
-
 
     const result =
       await env.DB
@@ -2326,27 +1907,19 @@ async function createProposal(
         )
         .run();
 
-
     return Response.json(
       {
-
         success: true,
-
         message:
           "تم تقديم العرض بنجاح",
-
         proposal_id:
           result.meta.last_row_id
-
       },
       {
         status: 201
       }
     );
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -2359,32 +1932,25 @@ async function createProposal(
         status: 500
       }
     );
-
   }
-
 }
 
-
 // ==================================================
-// جلب مشاريع العميل الحالي
+// جلب عروض مشروع للعميل
 // ==================================================
 
-async function getMyProjects(
+async function getProjectProposals(
   request,
   env
 ) {
-
   try {
-
     const user =
       await authenticateUser(
         request,
         env
       );
 
-
     if (!user) {
-
       return Response.json(
         {
           success: false,
@@ -2395,14 +1961,621 @@ async function getMyProjects(
           status: 401
         }
       );
-
     }
-
 
     if (
       user.role !== "client"
     ) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "هذه العروض مخصصة لصاحب المشروع"
+        },
+        {
+          status: 403
+        }
+      );
+    }
 
+    const url =
+      new URL(request.url);
+
+    const parts =
+      url.pathname
+        .split("/")
+        .filter(Boolean);
+
+    const projectId =
+      Number(parts[2]);
+
+    if (
+      !Number.isInteger(projectId) ||
+      projectId <= 0
+    ) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "رقم المشروع غير صحيح"
+        },
+        {
+          status: 400
+        }
+      );
+    }
+
+    const project =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            user_id,
+            status
+          FROM projects
+          WHERE id = ?
+          LIMIT 1
+        `)
+        .bind(projectId)
+        .first();
+
+    if (!project) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "المشروع غير موجود"
+        },
+        {
+          status: 404
+        }
+      );
+    }
+
+    if (
+      Number(project.user_id) !==
+      Number(user.id)
+    ) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "لا يمكنك مشاهدة عروض هذا المشروع"
+        },
+        {
+          status: 403
+        }
+      );
+    }
+
+    const result =
+      await env.DB
+        .prepare(`
+          SELECT
+            proposals.id,
+            proposals.project_id,
+            proposals.freelancer_id,
+            proposals.price,
+            proposals.delivery_days,
+            proposals.message,
+            proposals.status,
+            proposals.created_at,
+            proposals.updated_at,
+            users.full_name AS freelancer_name
+          FROM proposals
+          INNER JOIN users
+            ON users.id = proposals.freelancer_id
+          WHERE proposals.project_id = ?
+          ORDER BY
+            CASE proposals.status
+              WHEN 'pending' THEN 1
+              WHEN 'accepted' THEN 2
+              WHEN 'rejected' THEN 3
+              ELSE 4
+            END,
+            proposals.id DESC
+        `)
+        .bind(projectId)
+        .all();
+
+    return Response.json({
+      success: true,
+      proposals:
+        result.results || []
+    });
+  } catch (error) {
+    console.error(error);
+
+    return Response.json(
+      {
+        success: false,
+        message:
+          "حدث خطأ أثناء جلب عروض المشروع"
+      },
+      {
+        status: 500
+      }
+    );
+  }
+}
+
+// ==================================================
+// جلب عروض المستقل الحالي
+// ==================================================
+
+async function getMyProposals(
+  request,
+  env
+) {
+  try {
+    const user =
+      await authenticateUser(
+        request,
+        env
+      );
+
+    if (!user) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "يجب تسجيل الدخول أولًا"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+
+    if (
+      user.role !== "freelancer"
+    ) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "هذه الصفحة للمستقلين فقط"
+        },
+        {
+          status: 403
+        }
+      );
+    }
+
+    const result =
+      await env.DB
+        .prepare(`
+          SELECT
+            proposals.id,
+            proposals.project_id,
+            proposals.price,
+            proposals.delivery_days,
+            proposals.message,
+            proposals.status,
+            proposals.created_at,
+            proposals.updated_at,
+            projects.title AS project_title,
+            projects.description AS project_description,
+            projects.budget AS project_budget,
+            projects.category AS project_category,
+            projects.status AS project_status,
+            users.full_name AS client_name
+          FROM proposals
+          INNER JOIN projects
+            ON projects.id = proposals.project_id
+          INNER JOIN users
+            ON users.id = projects.user_id
+          WHERE proposals.freelancer_id = ?
+          ORDER BY proposals.id DESC
+        `)
+        .bind(user.id)
+        .all();
+
+    return Response.json({
+      success: true,
+      proposals:
+        result.results || []
+    });
+  } catch (error) {
+    console.error(error);
+
+    return Response.json(
+      {
+        success: false,
+        message:
+          "حدث خطأ أثناء جلب عروضك"
+      },
+      {
+        status: 500
+      }
+    );
+  }
+}
+
+// ==================================================
+// قبول عرض
+// ==================================================
+
+async function acceptProposal(
+  request,
+  env
+) {
+  try {
+    const user =
+      await authenticateUser(
+        request,
+        env
+      );
+
+    if (!user) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "يجب تسجيل الدخول أولًا"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+
+    if (
+      user.role !== "client"
+    ) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "فقط صاحب المشروع يستطيع قبول العرض"
+        },
+        {
+          status: 403
+        }
+      );
+    }
+
+    const proposalId =
+      getIdFromPath(request);
+
+    if (!proposalId) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "رقم العرض غير صحيح"
+        },
+        {
+          status: 400
+        }
+      );
+    }
+
+    const proposal =
+      await env.DB
+        .prepare(`
+          SELECT
+            proposals.id,
+            proposals.project_id,
+            proposals.status,
+            projects.user_id AS client_id,
+            projects.status AS project_status
+          FROM proposals
+          INNER JOIN projects
+            ON projects.id = proposals.project_id
+          WHERE proposals.id = ?
+          LIMIT 1
+        `)
+        .bind(proposalId)
+        .first();
+
+    if (!proposal) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "العرض غير موجود"
+        },
+        {
+          status: 404
+        }
+      );
+    }
+
+    if (
+      Number(proposal.client_id) !==
+      Number(user.id)
+    ) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "لا يمكنك قبول هذا العرض"
+        },
+        {
+          status: 403
+        }
+      );
+    }
+
+    if (
+      proposal.project_status !== "open"
+    ) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "هذا المشروع لم يعد مفتوحًا"
+        },
+        {
+          status: 400
+        }
+      );
+    }
+
+    if (
+      proposal.status !== "pending"
+    ) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "هذا العرض لم يعد معلقًا"
+        },
+        {
+          status: 400
+        }
+      );
+    }
+
+    await env.DB
+      .prepare(`
+        UPDATE proposals
+        SET
+          status = 'rejected',
+          updated_at = CURRENT_TIMESTAMP
+        WHERE
+          project_id = ?
+          AND status = 'pending'
+          AND id != ?
+      `)
+      .bind(
+        proposal.project_id,
+        proposalId
+      )
+      .run();
+
+    await env.DB
+      .prepare(`
+        UPDATE proposals
+        SET
+          status = 'accepted',
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `)
+      .bind(proposalId)
+      .run();
+
+    await env.DB
+      .prepare(`
+        UPDATE projects
+        SET
+          status = 'in_progress',
+          updated_at = CURRENT_TIMESTAMP
+        WHERE
+          id = ?
+          AND user_id = ?
+          AND status = 'open'
+      `)
+      .bind(
+        proposal.project_id,
+        user.id
+      )
+      .run();
+
+    return Response.json({
+      success: true,
+      message:
+        "تم قبول العرض وبدء تنفيذ المشروع"
+    });
+  } catch (error) {
+    console.error(error);
+
+    return Response.json(
+      {
+        success: false,
+        message:
+          "حدث خطأ أثناء قبول العرض"
+      },
+      {
+        status: 500
+      }
+    );
+  }
+}
+
+// ==================================================
+// رفض عرض
+// ==================================================
+
+async function rejectProposal(
+  request,
+  env
+) {
+  try {
+    const user =
+      await authenticateUser(
+        request,
+        env
+      );
+
+    if (!user) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "يجب تسجيل الدخول أولًا"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+
+    if (
+      user.role !== "client"
+    ) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "فقط صاحب المشروع يستطيع رفض العرض"
+        },
+        {
+          status: 403
+        }
+      );
+    }
+
+    const proposalId =
+      getIdFromPath(request);
+
+    if (!proposalId) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "رقم العرض غير صحيح"
+        },
+        {
+          status: 400
+        }
+      );
+    }
+
+    const proposal =
+      await env.DB
+        .prepare(`
+          SELECT
+            proposals.id,
+            proposals.status,
+            projects.user_id AS client_id
+          FROM proposals
+          INNER JOIN projects
+            ON projects.id = proposals.project_id
+          WHERE proposals.id = ?
+          LIMIT 1
+        `)
+        .bind(proposalId)
+        .first();
+
+    if (!proposal) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "العرض غير موجود"
+        },
+        {
+          status: 404
+        }
+      );
+    }
+
+    if (
+      Number(proposal.client_id) !==
+      Number(user.id)
+    ) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "لا يمكنك رفض هذا العرض"
+        },
+        {
+          status: 403
+        }
+      );
+    }
+
+    if (
+      proposal.status !== "pending"
+    ) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "هذا العرض لم يعد معلقًا"
+        },
+        {
+          status: 400
+        }
+      );
+    }
+
+    await env.DB
+      .prepare(`
+        UPDATE proposals
+        SET
+          status = 'rejected',
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `)
+      .bind(proposalId)
+      .run();
+
+    return Response.json({
+      success: true,
+      message:
+        "تم رفض العرض"
+    });
+  } catch (error) {
+    console.error(error);
+
+    return Response.json(
+      {
+        success: false,
+        message:
+          "حدث خطأ أثناء رفض العرض"
+      },
+      {
+        status: 500
+      }
+    );
+  }
+}
+
+// ==================================================
+// جلب مشاريع العميل الحالي
+// ==================================================
+
+async function getMyProjects(
+  request,
+  env
+) {
+  try {
+    const user =
+      await authenticateUser(
+        request,
+        env
+      );
+
+    if (!user) {
+      return Response.json(
+        {
+          success: false,
+          message:
+            "يجب تسجيل الدخول أولًا"
+        },
+        {
+          status: 401
+        }
+      );
+    }
+
+    if (
+      user.role !== "client"
+    ) {
       return Response.json(
         {
           success: false,
@@ -2413,9 +2586,7 @@ async function getMyProjects(
           status: 403
         }
       );
-
     }
-
 
     const result =
       await env.DB
@@ -2436,19 +2607,12 @@ async function getMyProjects(
         .bind(user.id)
         .all();
 
-
     return Response.json({
-
       success: true,
-
       projects:
         result.results || []
-
     });
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -2461,11 +2625,8 @@ async function getMyProjects(
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // تعديل مشروع
@@ -2475,18 +2636,14 @@ async function updateProject(
   request,
   env
 ) {
-
   try {
-
     const user =
       await authenticateUser(
         request,
         env
       );
 
-
     if (!user) {
-
       return Response.json(
         {
           success: false,
@@ -2497,14 +2654,11 @@ async function updateProject(
           status: 401
         }
       );
-
     }
-
 
     if (
       user.role !== "client"
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2515,16 +2669,12 @@ async function updateProject(
           status: 403
         }
       );
-
     }
-
 
     const projectId =
       getIdFromPath(request);
 
-
     if (!projectId) {
-
       return Response.json(
         {
           success: false,
@@ -2535,9 +2685,7 @@ async function updateProject(
           status: 400
         }
       );
-
     }
-
 
     const project =
       await env.DB
@@ -2553,9 +2701,7 @@ async function updateProject(
         .bind(projectId)
         .first();
 
-
     if (!project) {
-
       return Response.json(
         {
           success: false,
@@ -2566,15 +2712,12 @@ async function updateProject(
           status: 404
         }
       );
-
     }
-
 
     if (
       Number(project.user_id) !==
       Number(user.id)
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2585,14 +2728,11 @@ async function updateProject(
           status: 403
         }
       );
-
     }
-
 
     if (
       project.status !== "open"
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2603,29 +2743,22 @@ async function updateProject(
           status: 400
         }
       );
-
     }
-
 
     const data =
       await request.json();
 
-
     const title =
       String(data.title || "").trim();
-
 
     const description =
       String(data.description || "").trim();
 
-
     const category =
       String(data.category || "").trim();
 
-
     const budget =
       Number(data.budget);
-
 
     if (
       !title ||
@@ -2633,7 +2766,6 @@ async function updateProject(
       !category ||
       !Number.isFinite(budget)
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2644,12 +2776,9 @@ async function updateProject(
           status: 400
         }
       );
-
     }
 
-
     if (title.length < 3) {
-
       return Response.json(
         {
           success: false,
@@ -2660,12 +2789,9 @@ async function updateProject(
           status: 400
         }
       );
-
     }
 
-
     if (description.length < 10) {
-
       return Response.json(
         {
           success: false,
@@ -2676,12 +2802,9 @@ async function updateProject(
           status: 400
         }
       );
-
     }
 
-
     if (budget <= 0) {
-
       return Response.json(
         {
           success: false,
@@ -2692,9 +2815,7 @@ async function updateProject(
           status: 400
         }
       );
-
     }
-
 
     await env.DB
       .prepare(`
@@ -2719,19 +2840,12 @@ async function updateProject(
       )
       .run();
 
-
     return Response.json({
-
       success: true,
-
       message:
         "تم تعديل المشروع بنجاح"
-
     });
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -2744,11 +2858,8 @@ async function updateProject(
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // إلغاء مشروع
@@ -2758,18 +2869,14 @@ async function deleteProject(
   request,
   env
 ) {
-
   try {
-
     const user =
       await authenticateUser(
         request,
         env
       );
 
-
     if (!user) {
-
       return Response.json(
         {
           success: false,
@@ -2780,14 +2887,11 @@ async function deleteProject(
           status: 401
         }
       );
-
     }
-
 
     if (
       user.role !== "client"
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2798,16 +2902,12 @@ async function deleteProject(
           status: 403
         }
       );
-
     }
-
 
     const projectId =
       getIdFromPath(request);
 
-
     if (!projectId) {
-
       return Response.json(
         {
           success: false,
@@ -2818,9 +2918,7 @@ async function deleteProject(
           status: 400
         }
       );
-
     }
-
 
     const project =
       await env.DB
@@ -2836,9 +2934,7 @@ async function deleteProject(
         .bind(projectId)
         .first();
 
-
     if (!project) {
-
       return Response.json(
         {
           success: false,
@@ -2849,15 +2945,12 @@ async function deleteProject(
           status: 404
         }
       );
-
     }
-
 
     if (
       Number(project.user_id) !==
       Number(user.id)
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2868,14 +2961,11 @@ async function deleteProject(
           status: 403
         }
       );
-
     }
-
 
     if (
       project.status !== "open"
     ) {
-
       return Response.json(
         {
           success: false,
@@ -2886,9 +2976,7 @@ async function deleteProject(
           status: 400
         }
       );
-
     }
-
 
     await env.DB
       .prepare(`
@@ -2906,19 +2994,25 @@ async function deleteProject(
       )
       .run();
 
+    await env.DB
+      .prepare(`
+        UPDATE proposals
+        SET
+          status = 'rejected',
+          updated_at = CURRENT_TIMESTAMP
+        WHERE
+          project_id = ?
+          AND status = 'pending'
+      `)
+      .bind(projectId)
+      .run();
 
     return Response.json({
-
       success: true,
-
       message:
         "تم إلغاء المشروع بنجاح"
-
     });
-
-
   } catch (error) {
-
     console.error(error);
 
     return Response.json(
@@ -2931,11 +3025,8 @@ async function deleteProject(
         status: 500
       }
     );
-
   }
-
 }
-
 
 // ==================================================
 // التحقق من المستخدم والجلسة
@@ -2945,29 +3036,23 @@ async function authenticateUser(
   request,
   env
 ) {
-
   try {
-
     const cookies =
       parseCookies(
         request.headers.get("Cookie") || ""
       );
 
-
     const sessionToken =
       cookies.mihraf_session;
-
 
     if (!sessionToken) {
       return null;
     }
 
-
     const tokenHash =
       await sha256Hex(
         sessionToken
       );
-
 
     const session =
       await env.DB
@@ -2987,18 +3072,15 @@ async function authenticateUser(
         .bind(tokenHash)
         .first();
 
-
     if (!session) {
       return null;
     }
-
 
     if (
       new Date(
         session.expires_at
       ).getTime() <= Date.now()
     ) {
-
       await env.DB
         .prepare(`
           DELETE FROM sessions
@@ -3008,37 +3090,23 @@ async function authenticateUser(
         .run();
 
       return null;
-
     }
 
-
     return {
-
       id:
         session.id,
-
       full_name:
         session.full_name,
-
       email:
         session.email,
-
       role:
         session.role
-
     };
-
-
   } catch (error) {
-
     console.error(error);
-
     return null;
-
   }
-
 }
-
 
 // ==================================================
 // استخراج الرقم من الرابط
@@ -3047,39 +3115,30 @@ async function authenticateUser(
 function getIdFromPath(
   request
 ) {
-
   const url =
     new URL(
       request.url
     );
-
 
   const parts =
     url.pathname
       .split("/")
       .filter(Boolean);
 
-
   const id =
     Number(
       parts[parts.length - 1]
     );
 
-
   if (
     !Number.isInteger(id) ||
     id <= 0
   ) {
-
     return null;
-
   }
 
-
   return id;
-
 }
-
 
 // ==================================================
 // تشفير كلمة المرور PBKDF2
@@ -3089,7 +3148,6 @@ async function hashPassword(
   password,
   salt
 ) {
-
   const key =
     await crypto.subtle.importKey(
       "raw",
@@ -3099,37 +3157,26 @@ async function hashPassword(
       ["deriveBits"]
     );
 
-
   const bits =
     await crypto.subtle.deriveBits(
-
       {
         name:
           "PBKDF2",
-
         salt:
           salt,
-
         iterations:
           100000,
-
         hash:
           "SHA-256"
       },
-
       key,
-
       256
-
     );
-
 
   return bytesToHex(
     new Uint8Array(bits)
   );
-
 }
-
 
 // ==================================================
 // SHA-256
@@ -3138,12 +3185,10 @@ async function hashPassword(
 async function sha256Hex(
   value
 ) {
-
   const data =
     typeof value === "string"
       ? encoder.encode(value)
       : value;
-
 
   const hash =
     await crypto.subtle.digest(
@@ -3151,13 +3196,10 @@ async function sha256Hex(
       data
     );
 
-
   return bytesToHex(
     new Uint8Array(hash)
   );
-
 }
-
 
 // ==================================================
 // Token
@@ -3166,13 +3208,10 @@ async function sha256Hex(
 function randomToken(
   length
 ) {
-
   return bytesToHex(
     randomBytes(length)
   );
-
 }
-
 
 // ==================================================
 // Random Bytes
@@ -3181,22 +3220,17 @@ function randomToken(
 function randomBytes(
   length
 ) {
-
   const bytes =
     new Uint8Array(
       length
     );
 
-
   crypto.getRandomValues(
     bytes
   );
 
-
   return bytes;
-
 }
-
 
 // ==================================================
 // Hex → Bytes
@@ -3205,19 +3239,16 @@ function randomBytes(
 function hexToBytes(
   hex
 ) {
-
   const bytes =
     new Uint8Array(
       hex.length / 2
     );
-
 
   for (
     let i = 0;
     i < bytes.length;
     i++
   ) {
-
     bytes[i] =
       parseInt(
         hex.substring(
@@ -3226,14 +3257,10 @@ function hexToBytes(
         ),
         16
       );
-
   }
 
-
   return bytes;
-
 }
-
 
 // ==================================================
 // Bytes → Hex
@@ -3242,7 +3269,6 @@ function hexToBytes(
 function bytesToHex(
   bytes
 ) {
-
   return Array.from(
     bytes
   )
@@ -3253,9 +3279,7 @@ function bytesToHex(
           .padStart(2, "0")
     )
     .join("");
-
 }
-
 
 // ==================================================
 // مقارنة آمنة
@@ -3265,46 +3289,33 @@ function constantTimeEqual(
   a,
   b
 ) {
-
   if (
     typeof a !== "string" ||
     typeof b !== "string"
   ) {
-
     return false;
-
   }
-
 
   if (
     a.length !== b.length
   ) {
-
     return false;
-
   }
 
-
   let result = 0;
-
 
   for (
     let i = 0;
     i < a.length;
     i++
   ) {
-
     result |=
       a.charCodeAt(i) ^
       b.charCodeAt(i);
-
   }
 
-
   return result === 0;
-
 }
-
 
 // ==================================================
 // قراءة Cookies
@@ -3313,27 +3324,20 @@ function constantTimeEqual(
 function parseCookies(
   cookieHeader
 ) {
-
   const cookies = {};
-
 
   cookieHeader
     .split(";")
     .forEach(
       cookie => {
-
         const index =
           cookie.indexOf("=");
-
 
         if (
           index === -1
         ) {
-
           return;
-
         }
-
 
         const name =
           cookie
@@ -3343,7 +3347,6 @@ function parseCookies(
             )
             .trim();
 
-
         const value =
           cookie
             .substring(
@@ -3351,14 +3354,10 @@ function parseCookies(
             )
             .trim();
 
-
         cookies[name] =
           value;
-
       }
     );
 
-
   return cookies;
-
 }
