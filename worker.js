@@ -110,6 +110,15 @@ export default {
     }
 
 
+    // تقديم عرض على مشروع
+    if (
+      /^\/api\/projects\/\d+\/proposals$/.test(url.pathname) &&
+      request.method === "POST"
+    ) {
+      return createProposal(request, env);
+    }
+
+
     // مشاريع العميل الحالي
     if (
       url.pathname === "/api/my-projects" &&
@@ -169,6 +178,13 @@ export default {
           .first();
 
 
+        const proposalsResult = await env.DB
+          .prepare(
+            "SELECT COUNT(*) AS count FROM proposals"
+          )
+          .first();
+
+
         return Response.json({
 
           success: true,
@@ -179,7 +195,9 @@ export default {
 
           services: Number(servicesResult?.count || 0),
 
-          projects: Number(projectsResult?.count || 0)
+          projects: Number(projectsResult?.count || 0),
+
+          proposals: Number(proposalsResult?.count || 0)
 
         });
 
@@ -2009,6 +2027,333 @@ async function getProjects(
         success: false,
         message:
           "حدث خطأ أثناء جلب المشاريع"
+      },
+      {
+        status: 500
+      }
+    );
+
+  }
+
+}
+
+
+// ==================================================
+// تقديم عرض على مشروع
+// ==================================================
+
+async function createProposal(
+  request,
+  env
+) {
+
+  try {
+
+    const user =
+      await authenticateUser(
+        request,
+        env
+      );
+
+
+    if (!user) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "يجب تسجيل الدخول أولًا"
+        },
+        {
+          status: 401
+        }
+      );
+
+    }
+
+
+    // تقديم العروض للمستقلين فقط
+
+    if (
+      user.role !== "freelancer"
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "تقديم العروض متاح للمستقلين فقط"
+        },
+        {
+          status: 403
+        }
+      );
+
+    }
+
+
+    const url =
+      new URL(request.url);
+
+
+    const parts =
+      url.pathname
+        .split("/")
+        .filter(Boolean);
+
+
+    const projectId =
+      Number(parts[2]);
+
+
+    if (
+      !Number.isInteger(projectId) ||
+      projectId <= 0
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "رقم المشروع غير صحيح"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    const data =
+      await request.json();
+
+
+    const price =
+      Number(data.price);
+
+
+    const deliveryDays =
+      Number(data.delivery_days);
+
+
+    const message =
+      String(data.message || "").trim();
+
+
+    if (
+      !Number.isFinite(price) ||
+      price <= 0
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "السعر غير صحيح"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    if (
+      !Number.isInteger(deliveryDays) ||
+      deliveryDays <= 0
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "مدة التسليم غير صحيحة"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    if (
+      message.length < 10
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "رسالة العرض يجب أن تكون 10 أحرف على الأقل"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    const project =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            user_id,
+            status
+          FROM projects
+          WHERE id = ?
+          LIMIT 1
+        `)
+        .bind(projectId)
+        .first();
+
+
+    if (!project) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "المشروع غير موجود"
+        },
+        {
+          status: 404
+        }
+      );
+
+    }
+
+
+    if (
+      project.status !== "open"
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "هذا المشروع لم يعد مفتوحًا للعروض"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    // منع صاحب المشروع من تقديم عرض على مشروعه
+
+    if (
+      Number(project.user_id) ===
+      Number(user.id)
+    ) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "لا يمكنك تقديم عرض على مشروعك"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    // منع تقديم عرضين معلقين على نفس المشروع
+
+    const existing =
+      await env.DB
+        .prepare(`
+          SELECT
+            id
+          FROM proposals
+          WHERE
+            project_id = ?
+            AND freelancer_id = ?
+            AND status = 'pending'
+          LIMIT 1
+        `)
+        .bind(
+          projectId,
+          user.id
+        )
+        .first();
+
+
+    if (existing) {
+
+      return Response.json(
+        {
+          success: false,
+          message:
+            "لقد قدمت عرضًا على هذا المشروع بالفعل"
+        },
+        {
+          status: 400
+        }
+      );
+
+    }
+
+
+    const result =
+      await env.DB
+        .prepare(`
+          INSERT INTO proposals
+          (
+            project_id,
+            freelancer_id,
+            price,
+            delivery_days,
+            message
+          )
+          VALUES (?, ?, ?, ?, ?)
+        `)
+        .bind(
+          projectId,
+          user.id,
+          price,
+          deliveryDays,
+          message
+        )
+        .run();
+
+
+    return Response.json(
+      {
+
+        success: true,
+
+        message:
+          "تم تقديم العرض بنجاح",
+
+        proposal_id:
+          result.meta.last_row_id
+
+      },
+      {
+        status: 201
+      }
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    return Response.json(
+      {
+        success: false,
+        message:
+          "حدث خطأ أثناء تقديم العرض"
       },
       {
         status: 500
