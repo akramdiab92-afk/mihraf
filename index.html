@@ -21,9 +21,18 @@
       line-height: 1.7;
     }
 
+    body.menu-open {
+      overflow: hidden;
+    }
+
     a {
       text-decoration: none;
       color: inherit;
+    }
+
+    button,
+    input {
+      font-family: inherit;
     }
 
     .container {
@@ -74,23 +83,27 @@
       color: #2563eb;
     }
 
+    /* =========================
+       Auth Area
+    ========================= */
+
     .auth-area {
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .auth-area a,
-    .auth-area button {
-      border: none;
-      cursor: pointer;
-      font-family: inherit;
+    .auth-area a {
       font-size: 14px;
     }
 
     .login-link {
       color: #374151;
       padding: 9px 12px;
+    }
+
+    .login-link:hover {
+      color: #2563eb;
     }
 
     .register-btn {
@@ -104,28 +117,243 @@
       background: #1d4ed8;
     }
 
-    .user-name {
-      font-weight: 700;
-      color: #111827;
-      white-space: nowrap;
+    /* =========================
+       User Menu Button
+    ========================= */
+
+    .menu-button {
+      width: 44px;
+      height: 44px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 22px;
+      color: #1f2937;
     }
 
-    .dashboard-btn {
-      background: #2563eb;
-      color: white !important;
-      padding: 9px 14px;
-      border-radius: 8px;
+    .menu-button:hover {
+      background: #f3f6fb;
+      border-color: #d1d5db;
     }
 
-    .logout-btn {
-      background: #f3f4f6;
+    .menu-button span {
+      display: block;
+      line-height: 1;
+    }
+
+    /* =========================
+       Side Menu
+    ========================= */
+
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      z-index: 500;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.25s ease;
+      backdrop-filter: blur(2px);
+    }
+
+    .menu-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(360px, 88vw);
+      height: 100vh;
+      background: #ffffff;
+      z-index: 501;
+      box-shadow: -10px 0 35px rgba(0, 0, 0, 0.12);
+      transform: translateX(105%);
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .side-menu.active {
+      transform: translateX(0);
+    }
+
+    /* =========================
+       Menu Header
+    ========================= */
+
+    .side-menu-header {
+      padding: 22px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      background: linear-gradient(
+        135deg,
+        #eff6ff,
+        #ffffff
+      );
+    }
+
+    .menu-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .menu-brand {
+      color: #2563eb;
+      font-size: 23px;
+      font-weight: 800;
+    }
+
+    .close-menu {
+      width: 38px;
+      height: 38px;
+      border: none;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 22px;
       color: #374151;
-      padding: 9px 12px;
-      border-radius: 8px;
     }
 
-    .logout-btn:hover {
-      background: #e5e7eb;
+    .close-menu:hover {
+      background: #f3f4f6;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #2563eb;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .user-details {
+      min-width: 0;
+    }
+
+    .user-details strong {
+      display: block;
+      color: #111827;
+      font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-details span {
+      display: block;
+      color: #6b7280;
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    /* =========================
+       Menu Items
+    ========================= */
+
+    .side-menu-content {
+      flex: 1;
+      padding: 15px 12px;
+    }
+
+    .menu-section-title {
+      color: #9ca3af;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 8px 12px;
+      margin-bottom: 4px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      width: 100%;
+      padding: 12px 13px;
+      margin-bottom: 3px;
+      border-radius: 10px;
+      color: #374151;
+      font-size: 14px;
+      transition: 0.18s;
+    }
+
+    .menu-item:hover {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .menu-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+
+    .menu-item:hover .menu-icon {
+      background: #dbeafe;
+    }
+
+    .menu-item-text {
+      flex: 1;
+    }
+
+    .menu-item-arrow {
+      color: #9ca3af;
+      font-size: 14px;
+    }
+
+    /* =========================
+       Menu Footer
+    ========================= */
+
+    .side-menu-footer {
+      padding: 12px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .logout-menu-btn {
+      width: 100%;
+      border: none;
+      background: #fff1f2;
+      color: #dc2626;
+      padding: 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+
+    .logout-menu-btn:hover {
+      background: #fee2e2;
     }
 
     /* =========================
@@ -237,6 +465,10 @@
       color: white;
       cursor: pointer;
       font-weight: 700;
+    }
+
+    .search-box button:hover {
+      background: #1d4ed8;
     }
 
     /* =========================
@@ -410,6 +642,7 @@
     ========================= */
 
     @media (max-width: 900px) {
+
       .categories {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -428,6 +661,15 @@
     }
 
     @media (max-width: 600px) {
+
+      .nav {
+        min-height: 64px;
+      }
+
+      .logo {
+        font-size: 24px;
+      }
+
       .cards {
         grid-template-columns: 1fr;
       }
@@ -457,12 +699,16 @@
         width: 100%;
       }
 
-      .auth-area {
-        gap: 5px;
+      .register-btn {
+        padding: 9px 12px;
       }
 
-      .user-name {
-        display: none;
+      .login-link {
+        padding: 8px 5px;
+      }
+
+      .side-menu {
+        width: 88vw;
       }
     }
   </style>
@@ -488,12 +734,13 @@
         <a href="#professionals">المحترفون</a>
       </nav>
 
-      <!-- منطقة الحساب -->
       <div class="auth-area" id="authArea">
 
+        <!-- يظهر للزائر -->
         <a
           href="login.html"
           class="login-link"
+          id="loginLink"
         >
           تسجيل الدخول
         </a>
@@ -501,15 +748,203 @@
         <a
           href="register.html"
           class="register-btn"
+          id="registerLink"
         >
           إنشاء حساب
         </a>
+
+        <!-- يظهر للمستخدم المسجل -->
+        <button
+          type="button"
+          class="menu-button"
+          id="menuButton"
+          aria-label="فتح القائمة"
+          aria-expanded="false"
+          style="display:none;"
+          onclick="openSideMenu()"
+        >
+          <span>☰</span>
+        </button>
 
       </div>
 
     </div>
 
   </header>
+
+
+  <!-- =========================
+       Side Menu Overlay
+  ========================= -->
+
+  <div
+    class="menu-overlay"
+    id="menuOverlay"
+    onclick="closeSideMenu()"
+  ></div>
+
+
+  <!-- =========================
+       Side Menu
+  ========================= -->
+
+  <aside
+    class="side-menu"
+    id="sideMenu"
+    aria-hidden="true"
+  >
+
+    <div class="side-menu-header">
+
+      <div class="menu-header-top">
+
+        <div class="menu-brand">
+          مِهراف
+        </div>
+
+        <button
+          type="button"
+          class="close-menu"
+          onclick="closeSideMenu()"
+          aria-label="إغلاق القائمة"
+        >
+          ×
+        </button>
+
+      </div>
+
+      <div class="user-info">
+
+        <div
+          class="user-avatar"
+          id="userAvatar"
+        >
+          م
+        </div>
+
+        <div class="user-details">
+
+          <strong id="menuUserName">
+            المستخدم
+          </strong>
+
+          <span id="menuUserRole">
+            حساب مِهراف
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="side-menu-content">
+
+      <div class="menu-section-title">
+        الحساب
+      </div>
+
+      <a
+        href="dashboard.html"
+        class="menu-item"
+      >
+        <div class="menu-icon">📊</div>
+
+        <div class="menu-item-text">
+          لوحة التحكم
+        </div>
+
+        <div class="menu-item-arrow">
+          ‹
+        </div>
+      </a>
+
+
+      <div class="menu-section-title">
+        مِهراف
+      </div>
+
+      <a
+        href="projects.html"
+        class="menu-item"
+      >
+        <div class="menu-icon">📁</div>
+
+        <div class="menu-item-text">
+          استكشاف المشاريع
+        </div>
+
+        <div class="menu-item-arrow">
+          ‹
+        </div>
+      </a>
+
+
+      <a
+        href="add-project.html"
+        class="menu-item"
+      >
+        <div class="menu-icon">➕</div>
+
+        <div class="menu-item-text">
+          نشر مشروع
+        </div>
+
+        <div class="menu-item-arrow">
+          ‹
+        </div>
+      </a>
+
+
+      <a
+        href="my-projects.html"
+        class="menu-item"
+        id="myProjectsMenuItem"
+      >
+        <div class="menu-icon">📂</div>
+
+        <div class="menu-item-text">
+          مشاريعي
+        </div>
+
+        <div class="menu-item-arrow">
+          ‹
+        </div>
+      </a>
+
+
+      <a
+        href="add-service.html"
+        class="menu-item"
+      >
+        <div class="menu-icon">💼</div>
+
+        <div class="menu-item-text">
+          إضافة خدمة
+        </div>
+
+        <div class="menu-item-arrow">
+          ‹
+        </div>
+      </a>
+
+    </div>
+
+
+    <div class="side-menu-footer">
+
+      <button
+        type="button"
+        class="logout-menu-btn"
+        onclick="logoutUser()"
+      >
+        🚪 تسجيل الخروج
+      </button>
+
+    </div>
+
+  </aside>
 
 
   <!-- =========================
@@ -535,6 +970,7 @@
         <a
           href="register.html"
           class="primary-btn"
+          id="heroRegister"
         >
           إنشاء حساب
         </a>
@@ -542,6 +978,7 @@
         <a
           href="login.html"
           class="secondary-btn"
+          id="heroLogin"
         >
           تسجيل الدخول
         </a>
@@ -869,30 +1306,53 @@
       <div class="cards">
 
         <div class="card">
+
           <div class="card-content">
-            <h3>مصممون محترفون</h3>
+
+            <h3>
+              مصممون محترفون
+            </h3>
+
             <p>
               ابحث عن مصممين لتنفيذ أعمالك الإبداعية.
             </p>
+
           </div>
+
         </div>
 
+
         <div class="card">
+
           <div class="card-content">
-            <h3>مطورون ومبرمجون</h3>
+
+            <h3>
+              مطورون ومبرمجون
+            </h3>
+
             <p>
               محترفون في البرمجة والتقنية وتطوير المواقع.
             </p>
+
           </div>
+
         </div>
 
+
         <div class="card">
+
           <div class="card-content">
-            <h3>كتاب ومترجمون</h3>
+
+            <h3>
+              كتاب ومترجمون
+            </h3>
+
             <p>
               أصحاب خبرة في الكتابة والترجمة وصناعة المحتوى.
             </p>
+
           </div>
+
         </div>
 
       </div>
@@ -916,7 +1376,10 @@
       أنشئ حسابك وابدأ بعرض خدماتك على مِهراف.
     </p>
 
-    <a href="register.html">
+    <a
+      href="register.html"
+      id="ctaRegister"
+    >
       ابدأ الآن
     </a>
 
@@ -950,18 +1413,52 @@
 
   <script>
 
-    // =========================
-    // التحقق من تسجيل الدخول
-    // =========================
+    /* =========================
+       عناصر الصفحة
+    ========================= */
+
+    const authArea =
+      document.getElementById("authArea");
+
+    const loginLink =
+      document.getElementById("loginLink");
+
+    const registerLink =
+      document.getElementById("registerLink");
+
+    const heroRegister =
+      document.getElementById("heroRegister");
+
+    const heroLogin =
+      document.getElementById("heroLogin");
+
+    const ctaRegister =
+      document.getElementById("ctaRegister");
+
+    const menuButton =
+      document.getElementById("menuButton");
+
+    const sideMenu =
+      document.getElementById("sideMenu");
+
+    const menuOverlay =
+      document.getElementById("menuOverlay");
+
+    const menuUserName =
+      document.getElementById("menuUserName");
+
+    const menuUserRole =
+      document.getElementById("menuUserRole");
+
+    const userAvatar =
+      document.getElementById("userAvatar");
+
+
+    /* =========================
+       التحقق من تسجيل الدخول
+    ========================= */
 
     async function checkLogin() {
-
-      const authArea =
-        document.getElementById("authArea");
-
-      if (!authArea) {
-        return;
-      }
 
       try {
 
@@ -978,35 +1475,15 @@
         if (
           response.ok &&
           data.success &&
-          data.logged_in
+          data.logged_in &&
+          data.user
         ) {
 
-          const user =
-            data.user;
+          showLoggedInState(data.user);
 
+        } else {
 
-          authArea.innerHTML = `
-
-            <span class="user-name">
-              مرحبًا، ${escapeHtml(user.full_name)}
-            </span>
-
-            <a
-              href="dashboard.html"
-              class="dashboard-btn"
-            >
-              لوحة التحكم
-            </a>
-
-            <button
-              type="button"
-              class="logout-btn"
-              onclick="logoutUser()"
-            >
-              تسجيل الخروج
-            </button>
-
-          `;
+          showLoggedOutState();
 
         }
 
@@ -1017,16 +1494,256 @@
           error
         );
 
+        showLoggedOutState();
+
       }
 
     }
 
 
-    // =========================
-    // تسجيل الخروج
-    // =========================
+    /* =========================
+       حالة المستخدم المسجل
+    ========================= */
+
+    function showLoggedInState(user) {
+
+      /*
+       * إخفاء تسجيل الدخول وإنشاء الحساب
+       */
+
+      if (loginLink) {
+        loginLink.style.display = "none";
+      }
+
+      if (registerLink) {
+        registerLink.style.display = "none";
+      }
+
+
+      /*
+       * إظهار زر القائمة
+       */
+
+      if (menuButton) {
+        menuButton.style.display = "flex";
+      }
+
+
+      /*
+       * معلومات المستخدم
+       */
+
+      const fullName =
+        user.full_name || "المستخدم";
+
+      if (menuUserName) {
+        menuUserName.textContent =
+          fullName;
+      }
+
+
+      if (menuUserRole) {
+
+        if (user.role === "client") {
+
+          menuUserRole.textContent =
+            "صاحب مشاريع";
+
+        } else if (user.role === "freelancer") {
+
+          menuUserRole.textContent =
+            "مستقل ومحترف";
+
+        } else {
+
+          menuUserRole.textContent =
+            "حساب مِهراف";
+
+        }
+
+      }
+
+
+      /*
+       * أول حرف من الاسم
+       */
+
+      if (userAvatar) {
+
+        const firstCharacter =
+          fullName.trim().charAt(0);
+
+        userAvatar.textContent =
+          firstCharacter || "م";
+
+      }
+
+
+      /*
+       * المستخدم المسجل لا يحتاج
+       * لأزرار التسجيل في الصفحة الرئيسية
+       */
+
+      if (heroRegister) {
+        heroRegister.style.display = "none";
+      }
+
+      if (heroLogin) {
+        heroLogin.style.display = "none";
+      }
+
+      if (ctaRegister) {
+        ctaRegister.textContent =
+          "الانتقال إلى لوحة التحكم";
+
+        ctaRegister.href =
+          "dashboard.html";
+      }
+
+    }
+
+
+    /* =========================
+       حالة الزائر
+    ========================= */
+
+    function showLoggedOutState() {
+
+      if (loginLink) {
+        loginLink.style.display = "inline-block";
+      }
+
+      if (registerLink) {
+        registerLink.style.display = "inline-block";
+      }
+
+      if (menuButton) {
+        menuButton.style.display = "none";
+      }
+
+      if (heroRegister) {
+        heroRegister.style.display = "inline-block";
+      }
+
+      if (heroLogin) {
+        heroLogin.style.display = "inline-block";
+      }
+
+      if (ctaRegister) {
+        ctaRegister.textContent =
+          "ابدأ الآن";
+
+        ctaRegister.href =
+          "register.html";
+      }
+
+    }
+
+
+    /* =========================
+       فتح القائمة
+    ========================= */
+
+    function openSideMenu() {
+
+      if (!sideMenu || !menuOverlay) {
+        return;
+      }
+
+      sideMenu.classList.add("active");
+      menuOverlay.classList.add("active");
+
+      sideMenu.setAttribute(
+        "aria-hidden",
+        "false"
+      );
+
+      if (menuButton) {
+
+        menuButton.setAttribute(
+          "aria-expanded",
+          "true"
+        );
+
+      }
+
+      document.body.classList.add(
+        "menu-open"
+      );
+
+    }
+
+
+    /* =========================
+       إغلاق القائمة
+    ========================= */
+
+    function closeSideMenu() {
+
+      if (!sideMenu || !menuOverlay) {
+        return;
+      }
+
+      sideMenu.classList.remove("active");
+      menuOverlay.classList.remove("active");
+
+      sideMenu.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      if (menuButton) {
+
+        menuButton.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+
+      }
+
+      document.body.classList.remove(
+        "menu-open"
+      );
+
+    }
+
+
+    /* =========================
+       إغلاق القائمة بزر ESC
+    ========================= */
+
+    document.addEventListener(
+      "keydown",
+      function(event) {
+
+        if (event.key === "Escape") {
+          closeSideMenu();
+        }
+
+      }
+    );
+
+
+    /* =========================
+       تسجيل الخروج
+    ========================= */
 
     async function logoutUser() {
+
+      const logoutButton =
+        document.querySelector(
+          ".logout-menu-btn"
+        );
+
+      if (logoutButton) {
+
+        logoutButton.disabled = true;
+
+        logoutButton.textContent =
+          "جاري تسجيل الخروج...";
+
+      }
+
 
       try {
 
@@ -1040,11 +1757,24 @@
           await response.json();
 
 
-        if (data.success) {
+        if (
+          response.ok &&
+          data.success
+        ) {
 
-          window.location.reload();
+          closeSideMenu();
+
+          window.location.href =
+            "index.html";
 
         } else {
+
+          if (logoutButton) {
+            logoutButton.disabled = false;
+
+            logoutButton.textContent =
+              "🚪 تسجيل الخروج";
+          }
 
           alert(
             data.message ||
@@ -1055,7 +1785,17 @@
 
       } catch (error) {
 
-        console.error(error);
+        console.error(
+          "Logout error:",
+          error
+        );
+
+        if (logoutButton) {
+          logoutButton.disabled = false;
+
+          logoutButton.textContent =
+            "🚪 تسجيل الخروج";
+        }
 
         alert(
           "تعذر الاتصال بالخادم"
@@ -1066,31 +1806,16 @@
     }
 
 
-    // =========================
-    // حماية عرض الاسم
-    // =========================
-
-    function escapeHtml(text) {
-
-      const div =
-        document.createElement("div");
-
-      div.textContent =
-        text || "";
-
-      return div.innerHTML;
-
-    }
-
-
-    // =========================
-    // البحث - مؤقت
-    // =========================
+    /* =========================
+       البحث
+    ========================= */
 
     function searchSite() {
 
       const input =
-        document.getElementById("searchInput");
+        document.getElementById(
+          "searchInput"
+        );
 
       const value =
         input.value.trim();
@@ -1114,7 +1839,10 @@
     }
 
 
-    // تشغيل فحص الجلسة
+    /* =========================
+       تشغيل فحص الجلسة
+    ========================= */
+
     checkLogin();
 
   </script>
