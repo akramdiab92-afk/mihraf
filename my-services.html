@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>خدماتي | مِهراف</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Tahoma, sans-serif;
+      background: #f7f8fa;
+      color: #222;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 20px;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: bold;
+      color: #111827;
+      text-decoration: none;
+    }
+
+    .back {
+      text-decoration: none;
+      color: #374151;
+      font-size: 14px;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    h1 {
+      margin: 0 0 7px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: #6b7280;
+    }
+
+    .add-btn {
+      display: inline-block;
+      background: #111827;
+      color: white;
+      text-decoration: none;
+      padding: 12px 18px;
+      border-radius: 9px;
+      font-weight: bold;
+    }
+
+    .message {
+      display: none;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      color: #6b7280;
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .service {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.04);
+    }
+
+    .service h2 {
+      margin: 0 0 10px;
+      font-size: 19px;
+    }
+
+    .description {
+      color: #6b7280;
+      line-height: 1.7;
+      min-height: 55px;
+      white-space: pre-wrap;
+    }
+
+    .info {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 18px 0;
+      font-size: 14px;
+    }
+
+    .price {
+      font-weight: bold;
+      color: #111827;
+    }
+
+    .category {
+      color: #6b7280;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .active {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .paused {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .deleted {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .actions button {
+      border: 0;
+      border-radius: 8px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-size: 13px;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .actions button:hover {
+      opacity: .85;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 50px;
+      color: #6b7280;
+    }
+
+    @media (max-width: 600px) {
+      .top {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .add-btn {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">مِهراف</a>
+    <a href="dashboard.html" class="back">← لوحة التحكم</a>
+  </div>
+</header>
+
+<main>
+
+  <div class="top">
+    <div>
+      <h1>خدماتي</h1>
+      <p class="subtitle">إدارة الخدمات التي تقدمها للعملاء على مِهراف.</p>
+    </div>
+
+    <a href="add-service.html" class="add-btn">+ إضافة خدمة</a>
+  </div>
+
+  <div id="loading" class="loading">
+    جارٍ تحميل خدماتك...
+  </div>
+
+  <div id="message" class="message"></div>
+
+  <div id="services" class="services"></div>
+
+</main>
+
+<script>
+  const servicesContainer = document.getElementById("services");
+  const loading = document.getElementById("loading");
+  const message = document.getElementById("message");
+
+  function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text ?? "";
+    return div.innerHTML;
+  }
+
+  function showMessage(text) {
+    message.textContent = text;
+    message.style.display = "block";
+  }
+
+  function statusText(status) {
+    if (status === "active") return "نشطة";
+    if (status === "paused") return "متوقفة";
+    if (status === "deleted") return "محذوفة";
+    return status;
+  }
+
+  async function loadServices() {
+    try {
+      const meResponse = await fetch("/api/me", {
+        credentials: "include"
+      });
+
+      if (!meResponse.ok) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const me = await meResponse.json();
+
+      if (!me.user || me.user.role !== "freelancer") {
+        window.location.href = "dashboard.html";
+        return;
+      }
+
+      const response = await fetch("/api/my-services", {
+        credentials: "include"
+      });
+
+      const data = await response.json();
+
+      loading.style.display = "none";
+
+      if (!response.ok || !data.success) {
+        showMessage(data.message || "حدث خطأ أثناء تحميل الخدمات.");
+        return;
+      }
+
+      const services = data.services || [];
+
+      if (services.length === 0) {
+        showMessage("لا توجد لديك خدمات حتى الآن. أضف أول خدمة لك.");
+        return;
+      }
+
+      servicesContainer.innerHTML = services.map(service => `
+        <div class="service">
+          <span class="status ${escapeHtml(service.status)}">
+            ${escapeHtml(statusText(service.status))}
+          </span>
+
+          <h2>${escapeHtml(service.title)}</h2>
+
+          <div class="description">
+            ${escapeHtml(service.description)}
+          </div>
+
+          <div class="info">
+            <span class="price">
+              ${escapeHtml(String(service.price))} دولار
+            </span>
+
+            <span class="category">
+              ${escapeHtml(service.category)}
+            </span>
+          </div>
+
+          <div class="actions">
+
+            <button onclick="editService(${service.id})">
+              ✏️ تعديل
+            </button>
+
+            ${
+              service.status === "active"
+              ? `<button onclick="toggleService(${service.id}, 'paused')">
+                   ⏸️ إيقاف
+                 </button>`
+              : service.status === "paused"
+              ? `<button onclick="toggleService(${service.id}, 'active')">
+                   ▶️ تفعيل
+                 </button>`
+              : ""
+            }
+
+            ${
+              service.status !== "deleted"
+              ? `<button onclick="deleteService(${service.id})">
+                   🗑️ حذف
+                 </button>`
+              : ""
+            }
+
+          </div>
+        </div>
+      `).join("");
+
+    } catch (error) {
+      loading.style.display = "none";
+      showMessage("تعذر الاتصال بالخادم.");
+      console.error(error);
+    }
+  }
+
+  function editService(id) {
+    window.location.href = "edit-service.html?id=" + encodeURIComponent(id);
+  }
+
+  async function toggleService(id, status) {
+    const action = status === "paused" ? "إيقاف" : "تفعيل";
+
+    if (!confirm(`هل تريد ${action} هذه الخدمة؟`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/services/" + id, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          status: status
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        alert(data.message || "تعذر تعديل حالة الخدمة.");
+        return;
+      }
+
+      alert(data.message || "تم تحديث الخدمة.");
+      loadServices();
+
+    } catch (error) {
+      alert("تعذر الاتصال بالخادم.");
+    }
+  }
+
+  async function deleteService(id) {
+    if (!confirm("هل أنت متأكد من حذف هذه الخدمة؟")) {
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/services/" + id, {
+        method: "DELETE",
+        credentials: "include"
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        alert(data.message || "تعذر حذف الخدمة.");
+        return;
+      }
+
+      alert(data.message || "تم حذف الخدمة.");
+      loadServices();
+
+    } catch (error) {
+      alert("تعذر الاتصال بالخادم.");
+    }
+  }
+
+  loadServices();
+</script>
+
+</body>
+</html>
