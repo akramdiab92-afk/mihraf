@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نشر مشروع | مِهراف</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Tahoma, sans-serif;
+      background: #f7f8fa;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 20px;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 26px;
+      font-weight: bold;
+      color: #111827;
+      text-decoration: none;
+    }
+
+    .back {
+      text-decoration: none;
+      color: #374151;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 45px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+      border: 1px solid #e5e7eb;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 30px;
+      line-height: 1.7;
+    }
+
+    .field {
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      background: #fff;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #111827;
+    }
+
+    textarea {
+      min-height: 170px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .hint {
+      color: #6b7280;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .budget-box {
+      position: relative;
+    }
+
+    .currency {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .budget-box input {
+      padding-left: 60px;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      background: #111827;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      padding: 13px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .message.error {
+      display: block;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .message.success {
+      display: block;
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px 20px;
+      color: #6b7280;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    @media (max-width: 650px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">مِهراف</a>
+    <a href="dashboard.html" class="back">← العودة إلى لوحة التحكم</a>
+  </div>
+</header>
+
+<div class="container">
+
+  <div id="loading" class="loading">
+    جارٍ التحقق من الحساب...
+  </div>
+
+  <div id="notAllowed" class="card hidden">
+    <h1>غير مسموح</h1>
+    <p class="subtitle">
+      نشر المشاريع متاح للعملاء فقط.
+    </p>
+
+    <a href="dashboard.html"
+       style="display:inline-block;text-decoration:none;background:#111827;color:#fff;padding:12px 20px;border-radius:10px;">
+      العودة إلى لوحة التحكم
+    </a>
+  </div>
+
+  <div id="projectCard" class="card hidden">
+
+    <h1>نشر مشروع جديد</h1>
+
+    <p class="subtitle">
+      اشرح مشروعك بشكل واضح، وحدد الميزانية والتصنيف المناسب حتى يتمكن المستقلون من فهم احتياجك والتقدم للعمل عليه.
+    </p>
+
+    <div id="message" class="message"></div>
+
+    <form id="projectForm">
+
+      <div class="field">
+        <label for="title">عنوان المشروع</label>
+
+        <input
+          id="title"
+          type="text"
+          maxlength="120"
+          placeholder="مثال: أحتاج تصميم شعار احترافي لشركتي"
+          required
+        >
+
+        <div class="hint">
+          اكتب عنوانًا واضحًا ومختصرًا للمشروع.
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="description">وصف المشروع</label>
+
+        <textarea
+          id="description"
+          maxlength="3000"
+          placeholder="اشرح بالتفصيل ما الذي تحتاجه، وما المطلوب من المستقل، وأي شروط أو تفاصيل مهمة..."
+          required
+        ></textarea>
+
+        <div class="hint">
+          كلما كان الوصف واضحًا، زادت فرصة حصولك على عروض مناسبة.
+        </div>
+      </div>
+
+      <div class="row">
+
+        <div class="field">
+          <label for="category">التصنيف</label>
+
+          <select id="category" required>
+            <option value="">اختر التصنيف</option>
+            <option value="التصميم">التصميم</option>
+            <option value="البرمجة">البرمجة</option>
+            <option value="الكتابة">الكتابة</option>
+            <option value="التسويق">التسويق</option>
+            <option value="الفيديو">الفيديو</option>
+            <option value="الصوت">الصوت</option>
+            <option value="الأعمال">الأعمال</option>
+            <option value="أخرى">أخرى</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="budget">الميزانية</label>
+
+          <div class="budget-box">
+            <input
+              id="budget"
+              type="number"
+              min="1"
+              step="0.01"
+              placeholder="100"
+              required
+            >
+
+            <span class="currency">دولار</span>
+          </div>
+        </div>
+
+      </div>
+
+      <button id="submitBtn" type="submit">
+        نشر المشروع
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+<footer>
+  © 2026 مِهراف — جميع الحقوق محفوظة
+</footer>
+
+<script>
+
+  const loading = document.getElementById("loading");
+  const notAllowed = document.getElementById("notAllowed");
+  const projectCard = document.getElementById("projectCard");
+  const message = document.getElementById("message");
+  const form = document.getElementById("projectForm");
+  const submitBtn = document.getElementById("submitBtn");
+
+  function showMessage(text, type) {
+    message.textContent = text;
+    message.className = "message " + type;
+  }
+
+  async function checkUser() {
+
+    try {
+
+      const response = await fetch("/api/me", {
+        method: "GET",
+        credentials: "include"
+      });
+
+      const data = await response.json();
+
+      loading.classList.add("hidden");
+
+      if (!response.ok || !data.user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      if (data.user.role !== "client") {
+        notAllowed.classList.remove("hidden");
+        return;
+      }
+
+      projectCard.classList.remove("hidden");
+
+    } catch (error) {
+
+      loading.classList.add("hidden");
+
+      showMessage(
+        "حدث خطأ أثناء التحقق من الحساب. حاول مرة أخرى.",
+        "error"
+      );
+    }
+  }
+
+  form.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const title = document.getElementById("title").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const category = document.getElementById("category").value;
+    const budget = Number(document.getElementById("budget").value);
+
+    if (title.length < 3) {
+      showMessage("عنوان المشروع يجب أن يكون 3 أحرف على الأقل.", "error");
+      return;
+    }
+
+    if (description.length < 10) {
+      showMessage("وصف المشروع يجب أن يكون 10 أحرف على الأقل.", "error");
+      return;
+    }
+
+    if (!category) {
+      showMessage("يرجى اختيار تصنيف المشروع.", "error");
+      return;
+    }
+
+    if (!Number.isFinite(budget) || budget <= 0) {
+      showMessage("يرجى إدخال ميزانية صحيحة أكبر من صفر.", "error");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "جارٍ نشر المشروع...";
+
+    message.className = "message";
+
+    try {
+
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          category,
+          budget
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+
+        showMessage(
+          data.message || "تعذر نشر المشروع.",
+          "error"
+        );
+
+        submitBtn.disabled = false;
+        submitBtn.textContent = "نشر المشروع";
+        return;
+      }
+
+      showMessage(
+        "تم نشر المشروع بنجاح. سيتم تحويلك إلى لوحة التحكم...",
+        "success"
+      );
+
+      form.reset();
+
+      setTimeout(function() {
+        window.location.href = "dashboard.html";
+      }, 1500);
+
+    } catch (error) {
+
+      showMessage(
+        "حدث خطأ في الاتصال بالخادم. حاول مرة أخرى.",
+        "error"
+      );
+
+      submitBtn.disabled = false;
+      submitBtn.textContent = "نشر المشروع";
+    }
+
+  });
+
+  checkUser();
+
+</script>
+
+</body>
+</html>
