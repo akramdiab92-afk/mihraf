@@ -1,8 +1,13 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مِهراف | MIHRAF</title>  <style>
+
+  <title>مِهراف | MIHRAF</title>
+
+  <style>
     * {
       box-sizing: border-box;
       margin: 0;
@@ -10,11 +15,26 @@
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background: #f7f8fc;
+      font-family: Arial, Tahoma, sans-serif;
+      background: #f7f9fc;
       color: #1f2937;
-      line-height: 1.6;
+      line-height: 1.7;
     }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    /* =========================
+       Header
+    ========================= */
 
     header {
       background: #ffffff;
@@ -25,9 +45,7 @@
     }
 
     .nav {
-      max-width: 1200px;
-      margin: auto;
-      padding: 15px 20px;
+      min-height: 70px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -35,60 +53,104 @@
     }
 
     .logo {
-      font-size: 28px;
-      font-weight: bold;
       color: #2563eb;
-      text-decoration: none;
+      font-size: 28px;
+      font-weight: 800;
+      white-space: nowrap;
     }
 
-    nav {
+    .nav-links {
       display: flex;
-      gap: 10px;
       align-items: center;
+      gap: 22px;
+      font-size: 14px;
     }
 
-    nav a {
-      text-decoration: none;
+    .nav-links a {
       color: #374151;
-      font-size: 15px;
+    }
+
+    .nav-links a:hover {
+      color: #2563eb;
+    }
+
+    .auth-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .auth-area a,
+    .auth-area button {
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .login-link {
+      color: #374151;
+      padding: 9px 12px;
+    }
+
+    .register-btn {
+      background: #2563eb;
+      color: white !important;
+      padding: 10px 17px;
+      border-radius: 9px;
+    }
+
+    .register-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .user-name {
+      font-weight: 700;
+      color: #111827;
+      white-space: nowrap;
+    }
+
+    .dashboard-btn {
+      background: #2563eb;
+      color: white !important;
+      padding: 9px 14px;
+      border-radius: 8px;
+    }
+
+    .logout-btn {
+      background: #f3f4f6;
+      color: #374151;
       padding: 9px 12px;
       border-radius: 8px;
     }
 
-    nav a:hover {
-      color: #2563eb;
-      background: #eff6ff;
+    .logout-btn:hover {
+      background: #e5e7eb;
     }
 
-    .register-link {
-      background: #2563eb;
-      color: white !important;
-    }
-
-    .register-link:hover {
-      background: #1d4ed8 !important;
-      color: white !important;
-    }
-
-    .language {
-      border: 1px solid #d1d5db;
-      background: white;
-      padding: 8px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+    /* =========================
+       Hero
+    ========================= */
 
     .hero {
-      max-width: 1200px;
-      margin: auto;
-      padding: 80px 20px 60px;
+      padding: 85px 0;
+      background: linear-gradient(
+        135deg,
+        #eff6ff,
+        #ffffff
+      );
+    }
+
+    .hero-content {
       text-align: center;
+      max-width: 850px;
+      margin: auto;
     }
 
     .hero h1 {
-      font-size: 46px;
-      margin-bottom: 15px;
+      font-size: 42px;
       color: #111827;
+      margin-bottom: 18px;
     }
 
     .hero h1 span {
@@ -96,31 +158,34 @@
     }
 
     .hero p {
-      max-width: 700px;
-      margin: 0 auto 30px;
-      font-size: 19px;
+      font-size: 18px;
       color: #6b7280;
+      margin-bottom: 30px;
     }
 
     .hero-buttons {
       display: flex;
       justify-content: center;
       gap: 12px;
-      margin-bottom: 30px;
       flex-wrap: wrap;
     }
 
-    .hero-buttons a {
+    .primary-btn,
+    .secondary-btn {
       display: inline-block;
       padding: 13px 25px;
-      border-radius: 9px;
-      text-decoration: none;
-      font-weight: bold;
+      border-radius: 10px;
+      font-weight: 700;
+      transition: 0.2s;
     }
 
     .primary-btn {
       background: #2563eb;
       color: white;
+    }
+
+    .primary-btn:hover {
+      background: #1d4ed8;
     }
 
     .secondary-btn {
@@ -129,55 +194,77 @@
       border: 1px solid #2563eb;
     }
 
-    .search {
+    .secondary-btn:hover {
+      background: #eff6ff;
+    }
+
+    /* =========================
+       Search
+    ========================= */
+
+    .search-section {
+      padding: 35px 0;
+      background: white;
+    }
+
+    .search-box {
       max-width: 700px;
       margin: auto;
       display: flex;
-      background: white;
-      padding: 6px;
-      border: 1px solid #dbe1ea;
-      border-radius: 12px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+      gap: 10px;
     }
 
-    .search input {
+    .search-box input {
       flex: 1;
-      border: 0;
+      height: 50px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 0 15px;
+      font-size: 15px;
       outline: none;
-      padding: 15px;
-      font-size: 16px;
-      background: transparent;
     }
 
-    .search button {
-      border: 0;
+    .search-box input:focus {
+      border-color: #2563eb;
+    }
+
+    .search-box button {
+      height: 50px;
+      padding: 0 25px;
+      border: none;
+      border-radius: 10px;
       background: #2563eb;
       color: white;
-      padding: 0 25px;
-      border-radius: 8px;
       cursor: pointer;
-      font-size: 16px;
+      font-weight: 700;
     }
 
-    .section {
-      max-width: 1200px;
-      margin: auto;
-      padding: 45px 20px;
+    /* =========================
+       Sections
+    ========================= */
+
+    section {
+      padding: 65px 0;
     }
 
     .section-title {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 35px;
     }
 
     .section-title h2 {
-      font-size: 30px;
+      font-size: 28px;
+      color: #111827;
       margin-bottom: 8px;
     }
 
     .section-title p {
       color: #6b7280;
     }
+
+    /* =========================
+       Categories
+    ========================= */
 
     .categories {
       display: grid;
@@ -188,38 +275,57 @@
     .category {
       background: white;
       padding: 25px 15px;
-      border: 1px solid #e5e7eb;
       border-radius: 14px;
       text-align: center;
-      cursor: pointer;
+      border: 1px solid #e5e7eb;
       transition: 0.2s;
     }
 
     .category:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
     }
 
-    .category .icon {
-      font-size: 34px;
+    .category-icon {
+      font-size: 32px;
       margin-bottom: 10px;
     }
+
+    .category h3 {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .category p {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    /* =========================
+       Cards
+    ========================= */
 
     .cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+      gap: 22px;
     }
 
     .card {
       background: white;
-      border: 1px solid #e5e7eb;
       border-radius: 14px;
       overflow: hidden;
+      border: 1px solid #e5e7eb;
+      transition: 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
     }
 
     .card-image {
-      height: 180px;
+      height: 170px;
       background: #e5e7eb;
       display: flex;
       align-items: center;
@@ -232,8 +338,9 @@
     }
 
     .card h3 {
-      margin-bottom: 10px;
       font-size: 18px;
+      margin-bottom: 8px;
+      color: #111827;
     }
 
     .card p {
@@ -243,245 +350,775 @@
     }
 
     .price {
-      font-weight: bold;
       color: #2563eb;
+      font-weight: 700;
     }
 
+    /* =========================
+       CTA
+    ========================= */
+
     .cta {
-      background: #111827;
+      background: #2563eb;
       color: white;
       text-align: center;
-      padding: 60px 20px;
-      margin-top: 30px;
+      padding: 65px 20px;
     }
 
     .cta h2 {
-      font-size: 32px;
+      font-size: 30px;
       margin-bottom: 12px;
     }
 
     .cta p {
-      color: #d1d5db;
       margin-bottom: 25px;
+      opacity: 0.9;
     }
 
     .cta a {
       display: inline-block;
-      background: #2563eb;
-      color: white;
-      padding: 13px 25px;
-      border-radius: 8px;
-      text-decoration: none;
+      background: white;
+      color: #2563eb;
+      padding: 13px 27px;
+      border-radius: 10px;
+      font-weight: 700;
     }
 
+    /* =========================
+       Footer
+    ========================= */
+
     footer {
-      background: #0b1220;
-      color: #cbd5e1;
-      padding: 30px 20px;
+      background: #111827;
+      color: #d1d5db;
       text-align: center;
+      padding: 35px 15px;
     }
 
     footer strong {
       color: white;
-      font-size: 20px;
+      display: block;
+      margin-bottom: 6px;
     }
 
-    @media (max-width: 800px) {
-      nav a:not(.register-link) {
-        display: none;
-      }
+    footer p {
+      font-size: 13px;
+    }
 
-      .hero {
-        padding-top: 55px;
-      }
+    /* =========================
+       Responsive
+    ========================= */
 
-      .hero h1 {
-        font-size: 34px;
-      }
-
+    @media (max-width: 900px) {
       .categories {
         grid-template-columns: repeat(2, 1fr);
       }
 
       .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero h1 {
+        font-size: 34px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .cards {
         grid-template-columns: 1fr;
       }
 
-      .search {
-        flex-direction: column;
-        gap: 6px;
+      .categories {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
       }
 
-      .search button {
-        padding: 13px;
+      .hero {
+        padding: 60px 0;
+      }
+
+      .hero h1 {
+        font-size: 29px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .search-box {
+        flex-direction: column;
+      }
+
+      .search-box button {
+        width: 100%;
+      }
+
+      .auth-area {
+        gap: 5px;
+      }
+
+      .user-name {
+        display: none;
       }
     }
-  </style></head><body><header>
-  <div class="nav"><a href="index.html" class="logo">مِهراف</a>
+  </style>
+</head>
 
-<nav>
-  <a href="#services">الخدمات</a>
-  <a href="#projects">المشاريع</a>
-  <a href="#professionals">المحترفون</a>
-  <a href="login.html">تسجيل الدخول</a>
-  <a href="register.html" class="register-link">إنشاء حساب</a>
-</nav>
+<body>
 
-<select class="language" id="language">
-  <option value="ar">العربية</option>
-  <option value="en">English</option>
-  <option value="fr">Français</option>
-  <option value="tr">Türkçe</option>
-  <option value="ru">Русский</option>
-</select>
+  <!-- =========================
+       Header
+  ========================= -->
 
-  </div>
-</header><section class="hero">  <h1><span>مِهراف</span> — مهارتك تستحق الفرصة</h1>  <p>
-    منصة تجمع أصحاب المشاريع بالمستقلين والمحترفين لتنفيذ الخدمات والأعمال بسهولة.
-  </p>  <div class="hero-buttons">
-    <a href="register.html" class="primary-btn">إنشاء حساب</a>
-    <a href="login.html" class="secondary-btn">تسجيل الدخول</a>
-  </div>  <div class="search">
-    <input
-      type="text"
-      id="searchInput"
-      placeholder="ابحث عن خدمة أو مهارة..."
-    >
-    <button onclick="searchServices()">بحث</button>
-  </div></section><section class="section">  <div class="section-title">
-    <h2>استكشف الخدمات</h2>
-    <p>اختر المجال الذي تحتاج إليه</p>
-  </div>  <div class="categories"><div class="category">
-  <div class="icon">🎨</div>
-  تصميم
-</div>
+  <header>
 
-<div class="category">
-  <div class="icon">✍️</div>
-  كتابة وترجمة
-</div>
+    <div class="container nav">
 
-<div class="category">
-  <div class="icon">💻</div>
-  برمجة وتقنية
-</div>
+      <a href="index.html" class="logo">
+        مِهراف
+      </a>
 
-<div class="category">
-  <div class="icon">📊</div>
-  تسويق وأعمال
-</div>
+      <nav class="nav-links">
+        <a href="#services">الخدمات</a>
+        <a href="#projects">المشاريع</a>
+        <a href="#professionals">المحترفون</a>
+      </nav>
 
-<div class="category">
-  <div class="icon">📁</div>
-  إدخال بيانات
-</div>
+      <!-- منطقة الحساب -->
+      <div class="auth-area" id="authArea">
 
-<div class="category">
-  <div class="icon">🎬</div>
-  فيديو وصوت
-</div>
+        <a
+          href="login.html"
+          class="login-link"
+        >
+          تسجيل الدخول
+        </a>
 
-<div class="category">
-  <div class="icon">⚖️</div>
-  استشارات
-</div>
+        <a
+          href="register.html"
+          class="register-btn"
+        >
+          إنشاء حساب
+        </a>
 
-<div class="category">
-  <div class="icon">🛠️</div>
-  خدمات أخرى
-</div>
+      </div>
 
-  </div></section><section class="section" id="services">  <div class="section-title">
-    <h2>خدمات مميزة</h2>
-    <p>اكتشف خدمات يقدمها محترفون</p>
-  </div>  <div class="cards"><div class="card">
-  <div class="card-image">صورة الخدمة</div>
-  <div class="card-content">
-    <h3>تصميم إعلان احترافي</h3>
-    <p>تصميم إعلان جذاب مناسب لمواقع التواصل الاجتماعي.</p>
-    <div class="price">ابتداءً من $5</div>
-  </div>
-</div>
+    </div>
 
-<div class="card">
-  <div class="card-image">صورة الخدمة</div>
-  <div class="card-content">
-    <h3>إدخال وتنسيق البيانات</h3>
-    <p>تنظيم البيانات وتحويل الملفات وتنسيقها بشكل احترافي.</p>
-    <div class="price">ابتداءً من $5</div>
-  </div>
-</div>
+  </header>
 
-<div class="card">
-  <div class="card-image">صورة الخدمة</div>
-  <div class="card-content">
-    <h3>تحسين وتعديل الصور</h3>
-    <p>تحسين جودة الصور والألوان والخلفيات بشكل احترافي.</p>
-    <div class="price">ابتداءً من $5</div>
-  </div>
-</div>
 
-  </div></section><section class="section" id="projects">  <div class="section-title">
-    <h2>أحدث المشاريع</h2>
-    <p>مشاريع يبحث أصحابها عن محترفين لتنفيذها</p>
-  </div>  <div class="cards"><div class="card">
-  <div class="card-content">
-    <h3>تصميم هوية بصرية</h3>
-    <p>أبحث عن مصمم لإنشاء هوية بصرية لمشروع جديد.</p>
-    <div class="price">$50 - $100</div>
-  </div>
-</div>
+  <!-- =========================
+       Hero
+  ========================= -->
 
-<div class="card">
-  <div class="card-content">
-    <h3>كتابة محتوى لموقع</h3>
-    <p>مطلوب كاتب محتوى لكتابة صفحات موقع إلكتروني.</p>
-    <div class="price">$30 - $70</div>
-  </div>
-</div>
+  <section class="hero">
 
-<div class="card">
-  <div class="card-content">
-    <h3>تنظيم بيانات</h3>
-    <p>تحويل وترتيب بيانات من ملفات متعددة.</p>
-    <div class="price">$20 - $50</div>
-  </div>
-</div>
+    <div class="container hero-content">
 
-  </div></section><section class="cta">  <h2>هل لديك مهارة؟</h2>  <p>
-    أنشئ حسابك وابدأ بعرض خدماتك على مِهراف.
-  </p><a href="register.html">ابدأ الآن</a>
+      <h1>
+        مِهراف —
+        <span>مهارتك تستحق الفرصة</span>
+      </h1>
 
-</section><footer><strong>مِهراف | MIHRAF</strong>
+      <p>
+        منصة تجمع أصحاب المشاريع بالمستقلين والمحترفين
+        لتنفيذ الخدمات والأعمال بسهولة.
+      </p>
 
-  <p>منصة للخدمات والمشاريع والمستقلين</p>  <p>© 2026 MIHRAF</p></footer><script>
+      <div class="hero-buttons">
 
-function searchServices() {
-  const input = document.getElementById("searchInput").value.trim();
+        <a
+          href="register.html"
+          class="primary-btn"
+        >
+          إنشاء حساب
+        </a>
 
-  if (!input) {
-    alert("اكتب الخدمة أو المهارة التي تبحث عنها.");
-    return;
-  }
+        <a
+          href="login.html"
+          class="secondary-btn"
+        >
+          تسجيل الدخول
+        </a>
 
-  alert("ميزة البحث سيتم ربطها بالخدمات الحقيقية في الخطوة القادمة.");
-}
+      </div>
 
-const language = document.getElementById("language");
+    </div>
 
-language.addEventListener("change", function () {
+  </section>
 
-  const lang = this.value;
 
-  if (lang === "ar") {
-    document.documentElement.lang = "ar";
-    document.documentElement.dir = "rtl";
-  } else {
-    document.documentElement.lang = lang;
-    document.documentElement.dir = "ltr";
-  }
+  <!-- =========================
+       Search
+  ========================= -->
 
-});
+  <section class="search-section">
 
-</script></body>
+    <div class="container">
+
+      <div class="search-box">
+
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="ابحث عن خدمة أو مشروع..."
+        >
+
+        <button onclick="searchSite()">
+          بحث
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       Services / Categories
+  ========================= -->
+
+  <section id="services">
+
+    <div class="container">
+
+      <div class="section-title">
+
+        <h2>استكشف الخدمات</h2>
+
+        <p>
+          اختر المجال الذي تحتاج إليه
+        </p>
+
+      </div>
+
+
+      <div class="categories">
+
+        <div class="category">
+          <div class="category-icon">🎨</div>
+          <h3>تصميم</h3>
+          <p>تصميمات إبداعية واحترافية</p>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">✍️</div>
+          <h3>كتابة وترجمة</h3>
+          <p>محتوى وترجمة بمختلف اللغات</p>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">💻</div>
+          <h3>برمجة وتقنية</h3>
+          <p>مواقع وتطبيقات وحلول تقنية</p>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">📊</div>
+          <h3>تسويق وأعمال</h3>
+          <p>تسويق وإدارة وتطوير الأعمال</p>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">📁</div>
+          <h3>إدخال بيانات</h3>
+          <p>تنظيم وتنسيق البيانات</p>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">🎬</div>
+          <h3>فيديو وصوت</h3>
+          <p>مونتاج وتحرير وإنتاج المحتوى</p>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">⚖️</div>
+          <h3>استشارات</h3>
+          <p>خبرات واستشارات متخصصة</p>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">🛠️</div>
+          <h3>خدمات أخرى</h3>
+          <p>خدمات متنوعة حسب احتياجك</p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       Featured Services
+  ========================= -->
+
+  <section>
+
+    <div class="container">
+
+      <div class="section-title">
+
+        <h2>خدمات مميزة</h2>
+
+        <p>
+          اكتشف خدمات يقدمها محترفون
+        </p>
+
+      </div>
+
+
+      <div class="cards">
+
+        <div class="card">
+
+          <div class="card-image">
+            صورة الخدمة
+          </div>
+
+          <div class="card-content">
+
+            <h3>
+              تصميم إعلان احترافي
+            </h3>
+
+            <p>
+              تصميم إعلان جذاب مناسب لمواقع التواصل الاجتماعي.
+            </p>
+
+            <div class="price">
+              ابتداءً من $5
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-image">
+            صورة الخدمة
+          </div>
+
+          <div class="card-content">
+
+            <h3>
+              إدخال وتنسيق البيانات
+            </h3>
+
+            <p>
+              تنظيم البيانات وتحويل الملفات وتنسيقها بشكل احترافي.
+            </p>
+
+            <div class="price">
+              ابتداءً من $5
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-image">
+            صورة الخدمة
+          </div>
+
+          <div class="card-content">
+
+            <h3>
+              تحسين وتعديل الصور
+            </h3>
+
+            <p>
+              تحسين جودة الصور والألوان والخلفيات بشكل احترافي.
+            </p>
+
+            <div class="price">
+              ابتداءً من $5
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       Projects
+  ========================= -->
+
+  <section id="projects">
+
+    <div class="container">
+
+      <div class="section-title">
+
+        <h2>أحدث المشاريع</h2>
+
+        <p>
+          مشاريع يبحث أصحابها عن محترفين لتنفيذها
+        </p>
+
+      </div>
+
+
+      <div class="cards">
+
+        <div class="card">
+
+          <div class="card-content">
+
+            <h3>
+              تصميم هوية بصرية
+            </h3>
+
+            <p>
+              أبحث عن مصمم لإنشاء هوية بصرية لمشروع جديد.
+            </p>
+
+            <div class="price">
+              $50 - $100
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-content">
+
+            <h3>
+              كتابة محتوى لموقع
+            </h3>
+
+            <p>
+              مطلوب كاتب محتوى لكتابة صفحات موقع إلكتروني.
+            </p>
+
+            <div class="price">
+              $30 - $70
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-content">
+
+            <h3>
+              تنظيم بيانات
+            </h3>
+
+            <p>
+              تحويل وترتيب بيانات من ملفات متعددة.
+            </p>
+
+            <div class="price">
+              $20 - $50
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       Professionals
+  ========================= -->
+
+  <section id="professionals">
+
+    <div class="container">
+
+      <div class="section-title">
+
+        <h2>المحترفون</h2>
+
+        <p>
+          اكتشف أصحاب المهارات والخبرات
+        </p>
+
+      </div>
+
+      <div class="cards">
+
+        <div class="card">
+          <div class="card-content">
+            <h3>مصممون محترفون</h3>
+            <p>
+              ابحث عن مصممين لتنفيذ أعمالك الإبداعية.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-content">
+            <h3>مطورون ومبرمجون</h3>
+            <p>
+              محترفون في البرمجة والتقنية وتطوير المواقع.
+            </p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-content">
+            <h3>كتاب ومترجمون</h3>
+            <p>
+              أصحاب خبرة في الكتابة والترجمة وصناعة المحتوى.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       CTA
+  ========================= -->
+
+  <section class="cta">
+
+    <h2>
+      هل لديك مهارة؟
+    </h2>
+
+    <p>
+      أنشئ حسابك وابدأ بعرض خدماتك على مِهراف.
+    </p>
+
+    <a href="register.html">
+      ابدأ الآن
+    </a>
+
+  </section>
+
+
+  <!-- =========================
+       Footer
+  ========================= -->
+
+  <footer>
+
+    <strong>
+      مِهراف | MIHRAF
+    </strong>
+
+    <p>
+      منصة للخدمات والمشاريع والمستقلين
+    </p>
+
+    <p>
+      © 2026 MIHRAF
+    </p>
+
+  </footer>
+
+
+  <!-- =========================
+       JavaScript
+  ========================= -->
+
+  <script>
+
+    // =========================
+    // التحقق من تسجيل الدخول
+    // =========================
+
+    async function checkLogin() {
+
+      const authArea =
+        document.getElementById("authArea");
+
+      if (!authArea) {
+        return;
+      }
+
+      try {
+
+        const response =
+          await fetch("/api/me", {
+            method: "GET",
+            credentials: "include"
+          });
+
+        const data =
+          await response.json();
+
+
+        if (
+          response.ok &&
+          data.success &&
+          data.logged_in
+        ) {
+
+          const user =
+            data.user;
+
+
+          authArea.innerHTML = `
+
+            <span class="user-name">
+              مرحبًا، ${escapeHtml(user.full_name)}
+            </span>
+
+            <a
+              href="dashboard.html"
+              class="dashboard-btn"
+            >
+              لوحة التحكم
+            </a>
+
+            <button
+              type="button"
+              class="logout-btn"
+              onclick="logoutUser()"
+            >
+              تسجيل الخروج
+            </button>
+
+          `;
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Session check error:",
+          error
+        );
+
+      }
+
+    }
+
+
+    // =========================
+    // تسجيل الخروج
+    // =========================
+
+    async function logoutUser() {
+
+      try {
+
+        const response =
+          await fetch("/api/logout", {
+            method: "POST",
+            credentials: "include"
+          });
+
+        const data =
+          await response.json();
+
+
+        if (data.success) {
+
+          window.location.reload();
+
+        } else {
+
+          alert(
+            data.message ||
+            "تعذر تسجيل الخروج"
+          );
+
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          "تعذر الاتصال بالخادم"
+        );
+
+      }
+
+    }
+
+
+    // =========================
+    // حماية عرض الاسم
+    // =========================
+
+    function escapeHtml(text) {
+
+      const div =
+        document.createElement("div");
+
+      div.textContent =
+        text || "";
+
+      return div.innerHTML;
+
+    }
+
+
+    // =========================
+    // البحث - مؤقت
+    // =========================
+
+    function searchSite() {
+
+      const input =
+        document.getElementById("searchInput");
+
+      const value =
+        input.value.trim();
+
+
+      if (!value) {
+
+        alert(
+          "اكتب ما تريد البحث عنه أولًا."
+        );
+
+        return;
+
+      }
+
+
+      alert(
+        "ميزة البحث سيتم ربطها بالخدمات والمشاريع الحقيقية في الخطوة القادمة."
+      );
+
+    }
+
+
+    // تشغيل فحص الجلسة
+    checkLogin();
+
+  </script>
+
+</body>
+
 </html>
