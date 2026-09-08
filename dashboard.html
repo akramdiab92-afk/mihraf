@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة التحكم | مِهراف</title>
-
-  <style>
+  <title>لوحة التحكم | مِهراف</title>  <style>
     * {
       box-sizing: border-box;
     }
@@ -175,120 +172,99 @@
       padding: 40px;
       color: #b91c1c;
     }
-  </style>
-</head>
-
-<body>
-
-<header>
+  </style></head><body><header>
   <div class="header-inner">
     <a href="index.html" class="logo">مِهراف</a>
     <a href="index.html" class="home">← الصفحة الرئيسية</a>
   </div>
-</header>
-
-<main>
-
-  <div id="loading">
+</header><main>  <div id="loading">
     جارٍ تحميل لوحة التحكم...
-  </div>
+  </div>  <div id="error" class="error" style="display:none;"></div>  <div id="content"><div class="welcome">
+  <h1>مرحبًا، <span id="userName"></span> 👋</h1>
 
-  <div id="error" class="error" style="display:none;"></div>
+  <p id="userEmail"></p>
 
-  <div id="content">
-
-    <div class="welcome">
-      <h1>مرحبًا، <span id="userName"></span> 👋</h1>
-
-      <p id="userEmail"></p>
-
-      <div class="role" id="userRole"></div>
-    </div>
+  <div class="role" id="userRole"></div>
+</div>
 
 
-    <!-- لوحة المستقل -->
-    <section id="freelancerSection" style="display:none;">
+<!-- لوحة المستقل -->
+<section id="freelancerSection" style="display:none;">
 
-      <h2 class="section-title">إدارة خدماتك</h2>
+  <h2 class="section-title">إدارة خدماتك</h2>
 
-      <div class="cards">
+  <div class="cards">
 
-        <a href="my-services.html" class="card">
-          <div class="icon">💼</div>
-          <h3>خدماتي</h3>
-          <p>إدارة الخدمات التي تقدمها للعملاء.</p>
-        </a>
+    <a href="my-services.html" class="card">
+      <div class="icon">💼</div>
+      <h3>خدماتي</h3>
+      <p>إدارة الخدمات التي تقدمها للعملاء.</p>
+    </a>
 
-        <a href="add-service.html" class="card">
-          <div class="icon">➕</div>
-          <h3>إضافة خدمة</h3>
-          <p>انشر خدمة جديدة على مِهراف.</p>
-        </a>
+    <a href="add-service.html" class="card">
+      <div class="icon">➕</div>
+      <h3>إضافة خدمة</h3>
+      <p>انشر خدمة جديدة على مِهراف.</p>
+    </a>
 
-        <a href="#" class="card coming" onclick="return false;">
-          <span class="badge">قريبًا</span>
-          <div class="icon">📋</div>
-          <h3>تصفح المشاريع</h3>
-          <p>ابحث عن المشاريع المناسبة لمهاراتك.</p>
-        </a>
+    <a href="#" class="card coming" onclick="return false;">
+      <span class="badge">قريبًا</span>
+      <div class="icon">📋</div>
+      <h3>تصفح المشاريع</h3>
+      <p>ابحث عن المشاريع المناسبة لمهاراتك.</p>
+    </a>
 
-        <a href="#" class="card coming" onclick="return false;">
-          <span class="badge">قريبًا</span>
-          <div class="icon">📨</div>
-          <h3>طلبات العمل</h3>
-          <p>تابع عروضك وطلبات العمل.</p>
-        </a>
-
-      </div>
-
-    </section>
-
-
-    <!-- لوحة العميل -->
-    <section id="clientSection" style="display:none;">
-
-      <h2 class="section-title">إدارة مشاريعك</h2>
-
-      <div class="cards">
-
-        <!-- مشاريعي: سنفعّله لاحقًا -->
-        <a href="#" class="card coming" onclick="return false;">
-          <span class="badge">قريبًا</span>
-          <div class="icon">📁</div>
-          <h3>مشاريعي</h3>
-          <p>عرض وإدارة المشاريع التي نشرتها.</p>
-        </a>
-
-        <!-- نشر مشروع: مفعل -->
-        <a href="add-project.html" class="card">
-          <div class="icon">➕</div>
-          <h3>نشر مشروع</h3>
-          <p>انشر مشروعًا جديدًا واحصل على عروض المستقلين.</p>
-        </a>
-
-        <!-- طلباتي: سنفعّله لاحقًا -->
-        <a href="#" class="card coming" onclick="return false;">
-          <span class="badge">قريبًا</span>
-          <div class="icon">📨</div>
-          <h3>طلباتي</h3>
-          <p>تابع الخدمات والطلبات الخاصة بك.</p>
-        </a>
-
-      </div>
-
-    </section>
-
-
-    <button class="logout" onclick="logoutUser()">
-      تسجيل الخروج
-    </button>
+    <a href="#" class="card coming" onclick="return false;">
+      <span class="badge">قريبًا</span>
+      <div class="icon">📨</div>
+      <h3>طلبات العمل</h3>
+      <p>تابع عروضك وطلبات العمل.</p>
+    </a>
 
   </div>
 
-</main>
+</section>
 
 
-<script>
+<!-- لوحة العميل -->
+<section id="clientSection" style="display:none;">
+
+  <h2 class="section-title">إدارة مشاريعك</h2>
+
+  <div class="cards">
+
+    <!-- مشاريعي: مفعل -->
+    <a href="my-projects.html" class="card">
+      <div class="icon">📁</div>
+      <h3>مشاريعي</h3>
+      <p>عرض وإدارة المشاريع التي نشرتها.</p>
+    </a>
+
+    <!-- نشر مشروع: مفعل -->
+    <a href="add-project.html" class="card">
+      <div class="icon">➕</div>
+      <h3>نشر مشروع</h3>
+      <p>انشر مشروعًا جديدًا واحصل على عروض المستقلين.</p>
+    </a>
+
+    <!-- طلباتي: سنفعّله لاحقًا -->
+    <a href="#" class="card coming" onclick="return false;">
+      <span class="badge">قريبًا</span>
+      <div class="icon">📨</div>
+      <h3>طلباتي</h3>
+      <p>تابع الخدمات والطلبات الخاصة بك.</p>
+    </a>
+
+  </div>
+
+</section>
+
+
+<button class="logout" onclick="logoutUser()">
+  تسجيل الخروج
+</button>
+
+  </div></main><script>
 
   async function loadDashboard() {
 
@@ -373,7 +349,5 @@
 
   loadDashboard();
 
-</script>
-
-</body>
+</script></body>
 </html>
