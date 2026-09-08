@@ -1,6 +1,7 @@
 <!DOCTYPE html><html lang="ar" dir="rtl"><head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>مِهراف | MIHRAF</title>  <style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مِهراف | MIHRAF</title>  <style>
     * {
       box-sizing: border-box;
       margin: 0;
@@ -271,7 +272,7 @@
 
     .side-menu-content {
       flex: 1;
-      padding: 14px 10px;
+      padding: 10px 10px;
       overflow-y: auto;
     }
 
@@ -279,16 +280,17 @@
       color: #737b87;
       font-size: 10px;
       font-weight: 700;
-      padding: 9px 11px 6px;
+      padding: 7px 11px 4px;
     }
 
     .menu-item {
       display: flex;
       align-items: center;
-      gap: 11px;
+      gap: 10px;
       width: 100%;
-      padding: 10px 11px;
-      margin-bottom: 2px;
+      padding: 7px 11px;
+      margin-bottom: 1px;
+      min-height: 43px;
       border-radius: 9px;
       color: #c8cdd5;
       font-size: 13px;
@@ -305,14 +307,14 @@
     }
 
     .menu-icon {
-      width: 31px;
-      height: 31px;
+      width: 29px;
+      height: 29px;
       border-radius: 8px;
       background: #262b32;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      font-size: 14px;
       flex-shrink: 0;
       transition: 0.18s;
     }
@@ -343,11 +345,25 @@
       background: rgba(79, 140, 255, 0.08);
     }
 
+    .dashboard-menu-item {
+      margin-top: 2px;
+      margin-bottom: 3px;
+    }
+
+    .dashboard-menu-item .menu-icon {
+      background: rgba(79, 140, 255, 0.10);
+      color: var(--blue);
+    }
+
+    .dashboard-menu-item:hover .menu-icon {
+      background: rgba(79, 140, 255, 0.18);
+    }
+
     .more-menu {
       display: none;
       padding-right: 8px;
       border-right: 1px solid #30363f;
-      margin: 2px 8px 8px 0;
+      margin: 1px 8px 5px 0;
     }
 
     .more-menu.active {
@@ -356,12 +372,13 @@
 
     .more-menu .menu-item {
       font-size: 12px;
-      padding: 9px 10px;
+      padding: 7px 10px;
+      min-height: 40px;
     }
 
     .more-menu .menu-icon {
-      width: 28px;
-      height: 28px;
+      width: 27px;
+      height: 27px;
       font-size: 13px;
     }
 
@@ -380,10 +397,11 @@
     .logout-menu-btn {
       display: flex;
       align-items: center;
-      gap: 11px;
+      gap: 10px;
       width: 100%;
-      padding: 11px 11px;
-      margin-top: 5px;
+      padding: 8px 11px;
+      margin-top: 4px;
+      min-height: 43px;
       border: none;
       background: transparent;
       color: #ef6f79;
@@ -412,7 +430,7 @@
     .menu-divider {
       height: 1px;
       background: var(--border);
-      margin: 10px 11px;
+      margin: 6px 11px;
     }
 
     .hero {
@@ -815,9 +833,8 @@
         width: 88vw;
       }
     }
-  </style></head><body>  <header><div class="container nav">
-
-  <a href="index.html" class="logo">
+  </style></head><body>  <header>
+    <div class="container nav">  <a href="index.html" class="logo">
     مِهراف
   </a>
 
@@ -916,6 +933,26 @@
 
 <div class="side-menu-content">
 
+  <!-- لوحة التحكم -->
+
+  <a
+    href="dashboard.html"
+    class="menu-item dashboard-menu-item"
+  >
+    <div class="menu-icon">📊</div>
+
+    <div class="menu-item-text">
+      لوحة التحكم
+    </div>
+
+    <div class="menu-item-arrow">
+      ‹
+    </div>
+  </a>
+
+
+  <!-- استكشف مهراف -->
+
   <div class="menu-section-title">
     استكشف مِهراف
   </div>
@@ -926,9 +963,11 @@
     class="menu-item"
   >
     <div class="menu-icon">📁</div>
+
     <div class="menu-item-text">
       تصفح المشاريع
     </div>
+
     <div class="menu-item-arrow">
       ‹
     </div>
@@ -941,9 +980,11 @@
     onclick="closeSideMenu()"
   >
     <div class="menu-icon">👥</div>
+
     <div class="menu-item-text">
       تصفح المنفذين
     </div>
+
     <div class="menu-item-arrow">
       ‹
     </div>
@@ -956,9 +997,11 @@
     onclick="return false;"
   >
     <div class="menu-icon">🖼️</div>
+
     <div class="menu-item-text">
       تصفح الأعمال
     </div>
+
     <div class="menu-item-arrow">
       ‹
     </div>
@@ -971,9 +1014,11 @@
     onclick="closeSideMenu()"
   >
     <div class="menu-icon">💼</div>
+
     <div class="menu-item-text">
       تصفح الخدمات
     </div>
+
     <div class="menu-item-arrow">
       ‹
     </div>
@@ -986,9 +1031,11 @@
     onclick="return false;"
   >
     <div class="menu-icon">💬</div>
+
     <div class="menu-item-text">
       مجتمع مهراف
     </div>
+
     <div class="menu-item-arrow">
       ‹
     </div>
@@ -1001,9 +1048,11 @@
     onclick="return false;"
   >
     <div class="menu-icon">📖</div>
+
     <div class="menu-item-text">
       الدليل الإرشادي
     </div>
+
     <div class="menu-item-arrow">
       ‹
     </div>
@@ -1016,9 +1065,11 @@
     onclick="return false;"
   >
     <div class="menu-icon">🛟</div>
+
     <div class="menu-item-text">
       الدعم الفني
     </div>
+
     <div class="menu-item-arrow">
       ‹
     </div>
@@ -1032,9 +1083,11 @@
     onclick="toggleMoreMenu()"
   >
     <div class="menu-icon">⋯</div>
+
     <div class="menu-item-text">
       عرض المزيد
     </div>
+
     <div class="menu-item-arrow">
       ‹
     </div>
@@ -1052,6 +1105,7 @@
       onclick="return false;"
     >
       <div class="menu-icon">🛡️</div>
+
       <div class="menu-item-text">
         ضمان الحقوق
       </div>
@@ -1064,6 +1118,7 @@
       onclick="return false;"
     >
       <div class="menu-icon">📣</div>
+
       <div class="menu-item-text">
         التسويق بالعمولة
       </div>
@@ -1076,6 +1131,7 @@
       onclick="return false;"
     >
       <div class="menu-icon">❓</div>
+
       <div class="menu-item-text">
         الأسئلة الشائعة
       </div>
@@ -1088,6 +1144,7 @@
       onclick="return false;"
     >
       <div class="menu-icon">📝</div>
+
       <div class="menu-item-text">
         مدونة مهراف
       </div>
@@ -1100,6 +1157,7 @@
       onclick="return false;"
     >
       <div class="menu-icon">🔒</div>
+
       <div class="menu-item-text">
         سياسة الخصوصية
       </div>
@@ -1112,6 +1170,7 @@
       onclick="return false;"
     >
       <div class="menu-icon">📄</div>
+
       <div class="menu-item-text">
         شروط الاستخدام
       </div>
@@ -1130,6 +1189,7 @@
     onclick="logoutUser()"
   >
     <div class="menu-icon">🚪</div>
+
     <div class="menu-item-text">
       تسجيل الخروج
     </div>
@@ -1873,4 +1933,5 @@
 
     checkLogin();
 
-  </script></body></html>
+  </script></body>
+</html>
