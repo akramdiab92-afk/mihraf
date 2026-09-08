@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مشاريعي - مهراف</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Tahoma, sans-serif;
+      background: #f5f7fb;
+      color: #222;
+      line-height: 1.7;
+    }
+
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 20px;
+    }
+
+    .header-content {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: bold;
+      color: #111827;
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: #2563eb;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      color: #374151;
+      background: #f3f4f6;
+      padding: 9px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .back-btn:hover {
+      background: #e5e7eb;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .page-title {
+      margin-bottom: 25px;
+    }
+
+    .page-title h1 {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
+
+    .page-title p {
+      color: #6b7280;
+    }
+
+    .message {
+      display: none;
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+
+    .message.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .message.success {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 50px 20px;
+      color: #6b7280;
+    }
+
+    .empty {
+      display: none;
+      text-align: center;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 50px 20px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .empty .icon {
+      font-size: 45px;
+      margin-bottom: 15px;
+    }
+
+    .empty h2 {
+      margin-bottom: 8px;
+    }
+
+    .empty p {
+      color: #6b7280;
+      margin-bottom: 20px;
+    }
+
+    .primary-btn {
+      display: inline-block;
+      border: none;
+      background: #2563eb;
+      color: white;
+      padding: 11px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .primary-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .project-card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .project-card h2 {
+      font-size: 21px;
+      margin-bottom: 10px;
+      color: #111827;
+    }
+
+    .description {
+      color: #4b5563;
+      margin-bottom: 18px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .details {
+      display: grid;
+      gap: 9px;
+      margin-bottom: 18px;
+    }
+
+    .detail {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding-bottom: 7px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail span:first-child {
+      color: #6b7280;
+    }
+
+    .detail span:last-child {
+      font-weight: bold;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    .status.open {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status.in_progress {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status.completed {
+      background: #ede9fe;
+      color: #5b21b6;
+    }
+
+    .status.cancelled {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .edit-btn,
+    .delete-btn {
+      border: none;
+      padding: 9px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .edit-btn {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .edit-btn:hover {
+      background: #dbeafe;
+    }
+
+    .delete-btn {
+      background: #fef2f2;
+      color: #dc2626;
+    }
+
+    .delete-btn:hover {
+      background: #fee2e2;
+    }
+
+    /* نافذة التعديل */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      max-width: 600px;
+      margin: 40px auto;
+      border-radius: 14px;
+      padding: 25px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      font-size: 22px;
+    }
+
+    .close-btn {
+      border: none;
+      background: transparent;
+      font-size: 28px;
+      cursor: pointer;
+      color: #6b7280;
+    }
+
+    .form-group {
+      margin-bottom: 17px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: bold;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: #2563eb;
+    }
+
+    .form-group textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .cancel-btn {
+      border: none;
+      background: #f3f4f6;
+      color: #374151;
+      padding: 11px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .header-content {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .back-btn {
+        text-align: center;
+      }
+
+      .page-title h1 {
+        font-size: 25px;
+      }
+
+      .project-card {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-content">
+    <a href="index.html" class="logo">مِهراف<span>.</span></a>
+    <a href="dashboard.html" class="back-btn">← العودة إلى لوحة التحكم</a>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-title">
+    <h1>مشاريعي</h1>
+    <p>إدارة المشاريع التي قمت بنشرها على منصة مهراف.</p>
+  </div>
+
+  <div id="message" class="message"></div>
+
+  <div id="loading" class="loading">
+    جارٍ تحميل مشاريعك...
+  </div>
+
+  <div id="empty" class="empty">
+    <div class="icon">📁</div>
+    <h2>لا توجد مشاريع بعد</h2>
+    <p>لم تقم بنشر أي مشروع حتى الآن.</p>
+    <a href="add-project.html" class="primary-btn">➕ نشر مشروع جديد</a>
+  </div>
+
+  <div id="projects" class="projects"></div>
+
+</main>
+
+
+<!-- نافذة تعديل المشروع -->
+<div id="editModal" class="modal">
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h2>تعديل المشروع</h2>
+      <button class="close-btn" onclick="closeModal()">×</button>
+    </div>
+
+    <form id="editForm">
+
+      <div class="form-group">
+        <label for="editTitle">عنوان المشروع</label>
+        <input
+          type="text"
+          id="editTitle"
+          maxlength="120"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="editDescription">وصف المشروع</label>
+        <textarea
+          id="editDescription"
+          maxlength="3000"
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="editCategory">التصنيف</label>
+
+        <select id="editCategory" required>
+          <option value="">اختر التصنيف</option>
+          <option value="التصميم">التصميم</option>
+          <option value="البرمجة">البرمجة</option>
+          <option value="الكتابة">الكتابة</option>
+          <option value="التسويق">التسويق</option>
+          <option value="الفيديو">الفيديو</option>
+          <option value="الصوت">الصوت</option>
+          <option value="الأعمال">الأعمال</option>
+          <option value="أخرى">أخرى</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="editBudget">الميزانية بالدولار</label>
+
+        <input
+          type="number"
+          id="editBudget"
+          min="1"
+          step="0.01"
+          required
+        >
+      </div>
+
+      <div id="editMessage" class="message"></div>
+
+      <div class="modal-actions">
+
+        <button type="submit" class="primary-btn">
+          حفظ التعديلات
+        </button>
+
+        <button
+          type="button"
+          class="cancel-btn"
+          onclick="closeModal()"
+        >
+          إلغاء
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  let currentProjectId = null;
+
+  const loading = document.getElementById("loading");
+  const projectsContainer = document.getElementById("projects");
+  const empty = document.getElementById("empty");
+  const message = document.getElementById("message");
+  const editModal = document.getElementById("editModal");
+
+  const statusNames = {
+    open: "مفتوح",
+    in_progress: "قيد التنفيذ",
+    completed: "مكتمل",
+    cancelled: "ملغى"
+  };
+
+
+  function escapeHTML(value) {
+
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+
+  function showMessage(text, type = "error") {
+
+    message.textContent = text;
+    message.className = "message " + type;
+  }
+
+
+  function clearMessage() {
+
+    message.textContent = "";
+    message.className = "message";
+  }
+
+
+  function formatDate(dateString) {
+
+    if (!dateString) {
+      return "-";
+    }
+
+    const date = new Date(dateString);
+
+    if (isNaN(date.getTime())) {
+      return dateString;
+    }
+
+    return date.toLocaleDateString("ar", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
+  }
+
+
+  async function checkAuth() {
+
+    try {
+
+      const response = await fetch("/api/me", {
+        credentials: "include"
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.authenticated) {
+
+        window.location.href =
+          "login.html?redirect=my-projects.html";
+
+        return false;
+      }
+
+      if (data.user.role !== "client") {
+
+        showMessage("هذه الصفحة مخصصة لحسابات العملاء فقط.");
+
+        loading.style.display = "none";
+
+        return false;
+      }
+
+      return true;
+
+    } catch (error) {
+
+      loading.style.display = "none";
+
+      showMessage("تعذر الاتصال بالخادم. حاول مرة أخرى.");
+
+      return false;
+    }
+  }
+
+
+  async function loadProjects() {
+
+    clearMessage();
+
+    loading.style.display = "block";
+    empty.style.display = "none";
+    projectsContainer.innerHTML = "";
+
+    try {
+
+      const response = await fetch("/api/my-projects", {
+        method: "GET",
+        credentials: "include"
+      });
+
+      const data = await response.json();
+
+      loading.style.display = "none";
+
+      if (!response.ok) {
+
+        showMessage(
+          data.error || "تعذر تحميل المشاريع."
+        );
+
+        return;
+      }
+
+      const projects = data.projects || [];
+
+      if (projects.length === 0) {
+
+        empty.style.display = "block";
+
+        return;
+      }
+
+      projectsContainer.innerHTML =
+        projects.map(project => createProjectCard(project)).join("");
+
+    } catch (error) {
+
+      loading.style.display = "none";
+
+      showMessage(
+        "حدث خطأ أثناء تحميل المشاريع. حاول مرة أخرى."
+      );
+    }
+  }
+
+
+  function createProjectCard(project) {
+
+    const status = project.status || "open";
+
+    const canEdit = status === "open";
+
+    return `
+      <article class="project-card">
+
+        <h2>${escapeHTML(project.title)}</h2>
+
+        <div class="description">
+          ${escapeHTML(project.description)}
+        </div>
+
+        <div class="details">
+
+          <div class="detail">
+            <span>التصنيف</span>
+            <span>${escapeHTML(project.category)}</span>
+          </div>
+
+          <div class="detail">
+            <span>الميزانية</span>
+            <span>$${Number(project.budget).toFixed(2)}</span>
+          </div>
+
+          <div class="detail">
+            <span>الحالة</span>
+            <span class="status ${escapeHTML(status)}">
+              ${escapeHTML(statusNames[status] || status)}
+            </span>
+          </div>
+
+          <div class="detail">
+            <span>تاريخ النشر</span>
+            <span>${formatDate(project.created_at)}</span>
+          </div>
+
+        </div>
+
+        ${
+          canEdit
+          ? `
+            <div class="actions">
+
+              <button
+                class="edit-btn"
+                onclick="openEditModal(${Number(project.id)})"
+              >
+                ✏️ تعديل
+              </button>
+
+              <button
+                class="delete-btn"
+                onclick="deleteProject(${Number(project.id)})"
+              >
+                🗑️ إلغاء المشروع
+              </button>
+
+            </div>
+          `
+          : `
+            <div style="color:#6b7280;font-size:14px;">
+              لا يمكن تعديل هذا المشروع بعد تغيير حالته.
+            </div>
+          `
+        }
+
+      </article>
+    `;
+  }
+
+
+  async function openEditModal(projectId) {
+
+    clearEditMessage();
+
+    try {
+
+      const response = await fetch("/api/my-projects", {
+        credentials: "include"
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+
+        showMessage(
+          data.error || "تعذر تحميل المشروع."
+        );
+
+        return;
+      }
+
+      const project = (data.projects || [])
+        .find(item => Number(item.id) === Number(projectId));
+
+      if (!project) {
+
+        showMessage("المشروع غير موجود.");
+
+        return;
+      }
+
+      if (project.status !== "open") {
+
+        showMessage(
+          "لا يمكن تعديل هذا المشروع لأنه لم يعد مفتوحًا."
+        );
+
+        return;
+      }
+
+      currentProjectId = project.id;
+
+      document.getElementById("editTitle").value =
+        project.title || "";
+
+      document.getElementById("editDescription").value =
+        project.description || "";
+
+      document.getElementById("editCategory").value =
+        project.category || "";
+
+      document.getElementById("editBudget").value =
+        project.budget || "";
+
+      editModal.style.display = "block";
+
+    } catch (error) {
+
+      showMessage("حدث خطأ أثناء فتح المشروع.");
+    }
+  }
+
+
+  function closeModal() {
+
+    editModal.style.display = "none";
+    currentProjectId = null;
+
+    clearEditMessage();
+  }
+
+
+  function showEditMessage(text, type = "error") {
+
+    const element =
+      document.getElementById("editMessage");
+
+    element.textContent = text;
+    element.className = "message " + type;
+  }
+
+
+  function clearEditMessage() {
+
+    const element =
+      document.getElementById("editMessage");
+
+    element.textContent = "";
+    element.className = "message";
+  }
+
+
+  document
+    .getElementById("editForm")
+    .addEventListener("submit", async function(event) {
+
+      event.preventDefault();
+
+      if (!currentProjectId) {
+        return;
+      }
+
+      const title =
+        document.getElementById("editTitle").value.trim();
+
+      const description =
+        document.getElementById("editDescription").value.trim();
+
+      const category =
+        document.getElementById("editCategory").value;
+
+      const budget =
+        Number(document.getElementById("editBudget").value);
+
+      if (title.length < 3) {
+
+        showEditMessage(
+          "عنوان المشروع يجب أن يكون 3 أحرف على الأقل."
+        );
+
+        return;
+      }
+
+      if (description.length < 10) {
+
+        showEditMessage(
+          "وصف المشروع يجب أن يكون 10 أحرف على الأقل."
+        );
+
+        return;
+      }
+
+      if (!category) {
+
+        showEditMessage(
+          "يرجى اختيار التصنيف."
+        );
+
+        return;
+      }
+
+      if (!Number.isFinite(budget) || budget <= 0) {
+
+        showEditMessage(
+          "يرجى إدخال ميزانية صحيحة."
+        );
+
+        return;
+      }
+
+      const submitButton =
+        this.querySelector('button[type="submit"]');
+
+      submitButton.disabled = true;
+      submitButton.textContent = "جارٍ الحفظ...";
+
+      clearEditMessage();
+
+      try {
+
+        const response = await fetch(
+          "/api/projects/" + currentProjectId,
+          {
+            method: "PUT",
+
+            headers: {
+              "Content-Type": "application/json"
+            },
+
+            credentials: "include",
+
+            body: JSON.stringify({
+              title,
+              description,
+              category,
+              budget
+            })
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+
+          showEditMessage(
+            data.error || "تعذر حفظ التعديلات."
+          );
+
+          return;
+        }
+
+        closeModal();
+
+        showMessage(
+          "تم تعديل المشروع بنجاح.",
+          "success"
+        );
+
+        await loadProjects();
+
+      } catch (error) {
+
+        showEditMessage(
+          "حدث خطأ أثناء حفظ التعديلات."
+        );
+
+      } finally {
+
+        submitButton.disabled = false;
+        submitButton.textContent = "حفظ التعديلات";
+      }
+
+    });
+
+
+  async function deleteProject(projectId) {
+
+    const confirmed = confirm(
+      "هل أنت متأكد من إلغاء هذا المشروع؟\n\n" +
+      "سيتم تغيير حالته إلى «ملغى» ولن تتمكن من تعديله بعد ذلك."
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    clearMessage();
+
+    try {
+
+      const response = await fetch(
+        "/api/projects/" + projectId,
+        {
+          method: "DELETE",
+          credentials: "include"
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+
+        showMessage(
+          data.error || "تعذر إلغاء المشروع."
+        );
+
+        return;
+      }
+
+      showMessage(
+        "تم إلغاء المشروع بنجاح.",
+        "success"
+      );
+
+      await loadProjects();
+
+    } catch (error) {
+
+      showMessage(
+        "حدث خطأ أثناء إلغاء المشروع."
+      );
+    }
+  }
+
+
+  window.addEventListener("click", function(event) {
+
+    if (event.target === editModal) {
+      closeModal();
+    }
+
+  });
+
+
+  async function init() {
+
+    const authenticated = await checkAuth();
+
+    if (authenticated) {
+      await loadProjects();
+    }
+
+  }
+
+
+  init();
+
+</script>
+
+</body>
+</html>
