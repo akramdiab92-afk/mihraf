@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تعديل الخدمة | مِهراف</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Tahoma, sans-serif;
+      background: #f7f8fa;
+      color: #1f2937;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 20px;
+    }
+
+    .header-inner {
+      max-width: 850px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      text-decoration: none;
+      color: #111827;
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .back {
+      text-decoration: none;
+      color: #4b5563;
+      font-size: 14px;
+    }
+
+    main {
+      max-width: 850px;
+      margin: 35px auto;
+      padding: 0 20px;
+    }
+
+    .box {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 25px;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 27px;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 7px;
+      font-weight: bold;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 9px;
+      font-size: 15px;
+      font-family: inherit;
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 13px;
+      border: 0;
+      border-radius: 10px;
+      background: #111827;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .cancel {
+      display: block;
+      text-align: center;
+      margin-top: 13px;
+      color: #6b7280;
+      text-decoration: none;
+    }
+
+    .message {
+      display: none;
+      margin-top: 18px;
+      padding: 12px;
+      border-radius: 9px;
+      text-align: center;
+    }
+
+    .success {
+      display: block;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .loading {
+      text-align: center;
+      color: #6b7280;
+      padding: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">مِهراف</a>
+    <a href="my-services.html" class="back">← خدماتي</a>
+  </div>
+</header>
+
+<main>
+
+  <div class="box">
+
+    <div id="loading" class="loading">
+      جارٍ تحميل بيانات الخدمة...
+    </div>
+
+    <div id="formContainer" style="display:none;">
+
+      <h1>تعديل الخدمة ✏️</h1>
+
+      <p class="subtitle">
+        عدّل بيانات خدمتك ثم اضغط حفظ التعديلات.
+      </p>
+
+      <form id="editForm">
+
+        <label for="title">عنوان الخدمة</label>
+        <input
+          id="title"
+          type="text"
+          maxlength="120"
+          required
+        >
+
+        <label for="description">وصف الخدمة</label>
+        <textarea
+          id="description"
+          maxlength="3000"
+          required
+        ></textarea>
+
+        <div class="row">
+
+          <div>
+            <label for="category">التصنيف</label>
+
+            <select id="category" required>
+              <option value="">اختر التصنيف</option>
+              <option value="التصميم">التصميم</option>
+              <option value="البرمجة">البرمجة</option>
+              <option value="الكتابة">الكتابة</option>
+              <option value="التسويق">التسويق</option>
+              <option value="الفيديو">الفيديو</option>
+              <option value="الصوت">الصوت</option>
+              <option value="الأعمال">الأعمال</option>
+              <option value="أخرى">أخرى</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="price">السعر بالدولار</label>
+
+            <input
+              id="price"
+              type="number"
+              min="1"
+              step="0.01"
+              required
+            >
+          </div>
+
+        </div>
+
+        <label for="status">حالة الخدمة</label>
+
+        <select id="status" required>
+          <option value="active">نشطة</option>
+          <option value="paused">متوقفة</option>
+        </select>
+
+        <button id="saveButton" class="button" type="submit">
+          حفظ التعديلات
+        </button>
+
+        <a href="my-services.html" class="cancel">
+          إلغاء والعودة إلى خدماتي
+        </a>
+
+        <div id="message" class="message"></div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+
+  const params = new URLSearchParams(window.location.search);
+  const serviceId = params.get("id");
+
+  const loading = document.getElementById("loading");
+  const formContainer = document.getElementById("formContainer");
+  const form = document.getElementById("editForm");
+  const message = document.getElementById("message");
+  const saveButton = document.getElementById("saveButton");
+
+  function showMessage(text, type) {
+    message.textContent = text;
+    message.className = "message " + type;
+  }
+
+  async function loadService() {
+
+    if (!serviceId) {
+      loading.textContent = "لم يتم تحديد الخدمة.";
+      return;
+    }
+
+    try {
+
+      const meResponse = await fetch("/api/me", {
+        credentials: "include"
+      });
+
+      if (!meResponse.ok) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const meData = await meResponse.json();
+
+      if (!meData.user || meData.user.role !== "freelancer") {
+        window.location.href = "dashboard.html";
+        return;
+      }
+
+      /*
+        نستخدم خدمات المستخدم الحالية للحصول على الخدمة المطلوبة.
+        هذا يمنع تعديل خدمة لا يملكها المستخدم.
+      */
+
+      const response = await fetch("/api/my-services", {
+        credentials: "include"
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        loading.textContent =
+          data.message || "تعذر تحميل الخدمات.";
+        return;
+      }
+
+      const service = (data.services || []).find(
+        item => String(item.id) === String(serviceId)
+      );
+
+      if (!service) {
+        loading.textContent =
+          "الخدمة غير موجودة أو لا تملك صلاحية تعديلها.";
+        return;
+      }
+
+      document.getElementById("title").value =
+        service.title || "";
+
+      document.getElementById("description").value =
+        service.description || "";
+
+      document.getElementById("category").value =
+        service.category || "";
+
+      document.getElementById("price").value =
+        service.price || "";
+
+      document.getElementById("status").value =
+        service.status === "paused"
+          ? "paused"
+          : "active";
+
+      loading.style.display = "none";
+      formContainer.style.display = "block";
+
+    } catch (error) {
+
+      console.error(error);
+
+      loading.textContent =
+        "تعذر الاتصال بالخادم.";
+    }
+  }
+
+
+  form.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    saveButton.disabled = true;
+    saveButton.textContent = "جارٍ الحفظ...";
+
+    const title =
+      document.getElementById("title").value.trim();
+
+    const description =
+      document.getElementById("description").value.trim();
+
+    const category =
+      document.getElementById("category").value;
+
+    const price =
+      Number(document.getElementById("price").value);
+
+    const status =
+      document.getElementById("status").value;
+
+    try {
+
+      const response = await fetch(
+        "/api/services/" + encodeURIComponent(serviceId),
+        {
+          method: "PUT",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            title,
+            description,
+            category,
+            price,
+            status
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+
+        showMessage(
+          data.message || "تعذر حفظ التعديلات.",
+          "error"
+        );
+
+        saveButton.disabled = false;
+        saveButton.textContent = "حفظ التعديلات";
+
+        return;
+      }
+
+      showMessage(
+        data.message || "تم حفظ التعديلات بنجاح.",
+        "success"
+      );
+
+      setTimeout(function() {
+        window.location.href = "my-services.html";
+      }, 1200);
+
+    } catch (error) {
+
+      console.error(error);
+
+      showMessage(
+        "تعذر الاتصال بالخادم.",
+        "error"
+      );
+
+      saveButton.disabled = false;
+      saveButton.textContent = "حفظ التعديلات";
+    }
+
+  });
+
+
+  loadService();
+
+</script>
+
+</body>
+</html>
