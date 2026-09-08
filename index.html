@@ -60,10 +60,6 @@
       margin: auto;
     }
 
-    /* =========================
-       Header
-    ========================= */
-
     header {
       background: rgba(24, 27, 32, 0.92);
       border-bottom: 1px solid var(--border);
@@ -106,10 +102,6 @@
       color: var(--blue);
     }
 
-    /* =========================
-       Auth
-    ========================= */
-
     .auth-area {
       display: flex;
       align-items: center;
@@ -140,10 +132,6 @@
       transform: translateY(-1px);
     }
 
-    /* =========================
-       Menu Button
-    ========================= */
-
     .menu-button {
       width: 42px;
       height: 42px;
@@ -164,10 +152,6 @@
       border-color: #3d4652;
       transform: translateY(-1px);
     }
-
-    /* =========================
-       Side Menu
-    ========================= */
 
     .menu-overlay {
       position: fixed;
@@ -198,7 +182,7 @@
       transition: transform 0.3s ease;
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
+      overflow: hidden;
       box-shadow: -15px 0 40px rgba(0, 0, 0, 0.35);
     }
 
@@ -214,6 +198,7 @@
         #202731,
         #1b1f25
       );
+      flex-shrink: 0;
     }
 
     .menu-header-top {
@@ -291,13 +276,10 @@
       margin-top: 2px;
     }
 
-    /* =========================
-       Menu Items
-    ========================= */
-
     .side-menu-content {
       flex: 1;
       padding: 14px 10px;
+      overflow-y: auto;
     }
 
     .menu-section-title {
@@ -351,18 +333,20 @@
       font-size: 14px;
     }
 
-    /* =========================
-       Logout
-    ========================= */
-
     .side-menu-footer {
-      padding: 12px 10px;
+      padding: 14px 10px;
       border-top: 1px solid var(--border);
+      background: #1b1f24;
+      flex-shrink: 0;
     }
 
     .logout-menu-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 100%;
-      border: 1px solid #40272b;
+      min-height: 44px;
+      border: 1px solid #563038;
       background: #2a2023;
       color: #ef858d;
       padding: 11px;
@@ -375,12 +359,13 @@
 
     .logout-menu-btn:hover {
       background: #342326;
-      border-color: #593137;
+      border-color: #704049;
     }
 
-    /* =========================
-       Hero
-    ========================= */
+    .logout-menu-btn:disabled {
+      opacity: 0.7;
+      cursor: wait;
+    }
 
     .hero {
       padding: 82px 0 78px;
@@ -456,10 +441,6 @@
       transform: translateY(-2px);
     }
 
-    /* =========================
-       Search
-    ========================= */
-
     .search-section {
       padding: 26px 0;
       background: #1c2025;
@@ -529,10 +510,6 @@
       background: var(--blue-dark);
     }
 
-    /* =========================
-       Sections
-    ========================= */
-
     section {
       padding: 58px 0;
     }
@@ -553,10 +530,6 @@
       color: #858e9a;
       font-size: 13px;
     }
-
-    /* =========================
-       Categories
-    ========================= */
 
     .categories {
       display: grid;
@@ -596,10 +569,6 @@
       color: #858e9a;
       font-size: 11px;
     }
-
-    /* =========================
-       Cards
-    ========================= */
 
     .cards {
       display: grid;
@@ -655,10 +624,6 @@
       font-weight: 700;
     }
 
-    /* =========================
-       CTA
-    ========================= */
-
     .cta {
       background:
         radial-gradient(
@@ -701,10 +666,6 @@
       transform: translateY(-2px);
     }
 
-    /* =========================
-       Footer
-    ========================= */
-
     footer {
       background: #14171b;
       color: #777f8b;
@@ -724,10 +685,6 @@
       font-size: 11px;
       margin-top: 2px;
     }
-
-    /* =========================
-       Responsive
-    ========================= */
 
     @media (max-width: 900px) {
 
@@ -815,10 +772,6 @@
 
 <body>
 
-  <!-- =========================
-       Header
-  ========================= -->
-
   <header>
 
     <div class="container nav">
@@ -870,20 +823,12 @@
   </header>
 
 
-  <!-- =========================
-       Menu Overlay
-  ========================= -->
-
   <div
     class="menu-overlay"
     id="menuOverlay"
     onclick="closeSideMenu()"
   ></div>
 
-
-  <!-- =========================
-       Side Menu
-  ========================= -->
 
   <aside
     class="side-menu"
@@ -973,7 +918,6 @@
         </div>
       </a>
 
-
       <a
         href="add-project.html"
         class="menu-item"
@@ -987,7 +931,6 @@
         </div>
       </a>
 
-
       <a
         href="my-projects.html"
         class="menu-item"
@@ -1000,7 +943,6 @@
           ‹
         </div>
       </a>
-
 
       <a
         href="add-service.html"
@@ -1018,13 +960,12 @@
     </div>
 
 
-    <!-- تسجيل الخروج في أسفل القائمة -->
-
     <div class="side-menu-footer">
 
       <button
         type="button"
         class="logout-menu-btn"
+        id="logoutMenuButton"
         onclick="logoutUser()"
       >
         🚪 تسجيل الخروج
@@ -1034,10 +975,6 @@
 
   </aside>
 
-
-  <!-- =========================
-       Hero
-  ========================= -->
 
   <section class="hero">
 
@@ -1078,10 +1015,6 @@
   </section>
 
 
-  <!-- =========================
-       Search
-  ========================= -->
-
   <section class="search-section">
 
     <div class="container">
@@ -1109,10 +1042,6 @@
   </section>
 
 
-  <!-- =========================
-       Services / Categories
-  ========================= -->
-
   <section id="services">
 
     <div class="container">
@@ -1128,7 +1057,6 @@
         </p>
 
       </div>
-
 
       <div class="categories">
 
@@ -1187,10 +1115,6 @@
   </section>
 
 
-  <!-- =========================
-       Featured Services
-  ========================= -->
-
   <section>
 
     <div class="container">
@@ -1206,7 +1130,6 @@
         </p>
 
       </div>
-
 
       <div class="cards">
 
@@ -1291,10 +1214,6 @@
   </section>
 
 
-  <!-- =========================
-       Projects
-  ========================= -->
-
   <section id="projects">
 
     <div class="container">
@@ -1310,7 +1229,6 @@
         </p>
 
       </div>
-
 
       <div class="cards">
 
@@ -1383,10 +1301,6 @@
   </section>
 
 
-  <!-- =========================
-       Professionals
-  ========================= -->
-
   <section id="professionals">
 
     <div class="container">
@@ -1402,7 +1316,6 @@
         </p>
 
       </div>
-
 
       <div class="cards">
 
@@ -1463,10 +1376,6 @@
   </section>
 
 
-  <!-- =========================
-       CTA
-  ========================= -->
-
   <section class="cta">
 
     <h2>
@@ -1487,10 +1396,6 @@
   </section>
 
 
-  <!-- =========================
-       Footer
-  ========================= -->
-
   <footer>
 
     <strong>
@@ -1507,10 +1412,6 @@
 
   </footer>
 
-
-  <!-- =========================
-       JavaScript
-  ========================= -->
 
   <script>
 
@@ -1547,10 +1448,9 @@
     const userAvatar =
       document.getElementById("userAvatar");
 
+    const logoutMenuButton =
+      document.getElementById("logoutMenuButton");
 
-    /* =========================
-       فحص تسجيل الدخول
-    ========================= */
 
     async function checkLogin() {
 
@@ -1564,7 +1464,6 @@
 
         const data =
           await response.json();
-
 
         if (
           response.ok &&
@@ -1595,134 +1494,86 @@
     }
 
 
-    /* =========================
-       مستخدم مسجل
-    ========================= */
-
     function showLoggedInState(user) {
 
-      if (loginLink) {
-        loginLink.style.display = "none";
-      }
+      loginLink.style.display = "none";
 
-      if (registerLink) {
-        registerLink.style.display = "none";
-      }
+      registerLink.style.display = "none";
 
-      if (menuButton) {
-        menuButton.style.display = "flex";
-      }
+      menuButton.style.display = "flex";
 
 
       const fullName =
         user.full_name || "المستخدم";
 
 
-      if (menuUserName) {
-        menuUserName.textContent =
-          fullName;
-      }
+      menuUserName.textContent =
+        fullName;
 
 
-      if (menuUserRole) {
+      if (user.role === "client") {
 
-        if (user.role === "client") {
+        menuUserRole.textContent =
+          "صاحب مشاريع";
 
-          menuUserRole.textContent =
-            "صاحب مشاريع";
+      } else if (user.role === "freelancer") {
 
-        } else if (user.role === "freelancer") {
+        menuUserRole.textContent =
+          "مستقل ومحترف";
 
-          menuUserRole.textContent =
-            "مستقل ومحترف";
+      } else {
 
-        } else {
-
-          menuUserRole.textContent =
-            "حساب مِهراف";
-
-        }
+        menuUserRole.textContent =
+          "حساب مِهراف";
 
       }
 
 
-      if (userAvatar) {
-
-        userAvatar.textContent =
-          fullName.trim().charAt(0) || "م";
-
-      }
+      userAvatar.textContent =
+        fullName.trim().charAt(0) || "م";
 
 
-      if (heroRegister) {
-        heroRegister.style.display = "none";
-      }
+      heroRegister.style.display =
+        "none";
 
-      if (heroLogin) {
-        heroLogin.style.display = "none";
-      }
+      heroLogin.style.display =
+        "none";
 
 
-      if (ctaRegister) {
+      ctaRegister.textContent =
+        "الانتقال إلى لوحة التحكم";
 
-        ctaRegister.textContent =
-          "الانتقال إلى لوحة التحكم";
-
-        ctaRegister.href =
-          "dashboard.html";
-
-      }
+      ctaRegister.href =
+        "dashboard.html";
 
     }
 
-
-    /* =========================
-       زائر
-    ========================= */
 
     function showLoggedOutState() {
 
-      if (loginLink) {
-        loginLink.style.display =
-          "inline-block";
-      }
+      loginLink.style.display =
+        "inline-block";
 
-      if (registerLink) {
-        registerLink.style.display =
-          "inline-block";
-      }
+      registerLink.style.display =
+        "inline-block";
 
-      if (menuButton) {
-        menuButton.style.display =
-          "none";
-      }
+      menuButton.style.display =
+        "none";
 
-      if (heroRegister) {
-        heroRegister.style.display =
-          "inline-block";
-      }
+      heroRegister.style.display =
+        "inline-block";
 
-      if (heroLogin) {
-        heroLogin.style.display =
-          "inline-block";
-      }
+      heroLogin.style.display =
+        "inline-block";
 
-      if (ctaRegister) {
+      ctaRegister.textContent =
+        "ابدأ الآن";
 
-        ctaRegister.textContent =
-          "ابدأ الآن";
-
-        ctaRegister.href =
-          "register.html";
-
-      }
+      ctaRegister.href =
+        "register.html";
 
     }
 
-
-    /* =========================
-       فتح القائمة
-    ========================= */
 
     function openSideMenu() {
 
@@ -1747,10 +1598,6 @@
     }
 
 
-    /* =========================
-       إغلاق القائمة
-    ========================= */
-
     function closeSideMenu() {
 
       sideMenu.classList.remove("active");
@@ -1774,10 +1621,6 @@
     }
 
 
-    /* =========================
-       ESC
-    ========================= */
-
     document.addEventListener(
       "keydown",
       function(event) {
@@ -1790,23 +1633,14 @@
     );
 
 
-    /* =========================
-       تسجيل الخروج
-    ========================= */
-
     async function logoutUser() {
 
-      const button =
-        document.querySelector(
-          ".logout-menu-btn"
-        );
+      if (logoutMenuButton) {
 
+        logoutMenuButton.disabled =
+          true;
 
-      if (button) {
-
-        button.disabled = true;
-
-        button.textContent =
+        logoutMenuButton.textContent =
           "جاري تسجيل الخروج...";
 
       }
@@ -1832,38 +1666,32 @@
           window.location.href =
             "index.html";
 
-        } else {
-
-          if (button) {
-
-            button.disabled = false;
-
-            button.textContent =
-              "🚪 تسجيل الخروج";
-
-          }
-
-          alert(
-            data.message ||
-            "تعذر تسجيل الخروج"
-          );
+          return;
 
         }
+
+
+        throw new Error(
+          data.message ||
+          "تعذر تسجيل الخروج"
+        );
 
       } catch (error) {
 
         console.error(error);
 
-        if (button) {
+        if (logoutMenuButton) {
 
-          button.disabled = false;
+          logoutMenuButton.disabled =
+            false;
 
-          button.textContent =
+          logoutMenuButton.textContent =
             "🚪 تسجيل الخروج";
 
         }
 
         alert(
+          error.message ||
           "تعذر الاتصال بالخادم"
         );
 
@@ -1871,10 +1699,6 @@
 
     }
 
-
-    /* =========================
-       البحث
-    ========================= */
 
     function searchSite() {
 
@@ -1902,10 +1726,6 @@
 
     }
 
-
-    /* =========================
-       تشغيل النظام
-    ========================= */
 
     checkLogin();
 
