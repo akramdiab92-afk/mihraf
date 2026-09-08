@@ -1,46 +1,31 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>لوحة التحكم | مِهراف</title>
 
   <style>
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
 
     body {
+      margin: 0;
       font-family: Arial, Tahoma, sans-serif;
-      background: #f5f7fb;
+      background: #f7f8fa;
       color: #1f2937;
-      min-height: 100vh;
     }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .container {
-      width: 92%;
-      max-width: 1150px;
-      margin: auto;
-    }
-
-    /* Header */
 
     header {
-      background: white;
+      background: #ffffff;
       border-bottom: 1px solid #e5e7eb;
+      padding: 16px 20px;
     }
 
-    .nav {
-      min-height: 70px;
+    .header-inner {
+      max-width: 1100px;
+      margin: auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -48,96 +33,77 @@
     }
 
     .logo {
-      color: #2563eb;
-      font-size: 28px;
-      font-weight: 800;
+      color: #111827;
+      text-decoration: none;
+      font-size: 26px;
+      font-weight: bold;
     }
 
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .home-btn,
-    .logout-btn {
-      border: none;
-      cursor: pointer;
-      padding: 9px 14px;
-      border-radius: 8px;
-      font-family: inherit;
+    .home {
+      color: #4b5563;
+      text-decoration: none;
       font-size: 14px;
     }
 
-    .home-btn {
-      background: #eff6ff;
-      color: #2563eb;
-    }
-
-    .logout-btn {
-      background: #f3f4f6;
-      color: #374151;
-    }
-
-    .logout-btn:hover {
-      background: #e5e7eb;
-    }
-
-    /* Main */
-
     main {
-      padding: 45px 0;
+      max-width: 1100px;
+      margin: 35px auto;
+      padding: 0 20px;
     }
 
     .welcome {
-      background: white;
+      background: #ffffff;
       border: 1px solid #e5e7eb;
       border-radius: 16px;
-      padding: 28px;
+      padding: 25px;
       margin-bottom: 25px;
     }
 
     .welcome h1 {
-      font-size: 27px;
-      margin-bottom: 8px;
-      color: #111827;
+      margin: 0 0 8px;
+      font-size: 28px;
     }
 
     .welcome p {
+      margin: 6px 0;
       color: #6b7280;
-      font-size: 15px;
     }
 
-    .role-badge {
+    .role {
       display: inline-block;
-      margin-top: 15px;
-      padding: 7px 13px;
+      margin-top: 12px;
+      padding: 8px 13px;
+      background: #f3f4f6;
       border-radius: 20px;
-      background: #eff6ff;
-      color: #2563eb;
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 14px;
+      color: #374151;
     }
 
-    /* Cards */
+    .section-title {
+      margin: 30px 0 15px;
+      font-size: 21px;
+    }
 
-    .dashboard-grid {
+    .cards {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
     }
 
-    .dashboard-card {
-      background: white;
+    .card {
+      background: #ffffff;
       border: 1px solid #e5e7eb;
       border-radius: 14px;
-      padding: 24px;
-      transition: 0.2s;
+      padding: 22px;
+      text-decoration: none;
+      color: #111827;
+      transition: .2s;
+      position: relative;
     }
 
-    .dashboard-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,.06);
     }
 
     .icon {
@@ -145,572 +111,266 @@
       margin-bottom: 12px;
     }
 
-    .dashboard-card h3 {
-      margin-bottom: 7px;
-      color: #111827;
+    .card h3 {
+      margin: 0 0 7px;
       font-size: 18px;
     }
 
-    .dashboard-card p {
+    .card p {
+      margin: 0;
       color: #6b7280;
+      line-height: 1.6;
       font-size: 14px;
-      margin-bottom: 17px;
     }
 
-    .card-btn {
-      display: inline-block;
-      background: #2563eb;
+    .coming {
+      opacity: .65;
+      cursor: default;
+    }
+
+    .coming:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: #f3f4f6;
+      color: #6b7280;
+      font-size: 11px;
+      padding: 5px 8px;
+      border-radius: 12px;
+    }
+
+    .logout {
+      margin-top: 30px;
+      width: 100%;
+      padding: 13px;
+      border: 0;
+      border-radius: 10px;
+      background: #111827;
       color: white;
-      padding: 9px 15px;
-      border-radius: 8px;
-      font-size: 13px;
+      font-size: 15px;
+      cursor: pointer;
     }
 
-    .card-btn.disabled {
-      background: #e5e7eb;
-      color: #9ca3af;
-      cursor: not-allowed;
+    .logout:hover {
+      opacity: .9;
     }
-
-    /* Loading */
 
     #loading {
       text-align: center;
-      padding: 80px 20px;
+      padding: 50px;
       color: #6b7280;
     }
 
-    #dashboard {
+    #content {
       display: none;
     }
 
-    /* Error */
-
-    #error {
-      display: none;
+    .error {
       text-align: center;
-      padding: 80px 20px;
-    }
-
-    #error h2 {
-      margin-bottom: 12px;
-      color: #111827;
-    }
-
-    #error p {
-      color: #6b7280;
-      margin-bottom: 20px;
-    }
-
-    #error a {
-      display: inline-block;
-      background: #2563eb;
-      color: white;
-      padding: 11px 20px;
-      border-radius: 9px;
-    }
-
-    /* Footer */
-
-    footer {
-      text-align: center;
-      padding: 30px 15px;
-      color: #9ca3af;
-      font-size: 13px;
-    }
-
-    @media (max-width: 800px) {
-      .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 550px) {
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .welcome {
-        padding: 22px;
-      }
-
-      .welcome h1 {
-        font-size: 23px;
-      }
-
-      .nav-actions {
-        gap: 5px;
-      }
-
-      .home-btn,
-      .logout-btn {
-        padding: 8px 10px;
-        font-size: 13px;
-      }
+      padding: 40px;
+      color: #b91c1c;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- Header -->
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">مِهراف</a>
+    <a href="index.html" class="home">← الصفحة الرئيسية</a>
+  </div>
+</header>
 
-  <header>
-
-    <div class="container nav">
-
-      <a
-        href="index.html"
-        class="logo"
-      >
-        مِهراف
-      </a>
-
-      <div class="nav-actions">
-
-        <a
-          href="index.html"
-          class="home-btn"
-        >
-          الرئيسية
-        </a>
-
-        <button
-          type="button"
-          class="logout-btn"
-          onclick="logoutUser()"
-        >
-          تسجيل الخروج
-        </button>
-
-      </div>
-
-    </div>
-
-  </header>
-
-
-  <!-- Loading -->
+<main>
 
   <div id="loading">
-    جاري تحميل لوحة التحكم...
+    جارٍ تحميل لوحة التحكم...
   </div>
 
+  <div id="error" class="error" style="display:none;"></div>
 
-  <!-- Error -->
+  <div id="content">
 
-  <div id="error">
+    <div class="welcome">
+      <h1>مرحبًا، <span id="userName"></span> 👋</h1>
 
-    <h2>
-      يجب تسجيل الدخول أولًا
-    </h2>
+      <p id="userEmail"></p>
 
-    <p>
-      هذه الصفحة متاحة للمستخدمين المسجلين فقط.
-    </p>
-
-    <a href="login.html">
-      تسجيل الدخول
-    </a>
-
-  </div>
-
-
-  <!-- Dashboard -->
-
-  <main id="dashboard">
-
-    <div class="container">
-
-      <!-- Welcome -->
-
-      <div class="welcome">
-
-        <h1>
-          مرحبًا، <span id="userName"></span> 👋
-        </h1>
-
-        <p>
-          أهلاً بك في لوحة تحكم مِهراف.
-        </p>
-
-        <span
-          class="role-badge"
-          id="userRole"
-        >
-        </span>
-
-      </div>
-
-
-      <!-- Dashboard Cards -->
-
-      <div
-        class="dashboard-grid"
-        id="dashboardCards"
-      >
-
-        <!-- سيتم إنشاء البطاقات حسب نوع الحساب -->
-
-      </div>
-
+      <div class="role" id="userRole"></div>
     </div>
 
-  </main>
+    <!-- لوحة المستقل -->
+    <section id="freelancerSection" style="display:none;">
+
+      <h2 class="section-title">إدارة خدماتك</h2>
+
+      <div class="cards">
+
+        <a href="my-services.html" class="card">
+          <div class="icon">💼</div>
+          <h3>خدماتي</h3>
+          <p>إدارة الخدمات التي تقدمها للعملاء.</p>
+        </a>
+
+        <a href="add-service.html" class="card">
+          <div class="icon">➕</div>
+          <h3>إضافة خدمة</h3>
+          <p>انشر خدمة جديدة على مِهراف.</p>
+        </a>
+
+        <a href="#" class="card coming" onclick="return false;">
+          <span class="badge">قريبًا</span>
+          <div class="icon">📋</div>
+          <h3>تصفح المشاريع</h3>
+          <p>ابحث عن المشاريع المناسبة لمهاراتك.</p>
+        </a>
+
+        <a href="#" class="card coming" onclick="return false;">
+          <span class="badge">قريبًا</span>
+          <div class="icon">📨</div>
+          <h3>طلبات العمل</h3>
+          <p>تابع عروضك وطلبات العمل.</p>
+        </a>
+
+      </div>
+
+    </section>
 
 
-  <footer>
-    © 2026 MIHRAF — مِهراف
-  </footer>
+    <!-- لوحة العميل -->
+    <section id="clientSection" style="display:none;">
+
+      <h2 class="section-title">إدارة مشاريعك</h2>
+
+      <div class="cards">
+
+        <a href="#" class="card coming" onclick="return false;">
+          <span class="badge">قريبًا</span>
+          <div class="icon">📁</div>
+          <h3>مشاريعي</h3>
+          <p>عرض وإدارة المشاريع التي نشرتها.</p>
+        </a>
+
+        <a href="#" class="card coming" onclick="return false;">
+          <span class="badge">قريبًا</span>
+          <div class="icon">➕</div>
+          <h3>نشر مشروع</h3>
+          <p>انشر مشروعًا جديدًا واحصل على عروض المستقلين.</p>
+        </a>
+
+        <a href="#" class="card coming" onclick="return false;">
+          <span class="badge">قريبًا</span>
+          <div class="icon">📨</div>
+          <h3>طلباتي</h3>
+          <p>تابع الخدمات والطلبات الخاصة بك.</p>
+        </a>
+
+      </div>
+
+    </section>
 
 
-  <script>
+    <button class="logout" onclick="logoutUser()">
+      تسجيل الخروج
+    </button>
 
-    // =========================
-    // فحص المستخدم
-    // =========================
+  </div>
 
-    async function loadDashboard() {
-
-      const loading =
-        document.getElementById("loading");
-
-      const dashboard =
-        document.getElementById("dashboard");
-
-      const error =
-        document.getElementById("error");
-
-      try {
-
-        const response =
-          await fetch("/api/me", {
-            method: "GET",
-            credentials: "include"
-          });
-
-        const data =
-          await response.json();
+</main>
 
 
-        // المستخدم غير مسجل
-        if (
-          !response.ok ||
-          !data.success ||
-          !data.logged_in
-        ) {
+<script>
 
-          loading.style.display = "none";
-          error.style.display = "block";
+  async function loadDashboard() {
 
-          return;
-        }
+    try {
 
+      const response = await fetch("/api/me", {
+        credentials: "include"
+      });
 
-        // بيانات المستخدم
-        const user =
-          data.user;
-
-
-        document.getElementById(
-          "userName"
-        ).textContent =
-          user.full_name;
-
-
-        // نوع الحساب
-        const roleElement =
-          document.getElementById("userRole");
-
-
-        if (user.role === "client") {
-
-          roleElement.textContent =
-            "👤 حساب عميل";
-
-        } else if (user.role === "freelancer") {
-
-          roleElement.textContent =
-            "💼 حساب مستقل";
-
-        } else {
-
-          roleElement.textContent =
-            "حساب مستخدم";
-
-        }
-
-
-        // إنشاء البطاقات
-        createDashboardCards(
-          user.role
-        );
-
-
-        loading.style.display = "none";
-        dashboard.style.display = "block";
-
-
-      } catch (error) {
-
-        console.error(error);
-
-        loading.style.display = "none";
-        error.style.display = "block";
-
+      if (!response.ok) {
+        window.location.href = "login.html";
+        return;
       }
 
+      const data = await response.json();
+
+      if (!data.user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const user = data.user;
+
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("content").style.display = "block";
+
+      document.getElementById("userName").textContent =
+        user.full_name || "المستخدم";
+
+      document.getElementById("userEmail").textContent =
+        user.email || "";
+
+      if (user.role === "freelancer") {
+
+        document.getElementById("userRole").textContent =
+          "💼 حساب مستقل";
+
+        document.getElementById("freelancerSection").style.display =
+          "block";
+
+      } else {
+
+        document.getElementById("userRole").textContent =
+          "👤 حساب عميل";
+
+        document.getElementById("clientSection").style.display =
+          "block";
+      }
+
+    } catch (error) {
+
+      document.getElementById("loading").style.display = "none";
+
+      const errorBox = document.getElementById("error");
+
+      errorBox.textContent =
+        "تعذر الاتصال بالخادم. حاول مرة أخرى.";
+
+      errorBox.style.display = "block";
+
+      console.error(error);
+    }
+  }
+
+
+  async function logoutUser() {
+
+    try {
+
+      await fetch("/api/logout", {
+        method: "POST",
+        credentials: "include"
+      });
+
+    } catch (error) {
+      console.error(error);
     }
 
+    window.location.href = "login.html";
+  }
 
-    // =========================
-    // بطاقات لوحة التحكم
-    // =========================
 
-    function createDashboardCards(role) {
+  loadDashboard();
 
-      const container =
-        document.getElementById(
-          "dashboardCards"
-        );
-
-
-      if (role === "client") {
-
-        container.innerHTML = `
-
-          <div class="dashboard-card">
-
-            <div class="icon">📋</div>
-
-            <h3>
-              مشاريعي
-            </h3>
-
-            <p>
-              إدارة المشاريع التي نشرتها
-              ومتابعة عروض المستقلين.
-            </p>
-
-            <a
-              href="#"
-              class="card-btn disabled"
-            >
-              قريبًا
-            </a>
-
-          </div>
-
-
-          <div class="dashboard-card">
-
-            <div class="icon">➕</div>
-
-            <h3>
-              نشر مشروع
-            </h3>
-
-            <p>
-              أضف مشروعًا جديدًا وابحث
-              عن الشخص المناسب لتنفيذه.
-            </p>
-
-            <a
-              href="#"
-              class="card-btn disabled"
-            >
-              قريبًا
-            </a>
-
-          </div>
-
-
-          <div class="dashboard-card">
-
-            <div class="icon">🛒</div>
-
-            <h3>
-              طلباتي
-            </h3>
-
-            <p>
-              متابعة الخدمات التي طلبتها
-              وحالة تنفيذها.
-            </p>
-
-            <a
-              href="#"
-              class="card-btn disabled"
-            >
-              قريبًا
-            </a>
-
-          </div>
-
-        `;
-
-      }
-
-
-      else if (role === "freelancer") {
-
-        container.innerHTML = `
-
-          <div class="dashboard-card">
-
-            <div class="icon">💼</div>
-
-            <h3>
-              خدماتي
-            </h3>
-
-            <p>
-              إدارة الخدمات التي تقدمها
-              للعملاء على مِهراف.
-            </p>
-
-            <a
-              href="#"
-              class="card-btn disabled"
-            >
-              قريبًا
-            </a>
-
-          </div>
-
-
-          <div class="dashboard-card">
-
-            <div class="icon">🔎</div>
-
-            <h3>
-              تصفح المشاريع
-            </h3>
-
-            <p>
-              ابحث عن مشاريع مناسبة لمهاراتك
-              وقدم عروضك عليها.
-            </p>
-
-            <a
-              href="#"
-              class="card-btn disabled"
-            >
-              قريبًا
-            </a>
-
-          </div>
-
-
-          <div class="dashboard-card">
-
-            <div class="icon">📦</div>
-
-            <h3>
-              طلبات العمل
-            </h3>
-
-            <p>
-              تابع الأعمال والطلبات التي
-              تعمل عليها حاليًا.
-            </p>
-
-            <a
-              href="#"
-              class="card-btn disabled"
-            >
-              قريبًا
-            </a>
-
-          </div>
-
-        `;
-
-      }
-
-
-      else {
-
-        container.innerHTML = `
-
-          <div class="dashboard-card">
-
-            <div class="icon">👤</div>
-
-            <h3>
-              حسابي
-            </h3>
-
-            <p>
-              إدارة معلومات حسابك.
-            </p>
-
-            <a
-              href="#"
-              class="card-btn disabled"
-            >
-              قريبًا
-            </a>
-
-          </div>
-
-        `;
-
-      }
-
-    }
-
-
-    // =========================
-    // تسجيل الخروج
-    // =========================
-
-    async function logoutUser() {
-
-      try {
-
-        const response =
-          await fetch("/api/logout", {
-            method: "POST",
-            credentials: "include"
-          });
-
-        const data =
-          await response.json();
-
-
-        if (data.success) {
-
-          window.location.href =
-            "index.html";
-
-        } else {
-
-          alert(
-            data.message ||
-            "تعذر تسجيل الخروج"
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(error);
-
-        alert(
-          "تعذر الاتصال بالخادم"
-        );
-
-      }
-
-    }
-
-
-    // تشغيل لوحة التحكم
-    loadDashboard();
-
-  </script>
+</script>
 
 </body>
-
 </html>
