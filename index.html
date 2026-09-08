@@ -14,11 +14,30 @@
       padding: 0;
     }
 
+    :root {
+      --bg: #181b20;
+      --bg-soft: #20242a;
+      --card: #242930;
+      --card-hover: #2a3038;
+      --border: #30363f;
+      --text: #e7eaf0;
+      --muted: #9da4af;
+      --blue: #4f8cff;
+      --blue-dark: #3978e8;
+      --white: #ffffff;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: Arial, Tahoma, sans-serif;
-      background: #f7f9fc;
-      color: #1f2937;
+      background: var(--bg);
+      color: var(--text);
       line-height: 1.7;
+      font-size: 14px;
+      overflow-x: hidden;
     }
 
     body.menu-open {
@@ -37,7 +56,7 @@
 
     .container {
       width: 92%;
-      max-width: 1200px;
+      max-width: 1180px;
       margin: auto;
     }
 
@@ -46,104 +65,104 @@
     ========================= */
 
     header {
-      background: #ffffff;
-      border-bottom: 1px solid #e5e7eb;
+      background: rgba(24, 27, 32, 0.92);
+      border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
       z-index: 100;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
 
     .nav {
-      min-height: 70px;
+      min-height: 66px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
+      gap: 18px;
     }
 
     .logo {
-      color: #2563eb;
-      font-size: 28px;
+      color: var(--blue);
+      font-size: 25px;
       font-weight: 800;
+      letter-spacing: -0.5px;
       white-space: nowrap;
     }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 22px;
-      font-size: 14px;
+      gap: 24px;
+      font-size: 13px;
     }
 
     .nav-links a {
-      color: #374151;
+      color: var(--muted);
+      transition: 0.2s;
     }
 
     .nav-links a:hover {
-      color: #2563eb;
+      color: var(--blue);
     }
 
     /* =========================
-       Auth Area
+       Auth
     ========================= */
 
     .auth-area {
       display: flex;
       align-items: center;
-      gap: 10px;
-    }
-
-    .auth-area a {
-      font-size: 14px;
+      gap: 8px;
     }
 
     .login-link {
-      color: #374151;
-      padding: 9px 12px;
+      color: var(--muted);
+      padding: 8px 11px;
+      font-size: 13px;
     }
 
     .login-link:hover {
-      color: #2563eb;
+      color: var(--text);
     }
 
     .register-btn {
-      background: #2563eb;
+      background: var(--blue);
       color: white !important;
-      padding: 10px 17px;
-      border-radius: 9px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      transition: 0.2s;
     }
 
     .register-btn:hover {
-      background: #1d4ed8;
+      background: var(--blue-dark);
+      transform: translateY(-1px);
     }
 
     /* =========================
-       User Menu Button
+       Menu Button
     ========================= */
 
     .menu-button {
-      width: 44px;
-      height: 44px;
-      border: 1px solid #e5e7eb;
-      background: #ffffff;
-      border-radius: 11px;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: 0.2s;
-      font-size: 22px;
-      color: #1f2937;
+      font-size: 20px;
     }
 
     .menu-button:hover {
-      background: #f3f6fb;
-      border-color: #d1d5db;
-    }
-
-    .menu-button span {
-      display: block;
-      line-height: 1;
+      background: var(--card);
+      border-color: #3d4652;
+      transform: translateY(-1px);
     }
 
     /* =========================
@@ -153,12 +172,12 @@
     .menu-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.45);
+      background: rgba(0, 0, 0, 0.62);
       z-index: 500;
       opacity: 0;
       visibility: hidden;
       transition: 0.25s ease;
-      backdrop-filter: blur(2px);
+      backdrop-filter: blur(3px);
     }
 
     .menu-overlay.active {
@@ -170,33 +189,30 @@
       position: fixed;
       top: 0;
       right: 0;
-      width: min(360px, 88vw);
+      width: min(350px, 88vw);
       height: 100vh;
-      background: #ffffff;
+      background: #1d2127;
+      border-left: 1px solid var(--border);
       z-index: 501;
-      box-shadow: -10px 0 35px rgba(0, 0, 0, 0.12);
       transform: translateX(105%);
       transition: transform 0.3s ease;
       display: flex;
       flex-direction: column;
       overflow-y: auto;
+      box-shadow: -15px 0 40px rgba(0, 0, 0, 0.35);
     }
 
     .side-menu.active {
       transform: translateX(0);
     }
 
-    /* =========================
-       Menu Header
-    ========================= */
-
     .side-menu-header {
-      padding: 22px 20px;
-      border-bottom: 1px solid #e5e7eb;
+      padding: 20px 18px;
+      border-bottom: 1px solid var(--border);
       background: linear-gradient(
-        135deg,
-        #eff6ff,
-        #ffffff
+        145deg,
+        #202731,
+        #1b1f25
       );
     }
 
@@ -204,50 +220,55 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
       margin-bottom: 18px;
     }
 
     .menu-brand {
-      color: #2563eb;
-      font-size: 23px;
+      color: var(--blue);
+      font-size: 21px;
       font-weight: 800;
     }
 
     .close-menu {
-      width: 38px;
-      height: 38px;
-      border: none;
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      background: #252a31;
+      color: var(--muted);
       border-radius: 9px;
       cursor: pointer;
-      font-size: 22px;
-      color: #374151;
+      font-size: 20px;
+      transition: 0.2s;
     }
 
     .close-menu:hover {
-      background: #f3f4f6;
+      color: white;
+      background: #2d333b;
     }
 
     .user-info {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 11px;
     }
 
     .user-avatar {
-      width: 48px;
-      height: 48px;
+      width: 45px;
+      height: 45px;
       border-radius: 50%;
-      background: #2563eb;
+      background: linear-gradient(
+        135deg,
+        #4f8cff,
+        #356ed1
+      );
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       flex-shrink: 0;
+      box-shadow: 0 5px 15px rgba(79, 140, 255, 0.18);
     }
 
     .user-details {
@@ -256,8 +277,8 @@
 
     .user-details strong {
       display: block;
-      color: #111827;
-      font-size: 15px;
+      color: var(--text);
+      font-size: 14px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -265,8 +286,8 @@
 
     .user-details span {
       display: block;
-      color: #6b7280;
-      font-size: 12px;
+      color: var(--muted);
+      font-size: 11px;
       margin-top: 2px;
     }
 
@@ -276,49 +297,49 @@
 
     .side-menu-content {
       flex: 1;
-      padding: 15px 12px;
+      padding: 14px 10px;
     }
 
     .menu-section-title {
-      color: #9ca3af;
-      font-size: 11px;
+      color: #737b87;
+      font-size: 10px;
       font-weight: 700;
-      padding: 8px 12px;
-      margin-bottom: 4px;
+      padding: 9px 11px 6px;
     }
 
     .menu-item {
       display: flex;
       align-items: center;
-      gap: 13px;
+      gap: 11px;
       width: 100%;
-      padding: 12px 13px;
-      margin-bottom: 3px;
-      border-radius: 10px;
-      color: #374151;
-      font-size: 14px;
+      padding: 10px 11px;
+      margin-bottom: 2px;
+      border-radius: 9px;
+      color: #c8cdd5;
+      font-size: 13px;
       transition: 0.18s;
     }
 
     .menu-item:hover {
-      background: #eff6ff;
-      color: #2563eb;
+      background: #272d35;
+      color: white;
     }
 
     .menu-icon {
-      width: 32px;
-      height: 32px;
+      width: 31px;
+      height: 31px;
       border-radius: 8px;
-      background: #f3f4f6;
+      background: #262b32;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 17px;
+      font-size: 15px;
       flex-shrink: 0;
+      transition: 0.18s;
     }
 
     .menu-item:hover .menu-icon {
-      background: #dbeafe;
+      background: #303844;
     }
 
     .menu-item-text {
@@ -326,34 +347,35 @@
     }
 
     .menu-item-arrow {
-      color: #9ca3af;
+      color: #68717e;
       font-size: 14px;
     }
 
     /* =========================
-       Menu Footer
+       Logout
     ========================= */
 
     .side-menu-footer {
-      padding: 12px;
-      border-top: 1px solid #e5e7eb;
+      padding: 12px 10px;
+      border-top: 1px solid var(--border);
     }
 
     .logout-menu-btn {
       width: 100%;
-      border: none;
-      background: #fff1f2;
-      color: #dc2626;
-      padding: 13px;
-      border-radius: 10px;
+      border: 1px solid #40272b;
+      background: #2a2023;
+      color: #ef858d;
+      padding: 11px;
+      border-radius: 9px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       transition: 0.2s;
     }
 
     .logout-menu-btn:hover {
-      background: #fee2e2;
+      background: #342326;
+      border-color: #593137;
     }
 
     /* =========================
@@ -361,69 +383,77 @@
     ========================= */
 
     .hero {
-      padding: 85px 0;
-      background: linear-gradient(
-        135deg,
-        #eff6ff,
-        #ffffff
-      );
+      padding: 82px 0 78px;
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(79, 140, 255, 0.13),
+          transparent 40%
+        ),
+        var(--bg);
     }
 
     .hero-content {
       text-align: center;
-      max-width: 850px;
+      max-width: 820px;
       margin: auto;
     }
 
     .hero h1 {
-      font-size: 42px;
-      color: #111827;
-      margin-bottom: 18px;
+      font-size: 37px;
+      font-weight: 700;
+      color: #f0f2f5;
+      margin-bottom: 15px;
+      letter-spacing: -0.7px;
     }
 
     .hero h1 span {
-      color: #2563eb;
+      color: var(--blue);
     }
 
     .hero p {
-      font-size: 18px;
-      color: #6b7280;
-      margin-bottom: 30px;
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 27px;
     }
 
     .hero-buttons {
       display: flex;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     .primary-btn,
     .secondary-btn {
       display: inline-block;
-      padding: 13px 25px;
-      border-radius: 10px;
+      padding: 11px 21px;
+      border-radius: 9px;
+      font-size: 13px;
       font-weight: 700;
       transition: 0.2s;
     }
 
     .primary-btn {
-      background: #2563eb;
+      background: var(--blue);
       color: white;
     }
 
     .primary-btn:hover {
-      background: #1d4ed8;
+      background: var(--blue-dark);
+      transform: translateY(-2px);
     }
 
     .secondary-btn {
-      background: white;
-      color: #2563eb;
-      border: 1px solid #2563eb;
+      background: #22272e;
+      color: #bfc6d0;
+      border: 1px solid var(--border);
     }
 
     .secondary-btn:hover {
-      background: #eff6ff;
+      background: #292f37;
+      color: white;
+      transform: translateY(-2px);
     }
 
     /* =========================
@@ -431,44 +461,72 @@
     ========================= */
 
     .search-section {
-      padding: 35px 0;
-      background: white;
+      padding: 26px 0;
+      background: #1c2025;
+      border-top: 1px solid #242a31;
+      border-bottom: 1px solid #242a31;
     }
 
     .search-box {
-      max-width: 700px;
+      max-width: 680px;
       margin: auto;
+      position: relative;
       display: flex;
-      gap: 10px;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 16px;
+      color: #7f8895;
+      font-size: 17px;
+      pointer-events: none;
     }
 
     .search-box input {
-      flex: 1;
+      width: 100%;
       height: 50px;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      padding: 0 15px;
-      font-size: 15px;
+      border: 1px solid #343b44;
+      border-radius: 13px;
+      padding: 0 46px 0 95px;
+      font-size: 13px;
       outline: none;
+      background: #252a31;
+      color: #e5e7eb;
+      transition: 0.2s;
+      box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .search-box input::placeholder {
+      color: #7d8692;
     }
 
     .search-box input:focus {
-      border-color: #2563eb;
+      border-color: rgba(79, 140, 255, 0.7);
+      background: #282e36;
+      box-shadow:
+        0 0 0 3px rgba(79, 140, 255, 0.08),
+        0 10px 30px rgba(0, 0, 0, 0.16);
     }
 
     .search-box button {
-      height: 50px;
-      padding: 0 25px;
+      position: absolute;
+      left: 6px;
+      height: 38px;
+      padding: 0 17px;
       border: none;
-      border-radius: 10px;
-      background: #2563eb;
+      border-radius: 9px;
+      background: var(--blue);
       color: white;
       cursor: pointer;
+      font-size: 12px;
       font-weight: 700;
+      transition: 0.2s;
     }
 
     .search-box button:hover {
-      background: #1d4ed8;
+      background: var(--blue-dark);
     }
 
     /* =========================
@@ -476,22 +534,24 @@
     ========================= */
 
     section {
-      padding: 65px 0;
+      padding: 58px 0;
     }
 
     .section-title {
       text-align: center;
-      margin-bottom: 35px;
+      margin-bottom: 30px;
     }
 
     .section-title h2 {
-      font-size: 28px;
-      color: #111827;
-      margin-bottom: 8px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #e8ebef;
+      margin-bottom: 6px;
     }
 
     .section-title p {
-      color: #6b7280;
+      color: #858e9a;
+      font-size: 13px;
     }
 
     /* =========================
@@ -501,36 +561,40 @@
     .categories {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 18px;
+      gap: 14px;
     }
 
     .category {
-      background: white;
-      padding: 25px 15px;
-      border-radius: 14px;
+      background: var(--card);
+      padding: 21px 13px;
+      border-radius: 12px;
       text-align: center;
-      border: 1px solid #e5e7eb;
-      transition: 0.2s;
+      border: 1px solid var(--border);
+      transition: 0.22s;
     }
 
     .category:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+      background: var(--card-hover);
+      border-color: #39414c;
+      box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.18);
     }
 
     .category-icon {
-      font-size: 32px;
-      margin-bottom: 10px;
+      font-size: 27px;
+      margin-bottom: 8px;
     }
 
     .category h3 {
-      font-size: 16px;
-      margin-bottom: 5px;
+      font-size: 14px;
+      color: #e3e7ec;
+      margin-bottom: 4px;
     }
 
     .category p {
-      color: #6b7280;
-      font-size: 13px;
+      color: #858e9a;
+      font-size: 11px;
     }
 
     /* =========================
@@ -540,49 +604,54 @@
     .cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
+      gap: 17px;
     }
 
     .card {
-      background: white;
-      border-radius: 14px;
+      background: var(--card);
+      border-radius: 12px;
       overflow: hidden;
-      border: 1px solid #e5e7eb;
-      transition: 0.2s;
+      border: 1px solid var(--border);
+      transition: 0.22s;
     }
 
     .card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+      background: var(--card-hover);
+      border-color: #39414c;
+      box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.2);
     }
 
     .card-image {
-      height: 170px;
-      background: #e5e7eb;
+      height: 150px;
+      background: #20252b;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #6b7280;
+      color: #737c88;
+      font-size: 12px;
     }
 
     .card-content {
-      padding: 20px;
+      padding: 17px;
     }
 
     .card h3 {
-      font-size: 18px;
-      margin-bottom: 8px;
-      color: #111827;
+      font-size: 15px;
+      margin-bottom: 7px;
+      color: #e5e8ed;
     }
 
     .card p {
-      color: #6b7280;
-      font-size: 14px;
-      margin-bottom: 15px;
+      color: #89919d;
+      font-size: 12px;
+      margin-bottom: 13px;
     }
 
     .price {
-      color: #2563eb;
+      color: var(--blue);
+      font-size: 13px;
       font-weight: 700;
     }
 
@@ -591,29 +660,45 @@
     ========================= */
 
     .cta {
-      background: #2563eb;
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(79, 140, 255, 0.17),
+          transparent 55%
+        ),
+        #20252c;
       color: white;
       text-align: center;
-      padding: 65px 20px;
+      padding: 58px 20px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
 
     .cta h2 {
-      font-size: 30px;
-      margin-bottom: 12px;
+      font-size: 25px;
+      margin-bottom: 9px;
     }
 
     .cta p {
-      margin-bottom: 25px;
-      opacity: 0.9;
+      color: #9da5b0;
+      font-size: 13px;
+      margin-bottom: 21px;
     }
 
     .cta a {
       display: inline-block;
-      background: white;
-      color: #2563eb;
-      padding: 13px 27px;
-      border-radius: 10px;
+      background: var(--blue);
+      color: white;
+      padding: 11px 23px;
+      border-radius: 9px;
+      font-size: 13px;
       font-weight: 700;
+      transition: 0.2s;
+    }
+
+    .cta a:hover {
+      background: var(--blue-dark);
+      transform: translateY(-2px);
     }
 
     /* =========================
@@ -621,20 +706,23 @@
     ========================= */
 
     footer {
-      background: #111827;
-      color: #d1d5db;
+      background: #14171b;
+      color: #777f8b;
       text-align: center;
-      padding: 35px 15px;
+      padding: 30px 15px;
+      border-top: 1px solid #22272d;
     }
 
     footer strong {
-      color: white;
+      color: #dfe3e8;
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
+      font-size: 14px;
     }
 
     footer p {
-      font-size: 13px;
+      font-size: 11px;
+      margin-top: 2px;
     }
 
     /* =========================
@@ -656,18 +744,22 @@
       }
 
       .hero h1 {
-        font-size: 34px;
+        font-size: 32px;
       }
     }
 
     @media (max-width: 600px) {
 
+      .container {
+        width: 94%;
+      }
+
       .nav {
-        min-height: 64px;
+        min-height: 62px;
       }
 
       .logo {
-        font-size: 24px;
+        font-size: 23px;
       }
 
       .cards {
@@ -676,35 +768,42 @@
 
       .categories {
         grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        gap: 10px;
+      }
+
+      .category {
+        padding: 18px 9px;
       }
 
       .hero {
-        padding: 60px 0;
+        padding: 62px 0;
       }
 
       .hero h1 {
-        font-size: 29px;
+        font-size: 28px;
       }
 
       .hero p {
-        font-size: 16px;
+        font-size: 14px;
       }
 
-      .search-box {
-        flex-direction: column;
+      .search-section {
+        padding: 20px 0;
+      }
+
+      .search-box input {
+        height: 48px;
+        padding-right: 42px;
+        padding-left: 82px;
       }
 
       .search-box button {
-        width: 100%;
+        padding: 0 13px;
+        font-size: 11px;
       }
 
-      .register-btn {
-        padding: 9px 12px;
-      }
-
-      .login-link {
-        padding: 8px 5px;
+      .section-title h2 {
+        font-size: 22px;
       }
 
       .side-menu {
@@ -736,7 +835,6 @@
 
       <div class="auth-area" id="authArea">
 
-        <!-- يظهر للزائر -->
         <a
           href="login.html"
           class="login-link"
@@ -753,7 +851,6 @@
           إنشاء حساب
         </a>
 
-        <!-- يظهر للمستخدم المسجل -->
         <button
           type="button"
           class="menu-button"
@@ -763,7 +860,7 @@
           style="display:none;"
           onclick="openSideMenu()"
         >
-          <span>☰</span>
+          ☰
         </button>
 
       </div>
@@ -774,7 +871,7 @@
 
 
   <!-- =========================
-       Side Menu Overlay
+       Menu Overlay
   ========================= -->
 
   <div
@@ -850,11 +947,9 @@
         class="menu-item"
       >
         <div class="menu-icon">📊</div>
-
         <div class="menu-item-text">
           لوحة التحكم
         </div>
-
         <div class="menu-item-arrow">
           ‹
         </div>
@@ -862,19 +957,17 @@
 
 
       <div class="menu-section-title">
-        مِهراف
+        المشاريع والخدمات
       </div>
 
       <a
         href="projects.html"
         class="menu-item"
       >
-        <div class="menu-icon">📁</div>
-
+        <div class="menu-icon">🔎</div>
         <div class="menu-item-text">
           استكشاف المشاريع
         </div>
-
         <div class="menu-item-arrow">
           ‹
         </div>
@@ -886,11 +979,9 @@
         class="menu-item"
       >
         <div class="menu-icon">➕</div>
-
         <div class="menu-item-text">
           نشر مشروع
         </div>
-
         <div class="menu-item-arrow">
           ‹
         </div>
@@ -900,14 +991,11 @@
       <a
         href="my-projects.html"
         class="menu-item"
-        id="myProjectsMenuItem"
       >
         <div class="menu-icon">📂</div>
-
         <div class="menu-item-text">
           مشاريعي
         </div>
-
         <div class="menu-item-arrow">
           ‹
         </div>
@@ -919,11 +1007,9 @@
         class="menu-item"
       >
         <div class="menu-icon">💼</div>
-
         <div class="menu-item-text">
           إضافة خدمة
         </div>
-
         <div class="menu-item-arrow">
           ‹
         </div>
@@ -931,6 +1017,8 @@
 
     </div>
 
+
+    <!-- تسجيل الخروج في أسفل القائمة -->
 
     <div class="side-menu-footer">
 
@@ -1000,6 +1088,10 @@
 
       <div class="search-box">
 
+        <span class="search-icon">
+          🔎
+        </span>
+
         <input
           type="text"
           id="searchInput"
@@ -1027,7 +1119,9 @@
 
       <div class="section-title">
 
-        <h2>استكشف الخدمات</h2>
+        <h2>
+          استكشف الخدمات
+        </h2>
 
         <p>
           اختر المجال الذي تحتاج إليه
@@ -1103,7 +1197,9 @@
 
       <div class="section-title">
 
-        <h2>خدمات مميزة</h2>
+        <h2>
+          خدمات مميزة
+        </h2>
 
         <p>
           اكتشف خدمات يقدمها محترفون
@@ -1205,7 +1301,9 @@
 
       <div class="section-title">
 
-        <h2>أحدث المشاريع</h2>
+        <h2>
+          أحدث المشاريع
+        </h2>
 
         <p>
           مشاريع يبحث أصحابها عن محترفين لتنفيذها
@@ -1295,13 +1393,16 @@
 
       <div class="section-title">
 
-        <h2>المحترفون</h2>
+        <h2>
+          المحترفون
+        </h2>
 
         <p>
           اكتشف أصحاب المهارات والخبرات
         </p>
 
       </div>
+
 
       <div class="cards">
 
@@ -1413,13 +1514,6 @@
 
   <script>
 
-    /* =========================
-       عناصر الصفحة
-    ========================= */
-
-    const authArea =
-      document.getElementById("authArea");
-
     const loginLink =
       document.getElementById("loginLink");
 
@@ -1455,7 +1549,7 @@
 
 
     /* =========================
-       التحقق من تسجيل الدخول
+       فحص تسجيل الدخول
     ========================= */
 
     async function checkLogin() {
@@ -1502,14 +1596,10 @@
 
 
     /* =========================
-       حالة المستخدم المسجل
+       مستخدم مسجل
     ========================= */
 
     function showLoggedInState(user) {
-
-      /*
-       * إخفاء تسجيل الدخول وإنشاء الحساب
-       */
 
       if (loginLink) {
         loginLink.style.display = "none";
@@ -1519,22 +1609,14 @@
         registerLink.style.display = "none";
       }
 
-
-      /*
-       * إظهار زر القائمة
-       */
-
       if (menuButton) {
         menuButton.style.display = "flex";
       }
 
 
-      /*
-       * معلومات المستخدم
-       */
-
       const fullName =
         user.full_name || "المستخدم";
+
 
       if (menuUserName) {
         menuUserName.textContent =
@@ -1564,25 +1646,13 @@
       }
 
 
-      /*
-       * أول حرف من الاسم
-       */
-
       if (userAvatar) {
 
-        const firstCharacter =
-          fullName.trim().charAt(0);
-
         userAvatar.textContent =
-          firstCharacter || "م";
+          fullName.trim().charAt(0) || "م";
 
       }
 
-
-      /*
-       * المستخدم المسجل لا يحتاج
-       * لأزرار التسجيل في الصفحة الرئيسية
-       */
 
       if (heroRegister) {
         heroRegister.style.display = "none";
@@ -1592,49 +1662,59 @@
         heroLogin.style.display = "none";
       }
 
+
       if (ctaRegister) {
+
         ctaRegister.textContent =
           "الانتقال إلى لوحة التحكم";
 
         ctaRegister.href =
           "dashboard.html";
+
       }
 
     }
 
 
     /* =========================
-       حالة الزائر
+       زائر
     ========================= */
 
     function showLoggedOutState() {
 
       if (loginLink) {
-        loginLink.style.display = "inline-block";
+        loginLink.style.display =
+          "inline-block";
       }
 
       if (registerLink) {
-        registerLink.style.display = "inline-block";
+        registerLink.style.display =
+          "inline-block";
       }
 
       if (menuButton) {
-        menuButton.style.display = "none";
+        menuButton.style.display =
+          "none";
       }
 
       if (heroRegister) {
-        heroRegister.style.display = "inline-block";
+        heroRegister.style.display =
+          "inline-block";
       }
 
       if (heroLogin) {
-        heroLogin.style.display = "inline-block";
+        heroLogin.style.display =
+          "inline-block";
       }
 
       if (ctaRegister) {
+
         ctaRegister.textContent =
           "ابدأ الآن";
 
         ctaRegister.href =
           "register.html";
+
       }
 
     }
@@ -1646,11 +1726,8 @@
 
     function openSideMenu() {
 
-      if (!sideMenu || !menuOverlay) {
-        return;
-      }
-
       sideMenu.classList.add("active");
+
       menuOverlay.classList.add("active");
 
       sideMenu.setAttribute(
@@ -1658,14 +1735,10 @@
         "false"
       );
 
-      if (menuButton) {
-
-        menuButton.setAttribute(
-          "aria-expanded",
-          "true"
-        );
-
-      }
+      menuButton.setAttribute(
+        "aria-expanded",
+        "true"
+      );
 
       document.body.classList.add(
         "menu-open"
@@ -1680,11 +1753,8 @@
 
     function closeSideMenu() {
 
-      if (!sideMenu || !menuOverlay) {
-        return;
-      }
-
       sideMenu.classList.remove("active");
+
       menuOverlay.classList.remove("active");
 
       sideMenu.setAttribute(
@@ -1692,14 +1762,10 @@
         "true"
       );
 
-      if (menuButton) {
-
-        menuButton.setAttribute(
-          "aria-expanded",
-          "false"
-        );
-
-      }
+      menuButton.setAttribute(
+        "aria-expanded",
+        "false"
+      );
 
       document.body.classList.remove(
         "menu-open"
@@ -1709,7 +1775,7 @@
 
 
     /* =========================
-       إغلاق القائمة بزر ESC
+       ESC
     ========================= */
 
     document.addEventListener(
@@ -1730,16 +1796,17 @@
 
     async function logoutUser() {
 
-      const logoutButton =
+      const button =
         document.querySelector(
           ".logout-menu-btn"
         );
 
-      if (logoutButton) {
 
-        logoutButton.disabled = true;
+      if (button) {
 
-        logoutButton.textContent =
+        button.disabled = true;
+
+        button.textContent =
           "جاري تسجيل الخروج...";
 
       }
@@ -1762,18 +1829,18 @@
           data.success
         ) {
 
-          closeSideMenu();
-
           window.location.href =
             "index.html";
 
         } else {
 
-          if (logoutButton) {
-            logoutButton.disabled = false;
+          if (button) {
 
-            logoutButton.textContent =
+            button.disabled = false;
+
+            button.textContent =
               "🚪 تسجيل الخروج";
+
           }
 
           alert(
@@ -1785,16 +1852,15 @@
 
       } catch (error) {
 
-        console.error(
-          "Logout error:",
-          error
-        );
+        console.error(error);
 
-        if (logoutButton) {
-          logoutButton.disabled = false;
+        if (button) {
 
-          logoutButton.textContent =
+          button.disabled = false;
+
+          button.textContent =
             "🚪 تسجيل الخروج";
+
         }
 
         alert(
@@ -1823,9 +1889,7 @@
 
       if (!value) {
 
-        alert(
-          "اكتب ما تريد البحث عنه أولًا."
-        );
+        input.focus();
 
         return;
 
@@ -1840,7 +1904,7 @@
 
 
     /* =========================
-       تشغيل فحص الجلسة
+       تشغيل النظام
     ========================= */
 
     checkLogin();
