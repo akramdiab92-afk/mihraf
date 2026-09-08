@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>إضافة خدمة | مِهراف</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Tahoma, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 92%;
+      max-width: 850px;
+      margin: auto;
+    }
+
+    /* Header */
+
+    header {
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .nav {
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      color: #2563eb;
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .back-btn {
+      background: #eff6ff;
+      color: #2563eb;
+      padding: 9px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    /* Main */
+
+    main {
+      padding: 40px 0;
+    }
+
+    .form-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 30px;
+    }
+
+    .form-header {
+      margin-bottom: 28px;
+    }
+
+    .form-header h1 {
+      font-size: 27px;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .form-header p {
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* Form */
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #374151;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 9px;
+      padding: 12px 13px;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      background: white;
+      color: #111827;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+    }
+
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .price-wrapper {
+      position: relative;
+    }
+
+    .price-wrapper input {
+      padding-left: 65px;
+    }
+
+    .currency {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+      font-size: 13px;
+      pointer-events: none;
+    }
+
+    /* Message */
+
+    #message {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 9px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    #message.success {
+      display: block;
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #a7f3d0;
+    }
+
+    #message.error {
+      display: block;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    /* Button */
+
+    .submit-btn {
+      width: 100%;
+      border: none;
+      background: #2563eb;
+      color: white;
+      padding: 13px 20px;
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .submit-btn:disabled {
+      background: #93c5fd;
+      cursor: not-allowed;
+    }
+
+    /* Loading */
+
+    #loading {
+      text-align: center;
+      padding: 80px 20px;
+      color: #6b7280;
+    }
+
+    #content {
+      display: none;
+    }
+
+    /* Footer */
+
+    footer {
+      text-align: center;
+      padding: 30px 15px;
+      color: #9ca3af;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+
+      .form-card {
+        padding: 22px;
+      }
+
+      .form-header h1 {
+        font-size: 23px;
+      }
+
+      .nav {
+        min-height: 62px;
+      }
+
+      .logo {
+        font-size: 24px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- Header -->
+
+  <header>
+
+    <div class="container nav">
+
+      <a
+        href="index.html"
+        class="logo"
+      >
+        مِهراف
+      </a>
+
+      <a
+        href="dashboard.html"
+        class="back-btn"
+      >
+        لوحة التحكم
+      </a>
+
+    </div>
+
+  </header>
+
+
+  <!-- Loading -->
+
+  <div id="loading">
+    جاري التحقق من الحساب...
+  </div>
+
+
+  <!-- Content -->
+
+  <main id="content">
+
+    <div class="container">
+
+      <div class="form-card">
+
+        <div class="form-header">
+
+          <h1>
+            أضف خدمتك 🚀
+          </h1>
+
+          <p>
+            اعرض مهارتك أمام العملاء على منصة مِهراف.
+            اكتب وصفًا واضحًا للخدمة وحدد السعر المناسب.
+          </p>
+
+        </div>
+
+
+        <!-- Message -->
+
+        <div id="message"></div>
+
+
+        <!-- Form -->
+
+        <form id="serviceForm">
+
+
+          <!-- Title -->
+
+          <div class="form-group">
+
+            <label for="title">
+              عنوان الخدمة
+            </label>
+
+            <input
+              type="text"
+              id="title"
+              name="title"
+              placeholder="مثال: تصميم شعار احترافي"
+              maxlength="120"
+              required
+            >
+
+          </div>
+
+
+          <!-- Description -->
+
+          <div class="form-group">
+
+            <label for="description">
+              وصف الخدمة
+            </label>
+
+            <textarea
+              id="description"
+              name="description"
+              placeholder="اشرح للعميل بالتفصيل ماذا سيحصل عليه عند طلب خدمتك..."
+              maxlength="3000"
+              required
+            ></textarea>
+
+          </div>
+
+
+          <!-- Category -->
+
+          <div class="form-group">
+
+            <label for="category">
+              التصنيف
+            </label>
+
+            <select
+              id="category"
+              name="category"
+              required
+            >
+
+              <option value="">
+                اختر تصنيف الخدمة
+              </option>
+
+              <option value="التصميم">
+                🎨 التصميم
+              </option>
+
+              <option value="البرمجة">
+                💻 البرمجة والتطوير
+              </option>
+
+              <option value="الكتابة">
+                ✍️ الكتابة والترجمة
+              </option>
+
+              <option value="التسويق">
+                📢 التسويق الرقمي
+              </option>
+
+              <option value="الفيديو">
+                🎬 الفيديو والرسوم المتحركة
+              </option>
+
+              <option value="الصوت">
+                🎙️ الصوتيات
+              </option>
+
+              <option value="الأعمال">
+                📊 الأعمال والاستشارات
+              </option>
+
+              <option value="أخرى">
+                📦 أخرى
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- Price -->
+
+          <div class="form-group">
+
+            <label for="price">
+              سعر الخدمة
+            </label>
+
+            <div class="price-wrapper">
+
+              <input
+                type="number"
+                id="price"
+                name="price"
+                placeholder="مثال: 25"
+                min="1"
+                step="0.01"
+                required
+              >
+
+              <span class="currency">
+                دولار
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- Submit -->
+
+          <button
+            type="submit"
+            class="submit-btn"
+            id="submitBtn"
+          >
+            نشر الخدمة
+          </button>
+
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <footer>
+    © 2026 MIHRAF — مِهراف
+  </footer>
+
+
+  <script>
+
+
+    // ==================================================
+    // عناصر الصفحة
+    // ==================================================
+
+    const loading =
+      document.getElementById("loading");
+
+    const content =
+      document.getElementById("content");
+
+    const message =
+      document.getElementById("message");
+
+    const form =
+      document.getElementById("serviceForm");
+
+    const submitBtn =
+      document.getElementById("submitBtn");
+
+
+    // ==================================================
+    // عرض رسالة
+    // ==================================================
+
+    function showMessage(
+      text,
+      type
+    ) {
+
+      message.textContent =
+        text;
+
+      message.className =
+        type;
+
+      message.style.display =
+        "block";
+
+    }
+
+
+    // ==================================================
+    // التحقق من الحساب
+    // ==================================================
+
+    async function checkUser() {
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/me",
+            {
+              method: "GET",
+              credentials: "include"
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        // غير مسجل دخول
+
+        if (
+          !response.ok ||
+          !data.success ||
+          !data.logged_in
+        ) {
+
+          window.location.href =
+            "login.html";
+
+          return;
+
+        }
+
+
+        // يجب أن يكون مستقلًا
+
+        if (
+          data.user.role !== "freelancer"
+        ) {
+
+          loading.style.display =
+            "none";
+
+          content.style.display =
+            "block";
+
+          showMessage(
+            "هذه الصفحة مخصصة للمستقلين فقط.",
+            "error"
+          );
+
+          form.style.display =
+            "none";
+
+          return;
+
+        }
+
+
+        // السماح بالدخول
+
+        loading.style.display =
+          "none";
+
+        content.style.display =
+          "block";
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        loading.style.display =
+          "none";
+
+        content.style.display =
+          "block";
+
+        showMessage(
+          "تعذر الاتصال بالخادم. حاول مرة أخرى.",
+          "error"
+        );
+
+      }
+
+    }
+
+
+    // ==================================================
+    // نشر الخدمة
+    // ==================================================
+
+    form.addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+
+        const title =
+          document
+            .getElementById("title")
+            .value
+            .trim();
+
+
+        const description =
+          document
+            .getElementById("description")
+            .value
+            .trim();
+
+
+        const category =
+          document
+            .getElementById("category")
+            .value
+            .trim();
+
+
+        const price =
+          Number(
+            document
+              .getElementById("price")
+              .value
+          );
+
+
+        // تحقق إضافي
+
+        if (
+          title.length < 3
+        ) {
+
+          showMessage(
+            "عنوان الخدمة يجب أن يكون 3 أحرف على الأقل.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        if (
+          description.length < 10
+        ) {
+
+          showMessage(
+            "وصف الخدمة يجب أن يكون 10 أحرف على الأقل.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        if (
+          !category
+        ) {
+
+          showMessage(
+            "اختر تصنيف الخدمة.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        if (
+          !Number.isFinite(price) ||
+          price <= 0
+        ) {
+
+          showMessage(
+            "أدخل سعرًا صحيحًا أكبر من صفر.",
+            "error"
+          );
+
+          return;
+
+        }
+
+
+        // تعطيل الزر
+
+        submitBtn.disabled =
+          true;
+
+        submitBtn.textContent =
+          "جاري نشر الخدمة...";
+
+
+        message.style.display =
+          "none";
+
+
+        try {
+
+          const response =
+            await fetch(
+              "/api/services",
+              {
+                method: "POST",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                credentials:
+                  "include",
+
+                body:
+                  JSON.stringify({
+                    title:
+                      title,
+
+                    description:
+                      description,
+
+                    category:
+                      category,
+
+                    price:
+                      price
+                  })
+              }
+            );
+
+
+          const data =
+            await response.json();
+
+
+          if (
+            response.ok &&
+            data.success
+          ) {
+
+            showMessage(
+              "تم نشر خدمتك بنجاح 🎉",
+              "success"
+            );
+
+
+            form.reset();
+
+
+            // بعد فترة نعود للوحة التحكم
+
+            setTimeout(
+              function() {
+
+                window.location.href =
+                  "dashboard.html";
+
+              },
+              1500
+            );
+
+
+          } else {
+
+            showMessage(
+              data.message ||
+              "تعذر نشر الخدمة.",
+              "error"
+            );
+
+
+            submitBtn.disabled =
+              false;
+
+            submitBtn.textContent =
+              "نشر الخدمة";
+
+          }
+
+
+        } catch (error) {
+
+          console.error(error);
+
+
+          showMessage(
+            "تعذر الاتصال بالخادم. حاول مرة أخرى.",
+            "error"
+          );
+
+
+          submitBtn.disabled =
+            false;
+
+          submitBtn.textContent =
+            "نشر الخدمة";
+
+        }
+
+      }
+    );
+
+
+    // تشغيل التحقق
+
+    checkUser();
+
+
+  </script>
+
+
+</body>
+
+</html>
