@@ -1,5 +1,4 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
-<head>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>لوحة التحكم | مِهراف</title>  <style>
@@ -10,13 +9,13 @@
     body {
       margin: 0;
       font-family: Arial, Tahoma, sans-serif;
-      background: #f7f8fa;
-      color: #1f2937;
+      background: #181b20;
+      color: #e7eaf0;
     }
 
     header {
-      background: #ffffff;
-      border-bottom: 1px solid #e5e7eb;
+      background: #1d2127;
+      border-bottom: 1px solid #30363f;
       padding: 16px 20px;
     }
 
@@ -30,16 +29,21 @@
     }
 
     .logo {
-      color: #111827;
+      color: #4f8cff;
       text-decoration: none;
       font-size: 26px;
       font-weight: bold;
     }
 
     .home {
-      color: #4b5563;
+      color: #9da4af;
       text-decoration: none;
       font-size: 14px;
+      transition: .2s;
+    }
+
+    .home:hover {
+      color: #4f8cff;
     }
 
     main {
@@ -49,8 +53,8 @@
     }
 
     .welcome {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
+      background: #20242a;
+      border: 1px solid #30363f;
       border-radius: 16px;
       padding: 25px;
       margin-bottom: 25px;
@@ -59,26 +63,29 @@
     .welcome h1 {
       margin: 0 0 8px;
       font-size: 28px;
+      color: #e7eaf0;
     }
 
     .welcome p {
       margin: 6px 0;
-      color: #6b7280;
+      color: #9da4af;
     }
 
     .role {
       display: inline-block;
       margin-top: 12px;
       padding: 8px 13px;
-      background: #f3f4f6;
+      background: #292f37;
+      border: 1px solid #343b44;
       border-radius: 20px;
       font-size: 14px;
-      color: #374151;
+      color: #c8cdd5;
     }
 
     .section-title {
       margin: 30px 0 15px;
       font-size: 21px;
+      color: #e7eaf0;
     }
 
     .cards {
@@ -88,19 +95,21 @@
     }
 
     .card {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
+      background: #242930;
+      border: 1px solid #30363f;
       border-radius: 14px;
       padding: 22px;
       text-decoration: none;
-      color: #111827;
+      color: #e7eaf0;
       transition: .2s;
       position: relative;
     }
 
     .card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(0,0,0,.06);
+      background: #2a3038;
+      border-color: #39414c;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, .18);
     }
 
     .icon {
@@ -111,11 +120,12 @@
     .card h3 {
       margin: 0 0 7px;
       font-size: 18px;
+      color: #e7eaf0;
     }
 
     .card p {
       margin: 0;
-      color: #6b7280;
+      color: #9da4af;
       line-height: 1.6;
       font-size: 14px;
     }
@@ -128,39 +138,26 @@
     .coming:hover {
       transform: none;
       box-shadow: none;
+      background: #242930;
+      border-color: #30363f;
     }
 
     .badge {
       position: absolute;
       top: 15px;
       left: 15px;
-      background: #f3f4f6;
-      color: #6b7280;
+      background: #2d333b;
+      color: #9da4af;
+      border: 1px solid #3a424d;
       font-size: 11px;
       padding: 5px 8px;
       border-radius: 12px;
     }
 
-    .logout {
-      margin-top: 30px;
-      width: 100%;
-      padding: 13px;
-      border: 0;
-      border-radius: 10px;
-      background: #111827;
-      color: white;
-      font-size: 15px;
-      cursor: pointer;
-    }
-
-    .logout:hover {
-      opacity: .9;
-    }
-
     #loading {
       text-align: center;
       padding: 50px;
-      color: #6b7280;
+      color: #9da4af;
     }
 
     #content {
@@ -170,184 +167,344 @@
     .error {
       text-align: center;
       padding: 40px;
-      color: #b91c1c;
+      color: #ef6f79;
     }
-  </style></head><body><header>
-  <div class="header-inner">
-    <a href="index.html" class="logo">مِهراف</a>
-    <a href="index.html" class="home">← الصفحة الرئيسية</a>
-  </div>
-</header><main>  <div id="loading">
-    جارٍ تحميل لوحة التحكم...
-  </div>  <div id="error" class="error" style="display:none;"></div>  <div id="content"><div class="welcome">
-  <h1>مرحبًا، <span id="userName"></span> 👋</h1>
+  </style></head><body>  <header><div class="header-inner">
 
-  <p id="userEmail"></p>
+  <a href="index.html" class="logo">
+    مِهراف
+  </a>
 
-  <div class="role" id="userRole"></div>
+  <a href="index.html" class="home">
+    ← الصفحة الرئيسية
+  </a>
+
 </div>
 
+  </header>  <main><div id="loading">
+  جارٍ تحميل لوحة التحكم...
+</div>
 
-<!-- لوحة المستقل -->
-<section id="freelancerSection" style="display:none;">
+<div
+  id="error"
+  class="error"
+  style="display:none;"
+></div>
 
-  <h2 class="section-title">إدارة خدماتك</h2>
 
-  <div class="cards">
+<div id="content">
 
-    <a href="my-services.html" class="card">
-      <div class="icon">💼</div>
-      <h3>خدماتي</h3>
-      <p>إدارة الخدمات التي تقدمها للعملاء.</p>
-    </a>
+  <div class="welcome">
 
-    <a href="add-service.html" class="card">
-      <div class="icon">➕</div>
-      <h3>إضافة خدمة</h3>
-      <p>انشر خدمة جديدة على مِهراف.</p>
-    </a>
+    <h1>
+      مرحبًا، <span id="userName"></span> 👋
+    </h1>
 
-    <a href="#" class="card coming" onclick="return false;">
-      <span class="badge">قريبًا</span>
-      <div class="icon">📋</div>
-      <h3>تصفح المشاريع</h3>
-      <p>ابحث عن المشاريع المناسبة لمهاراتك.</p>
-    </a>
+    <p id="userEmail"></p>
 
-    <a href="#" class="card coming" onclick="return false;">
-      <span class="badge">قريبًا</span>
-      <div class="icon">📨</div>
-      <h3>طلبات العمل</h3>
-      <p>تابع عروضك وطلبات العمل.</p>
-    </a>
+    <div
+      class="role"
+      id="userRole"
+    ></div>
 
   </div>
 
-</section>
+
+  <!-- لوحة المستقل -->
+
+  <section
+    id="freelancerSection"
+    style="display:none;"
+  >
+
+    <h2 class="section-title">
+      إدارة خدماتك
+    </h2>
+
+    <div class="cards">
+
+      <a
+        href="my-services.html"
+        class="card"
+      >
+        <div class="icon">💼</div>
+
+        <h3>
+          خدماتي
+        </h3>
+
+        <p>
+          إدارة الخدمات التي تقدمها للعملاء.
+        </p>
+      </a>
 
 
-<!-- لوحة العميل -->
-<section id="clientSection" style="display:none;">
+      <a
+        href="add-service.html"
+        class="card"
+      >
+        <div class="icon">➕</div>
 
-  <h2 class="section-title">إدارة مشاريعك</h2>
+        <h3>
+          إضافة خدمة
+        </h3>
 
-  <div class="cards">
-
-    <!-- مشاريعي: مفعل -->
-    <a href="my-projects.html" class="card">
-      <div class="icon">📁</div>
-      <h3>مشاريعي</h3>
-      <p>عرض وإدارة المشاريع التي نشرتها.</p>
-    </a>
-
-    <!-- نشر مشروع: مفعل -->
-    <a href="add-project.html" class="card">
-      <div class="icon">➕</div>
-      <h3>نشر مشروع</h3>
-      <p>انشر مشروعًا جديدًا واحصل على عروض المستقلين.</p>
-    </a>
-
-    <!-- طلباتي: سنفعّله لاحقًا -->
-    <a href="#" class="card coming" onclick="return false;">
-      <span class="badge">قريبًا</span>
-      <div class="icon">📨</div>
-      <h3>طلباتي</h3>
-      <p>تابع الخدمات والطلبات الخاصة بك.</p>
-    </a>
-
-  </div>
-
-</section>
+        <p>
+          انشر خدمة جديدة على مِهراف.
+        </p>
+      </a>
 
 
-<button class="logout" onclick="logoutUser()">
-  تسجيل الخروج
-</button>
+      <a
+        href="#"
+        class="card coming"
+        onclick="return false;"
+      >
+        <span class="badge">
+          قريبًا
+        </span>
 
-  </div></main><script>
+        <div class="icon">📋</div>
 
-  async function loadDashboard() {
+        <h3>
+          تصفح المشاريع
+        </h3>
 
-    try {
+        <p>
+          ابحث عن المشاريع المناسبة لمهاراتك.
+        </p>
+      </a>
 
-      const response = await fetch("/api/me", {
-        credentials: "include"
-      });
 
-      if (!response.ok) {
-        window.location.href = "login.html";
-        return;
-      }
+      <a
+        href="#"
+        class="card coming"
+        onclick="return false;"
+      >
+        <span class="badge">
+          قريبًا
+        </span>
 
-      const data = await response.json();
+        <div class="icon">📨</div>
 
-      if (!data.user) {
-        window.location.href = "login.html";
-        return;
-      }
+        <h3>
+          طلبات العمل
+        </h3>
 
-      const user = data.user;
+        <p>
+          تابع عروضك وطلبات العمل.
+        </p>
+      </a>
 
-      document.getElementById("loading").style.display = "none";
-      document.getElementById("content").style.display = "block";
+    </div>
 
-      document.getElementById("userName").textContent =
-        user.full_name || "المستخدم";
+  </section>
 
-      document.getElementById("userEmail").textContent =
-        user.email || "";
 
-      if (user.role === "freelancer") {
+  <!-- لوحة العميل -->
 
-        document.getElementById("userRole").textContent =
-          "💼 حساب مستقل";
+  <section
+    id="clientSection"
+    style="display:none;"
+  >
 
-        document.getElementById("freelancerSection").style.display =
+    <h2 class="section-title">
+      إدارة مشاريعك
+    </h2>
+
+    <div class="cards">
+
+      <!-- مشاريعي: مفعل -->
+
+      <a
+        href="my-projects.html"
+        class="card"
+      >
+        <div class="icon">📁</div>
+
+        <h3>
+          مشاريعي
+        </h3>
+
+        <p>
+          عرض وإدارة المشاريع التي نشرتها.
+        </p>
+      </a>
+
+
+      <!-- نشر مشروع: مفعل -->
+
+      <a
+        href="add-project.html"
+        class="card"
+      >
+        <div class="icon">➕</div>
+
+        <h3>
+          نشر مشروع
+        </h3>
+
+        <p>
+          انشر مشروعًا جديدًا واحصل على عروض المستقلين.
+        </p>
+      </a>
+
+
+      <!-- طلباتي: سنفعّله لاحقًا -->
+
+      <a
+        href="#"
+        class="card coming"
+        onclick="return false;"
+      >
+        <span class="badge">
+          قريبًا
+        </span>
+
+        <div class="icon">📨</div>
+
+        <h3>
+          طلباتي
+        </h3>
+
+        <p>
+          تابع الخدمات والطلبات الخاصة بك.
+        </p>
+      </a>
+
+    </div>
+
+  </section>
+
+</div>
+
+  </main>  <script>
+
+    async function loadDashboard() {
+
+      try {
+
+        const response =
+          await fetch("/api/me", {
+            credentials: "include"
+          });
+
+
+        if (!response.ok) {
+
+          window.location.href =
+            "login.html";
+
+          return;
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        if (!data.user) {
+
+          window.location.href =
+            "login.html";
+
+          return;
+
+        }
+
+
+        const user =
+          data.user;
+
+
+        document.getElementById(
+          "loading"
+        ).style.display =
+          "none";
+
+
+        document.getElementById(
+          "content"
+        ).style.display =
           "block";
 
-      } else {
 
-        document.getElementById("userRole").textContent =
-          "👤 حساب عميل";
+        document.getElementById(
+          "userName"
+        ).textContent =
+          user.full_name ||
+          "المستخدم";
 
-        document.getElementById("clientSection").style.display =
+
+        document.getElementById(
+          "userEmail"
+        ).textContent =
+          user.email ||
+          "";
+
+
+        if (
+          user.role ===
+          "freelancer"
+        ) {
+
+          document.getElementById(
+            "userRole"
+          ).textContent =
+            "💼 حساب مستقل";
+
+
+          document.getElementById(
+            "freelancerSection"
+          ).style.display =
+            "block";
+
+        } else {
+
+          document.getElementById(
+            "userRole"
+          ).textContent =
+            "👤 حساب عميل";
+
+
+          document.getElementById(
+            "clientSection"
+          ).style.display =
+            "block";
+
+        }
+
+      } catch (error) {
+
+        document.getElementById(
+          "loading"
+        ).style.display =
+          "none";
+
+
+        const errorBox =
+          document.getElementById(
+            "error"
+          );
+
+
+        errorBox.textContent =
+          "تعذر الاتصال بالخادم. حاول مرة أخرى.";
+
+
+        errorBox.style.display =
           "block";
+
+
+        console.error(error);
+
       }
 
-    } catch (error) {
-
-      document.getElementById("loading").style.display = "none";
-
-      const errorBox = document.getElementById("error");
-
-      errorBox.textContent =
-        "تعذر الاتصال بالخادم. حاول مرة أخرى.";
-
-      errorBox.style.display = "block";
-
-      console.error(error);
-    }
-  }
-
-
-  async function logoutUser() {
-
-    try {
-
-      await fetch("/api/logout", {
-        method: "POST",
-        credentials: "include"
-      });
-
-    } catch (error) {
-      console.error(error);
     }
 
-    window.location.href = "login.html";
-  }
 
+    loadDashboard();
 
-  loadDashboard();
-
-</script></body>
+  </script></body>
 </html>
