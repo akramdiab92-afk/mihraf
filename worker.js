@@ -1,4 +1,5 @@
 const encoder = new TextEncoder();
+// force worker redeploy
 
 const SESSION_DAYS = 7;
 const SESSION_MAX_AGE = SESSION_DAYS * 24 * 60 * 60;
