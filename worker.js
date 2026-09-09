@@ -3,4736 +3,3436 @@ const encoder = new TextEncoder();
 const SESSION_DAYS = 7;
 const SESSION_MAX_AGE = SESSION_DAYS * 24 * 60 * 60;
 
-// ==================================================
-// Worker
-// ==================================================
-
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    const path = url.pathname;
+    const method = request.method;
 
-    // ================================
-    // المستخدمون
-    // ================================
+    try {
+      // =========================
+      // AUTH
+      // =========================
 
-    if (
-      url.pathname === "/api/register" &&
-      request.method === "POST"
-    ) {
-      return register(request, env);
-    }
-
-    if (
-      url.pathname === "/api/login" &&
-      request.method === "POST"
-    ) {
-      return login(request, env);
-    }
-
-    if (
-      url.pathname === "/api/me" &&
-      request.method === "GET"
-    ) {
-      return getCurrentUser(request, env);
-    }
-
-    if (
-      url.pathname === "/api/logout" &&
-      request.method === "POST"
-    ) {
-      return logout(request, env);
-    }
-
-    // ================================
-    // الخدمات
-    // ================================
-
-    if (
-      url.pathname === "/api/services" &&
-      request.method === "POST"
-    ) {
-      return createService(request, env);
-    }
-
-    if (
-      url.pathname === "/api/services" &&
-      request.method === "GET"
-    ) {
-      return getServices(request, env);
-    }
-
-    if (
-      url.pathname.startsWith("/api/services/") &&
-      request.method === "PUT"
-    ) {
-      return updateService(request, env);
-    }
-
-    if (
-      url.pathname.startsWith("/api/services/") &&
-      request.method === "DELETE"
-    ) {
-      return deleteService(request, env);
-    }
-
-    if (
-      url.pathname === "/api/my-services" &&
-      request.method === "GET"
-    ) {
-      return getMyServices(request, env);
-    }
-
-    // ================================
-    // المشاريع
-    // ================================
-
-    if (
-      url.pathname === "/api/projects" &&
-      request.method === "POST"
-    ) {
-      return createProject(request, env);
-    }
-
-    if (
-      url.pathname === "/api/projects" &&
-      request.method === "GET"
-    ) {
-      return getProjects(request, env);
-    }
-
-    if (
-      /^\/api\/projects\/\d+\/proposals$/.test(url.pathname) &&
-      request.method === "POST"
-    ) {
-      return createProposal(request, env);
-    }
-
-    if (
-      /^\/api\/projects\/\d+\/proposals$/.test(url.pathname) &&
-      request.method === "GET"
-    ) {
-      return getProjectProposals(request, env);
-    }
-
-    if (
-      url.pathname === "/api/my-projects" &&
-      request.method === "GET"
-    ) {
-      return getMyProjects(request, env);
-    }
-
-    if (
-      url.pathname === "/api/my-proposals" &&
-      request.method === "GET"
-    ) {
-      return getMyProposals(request, env);
-    }
-
-    if (
-      /^\/api\/proposals\/\d+\/accept$/.test(url.pathname) &&
-      request.method === "PUT"
-    ) {
-      return acceptProposal(request, env);
-    }
-
-    if (
-      /^\/api\/proposals\/\d+\/reject$/.test(url.pathname) &&
-      request.method === "PUT"
-    ) {
-      return rejectProposal(request, env);
-    }
-
-    // ================================
-    // نظام التنفيذ
-    // ================================
-
-    if (
-      /^\/api\/projects\/\d+\/execution$/.test(url.pathname) &&
-      request.method === "GET"
-    ) {
-      return getProjectExecution(request, env);
-    }
-
-    if (
-      url.pathname === "/api/my-executions" &&
-      request.method === "GET"
-    ) {
-      return getMyExecutions(request, env);
-    }
-
-    if (
-      /^\/api\/projects\/\d+\/events$/.test(url.pathname) &&
-      request.method === "GET"
-    ) {
-      return getProjectEvents(request, env);
-    }
-
-    if (
-      /^\/api\/projects\/\d+\/deliveries$/.test(url.pathname) &&
-      request.method === "POST"
-    ) {
-      return createDelivery(request, env);
-    }
-
-    if (
-      /^\/api\/deliveries\/\d+\/revision$/.test(url.pathname) &&
-      request.method === "POST"
-    ) {
-      return requestRevision(request, env);
-    }
-
-    if (
-      /^\/api\/deliveries\/\d+\/accept$/.test(url.pathname) &&
-      request.method === "PUT"
-    ) {
-      return acceptDelivery(request, env);
-    }
-
-    // ================================
-    // تعديل / إلغاء المشروع
-    // ================================
-
-    if (
-      /^\/api\/projects\/\d+$/.test(url.pathname) &&
-      request.method === "PUT"
-    ) {
-      return updateProject(request, env);
-    }
-
-    if (
-      /^\/api\/projects\/\d+$/.test(url.pathname) &&
-      request.method === "DELETE"
-    ) {
-      return deleteProject(request, env);
-    }
-
-    // ================================
-    // اختبار قاعدة البيانات
-    // ================================
-
-    if (
-      url.pathname === "/api/test" &&
-      request.method === "GET"
-    ) {
-      try {
-        const result = await env.DB
-          .prepare("SELECT COUNT(*) AS count FROM users")
-          .first();
-
-        const servicesResult = await env.DB
-          .prepare("SELECT COUNT(*) AS count FROM services")
-          .first();
-
-        const projectsResult = await env.DB
-          .prepare("SELECT COUNT(*) AS count FROM projects")
-          .first();
-
-        const proposalsResult = await env.DB
-          .prepare("SELECT COUNT(*) AS count FROM proposals")
-          .first();
-
-        const executionsResult = await env.DB
-          .prepare("SELECT COUNT(*) AS count FROM project_executions")
-          .first();
-
-        const deliveriesResult = await env.DB
-          .prepare("SELECT COUNT(*) AS count FROM project_deliveries")
-          .first();
-
-        const revisionsResult = await env.DB
-          .prepare("SELECT COUNT(*) AS count FROM project_revision_requests")
-          .first();
-
-        const eventsResult = await env.DB
-          .prepare("SELECT COUNT(*) AS count FROM project_events")
-          .first();
-
-        return Response.json({
-          success: true,
-          database: true,
-          users: Number(result?.count || 0),
-          services: Number(servicesResult?.count || 0),
-          projects: Number(projectsResult?.count || 0),
-          proposals: Number(proposalsResult?.count || 0),
-          executions: Number(executionsResult?.count || 0),
-          deliveries: Number(deliveriesResult?.count || 0),
-          revisions: Number(revisionsResult?.count || 0),
-          events: Number(eventsResult?.count || 0)
-        });
-      } catch (error) {
-        console.error(error);
-
-        return Response.json(
-          {
-            success: false,
-            error: "Database error"
-          },
-          {
-            status: 500
-          }
-        );
+      if (path === "/api/register" && method === "POST") {
+        return await register(request, env);
       }
-    }
 
-    return env.ASSETS.fetch(request);
+      if (path === "/api/login" && method === "POST") {
+        return await login(request, env);
+      }
+
+      if (path === "/api/me" && method === "GET") {
+        return await getMe(request, env);
+      }
+
+      if (path === "/api/logout" && method === "POST") {
+        return await logout(request, env);
+      }
+
+      // =========================
+      // SERVICES
+      // =========================
+
+      if (path === "/api/services" && method === "POST") {
+        return await createService(request, env);
+      }
+
+      if (path === "/api/services" && method === "GET") {
+        return await getServices(request, env);
+      }
+
+      if (path === "/api/my-services" && method === "GET") {
+        return await getMyServices(request, env);
+      }
+
+      if (/^\/api\/services\/\d+$/.test(path) && method === "PUT") {
+        return await updateService(request, env);
+      }
+
+      if (/^\/api\/services\/\d+$/.test(path) && method === "DELETE") {
+        return await deleteService(request, env);
+      }
+
+      // =========================
+      // PROJECTS
+      // =========================
+
+      if (path === "/api/projects" && method === "POST") {
+        return await createProject(request, env);
+      }
+
+      if (path === "/api/projects" && method === "GET") {
+        return await getProjects(request, env);
+      }
+
+      if (path === "/api/my-projects" && method === "GET") {
+        return await getMyProjects(request, env);
+      }
+
+      if (/^\/api\/projects\/\d+$/.test(path) && method === "PUT") {
+        return await updateProject(request, env);
+      }
+
+      if (/^\/api\/projects\/\d+$/.test(path) && method === "DELETE") {
+        return await deleteProject(request, env);
+      }
+
+      // =========================
+      // PROPOSALS
+      // =========================
+
+      if (/^\/api\/projects\/\d+\/proposals$/.test(path) && method === "POST") {
+        return await createProposal(request, env);
+      }
+
+      if (/^\/api\/projects\/\d+\/proposals$/.test(path) && method === "GET") {
+        return await getProjectProposals(request, env);
+      }
+
+      if (path === "/api/my-proposals" && method === "GET") {
+        return await getMyProposals(request, env);
+      }
+
+      if (/^\/api\/proposals\/\d+\/accept$/.test(path) && method === "PUT") {
+        return await acceptProposal(request, env);
+      }
+
+      if (/^\/api\/proposals\/\d+\/reject$/.test(path) && method === "PUT") {
+        return await rejectProposal(request, env);
+      }
+
+      // =========================
+      // EXECUTION
+      // =========================
+
+      if (/^\/api\/projects\/\d+\/execution$/.test(path) && method === "GET") {
+        return await getProjectExecution(request, env);
+      }
+
+      if (path === "/api/my-executions" && method === "GET") {
+        return await getMyExecutions(request, env);
+      }
+
+      if (/^\/api\/projects\/\d+\/events$/.test(path) && method === "GET") {
+        return await getProjectEvents(request, env);
+      }
+
+      // =========================
+      // DELIVERIES
+      // =========================
+
+      if (/^\/api\/projects\/\d+\/deliveries$/.test(path) && method === "POST") {
+        return await createDelivery(request, env);
+      }
+
+      if (/^\/api\/deliveries\/\d+\/revision$/.test(path) && method === "POST") {
+        return await requestRevision(request, env);
+      }
+
+      if (/^\/api\/deliveries\/\d+\/accept$/.test(path) && method === "PUT") {
+        return await acceptDelivery(request, env);
+      }
+
+      // =========================
+      // PORTFOLIO / BUSINESSES
+      // =========================
+
+      if (path === "/api/portfolio" && method === "POST") {
+        return await createPortfolio(request, env);
+      }
+
+      if (path === "/api/portfolio" && method === "GET") {
+        return await getPortfolio(request, env);
+      }
+
+      if (path === "/api/my-portfolio" && method === "GET") {
+        return await getMyPortfolio(request, env);
+      }
+
+      if (/^\/api\/portfolio\/\d+$/.test(path) && method === "GET") {
+        return await getPortfolioItem(request, env);
+      }
+
+      if (/^\/api\/portfolio\/\d+$/.test(path) && method === "PUT") {
+        return await updatePortfolio(request, env);
+      }
+
+      if (/^\/api\/portfolio\/\d+$/.test(path) && method === "DELETE") {
+        return await deletePortfolio(request, env);
+      }
+
+      // =========================
+      // DATABASE TEST
+      // =========================
+
+      if (path === "/api/test" && method === "GET") {
+        return await testDatabase(env);
+      }
+
+      // =========================
+      // ASSETS
+      // =========================
+
+      return env.ASSETS.fetch(request);
+
+    } catch (error) {
+      console.error("Worker error:", error);
+
+      return json({
+        success: false,
+        error: "حدث خطأ داخلي في الخادم",
+        details: error?.message || "Unknown error"
+      }, 500);
+    }
   }
 };
 
-// ==================================================
-// تسجيل حساب جديد
-// ==================================================
 
-async function register(request, env) {
+// ============================================================
+// RESPONSE HELPERS
+// ============================================================
+
+function json(data, status = 200, extraHeaders = {}) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      ...extraHeaders
+    }
+  });
+}
+
+async function readJson(request) {
   try {
-    const data = await request.json();
-
-    const fullName =
-      String(data.full_name || "").trim();
-
-    const email =
-      String(data.email || "")
-        .trim()
-        .toLowerCase();
-
-    const password =
-      String(data.password || "");
-
-    const role =
-      String(data.role || "");
-
-    if (
-      !fullName ||
-      !email ||
-      !password ||
-      !role
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message: "جميع الحقول مطلوبة"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (
-      !["client", "freelancer"].includes(role)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message: "نوع الحساب غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (password.length < 8) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "كلمة المرور يجب أن تكون 8 أحرف على الأقل"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "البريد الإلكتروني غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const existing =
-      await env.DB
-        .prepare(
-          "SELECT id FROM users WHERE email = ? COLLATE NOCASE"
-        )
-        .bind(email)
-        .first();
-
-    if (existing) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "هذا البريد الإلكتروني مستخدم بالفعل"
-        },
-        {
-          status: 409
-        }
-      );
-    }
-
-    const salt =
-      randomBytes(16);
-
-    const passwordHash =
-      await hashPassword(
-        password,
-        salt
-      );
-
-    const result =
-      await env.DB
-        .prepare(`
-          INSERT INTO users
-          (
-            full_name,
-            email,
-            password_hash,
-            password_salt,
-            role
-          )
-          VALUES (?, ?, ?, ?, ?)
-        `)
-        .bind(
-          fullName,
-          email,
-          passwordHash,
-          bytesToHex(salt),
-          role
-        )
-        .run();
-
-    return Response.json({
-      success: true,
-      message:
-        "تم إنشاء الحساب بنجاح",
-      user_id:
-        result.meta.last_row_id
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء إنشاء الحساب"
-      },
-      {
-        status: 500
-      }
-    );
+    return await request.json();
+  } catch {
+    return null;
   }
 }
 
-// ==================================================
-// تسجيل الدخول
-// ==================================================
+function cleanString(value) {
+  if (value === undefined || value === null) {
+    return "";
+  }
+
+  return String(value).trim();
+}
+
+function normalizeSkills(value) {
+  if (Array.isArray(value)) {
+    return value
+      .map(item => cleanString(item))
+      .filter(Boolean)
+      .join(", ");
+  }
+
+  return cleanString(value);
+}
+
+
+// ============================================================
+// AUTH
+// ============================================================
+
+async function register(request, env) {
+  const body = await readJson(request);
+
+  if (!body) {
+    return json({
+      success: false,
+      error: "بيانات الطلب غير صحيحة"
+    }, 400);
+  }
+
+  const fullName = cleanString(body.full_name || body.fullName);
+  const email = cleanString(body.email).toLowerCase();
+  const password = String(body.password || "");
+  const role = cleanString(body.role).toLowerCase();
+
+  if (!fullName || !email || !password || !role) {
+    return json({
+      success: false,
+      error: "جميع الحقول المطلوبة يجب تعبئتها"
+    }, 400);
+  }
+
+  if (fullName.length < 2) {
+    return json({
+      success: false,
+      error: "الاسم يجب أن يكون صحيحًا"
+    }, 400);
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return json({
+      success: false,
+      error: "البريد الإلكتروني غير صحيح"
+    }, 400);
+  }
+
+  if (password.length < 8) {
+    return json({
+      success: false,
+      error: "كلمة المرور يجب أن تكون 8 أحرف على الأقل"
+    }, 400);
+  }
+
+  if (!["client", "freelancer"].includes(role)) {
+    return json({
+      success: false,
+      error: "نوع الحساب غير صحيح"
+    }, 400);
+  }
+
+  const existing = await env.DB
+    .prepare(`
+      SELECT id
+      FROM users
+      WHERE email = ? COLLATE NOCASE
+      LIMIT 1
+    `)
+    .bind(email)
+    .first();
+
+  if (existing) {
+    return json({
+      success: false,
+      error: "البريد الإلكتروني مستخدم مسبقًا"
+    }, 409);
+  }
+
+  const { hash, salt } = await hashPassword(password);
+
+  const result = await env.DB
+    .prepare(`
+      INSERT INTO users
+      (
+        full_name,
+        email,
+        password_hash,
+        password_salt,
+        role
+      )
+      VALUES (?, ?, ?, ?, ?)
+    `)
+    .bind(
+      fullName,
+      email,
+      hash,
+      salt,
+      role
+    )
+    .run();
+
+  return json({
+    success: true,
+    message: "تم إنشاء الحساب بنجاح",
+    user_id: result.meta.last_row_id
+  }, 201);
+}
+
 
 async function login(request, env) {
-  try {
-    const data = await request.json();
+  const body = await readJson(request);
 
-    const email =
-      String(data.email || "")
-        .trim()
-        .toLowerCase();
+  if (!body) {
+    return json({
+      success: false,
+      error: "بيانات الطلب غير صحيحة"
+    }, 400);
+  }
 
-    const password =
-      String(data.password || "");
+  const email = cleanString(body.email).toLowerCase();
+  const password = String(body.password || "");
 
-    if (!email || !password) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "البريد الإلكتروني وكلمة المرور مطلوبان"
-        },
-        {
-          status: 400
-        }
-      );
-    }
+  if (!email || !password) {
+    return json({
+      success: false,
+      error: "البريد الإلكتروني وكلمة المرور مطلوبان"
+    }, 400);
+  }
 
-    const user =
-      await env.DB
-        .prepare(`
-          SELECT
-            id,
-            full_name,
-            email,
-            password_hash,
-            password_salt,
-            role
-          FROM users
-          WHERE email = ? COLLATE NOCASE
-          LIMIT 1
-        `)
-        .bind(email)
-        .first();
+  const user = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        full_name,
+        email,
+        password_hash,
+        password_salt,
+        role
+      FROM users
+      WHERE email = ? COLLATE NOCASE
+      LIMIT 1
+    `)
+    .bind(email)
+    .first();
 
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "البريد الإلكتروني أو كلمة المرور غير صحيحة"
-        },
-        {
-          status: 401
-        }
-      );
-    }
+  if (!user) {
+    return json({
+      success: false,
+      error: "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+    }, 401);
+  }
 
-    const salt =
-      hexToBytes(
-        user.password_salt
-      );
+  const passwordHash = await hashPasswordWithSalt(
+    password,
+    user.password_salt
+  );
 
-    const passwordHash =
-      await hashPassword(
-        password,
-        salt
-      );
+  const valid = constantTimeEqual(
+    hexToBytes(passwordHash),
+    hexToBytes(user.password_hash)
+  );
 
-    if (
-      !constantTimeEqual(
-        passwordHash,
-        user.password_hash
+  if (!valid) {
+    return json({
+      success: false,
+      error: "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+    }, 401);
+  }
+
+  const token = randomToken(32);
+  const tokenHash = await sha256Hex(token);
+
+  const expiresAt = new Date(
+    Date.now() + SESSION_MAX_AGE * 1000
+  ).toISOString();
+
+  await env.DB
+    .prepare(`
+      DELETE FROM sessions
+      WHERE user_id = ?
+    `)
+    .bind(user.id)
+    .run();
+
+  await env.DB
+    .prepare(`
+      INSERT INTO sessions
+      (
+        user_id,
+        token_hash,
+        expires_at
       )
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "البريد الإلكتروني أو كلمة المرور غير صحيحة"
-        },
-        {
-          status: 401
-        }
-      );
+      VALUES (?, ?, ?)
+    `)
+    .bind(
+      user.id,
+      tokenHash,
+      expiresAt
+    )
+    .run();
+
+  const cookie =
+    `mihraf_session=${token}; ` +
+    `HttpOnly; ` +
+    `Secure; ` +
+    `SameSite=Lax; ` +
+    `Path=/; ` +
+    `Max-Age=${SESSION_MAX_AGE}`;
+
+  return json({
+    success: true,
+    message: "تم تسجيل الدخول بنجاح",
+    user: {
+      id: user.id,
+      full_name: user.full_name,
+      email: user.email,
+      role: user.role
     }
+  }, 200, {
+    "Set-Cookie": cookie
+  });
+}
 
-    const sessionToken =
-      randomToken(32);
 
-    const sessionTokenHash =
-      await sha256Hex(
-        sessionToken
-      );
+async function getMe(request, env) {
+  const user = await authenticateUser(request, env);
 
-    const expiresAt =
-      new Date(
-        Date.now() +
-        SESSION_DAYS *
-        24 *
-        60 *
-        60 *
-        1000
-      ).toISOString();
+  if (!user) {
+    return json({
+      success: false,
+      authenticated: false,
+      error: "غير مسجل الدخول"
+    }, 401);
+  }
+
+  return json({
+    success: true,
+    authenticated: true,
+    user
+  });
+}
+
+
+async function logout(request, env) {
+  const cookies = parseCookies(request.headers.get("Cookie") || "");
+  const token = cookies.mihraf_session;
+
+  if (token) {
+    const tokenHash = await sha256Hex(token);
 
     await env.DB
       .prepare(`
         DELETE FROM sessions
-        WHERE user_id = ?
+        WHERE token_hash = ?
       `)
-      .bind(user.id)
+      .bind(tokenHash)
       .run();
-
-    await env.DB
-      .prepare(`
-        INSERT INTO sessions
-        (
-          user_id,
-          token_hash,
-          expires_at
-        )
-        VALUES (?, ?, ?)
-      `)
-      .bind(
-        user.id,
-        sessionTokenHash,
-        expiresAt
-      )
-      .run();
-
-    const cookie =
-      `mihraf_session=${sessionToken}; ` +
-      `HttpOnly; ` +
-      `Secure; ` +
-      `SameSite=Lax; ` +
-      `Path=/; ` +
-      `Max-Age=${SESSION_MAX_AGE}`;
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        message:
-          "تم تسجيل الدخول بنجاح",
-        user: {
-          id:
-            user.id,
-          full_name:
-            user.full_name,
-          email:
-            user.email,
-          role:
-            user.role
-        }
-      }),
-      {
-        status: 200,
-        headers: {
-          "Content-Type":
-            "application/json; charset=UTF-8",
-          "Set-Cookie":
-            cookie
-        }
-      }
-    );
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء تسجيل الدخول"
-      },
-      {
-        status: 500
-      }
-    );
   }
+
+  return json({
+    success: true,
+    message: "تم تسجيل الخروج"
+  }, 200, {
+    "Set-Cookie":
+      "mihraf_session=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0"
+  });
 }
 
-// ==================================================
-// المستخدم الحالي
-// ==================================================
 
-async function getCurrentUser(
-  request,
-  env
-) {
-  try {
-    const cookies =
-      parseCookies(
-        request.headers.get("Cookie") || ""
-      );
+// ============================================================
+// SERVICES
+// ============================================================
 
-    const sessionToken =
-      cookies.mihraf_session;
+async function createService(request, env) {
+  const user = await authenticateUser(request, env);
 
-    if (!sessionToken) {
-      return Response.json(
-        {
-          success: false,
-          logged_in: false
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    const tokenHash =
-      await sha256Hex(
-        sessionToken
-      );
-
-    const session =
-      await env.DB
-        .prepare(`
-          SELECT
-            sessions.user_id,
-            sessions.expires_at,
-            users.id,
-            users.full_name,
-            users.email,
-            users.role
-          FROM sessions
-          INNER JOIN users
-            ON users.id = sessions.user_id
-          WHERE sessions.token_hash = ?
-          LIMIT 1
-        `)
-        .bind(tokenHash)
-        .first();
-
-    if (!session) {
-      return Response.json(
-        {
-          success: false,
-          logged_in: false
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      new Date(
-        session.expires_at
-      ).getTime() <= Date.now()
-    ) {
-      await env.DB
-        .prepare(`
-          DELETE FROM sessions
-          WHERE token_hash = ?
-        `)
-        .bind(tokenHash)
-        .run();
-
-      return Response.json(
-        {
-          success: false,
-          logged_in: false,
-          message:
-            "انتهت الجلسة"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    return Response.json({
-      success: true,
-      logged_in: true,
-      user: {
-        id:
-          session.id,
-        full_name:
-          session.full_name,
-        email:
-          session.email,
-        role:
-          session.role
-      }
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء التحقق من الجلسة"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
   }
-}
 
-// ==================================================
-// تسجيل الخروج
-// ==================================================
-
-async function logout(
-  request,
-  env
-) {
-  try {
-    const cookies =
-      parseCookies(
-        request.headers.get("Cookie") || ""
-      );
-
-    const sessionToken =
-      cookies.mihraf_session;
-
-    if (sessionToken) {
-      const tokenHash =
-        await sha256Hex(
-          sessionToken
-        );
-
-      await env.DB
-        .prepare(`
-          DELETE FROM sessions
-          WHERE token_hash = ?
-        `)
-        .bind(tokenHash)
-        .run();
-    }
-
-    const cookie =
-      "mihraf_session=; " +
-      "HttpOnly; " +
-      "Secure; " +
-      "SameSite=Lax; " +
-      "Path=/; " +
-      "Max-Age=0";
-
-    return new Response(
-      JSON.stringify({
-        success: true,
-        message:
-          "تم تسجيل الخروج"
-      }),
-      {
-        status: 200,
-        headers: {
-          "Content-Type":
-            "application/json; charset=UTF-8",
-          "Set-Cookie":
-            cookie
-        }
-      }
-    );
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء تسجيل الخروج"
-      },
-      {
-        status: 500
-      }
-    );
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "إضافة الخدمات متاحة للمستقلين فقط"
+    }, 403);
   }
-}
 
-// ==================================================
-// إنشاء خدمة
-// ==================================================
+  const body = await readJson(request);
 
-async function createService(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
-
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "freelancer"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "فقط المستقل يستطيع إضافة خدمة"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const data =
-      await request.json();
-
-    const title =
-      String(data.title || "").trim();
-
-    const description =
-      String(data.description || "").trim();
-
-    const category =
-      String(data.category || "").trim();
-
-    const price =
-      Number(data.price);
-
-    if (
-      !title ||
-      !description ||
-      !category ||
-      !Number.isFinite(price)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "جميع بيانات الخدمة مطلوبة"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (title.length < 3) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "عنوان الخدمة قصير جدًا"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (description.length < 10) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "وصف الخدمة قصير جدًا"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (price <= 0) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "السعر يجب أن يكون أكبر من صفر"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const result =
-      await env.DB
-        .prepare(`
-          INSERT INTO services
-          (
-            user_id,
-            title,
-            description,
-            price,
-            category
-          )
-          VALUES (?, ?, ?, ?, ?)
-        `)
-        .bind(
-          user.id,
-          title,
-          description,
-          price,
-          category
-        )
-        .run();
-
-    return Response.json({
-      success: true,
-      message:
-        "تم نشر الخدمة بنجاح",
-      service_id:
-        result.meta.last_row_id
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء إنشاء الخدمة"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!body) {
+    return json({
+      success: false,
+      error: "بيانات غير صحيحة"
+    }, 400);
   }
-}
 
-// ==================================================
-// جلب جميع الخدمات
-// ==================================================
+  const title = cleanString(body.title);
+  const description = cleanString(body.description);
+  const category = cleanString(body.category);
+  const price = Number(body.price);
 
-async function getServices(
-  request,
-  env
-) {
-  try {
-    const url =
-      new URL(request.url);
-
-    const category =
-      String(
-        url.searchParams.get(
-          "category"
-        ) || ""
-      ).trim();
-
-    let result;
-
-    if (category) {
-      result =
-        await env.DB
-          .prepare(`
-            SELECT
-              services.id,
-              services.title,
-              services.description,
-              services.price,
-              services.category,
-              services.status,
-              services.created_at,
-              users.id AS user_id,
-              users.full_name AS freelancer_name
-            FROM services
-            INNER JOIN users
-              ON users.id = services.user_id
-            WHERE
-              services.status = 'active'
-              AND services.category = ?
-            ORDER BY services.id DESC
-          `)
-          .bind(category)
-          .all();
-    } else {
-      result =
-        await env.DB
-          .prepare(`
-            SELECT
-              services.id,
-              services.title,
-              services.description,
-              services.price,
-              services.category,
-              services.status,
-              services.created_at,
-              users.id AS user_id,
-              users.full_name AS freelancer_name
-            FROM services
-            INNER JOIN users
-              ON users.id = services.user_id
-            WHERE services.status = 'active'
-            ORDER BY services.id DESC
-          `)
-          .all();
-    }
-
-    return Response.json({
-      success: true,
-      services:
-        result.results || []
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء جلب الخدمات"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!title || !description || !category) {
+    return json({
+      success: false,
+      error: "العنوان والوصف والتصنيف مطلوبة"
+    }, 400);
   }
-}
 
-// ==================================================
-// جلب خدمات المستخدم الحالي
-// ==================================================
-
-async function getMyServices(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
-
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "freelancer"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "هذه الصفحة للمستقلين فقط"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const result =
-      await env.DB
-        .prepare(`
-          SELECT
-            id,
-            title,
-            description,
-            price,
-            category,
-            status,
-            created_at,
-            updated_at
-          FROM services
-          WHERE user_id = ?
-          ORDER BY id DESC
-        `)
-        .bind(user.id)
-        .all();
-
-    return Response.json({
-      success: true,
-      services:
-        result.results || []
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء جلب خدماتك"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!Number.isFinite(price) || price < 0) {
+    return json({
+      success: false,
+      error: "السعر غير صحيح"
+    }, 400);
   }
-}
 
-// ==================================================
-// تعديل خدمة
-// ==================================================
-
-async function updateService(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
-
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "freelancer"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "فقط المستقل يستطيع تعديل الخدمة"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const serviceId =
-      getIdFromPath(request);
-
-    if (!serviceId) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رقم الخدمة غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const service =
-      await env.DB
-        .prepare(`
-          SELECT
-            id,
-            user_id
-          FROM services
-          WHERE id = ?
-          LIMIT 1
-        `)
-        .bind(serviceId)
-        .first();
-
-    if (!service) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "الخدمة غير موجودة"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    if (
-      Number(service.user_id) !==
-      Number(user.id)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكنك تعديل هذه الخدمة"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const data =
-      await request.json();
-
-    const title =
-      String(data.title || "").trim();
-
-    const description =
-      String(data.description || "").trim();
-
-    const category =
-      String(data.category || "").trim();
-
-    const price =
-      Number(data.price);
-
-    const status =
-      String(
-        data.status || "active"
-      );
-
-    if (
-      !title ||
-      !description ||
-      !category ||
-      !Number.isFinite(price)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "جميع بيانات الخدمة مطلوبة"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (price <= 0) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "السعر يجب أن يكون أكبر من صفر"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (
-      !["active", "paused"].includes(
+  const result = await env.DB
+    .prepare(`
+      INSERT INTO services
+      (
+        user_id,
+        title,
+        description,
+        category,
+        price,
         status
       )
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "حالة الخدمة غير صحيحة"
-        },
-        {
-          status: 400
-        }
-      );
-    }
+      VALUES (?, ?, ?, ?, ?, 'active')
+    `)
+    .bind(
+      user.id,
+      title,
+      description,
+      category,
+      price
+    )
+    .run();
 
-    await env.DB
-      .prepare(`
-        UPDATE services
-        SET
-          title = ?,
-          description = ?,
-          price = ?,
-          category = ?,
-          status = ?,
-          updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
-          AND user_id = ?
-      `)
-      .bind(
+  return json({
+    success: true,
+    message: "تمت إضافة الخدمة بنجاح",
+    service_id: result.meta.last_row_id
+  }, 201);
+}
+
+
+async function getServices(request, env) {
+  const url = new URL(request.url);
+  const category = cleanString(url.searchParams.get("category"));
+
+  let query = `
+    SELECT
+      s.id,
+      s.user_id,
+      s.title,
+      s.description,
+      s.category,
+      s.price,
+      s.status,
+      s.created_at,
+      s.updated_at,
+      u.full_name AS freelancer_name
+    FROM services s
+    JOIN users u ON u.id = s.user_id
+    WHERE s.status = 'active'
+  `;
+
+  const params = [];
+
+  if (category) {
+    query += ` AND s.category = ? `;
+    params.push(category);
+  }
+
+  query += ` ORDER BY s.id DESC `;
+
+  const result = await env.DB
+    .prepare(query)
+    .bind(...params)
+    .all();
+
+  return json({
+    success: true,
+    services: result.results || []
+  });
+}
+
+
+async function getMyServices(request, env) {
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "هذه الصفحة للمستقلين فقط"
+    }, 403);
+  }
+
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        user_id,
         title,
         description,
+        category,
         price,
-        category,
         status,
-        serviceId,
-        user.id
-      )
-      .run();
+        created_at,
+        updated_at
+      FROM services
+      WHERE user_id = ?
+      ORDER BY id DESC
+    `)
+    .bind(user.id)
+    .all();
 
-    return Response.json({
-      success: true,
-      message:
-        "تم تعديل الخدمة بنجاح"
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء تعديل الخدمة"
-      },
-      {
-        status: 500
-      }
-    );
-  }
+  return json({
+    success: true,
+    services: result.results || []
+  });
 }
 
-// ==================================================
-// حذف خدمة
-// ==================================================
 
-async function deleteService(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
+async function updateService(request, env) {
+  const user = await authenticateUser(request, env);
 
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "freelancer"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "فقط المستقل يستطيع حذف الخدمة"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const serviceId =
-      getIdFromPath(request);
-
-    if (!serviceId) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رقم الخدمة غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const service =
-      await env.DB
-        .prepare(`
-          SELECT
-            id,
-            user_id
-          FROM services
-          WHERE id = ?
-          LIMIT 1
-        `)
-        .bind(serviceId)
-        .first();
-
-    if (!service) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "الخدمة غير موجودة"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    if (
-      Number(service.user_id) !==
-      Number(user.id)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكنك حذف هذه الخدمة"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    await env.DB
-      .prepare(`
-        UPDATE services
-        SET
-          status = 'deleted',
-          updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
-          AND user_id = ?
-      `)
-      .bind(
-        serviceId,
-        user.id
-      )
-      .run();
-
-    return Response.json({
-      success: true,
-      message:
-        "تم حذف الخدمة بنجاح"
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء حذف الخدمة"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
   }
+
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "غير مسموح"
+    }, 403);
+  }
+
+  const id = getIdFromPath(request);
+
+  if (!id) {
+    return json({
+      success: false,
+      error: "معرف الخدمة غير صحيح"
+    }, 400);
+  }
+
+  const service = await env.DB
+    .prepare(`
+      SELECT *
+      FROM services
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(id)
+    .first();
+
+  if (!service) {
+    return json({
+      success: false,
+      error: "الخدمة غير موجودة"
+    }, 404);
+  }
+
+  if (service.user_id !== user.id) {
+    return json({
+      success: false,
+      error: "لا تملك صلاحية تعديل هذه الخدمة"
+    }, 403);
+  }
+
+  const body = await readJson(request);
+
+  if (!body) {
+    return json({
+      success: false,
+      error: "بيانات غير صحيحة"
+    }, 400);
+  }
+
+  const title =
+    body.title !== undefined
+      ? cleanString(body.title)
+      : service.title;
+
+  const description =
+    body.description !== undefined
+      ? cleanString(body.description)
+      : service.description;
+
+  const category =
+    body.category !== undefined
+      ? cleanString(body.category)
+      : service.category;
+
+  const price =
+    body.price !== undefined
+      ? Number(body.price)
+      : Number(service.price);
+
+  const status =
+    body.status !== undefined
+      ? cleanString(body.status)
+      : service.status;
+
+  if (!title || !description || !category) {
+    return json({
+      success: false,
+      error: "العنوان والوصف والتصنيف مطلوبة"
+    }, 400);
+  }
+
+  if (!Number.isFinite(price) || price < 0) {
+    return json({
+      success: false,
+      error: "السعر غير صحيح"
+    }, 400);
+  }
+
+  if (!["active", "paused"].includes(status)) {
+    return json({
+      success: false,
+      error: "حالة الخدمة غير صحيحة"
+    }, 400);
+  }
+
+  await env.DB
+    .prepare(`
+      UPDATE services
+      SET
+        title = ?,
+        description = ?,
+        category = ?,
+        price = ?,
+        status = ?,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `)
+    .bind(
+      title,
+      description,
+      category,
+      price,
+      status,
+      id
+    )
+    .run();
+
+  return json({
+    success: true,
+    message: "تم تحديث الخدمة بنجاح"
+  });
 }
 
-// ==================================================
-// إنشاء مشروع
-// ==================================================
 
-async function createProject(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
+async function deleteService(request, env) {
+  const user = await authenticateUser(request, env);
 
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "client"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "فقط العميل يستطيع نشر مشروع"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const data =
-      await request.json();
-
-    const title =
-      String(data.title || "").trim();
-
-    const description =
-      String(data.description || "").trim();
-
-    const category =
-      String(data.category || "").trim();
-
-    const budget =
-      Number(data.budget);
-
-    if (
-      !title ||
-      !description ||
-      !category ||
-      !Number.isFinite(budget)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "جميع بيانات المشروع مطلوبة"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (title.length < 3) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "عنوان المشروع قصير جدًا"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (description.length < 10) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "وصف المشروع قصير جدًا"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (budget <= 0) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "الميزانية يجب أن تكون أكبر من صفر"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const result =
-      await env.DB
-        .prepare(`
-          INSERT INTO projects
-          (
-            user_id,
-            title,
-            description,
-            budget,
-            category
-          )
-          VALUES (?, ?, ?, ?, ?)
-        `)
-        .bind(
-          user.id,
-          title,
-          description,
-          budget,
-          category
-        )
-        .run();
-
-    return Response.json({
-      success: true,
-      message:
-        "تم نشر المشروع بنجاح",
-      project_id:
-        result.meta.last_row_id
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء إنشاء المشروع"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
   }
+
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "غير مسموح"
+    }, 403);
+  }
+
+  const id = getIdFromPath(request);
+
+  if (!id) {
+    return json({
+      success: false,
+      error: "معرف الخدمة غير صحيح"
+    }, 400);
+  }
+
+  const service = await env.DB
+    .prepare(`
+      SELECT id, user_id
+      FROM services
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(id)
+    .first();
+
+  if (!service) {
+    return json({
+      success: false,
+      error: "الخدمة غير موجودة"
+    }, 404);
+  }
+
+  if (service.user_id !== user.id) {
+    return json({
+      success: false,
+      error: "لا تملك صلاحية حذف هذه الخدمة"
+    }, 403);
+  }
+
+  await env.DB
+    .prepare(`
+      UPDATE services
+      SET
+        status = 'deleted',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `)
+    .bind(id)
+    .run();
+
+  return json({
+    success: true,
+    message: "تم حذف الخدمة"
+  });
 }
 
-// ==================================================
-// جلب المشاريع المفتوحة
-// ==================================================
 
-async function getProjects(
-  request,
-  env
-) {
-  try {
-    const url =
-      new URL(request.url);
+// ============================================================
+// PROJECTS
+// ============================================================
 
-    const category =
-      String(
-        url.searchParams.get(
-          "category"
-        ) || ""
-      ).trim();
+async function createProject(request, env) {
+  const user = await authenticateUser(request, env);
 
-    let result;
-
-    if (category) {
-      result =
-        await env.DB
-          .prepare(`
-            SELECT
-              projects.id,
-              projects.title,
-              projects.description,
-              projects.budget,
-              projects.category,
-              projects.status,
-              projects.created_at,
-              users.id AS client_id,
-              users.full_name AS client_name
-            FROM projects
-            INNER JOIN users
-              ON users.id = projects.user_id
-            WHERE
-              projects.status = 'open'
-              AND projects.category = ?
-            ORDER BY projects.id DESC
-          `)
-          .bind(category)
-          .all();
-    } else {
-      result =
-        await env.DB
-          .prepare(`
-            SELECT
-              projects.id,
-              projects.title,
-              projects.description,
-              projects.budget,
-              projects.category,
-              projects.status,
-              projects.created_at,
-              users.id AS client_id,
-              users.full_name AS client_name
-            FROM projects
-            INNER JOIN users
-              ON users.id = projects.user_id
-            WHERE projects.status = 'open'
-            ORDER BY projects.id DESC
-          `)
-          .all();
-    }
-
-    return Response.json({
-      success: true,
-      projects:
-        result.results || []
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء جلب المشاريع"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
   }
-}
 
-// ==================================================
-// تقديم عرض على مشروع
-// ==================================================
-
-async function createProposal(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
-
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "freelancer"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "تقديم العروض متاح للمستقلين فقط"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const url =
-      new URL(request.url);
-
-    const parts =
-      url.pathname
-        .split("/")
-        .filter(Boolean);
-
-    const projectId =
-      Number(parts[2]);
-
-    if (
-      !Number.isInteger(projectId) ||
-      projectId <= 0
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رقم المشروع غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const data =
-      await request.json();
-
-    const price =
-      Number(data.price);
-
-    const deliveryDays =
-      Number(data.delivery_days);
-
-    const message =
-      String(data.message || "").trim();
-
-    if (
-      !Number.isFinite(price) ||
-      price <= 0
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "السعر غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (
-      !Number.isInteger(deliveryDays) ||
-      deliveryDays <= 0
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "مدة التسليم غير صحيحة"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (
-      message.length < 10
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رسالة العرض يجب أن تكون 10 أحرف على الأقل"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const project =
-      await env.DB
-        .prepare(`
-          SELECT
-            id,
-            user_id,
-            status
-          FROM projects
-          WHERE id = ?
-          LIMIT 1
-        `)
-        .bind(projectId)
-        .first();
-
-    if (!project) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "المشروع غير موجود"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    if (
-      project.status !== "open"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "هذا المشروع لم يعد مفتوحًا للعروض"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (
-      Number(project.user_id) ===
-      Number(user.id)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكنك تقديم عرض على مشروعك"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const existing =
-      await env.DB
-        .prepare(`
-          SELECT
-            id
-          FROM proposals
-          WHERE
-            project_id = ?
-            AND freelancer_id = ?
-            AND status IN ('pending', 'accepted')
-          LIMIT 1
-        `)
-        .bind(
-          projectId,
-          user.id
-        )
-        .first();
-
-    if (existing) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لديك عرض موجود بالفعل على هذا المشروع"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const result =
-      await env.DB
-        .prepare(`
-          INSERT INTO proposals
-          (
-            project_id,
-            freelancer_id,
-            price,
-            delivery_days,
-            message
-          )
-          VALUES (?, ?, ?, ?, ?)
-        `)
-        .bind(
-          projectId,
-          user.id,
-          price,
-          deliveryDays,
-          message
-        )
-        .run();
-
-    return Response.json(
-      {
-        success: true,
-        message:
-          "تم تقديم العرض بنجاح",
-        proposal_id:
-          result.meta.last_row_id
-      },
-      {
-        status: 201
-      }
-    );
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء تقديم العرض"
-      },
-      {
-        status: 500
-      }
-    );
+  if (user.role !== "client") {
+    return json({
+      success: false,
+      error: "إنشاء المشاريع متاح للعملاء فقط"
+    }, 403);
   }
-}
 
-// ==================================================
-// جلب عروض مشروع للعميل
-// ==================================================
+  const body = await readJson(request);
 
-async function getProjectProposals(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
-
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "client"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "هذه العروض مخصصة لصاحب المشروع"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const url =
-      new URL(request.url);
-
-    const parts =
-      url.pathname
-        .split("/")
-        .filter(Boolean);
-
-    const projectId =
-      Number(parts[2]);
-
-    if (
-      !Number.isInteger(projectId) ||
-      projectId <= 0
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رقم المشروع غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const project =
-      await env.DB
-        .prepare(`
-          SELECT
-            id,
-            user_id,
-            status
-          FROM projects
-          WHERE id = ?
-          LIMIT 1
-        `)
-        .bind(projectId)
-        .first();
-
-    if (!project) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "المشروع غير موجود"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    if (
-      Number(project.user_id) !==
-      Number(user.id)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكنك مشاهدة عروض هذا المشروع"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const result =
-      await env.DB
-        .prepare(`
-          SELECT
-            proposals.id,
-            proposals.project_id,
-            proposals.freelancer_id,
-            proposals.price,
-            proposals.delivery_days,
-            proposals.message,
-            proposals.status,
-            proposals.created_at,
-            proposals.updated_at,
-            users.full_name AS freelancer_name
-          FROM proposals
-          INNER JOIN users
-            ON users.id = proposals.freelancer_id
-          WHERE proposals.project_id = ?
-          ORDER BY
-            CASE proposals.status
-              WHEN 'pending' THEN 1
-              WHEN 'accepted' THEN 2
-              WHEN 'rejected' THEN 3
-              ELSE 4
-            END,
-            proposals.id DESC
-        `)
-        .bind(projectId)
-        .all();
-
-    return Response.json({
-      success: true,
-      proposals:
-        result.results || []
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء جلب عروض المشروع"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!body) {
+    return json({
+      success: false,
+      error: "بيانات غير صحيحة"
+    }, 400);
   }
-}
 
-// ==================================================
-// جلب عروض المستقل الحالي
-// ==================================================
+  const title = cleanString(body.title);
+  const description = cleanString(body.description);
+  const category = cleanString(body.category);
+  const budget = Number(body.budget);
 
-async function getMyProposals(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
-
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "freelancer"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "هذه الصفحة للمستقلين فقط"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const result =
-      await env.DB
-        .prepare(`
-          SELECT
-            proposals.id,
-            proposals.project_id,
-            proposals.price,
-            proposals.delivery_days,
-            proposals.message,
-            proposals.status,
-            proposals.created_at,
-            proposals.updated_at,
-            projects.title AS project_title,
-            projects.description AS project_description,
-            projects.budget AS project_budget,
-            projects.category AS project_category,
-            projects.status AS project_status,
-            users.full_name AS client_name
-          FROM proposals
-          INNER JOIN projects
-            ON projects.id = proposals.project_id
-          INNER JOIN users
-            ON users.id = projects.user_id
-          WHERE proposals.freelancer_id = ?
-          ORDER BY proposals.id DESC
-        `)
-        .bind(user.id)
-        .all();
-
-    return Response.json({
-      success: true,
-      proposals:
-        result.results || []
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء جلب عروضك"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!title || !description || !category) {
+    return json({
+      success: false,
+      error: "العنوان والوصف والتصنيف مطلوبة"
+    }, 400);
   }
-}
 
-// ==================================================
-// قبول عرض + إنشاء التنفيذ
-// ==================================================
-
-async function acceptProposal(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
-
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "client"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "فقط صاحب المشروع يستطيع قبول العرض"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const proposalId =
-      getIdFromPath(request);
-
-    if (!proposalId) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رقم العرض غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const proposal =
-      await env.DB
-        .prepare(`
-          SELECT
-            proposals.id,
-            proposals.project_id,
-            proposals.freelancer_id,
-            proposals.delivery_days,
-            proposals.status,
-            projects.user_id AS client_id,
-            projects.title AS project_title,
-            projects.status AS project_status
-          FROM proposals
-          INNER JOIN projects
-            ON projects.id = proposals.project_id
-          WHERE proposals.id = ?
-          LIMIT 1
-        `)
-        .bind(proposalId)
-        .first();
-
-    if (!proposal) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "العرض غير موجود"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    if (
-      Number(proposal.client_id) !==
-      Number(user.id)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكنك قبول هذا العرض"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    if (
-      proposal.project_status !== "open"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "هذا المشروع لم يعد مفتوحًا"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (
-      proposal.status !== "pending"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "هذا العرض لم يعد معلقًا"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const existingExecution =
-      await env.DB
-        .prepare(`
-          SELECT id
-          FROM project_executions
-          WHERE project_id = ?
-             OR proposal_id = ?
-          LIMIT 1
-        `)
-        .bind(
-          proposal.project_id,
-          proposalId
-        )
-        .first();
-
-    if (existingExecution) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يوجد تنفيذ مرتبط بهذا المشروع بالفعل"
-        },
-        {
-          status: 409
-        }
-      );
-    }
-
-    const dueAt =
-      new Date(
-        Date.now() +
-        Number(proposal.delivery_days) *
-        24 *
-        60 *
-        60 *
-        1000
-      ).toISOString();
-
-    await env.DB.batch([
-      env.DB
-        .prepare(`
-          UPDATE proposals
-          SET
-            status = 'rejected',
-            updated_at = CURRENT_TIMESTAMP
-          WHERE
-            project_id = ?
-            AND status = 'pending'
-            AND id != ?
-        `)
-        .bind(
-          proposal.project_id,
-          proposalId
-        ),
-
-      env.DB
-        .prepare(`
-          UPDATE proposals
-          SET
-            status = 'accepted',
-            updated_at = CURRENT_TIMESTAMP
-          WHERE
-            id = ?
-            AND status = 'pending'
-        `)
-        .bind(proposalId),
-
-      env.DB
-        .prepare(`
-          UPDATE projects
-          SET
-            status = 'in_progress',
-            updated_at = CURRENT_TIMESTAMP
-          WHERE
-            id = ?
-            AND user_id = ?
-            AND status = 'open'
-        `)
-        .bind(
-          proposal.project_id,
-          user.id
-        ),
-
-      env.DB
-        .prepare(`
-          INSERT INTO project_executions
-          (
-            project_id,
-            proposal_id,
-            freelancer_id,
-            start_at,
-            due_at,
-            status
-          )
-          VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?, 'in_progress')
-        `)
-        .bind(
-          proposal.project_id,
-          proposalId,
-          proposal.freelancer_id,
-          dueAt
-        )
-    ]);
-
-    const execution =
-      await env.DB
-        .prepare(`
-          SELECT id
-          FROM project_executions
-          WHERE project_id = ?
-          LIMIT 1
-        `)
-        .bind(proposal.project_id)
-        .first();
-
-    if (execution) {
-      await env.DB
-        .prepare(`
-          INSERT INTO project_events
-          (
-            project_id,
-            execution_id,
-            user_id,
-            event_type,
-            message
-          )
-          VALUES (?, ?, ?, ?, ?)
-        `)
-        .bind(
-          proposal.project_id,
-          execution.id,
-          user.id,
-          "proposal_accepted",
-          "تم قبول العرض وبدء تنفيذ المشروع"
-        )
-        .run();
-    }
-
-    return Response.json({
-      success: true,
-      message:
-        "تم قبول العرض وبدء تنفيذ المشروع",
-      execution_id:
-        execution?.id || null
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء قبول العرض"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!Number.isFinite(budget) || budget < 0) {
+    return json({
+      success: false,
+      error: "الميزانية غير صحيحة"
+    }, 400);
   }
-}
 
-// ==================================================
-// رفض عرض
-// ==================================================
-
-async function rejectProposal(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
-
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "client"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "فقط صاحب المشروع يستطيع رفض العرض"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const proposalId =
-      getIdFromPath(request);
-
-    if (!proposalId) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رقم العرض غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const proposal =
-      await env.DB
-        .prepare(`
-          SELECT
-            proposals.id,
-            proposals.status,
-            projects.user_id AS client_id
-          FROM proposals
-          INNER JOIN projects
-            ON projects.id = proposals.project_id
-          WHERE proposals.id = ?
-          LIMIT 1
-        `)
-        .bind(proposalId)
-        .first();
-
-    if (!proposal) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "العرض غير موجود"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    if (
-      Number(proposal.client_id) !==
-      Number(user.id)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكنك رفض هذا العرض"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    if (
-      proposal.status !== "pending"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "هذا العرض لم يعد معلقًا"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    await env.DB
-      .prepare(`
-        UPDATE proposals
-        SET
-          status = 'rejected',
-          updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
-      `)
-      .bind(proposalId)
-      .run();
-
-    return Response.json({
-      success: true,
-      message:
-        "تم رفض العرض"
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء رفض العرض"
-      },
-      {
-        status: 500
-      }
-    );
-  }
-}
-
-// ==================================================
-// جلب مشاريع العميل الحالي
-// ==================================================
-
-async function getMyProjects(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
-
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "client"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "هذه الصفحة للعملاء فقط"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const result =
-      await env.DB
-        .prepare(`
-          SELECT
-            projects.id,
-            projects.title,
-            projects.description,
-            projects.budget,
-            projects.category,
-            projects.status,
-            projects.created_at,
-            projects.updated_at,
-            project_executions.id AS execution_id,
-            project_executions.status AS execution_status,
-            project_executions.start_at,
-            project_executions.due_at,
-            project_executions.completed_at,
-            project_executions.freelancer_id
-          FROM projects
-          LEFT JOIN project_executions
-            ON project_executions.project_id = projects.id
-          WHERE projects.user_id = ?
-          ORDER BY projects.id DESC
-        `)
-        .bind(user.id)
-        .all();
-
-    return Response.json({
-      success: true,
-      projects:
-        result.results || []
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء جلب مشاريعك"
-      },
-      {
-        status: 500
-      }
-    );
-  }
-}
-
-// ==================================================
-// تعديل مشروع
-// ==================================================
-
-async function updateProject(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
-
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "client"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "فقط العميل يستطيع تعديل المشروع"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const projectId =
-      getIdFromPath(request);
-
-    if (!projectId) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رقم المشروع غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const project =
-      await env.DB
-        .prepare(`
-          SELECT
-            id,
-            user_id,
-            status
-          FROM projects
-          WHERE id = ?
-          LIMIT 1
-        `)
-        .bind(projectId)
-        .first();
-
-    if (!project) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "المشروع غير موجود"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    if (
-      Number(project.user_id) !==
-      Number(user.id)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكنك تعديل هذا المشروع"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    if (
-      project.status !== "open"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكن تعديل مشروع غير مفتوح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const data =
-      await request.json();
-
-    const title =
-      String(data.title || "").trim();
-
-    const description =
-      String(data.description || "").trim();
-
-    const category =
-      String(data.category || "").trim();
-
-    const budget =
-      Number(data.budget);
-
-    if (
-      !title ||
-      !description ||
-      !category ||
-      !Number.isFinite(budget)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "جميع بيانات المشروع مطلوبة"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (title.length < 3) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "عنوان المشروع قصير جدًا"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (description.length < 10) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "وصف المشروع قصير جدًا"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (budget <= 0) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "الميزانية يجب أن تكون أكبر من صفر"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    await env.DB
-      .prepare(`
-        UPDATE projects
-        SET
-          title = ?,
-          description = ?,
-          budget = ?,
-          category = ?,
-          updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
-          AND user_id = ?
-          AND status = 'open'
-      `)
-      .bind(
+  const result = await env.DB
+    .prepare(`
+      INSERT INTO projects
+      (
+        client_id,
         title,
         description,
-        budget,
         category,
-        projectId,
-        user.id
+        budget,
+        status
       )
-      .run();
+      VALUES (?, ?, ?, ?, ?, 'open')
+    `)
+    .bind(
+      user.id,
+      title,
+      description,
+      category,
+      budget
+    )
+    .run();
 
-    return Response.json({
-      success: true,
-      message:
-        "تم تعديل المشروع بنجاح"
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء تعديل المشروع"
-      },
-      {
-        status: 500
-      }
-    );
-  }
+  return json({
+    success: true,
+    message: "تم إنشاء المشروع بنجاح",
+    project_id: result.meta.last_row_id
+  }, 201);
 }
 
-// ==================================================
-// إلغاء مشروع
-// ==================================================
 
-async function deleteProject(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
+async function getProjects(request, env) {
+  const url = new URL(request.url);
+  const category = cleanString(url.searchParams.get("category"));
 
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
+  let query = `
+    SELECT
+      p.id,
+      p.client_id,
+      p.title,
+      p.description,
+      p.category,
+      p.budget,
+      p.status,
+      p.created_at,
+      p.updated_at,
+      u.full_name AS client_name
+    FROM projects p
+    JOIN users u ON u.id = p.client_id
+    WHERE p.status = 'open'
+  `;
 
-    if (
-      user.role !== "client"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "فقط العميل يستطيع إلغاء المشروع"
-        },
-        {
-          status: 403
-        }
-      );
-    }
+  const params = [];
 
-    const projectId =
-      getIdFromPath(request);
-
-    if (!projectId) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رقم المشروع غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const project =
-      await env.DB
-        .prepare(`
-          SELECT
-            id,
-            user_id,
-            status
-          FROM projects
-          WHERE id = ?
-          LIMIT 1
-        `)
-        .bind(projectId)
-        .first();
-
-    if (!project) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "المشروع غير موجود"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    if (
-      Number(project.user_id) !==
-      Number(user.id)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكنك إلغاء هذا المشروع"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    if (
-      project.status !== "open"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "هذا المشروع ليس مفتوحًا"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    await env.DB.batch([
-      env.DB
-        .prepare(`
-          UPDATE projects
-          SET
-            status = 'cancelled',
-            updated_at = CURRENT_TIMESTAMP
-          WHERE
-            id = ?
-            AND user_id = ?
-            AND status = 'open'
-        `)
-        .bind(
-          projectId,
-          user.id
-        ),
-
-      env.DB
-        .prepare(`
-          UPDATE proposals
-          SET
-            status = 'rejected',
-            updated_at = CURRENT_TIMESTAMP
-          WHERE
-            project_id = ?
-            AND status = 'pending'
-        `)
-        .bind(projectId)
-    ]);
-
-    return Response.json({
-      success: true,
-      message:
-        "تم إلغاء المشروع بنجاح"
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء إلغاء المشروع"
-      },
-      {
-        status: 500
-      }
-    );
+  if (category) {
+    query += ` AND p.category = ? `;
+    params.push(category);
   }
+
+  query += ` ORDER BY p.id DESC `;
+
+  const result = await env.DB
+    .prepare(query)
+    .bind(...params)
+    .all();
+
+  return json({
+    success: true,
+    projects: result.results || []
+  });
 }
 
-// ==================================================
-// جلب تنفيذ مشروع
-// ==================================================
 
-async function getProjectExecution(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
+async function getMyProjects(request, env) {
+  const user = await authenticateUser(request, env);
 
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    const projectId =
-      getIdFromPath(request);
-
-    if (!projectId) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رقم المشروع غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const execution =
-      await env.DB
-        .prepare(`
-          SELECT
-            project_executions.id,
-            project_executions.project_id,
-            project_executions.proposal_id,
-            project_executions.freelancer_id,
-            project_executions.start_at,
-            project_executions.due_at,
-            project_executions.status,
-            project_executions.completed_at,
-            project_executions.created_at,
-            project_executions.updated_at,
-
-            projects.title AS project_title,
-            projects.description AS project_description,
-            projects.budget AS project_budget,
-            projects.category AS project_category,
-            projects.status AS project_status,
-            projects.user_id AS client_id,
-
-            client.full_name AS client_name,
-            freelancer.full_name AS freelancer_name,
-
-            proposals.price AS proposal_price,
-            proposals.delivery_days
-              AS proposal_delivery_days,
-            proposals.message AS proposal_message
-
-          FROM project_executions
-
-          INNER JOIN projects
-            ON projects.id =
-               project_executions.project_id
-
-          INNER JOIN users AS client
-            ON client.id =
-               projects.user_id
-
-          INNER JOIN users AS freelancer
-            ON freelancer.id =
-               project_executions.freelancer_id
-
-          INNER JOIN proposals
-            ON proposals.id =
-               project_executions.proposal_id
-
-          WHERE
-            project_executions.project_id = ?
-
-          LIMIT 1
-        `)
-        .bind(projectId)
-        .first();
-
-    if (!execution) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يوجد تنفيذ لهذا المشروع"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    const isClient =
-      Number(execution.client_id) ===
-      Number(user.id);
-
-    const isFreelancer =
-      Number(execution.freelancer_id) ===
-      Number(user.id);
-
-    if (
-      !isClient &&
-      !isFreelancer
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكنك مشاهدة تنفيذ هذا المشروع"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const deliveries =
-      await env.DB
-        .prepare(`
-          SELECT
-            project_deliveries.id,
-            project_deliveries.execution_id,
-            project_deliveries.freelancer_id,
-            project_deliveries.version,
-            project_deliveries.message,
-            project_deliveries.file_url,
-            project_deliveries.status,
-            project_deliveries.created_at,
-            users.full_name AS freelancer_name
-          FROM project_deliveries
-          INNER JOIN users
-            ON users.id =
-               project_deliveries.freelancer_id
-          WHERE
-            project_deliveries.execution_id = ?
-          ORDER BY
-            project_deliveries.version DESC
-        `)
-        .bind(execution.id)
-        .all();
-
-    const revisions =
-      await env.DB
-        .prepare(`
-          SELECT
-            project_revision_requests.id,
-            project_revision_requests.execution_id,
-            project_revision_requests.delivery_id,
-            project_revision_requests.client_id,
-            project_revision_requests.message,
-            project_revision_requests.status,
-            project_revision_requests.created_at,
-            project_revision_requests.resolved_at
-          FROM project_revision_requests
-          WHERE
-            project_revision_requests.execution_id = ?
-          ORDER BY
-            project_revision_requests.id DESC
-        `)
-        .bind(execution.id)
-        .all();
-
-    return Response.json({
-      success: true,
-      execution,
-      deliveries:
-        deliveries.results || [],
-      revisions:
-        revisions.results || []
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء جلب تنفيذ المشروع"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
   }
+
+  if (user.role !== "client") {
+    return json({
+      success: false,
+      error: "هذه الصفحة للعملاء فقط"
+    }, 403);
+  }
+
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        client_id,
+        title,
+        description,
+        category,
+        budget,
+        status,
+        created_at,
+        updated_at
+      FROM projects
+      WHERE client_id = ?
+      ORDER BY id DESC
+    `)
+    .bind(user.id)
+    .all();
+
+  return json({
+    success: true,
+    projects: result.results || []
+  });
 }
 
-// ==================================================
-// تنفيذات المستخدم الحالي
-// ==================================================
 
-async function getMyExecutions(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
+async function updateProject(request, env) {
+  const user = await authenticateUser(request, env);
 
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    let result;
-
-    if (
-      user.role === "client"
-    ) {
-      result =
-        await env.DB
-          .prepare(`
-            SELECT
-              project_executions.id,
-              project_executions.project_id,
-              project_executions.proposal_id,
-              project_executions.freelancer_id,
-              project_executions.start_at,
-              project_executions.due_at,
-              project_executions.status,
-              project_executions.completed_at,
-
-              projects.title AS project_title,
-              projects.description AS project_description,
-              projects.budget AS project_budget,
-              projects.category AS project_category,
-
-              users.full_name AS freelancer_name
-
-            FROM project_executions
-
-            INNER JOIN projects
-              ON projects.id =
-                 project_executions.project_id
-
-            INNER JOIN users
-              ON users.id =
-                 project_executions.freelancer_id
-
-            WHERE projects.user_id = ?
-
-            ORDER BY project_executions.id DESC
-          `)
-          .bind(user.id)
-          .all();
-    } else {
-      result =
-        await env.DB
-          .prepare(`
-            SELECT
-              project_executions.id,
-              project_executions.project_id,
-              project_executions.proposal_id,
-              project_executions.freelancer_id,
-              project_executions.start_at,
-              project_executions.due_at,
-              project_executions.status,
-              project_executions.completed_at,
-
-              projects.title AS project_title,
-              projects.description AS project_description,
-              projects.budget AS project_budget,
-              projects.category AS project_category,
-
-              users.full_name AS client_name
-
-            FROM project_executions
-
-            INNER JOIN projects
-              ON projects.id =
-                 project_executions.project_id
-
-            INNER JOIN users
-              ON users.id =
-                 projects.user_id
-
-            WHERE
-              project_executions.freelancer_id = ?
-
-            ORDER BY project_executions.id DESC
-          `)
-          .bind(user.id)
-          .all();
-    }
-
-    return Response.json({
-      success: true,
-      executions:
-        result.results || []
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء جلب التنفيذات"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
   }
+
+  if (user.role !== "client") {
+    return json({
+      success: false,
+      error: "غير مسموح"
+    }, 403);
+  }
+
+  const id = getIdFromPath(request);
+
+  if (!id) {
+    return json({
+      success: false,
+      error: "معرف المشروع غير صحيح"
+    }, 400);
+  }
+
+  const project = await env.DB
+    .prepare(`
+      SELECT *
+      FROM projects
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(id)
+    .first();
+
+  if (!project) {
+    return json({
+      success: false,
+      error: "المشروع غير موجود"
+    }, 404);
+  }
+
+  if (project.client_id !== user.id) {
+    return json({
+      success: false,
+      error: "لا تملك صلاحية تعديل المشروع"
+    }, 403);
+  }
+
+  if (project.status !== "open") {
+    return json({
+      success: false,
+      error: "لا يمكن تعديل المشروع بعد بدء تنفيذه"
+    }, 400);
+  }
+
+  const body = await readJson(request);
+
+  if (!body) {
+    return json({
+      success: false,
+      error: "بيانات غير صحيحة"
+    }, 400);
+  }
+
+  const title =
+    body.title !== undefined
+      ? cleanString(body.title)
+      : project.title;
+
+  const description =
+    body.description !== undefined
+      ? cleanString(body.description)
+      : project.description;
+
+  const category =
+    body.category !== undefined
+      ? cleanString(body.category)
+      : project.category;
+
+  const budget =
+    body.budget !== undefined
+      ? Number(body.budget)
+      : Number(project.budget);
+
+  if (!title || !description || !category) {
+    return json({
+      success: false,
+      error: "العنوان والوصف والتصنيف مطلوبة"
+    }, 400);
+  }
+
+  if (!Number.isFinite(budget) || budget < 0) {
+    return json({
+      success: false,
+      error: "الميزانية غير صحيحة"
+    }, 400);
+  }
+
+  await env.DB
+    .prepare(`
+      UPDATE projects
+      SET
+        title = ?,
+        description = ?,
+        category = ?,
+        budget = ?,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `)
+    .bind(
+      title,
+      description,
+      category,
+      budget,
+      id
+    )
+    .run();
+
+  return json({
+    success: true,
+    message: "تم تعديل المشروع بنجاح"
+  });
 }
 
-// ==================================================
-// جلب سجل أحداث المشروع
-// ==================================================
 
-async function getProjectEvents(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
+async function deleteProject(request, env) {
+  const user = await authenticateUser(request, env);
 
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    const projectId =
-      getIdFromPath(request);
-
-    if (!projectId) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رقم المشروع غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const project =
-      await env.DB
-        .prepare(`
-          SELECT
-            id,
-            user_id
-          FROM projects
-          WHERE id = ?
-          LIMIT 1
-        `)
-        .bind(projectId)
-        .first();
-
-    if (!project) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "المشروع غير موجود"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    let allowed = false;
-
-    if (
-      Number(project.user_id) ===
-      Number(user.id)
-    ) {
-      allowed = true;
-    } else {
-      const execution =
-        await env.DB
-          .prepare(`
-            SELECT id
-            FROM project_executions
-            WHERE
-              project_id = ?
-              AND freelancer_id = ?
-            LIMIT 1
-          `)
-          .bind(
-            projectId,
-            user.id
-          )
-          .first();
-
-      if (execution) {
-        allowed = true;
-      }
-    }
-
-    if (!allowed) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكنك مشاهدة سجل هذا المشروع"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const result =
-      await env.DB
-        .prepare(`
-          SELECT
-            project_events.id,
-            project_events.project_id,
-            project_events.execution_id,
-            project_events.user_id,
-            project_events.event_type,
-            project_events.message,
-            project_events.created_at,
-            users.full_name AS user_name,
-            users.role AS user_role
-          FROM project_events
-          INNER JOIN users
-            ON users.id =
-               project_events.user_id
-          WHERE
-            project_events.project_id = ?
-          ORDER BY
-            project_events.id DESC
-        `)
-        .bind(projectId)
-        .all();
-
-    return Response.json({
-      success: true,
-      events:
-        result.results || []
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء جلب سجل المشروع"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
   }
+
+  if (user.role !== "client") {
+    return json({
+      success: false,
+      error: "غير مسموح"
+    }, 403);
+  }
+
+  const id = getIdFromPath(request);
+
+  if (!id) {
+    return json({
+      success: false,
+      error: "معرف المشروع غير صحيح"
+    }, 400);
+  }
+
+  const project = await env.DB
+    .prepare(`
+      SELECT *
+      FROM projects
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(id)
+    .first();
+
+  if (!project) {
+    return json({
+      success: false,
+      error: "المشروع غير موجود"
+    }, 404);
+  }
+
+  if (project.client_id !== user.id) {
+    return json({
+      success: false,
+      error: "لا تملك صلاحية إلغاء المشروع"
+    }, 403);
+  }
+
+  if (["completed", "cancelled"].includes(project.status)) {
+    return json({
+      success: false,
+      error: "المشروع منتهٍ مسبقًا"
+    }, 400);
+  }
+
+  await env.DB.batch([
+    env.DB.prepare(`
+      UPDATE projects
+      SET
+        status = 'cancelled',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(id),
+
+    env.DB.prepare(`
+      UPDATE proposals
+      SET status = 'rejected'
+      WHERE project_id = ?
+      AND status = 'pending'
+    `).bind(id)
+  ]);
+
+  return json({
+    success: true,
+    message: "تم إلغاء المشروع بنجاح"
+  });
 }
 
-// ==================================================
-// تسليم العمل
-// ==================================================
 
-async function createDelivery(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
+// ============================================================
+// PROPOSALS
+// ============================================================
 
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
+async function createProposal(request, env) {
+  const user = await authenticateUser(request, env);
 
-    if (
-      user.role !== "freelancer"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "تسليم العمل متاح للمستقل فقط"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const projectId =
-      getIdFromPath(request);
-
-    if (!projectId) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رقم المشروع غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const data =
-      await request.json();
-
-    const message =
-      String(data.message || "").trim();
-
-    const fileUrl =
-      String(
-        data.file_url || ""
-      ).trim() || null;
-
-    if (
-      message.length < 10
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رسالة التسليم يجب أن تكون 10 أحرف على الأقل"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const execution =
-      await env.DB
-        .prepare(`
-          SELECT
-            id,
-            project_id,
-            freelancer_id,
-            status
-          FROM project_executions
-          WHERE
-            project_id = ?
-            AND freelancer_id = ?
-          LIMIT 1
-        `)
-        .bind(
-          projectId,
-          user.id
-        )
-        .first();
-
-    if (!execution) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يوجد تنفيذ مرتبط بك لهذا المشروع"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    if (
-      ![
-        "in_progress",
-        "revision_requested"
-      ].includes(
-        execution.status
-      )
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكن تسليم العمل في الحالة الحالية"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const latestRevision =
-      await env.DB
-        .prepare(`
-          SELECT id
-          FROM project_revision_requests
-          WHERE
-            execution_id = ?
-            AND status = 'open'
-          ORDER BY id DESC
-          LIMIT 1
-        `)
-        .bind(execution.id)
-        .first();
-
-    const versionRow =
-      await env.DB
-        .prepare(`
-          SELECT
-            COALESCE(MAX(version), 0) + 1
-              AS next_version
-          FROM project_deliveries
-          WHERE execution_id = ?
-        `)
-        .bind(execution.id)
-        .first();
-
-    const version =
-      Number(
-        versionRow?.next_version || 1
-      );
-
-    const insertResult =
-      await env.DB
-        .prepare(`
-          INSERT INTO project_deliveries
-          (
-            execution_id,
-            freelancer_id,
-            version,
-            message,
-            file_url,
-            status
-          )
-          VALUES (?, ?, ?, ?, ?, 'submitted')
-        `)
-        .bind(
-          execution.id,
-          user.id,
-          version,
-          message,
-          fileUrl
-        )
-        .run();
-
-    await env.DB.batch([
-      env.DB
-        .prepare(`
-          UPDATE project_executions
-          SET
-            status = 'submitted',
-            updated_at = CURRENT_TIMESTAMP
-          WHERE
-            id = ?
-        `)
-        .bind(execution.id),
-
-      env.DB
-        .prepare(`
-          UPDATE project_revision_requests
-          SET
-            status = 'resolved',
-            resolved_at = CURRENT_TIMESTAMP
-          WHERE
-            execution_id = ?
-            AND status = 'open'
-        `)
-        .bind(execution.id),
-
-      env.DB
-        .prepare(`
-          INSERT INTO project_events
-          (
-            project_id,
-            execution_id,
-            user_id,
-            event_type,
-            message
-          )
-          VALUES (?, ?, ?, ?, ?)
-        `)
-        .bind(
-          projectId,
-          execution.id,
-          user.id,
-          "delivery_submitted",
-          `تم تسليم العمل - الإصدار ${version}`
-        )
-    ]);
-
-    return Response.json({
-      success: true,
-      message:
-        "تم تسليم العمل بنجاح",
-      delivery_id:
-        insertResult.meta.last_row_id,
-      version
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء تسليم العمل"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
   }
-}
 
-// ==================================================
-// طلب تعديل
-// ==================================================
-
-async function requestRevision(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
-
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "client"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "طلب التعديل متاح لصاحب المشروع فقط"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const deliveryId =
-      getIdFromPath(request);
-
-    if (!deliveryId) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رقم التسليم غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const data =
-      await request.json();
-
-    const message =
-      String(data.message || "").trim();
-
-    if (
-      message.length < 10
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رسالة طلب التعديل يجب أن تكون 10 أحرف على الأقل"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const delivery =
-      await env.DB
-        .prepare(`
-          SELECT
-            project_deliveries.id,
-            project_deliveries.execution_id,
-            project_deliveries.freelancer_id,
-            project_deliveries.status,
-
-            project_executions.project_id,
-            project_executions.status
-              AS execution_status,
-
-            projects.user_id AS client_id
-
-          FROM project_deliveries
-
-          INNER JOIN project_executions
-            ON project_executions.id =
-               project_deliveries.execution_id
-
-          INNER JOIN projects
-            ON projects.id =
-               project_executions.project_id
-
-          WHERE
-            project_deliveries.id = ?
-
-          LIMIT 1
-        `)
-        .bind(deliveryId)
-        .first();
-
-    if (!delivery) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "التسليم غير موجود"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    if (
-      Number(delivery.client_id) !==
-      Number(user.id)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكنك طلب تعديل لهذا التسليم"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    if (
-      delivery.execution_status !==
-      "submitted"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكن طلب تعديل في الحالة الحالية"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (
-      delivery.status !== "submitted"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "هذا التسليم لم يعد قابلًا لطلب التعديل"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const openRevision =
-      await env.DB
-        .prepare(`
-          SELECT id
-          FROM project_revision_requests
-          WHERE
-            execution_id = ?
-            AND status = 'open'
-          LIMIT 1
-        `)
-        .bind(
-          delivery.execution_id
-        )
-        .first();
-
-    if (openRevision) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يوجد طلب تعديل مفتوح بالفعل"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const revisionResult =
-      await env.DB
-        .prepare(`
-          INSERT INTO project_revision_requests
-          (
-            execution_id,
-            delivery_id,
-            client_id,
-            message,
-            status
-          )
-          VALUES (?, ?, ?, ?, 'open')
-        `)
-        .bind(
-          delivery.execution_id,
-          deliveryId,
-          user.id,
-          message
-        )
-        .run();
-
-    await env.DB.batch([
-      env.DB
-        .prepare(`
-          UPDATE project_deliveries
-          SET
-            status = 'revision_requested'
-          WHERE id = ?
-        `)
-        .bind(deliveryId),
-
-      env.DB
-        .prepare(`
-          UPDATE project_executions
-          SET
-            status = 'revision_requested',
-            updated_at = CURRENT_TIMESTAMP
-          WHERE id = ?
-        `)
-        .bind(delivery.execution_id),
-
-      env.DB
-        .prepare(`
-          INSERT INTO project_events
-          (
-            project_id,
-            execution_id,
-            user_id,
-            event_type,
-            message
-          )
-          VALUES (?, ?, ?, ?, ?)
-        `)
-        .bind(
-          delivery.project_id,
-          delivery.execution_id,
-          user.id,
-          "revision_requested",
-          "طلب العميل تعديلًا على التسليم"
-        )
-    ]);
-
-    return Response.json({
-      success: true,
-      message:
-        "تم إرسال طلب التعديل",
-      revision_id:
-        revisionResult.meta.last_row_id
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء طلب التعديل"
-      },
-      {
-        status: 500
-      }
-    );
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "تقديم العروض متاح للمستقلين فقط"
+    }, 403);
   }
-}
 
-// ==================================================
-// قبول التسليم وإنهاء المشروع
-// ==================================================
+  const parts = new URL(request.url).pathname
+    .split("/")
+    .filter(Boolean);
 
-async function acceptDelivery(
-  request,
-  env
-) {
-  try {
-    const user =
-      await authenticateUser(
-        request,
-        env
-      );
+  const projectId = Number(parts[2]);
 
-    if (!user) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "يجب تسجيل الدخول أولًا"
-        },
-        {
-          status: 401
-        }
-      );
-    }
-
-    if (
-      user.role !== "client"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "قبول التسليم متاح لصاحب المشروع فقط"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    const deliveryId =
-      getIdFromPath(request);
-
-    if (!deliveryId) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "رقم التسليم غير صحيح"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    const delivery =
-      await env.DB
-        .prepare(`
-          SELECT
-            project_deliveries.id,
-            project_deliveries.execution_id,
-            project_deliveries.status,
-
-            project_executions.project_id,
-            project_executions.status
-              AS execution_status,
-
-            projects.user_id AS client_id
-
-          FROM project_deliveries
-
-          INNER JOIN project_executions
-            ON project_executions.id =
-               project_deliveries.execution_id
-
-          INNER JOIN projects
-            ON projects.id =
-               project_executions.project_id
-
-          WHERE
-            project_deliveries.id = ?
-
-          LIMIT 1
-        `)
-        .bind(deliveryId)
-        .first();
-
-    if (!delivery) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "التسليم غير موجود"
-        },
-        {
-          status: 404
-        }
-      );
-    }
-
-    if (
-      Number(delivery.client_id) !==
-      Number(user.id)
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكنك قبول هذا التسليم"
-        },
-        {
-          status: 403
-        }
-      );
-    }
-
-    if (
-      delivery.execution_status !==
-      "submitted"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "لا يمكن قبول التسليم في الحالة الحالية"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    if (
-      delivery.status !== "submitted"
-    ) {
-      return Response.json(
-        {
-          success: false,
-          message:
-            "هذا التسليم لم يعد قابلًا للقبول"
-        },
-        {
-          status: 400
-        }
-      );
-    }
-
-    await env.DB.batch([
-      env.DB
-        .prepare(`
-          UPDATE project_deliveries
-          SET
-            status = 'accepted'
-          WHERE
-            id = ?
-            AND status = 'submitted'
-        `)
-        .bind(deliveryId),
-
-      env.DB
-        .prepare(`
-          UPDATE project_executions
-          SET
-            status = 'completed',
-            completed_at = CURRENT_TIMESTAMP,
-            updated_at = CURRENT_TIMESTAMP
-          WHERE
-            id = ?
-            AND status = 'submitted'
-        `)
-        .bind(delivery.execution_id),
-
-      env.DB
-        .prepare(`
-          UPDATE projects
-          SET
-            status = 'completed',
-            updated_at = CURRENT_TIMESTAMP
-          WHERE
-            id = ?
-            AND user_id = ?
-            AND status = 'in_progress'
-        `)
-        .bind(
-          delivery.project_id,
-          user.id
-        ),
-
-      env.DB
-        .prepare(`
-          UPDATE project_revision_requests
-          SET
-            status = 'resolved',
-            resolved_at = CURRENT_TIMESTAMP
-          WHERE
-            execution_id = ?
-            AND status = 'open'
-        `)
-        .bind(delivery.execution_id),
-
-      env.DB
-        .prepare(`
-          INSERT INTO project_events
-          (
-            project_id,
-            execution_id,
-            user_id,
-            event_type,
-            message
-          )
-          VALUES (?, ?, ?, ?, ?)
-        `)
-        .bind(
-          delivery.project_id,
-          delivery.execution_id,
-          user.id,
-          "project_completed",
-          "تم قبول التسليم وإكمال المشروع بنجاح"
-        )
-    ]);
-
-    return Response.json({
-      success: true,
-      message:
-        "تم قبول التسليم وإكمال المشروع بنجاح"
-    });
-  } catch (error) {
-    console.error(error);
-
-    return Response.json(
-      {
-        success: false,
-        message:
-          "حدث خطأ أثناء قبول التسليم"
-      },
-      {
-        status: 500
-      }
-    );
+  if (!Number.isInteger(projectId) || projectId <= 0) {
+    return json({
+      success: false,
+      error: "معرف المشروع غير صحيح"
+    }, 400);
   }
-}
 
-// ==================================================
-// التحقق من المستخدم والجلسة
-// ==================================================
+  const project = await env.DB
+    .prepare(`
+      SELECT *
+      FROM projects
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
 
-async function authenticateUser(
-  request,
-  env
-) {
-  try {
-    const cookies =
-      parseCookies(
-        request.headers.get("Cookie") || ""
-      );
-
-    const sessionToken =
-      cookies.mihraf_session;
-
-    if (!sessionToken) {
-      return null;
-    }
-
-    const tokenHash =
-      await sha256Hex(
-        sessionToken
-      );
-
-    const session =
-      await env.DB
-        .prepare(`
-          SELECT
-            users.id,
-            users.full_name,
-            users.email,
-            users.role,
-            sessions.expires_at
-          FROM sessions
-          INNER JOIN users
-            ON users.id = sessions.user_id
-          WHERE sessions.token_hash = ?
-          LIMIT 1
-        `)
-        .bind(tokenHash)
-        .first();
-
-    if (!session) {
-      return null;
-    }
-
-    if (
-      new Date(
-        session.expires_at
-      ).getTime() <= Date.now()
-    ) {
-      await env.DB
-        .prepare(`
-          DELETE FROM sessions
-          WHERE token_hash = ?
-        `)
-        .bind(tokenHash)
-        .run();
-
-      return null;
-    }
-
-    return {
-      id:
-        session.id,
-      full_name:
-        session.full_name,
-      email:
-        session.email,
-      role:
-        session.role
-    };
-  } catch (error) {
-    console.error(error);
-
-    return null;
+  if (!project) {
+    return json({
+      success: false,
+      error: "المشروع غير موجود"
+    }, 404);
   }
-}
 
-// ==================================================
-// استخراج الرقم من الرابط
-// ==================================================
+  if (project.status !== "open") {
+    return json({
+      success: false,
+      error: "المشروع غير مفتوح لاستقبال العروض"
+    }, 400);
+  }
 
-function getIdFromPath(
-  request
-) {
-  const url =
-    new URL(request.url);
+  if (project.client_id === user.id) {
+    return json({
+      success: false,
+      error: "لا يمكنك التقديم على مشروعك"
+    }, 400);
+  }
 
-  const parts =
-    url.pathname
-      .split("/")
-      .filter(Boolean);
+  const body = await readJson(request);
 
-  const id =
-    Number(
-      parts[parts.length - 1]
-    );
+  if (!body) {
+    return json({
+      success: false,
+      error: "بيانات غير صحيحة"
+    }, 400);
+  }
+
+  const price = Number(body.price);
+  const deliveryDays = Number(
+    body.delivery_days ?? body.deliveryDays
+  );
+  const message = cleanString(body.message);
+
+  if (!Number.isFinite(price) || price < 0) {
+    return json({
+      success: false,
+      error: "السعر غير صحيح"
+    }, 400);
+  }
 
   if (
-    !Number.isInteger(id) ||
-    id <= 0
+    !Number.isInteger(deliveryDays) ||
+    deliveryDays <= 0
   ) {
+    return json({
+      success: false,
+      error: "مدة التسليم غير صحيحة"
+    }, 400);
+  }
+
+  if (message.length < 10) {
+    return json({
+      success: false,
+      error: "رسالة العرض قصيرة جدًا"
+    }, 400);
+  }
+
+  const existing = await env.DB
+    .prepare(`
+      SELECT id
+      FROM proposals
+      WHERE project_id = ?
+      AND freelancer_id = ?
+      AND status IN ('pending', 'accepted')
+      LIMIT 1
+    `)
+    .bind(projectId, user.id)
+    .first();
+
+  if (existing) {
+    return json({
+      success: false,
+      error: "لديك عرض موجود مسبقًا على هذا المشروع"
+    }, 409);
+  }
+
+  const result = await env.DB
+    .prepare(`
+      INSERT INTO proposals
+      (
+        project_id,
+        freelancer_id,
+        price,
+        delivery_days,
+        message,
+        status
+      )
+      VALUES (?, ?, ?, ?, ?, 'pending')
+    `)
+    .bind(
+      projectId,
+      user.id,
+      price,
+      deliveryDays,
+      message
+    )
+    .run();
+
+  return json({
+    success: true,
+    message: "تم إرسال العرض بنجاح",
+    proposal_id: result.meta.last_row_id
+  }, 201);
+}
+
+
+async function getProjectProposals(request, env) {
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  const parts = new URL(request.url).pathname
+    .split("/")
+    .filter(Boolean);
+
+  const projectId = Number(parts[2]);
+
+  if (!Number.isInteger(projectId) || projectId <= 0) {
+    return json({
+      success: false,
+      error: "معرف المشروع غير صحيح"
+    }, 400);
+  }
+
+  const project = await env.DB
+    .prepare(`
+      SELECT *
+      FROM projects
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
+
+  if (!project) {
+    return json({
+      success: false,
+      error: "المشروع غير موجود"
+    }, 404);
+  }
+
+  if (project.client_id !== user.id) {
+    return json({
+      success: false,
+      error: "لا تملك صلاحية مشاهدة عروض هذا المشروع"
+    }, 403);
+  }
+
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        p.id,
+        p.project_id,
+        p.freelancer_id,
+        p.price,
+        p.delivery_days,
+        p.message,
+        p.status,
+        p.created_at,
+        p.updated_at,
+        u.full_name AS freelancer_name,
+        u.email AS freelancer_email
+      FROM proposals p
+      JOIN users u ON u.id = p.freelancer_id
+      WHERE p.project_id = ?
+      ORDER BY p.id DESC
+    `)
+    .bind(projectId)
+    .all();
+
+  return json({
+    success: true,
+    proposals: result.results || []
+  });
+}
+
+
+async function getMyProposals(request, env) {
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "هذه الصفحة للمستقلين فقط"
+    }, 403);
+  }
+
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        p.id,
+        p.project_id,
+        p.freelancer_id,
+        p.price,
+        p.delivery_days,
+        p.message,
+        p.status,
+        p.created_at,
+        p.updated_at,
+        pr.title AS project_title,
+        pr.description AS project_description,
+        pr.category AS project_category,
+        pr.budget AS project_budget,
+        u.full_name AS client_name
+      FROM proposals p
+      JOIN projects pr ON pr.id = p.project_id
+      JOIN users u ON u.id = pr.client_id
+      WHERE p.freelancer_id = ?
+      ORDER BY p.id DESC
+    `)
+    .bind(user.id)
+    .all();
+
+  return json({
+    success: true,
+    proposals: result.results || []
+  });
+}
+
+
+async function acceptProposal(request, env) {
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  if (user.role !== "client") {
+    return json({
+      success: false,
+      error: "غير مسموح"
+    }, 403);
+  }
+
+  const proposalId = getIdFromPath(request);
+
+  if (!proposalId) {
+    return json({
+      success: false,
+      error: "معرف العرض غير صحيح"
+    }, 400);
+  }
+
+  const proposal = await env.DB
+    .prepare(`
+      SELECT
+        p.*,
+        pr.client_id,
+        pr.status AS project_status,
+        pr.title AS project_title
+      FROM proposals p
+      JOIN projects pr ON pr.id = p.project_id
+      WHERE p.id = ?
+      LIMIT 1
+    `)
+    .bind(proposalId)
+    .first();
+
+  if (!proposal) {
+    return json({
+      success: false,
+      error: "العرض غير موجود"
+    }, 404);
+  }
+
+  if (proposal.client_id !== user.id) {
+    return json({
+      success: false,
+      error: "لا تملك صلاحية قبول هذا العرض"
+    }, 403);
+  }
+
+  if (proposal.status !== "pending") {
+    return json({
+      success: false,
+      error: "العرض ليس بانتظار القبول"
+    }, 400);
+  }
+
+  if (proposal.project_status !== "open") {
+    return json({
+      success: false,
+      error: "المشروع لم يعد مفتوحًا"
+    }, 400);
+  }
+
+  const existingExecution = await env.DB
+    .prepare(`
+      SELECT id
+      FROM project_executions
+      WHERE project_id = ?
+      LIMIT 1
+    `)
+    .bind(proposal.project_id)
+    .first();
+
+  if (existingExecution) {
+    return json({
+      success: false,
+      error: "يوجد تنفيذ قائم لهذا المشروع"
+    }, 409);
+  }
+
+  const startAt = new Date();
+
+  const dueAt = new Date(
+    startAt.getTime() +
+    Number(proposal.delivery_days) *
+    24 *
+    60 *
+    60 *
+    1000
+  );
+
+  await env.DB.batch([
+    env.DB.prepare(`
+      UPDATE proposals
+      SET
+        status = 'accepted',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(proposalId),
+
+    env.DB.prepare(`
+      UPDATE proposals
+      SET
+        status = 'rejected',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE project_id = ?
+      AND id != ?
+      AND status = 'pending'
+    `).bind(
+      proposal.project_id,
+      proposalId
+    ),
+
+    env.DB.prepare(`
+      UPDATE projects
+      SET
+        status = 'in_progress',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(proposal.project_id),
+
+    env.DB.prepare(`
+      INSERT INTO project_executions
+      (
+        project_id,
+        proposal_id,
+        client_id,
+        freelancer_id,
+        status,
+        start_at,
+        due_at
+      )
+      VALUES (?, ?, ?, ?, 'in_progress', ?, ?)
+    `).bind(
+      proposal.project_id,
+      proposalId,
+      proposal.client_id,
+      proposal.freelancer_id,
+      startAt.toISOString(),
+      dueAt.toISOString()
+    ),
+
+    env.DB.prepare(`
+      INSERT INTO project_events
+      (
+        project_id,
+        user_id,
+        event_type,
+        message
+      )
+      VALUES (?, ?, 'proposal_accepted', ?)
+    `).bind(
+      proposal.project_id,
+      user.id,
+      `تم قبول عرض المستقل وبدء تنفيذ المشروع`
+    )
+  ]);
+
+  const execution = await env.DB
+    .prepare(`
+      SELECT *
+      FROM project_executions
+      WHERE project_id = ?
+      LIMIT 1
+    `)
+    .bind(proposal.project_id)
+    .first();
+
+  return json({
+    success: true,
+    message: "تم قبول العرض وبدء التنفيذ",
+    execution
+  });
+}
+
+
+async function rejectProposal(request, env) {
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  if (user.role !== "client") {
+    return json({
+      success: false,
+      error: "غير مسموح"
+    }, 403);
+  }
+
+  const proposalId = getIdFromPath(request);
+
+  if (!proposalId) {
+    return json({
+      success: false,
+      error: "معرف العرض غير صحيح"
+    }, 400);
+  }
+
+  const proposal = await env.DB
+    .prepare(`
+      SELECT
+        p.*,
+        pr.client_id
+      FROM proposals p
+      JOIN projects pr ON pr.id = p.project_id
+      WHERE p.id = ?
+      LIMIT 1
+    `)
+    .bind(proposalId)
+    .first();
+
+  if (!proposal) {
+    return json({
+      success: false,
+      error: "العرض غير موجود"
+    }, 404);
+  }
+
+  if (proposal.client_id !== user.id) {
+    return json({
+      success: false,
+      error: "لا تملك صلاحية رفض هذا العرض"
+    }, 403);
+  }
+
+  if (proposal.status !== "pending") {
+    return json({
+      success: false,
+      error: "العرض ليس بانتظار القرار"
+    }, 400);
+  }
+
+  await env.DB
+    .prepare(`
+      UPDATE proposals
+      SET
+        status = 'rejected',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `)
+    .bind(proposalId)
+    .run();
+
+  return json({
+    success: true,
+    message: "تم رفض العرض"
+  });
+}
+// ============================================================
+// EXECUTION
+// ============================================================
+
+async function getProjectExecution(request, env) {
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  const projectId = getIdFromPath(request);
+
+  if (!projectId) {
+    return json({
+      success: false,
+      error: "معرف المشروع غير صحيح"
+    }, 400);
+  }
+
+  const execution = await env.DB
+    .prepare(`
+      SELECT
+        e.*,
+        p.title AS project_title,
+        p.description AS project_description,
+        p.budget AS project_budget,
+        c.full_name AS client_name,
+        f.full_name AS freelancer_name
+      FROM project_executions e
+      JOIN projects p ON p.id = e.project_id
+      JOIN users c ON c.id = e.client_id
+      JOIN users f ON f.id = e.freelancer_id
+      WHERE e.project_id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
+
+  if (!execution) {
+    return json({
+      success: false,
+      error: "لا يوجد تنفيذ لهذا المشروع"
+    }, 404);
+  }
+
+  if (
+    execution.client_id !== user.id &&
+    execution.freelancer_id !== user.id
+  ) {
+    return json({
+      success: false,
+      error: "لا تملك صلاحية مشاهدة التنفيذ"
+    }, 403);
+  }
+
+  const deliveries = await env.DB
+    .prepare(`
+      SELECT
+        d.*,
+        u.full_name AS freelancer_name
+      FROM project_deliveries d
+      JOIN users u ON u.id = d.freelancer_id
+      WHERE d.execution_id = ?
+      ORDER BY d.version DESC
+    `)
+    .bind(execution.id)
+    .all();
+
+  const revisions = await env.DB
+    .prepare(`
+      SELECT
+        r.*,
+        d.version,
+        u.full_name AS client_name
+      FROM project_revision_requests r
+      JOIN project_deliveries d ON d.id = r.delivery_id
+      JOIN users u ON u.id = r.client_id
+      WHERE r.execution_id = ?
+      ORDER BY r.id DESC
+    `)
+    .bind(execution.id)
+    .all();
+
+  return json({
+    success: true,
+    execution,
+    deliveries: deliveries.results || [],
+    revisions: revisions.results || []
+  });
+}
+
+
+async function getMyExecutions(request, env) {
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  let query;
+
+  if (user.role === "client") {
+    query = `
+      SELECT
+        e.*,
+        p.title AS project_title,
+        p.description AS project_description,
+        f.full_name AS freelancer_name
+      FROM project_executions e
+      JOIN projects p ON p.id = e.project_id
+      JOIN users f ON f.id = e.freelancer_id
+      WHERE e.client_id = ?
+      ORDER BY e.id DESC
+    `;
+  } else {
+    query = `
+      SELECT
+        e.*,
+        p.title AS project_title,
+        p.description AS project_description,
+        c.full_name AS client_name
+      FROM project_executions e
+      JOIN projects p ON p.id = e.project_id
+      JOIN users c ON c.id = e.client_id
+      WHERE e.freelancer_id = ?
+      ORDER BY e.id DESC
+    `;
+  }
+
+  const result = await env.DB
+    .prepare(query)
+    .bind(user.id)
+    .all();
+
+  return json({
+    success: true,
+    executions: result.results || []
+  });
+}
+
+
+async function getProjectEvents(request, env) {
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  const projectId = getIdFromPath(request);
+
+  if (!projectId) {
+    return json({
+      success: false,
+      error: "معرف المشروع غير صحيح"
+    }, 400);
+  }
+
+  const execution = await env.DB
+    .prepare(`
+      SELECT *
+      FROM project_executions
+      WHERE project_id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
+
+  if (!execution) {
+    const project = await env.DB
+      .prepare(`
+        SELECT client_id
+        FROM projects
+        WHERE id = ?
+        LIMIT 1
+      `)
+      .bind(projectId)
+      .first();
+
+    if (!project) {
+      return json({
+        success: false,
+        error: "المشروع غير موجود"
+      }, 404);
+    }
+
+    if (project.client_id !== user.id) {
+      return json({
+        success: false,
+        error: "لا تملك صلاحية مشاهدة الأحداث"
+      }, 403);
+    }
+  } else {
+    if (
+      execution.client_id !== user.id &&
+      execution.freelancer_id !== user.id
+    ) {
+      return json({
+        success: false,
+        error: "لا تملك صلاحية مشاهدة الأحداث"
+      }, 403);
+    }
+  }
+
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        e.*,
+        u.full_name AS user_name
+      FROM project_events e
+      LEFT JOIN users u ON u.id = e.user_id
+      WHERE e.project_id = ?
+      ORDER BY e.id DESC
+    `)
+    .bind(projectId)
+    .all();
+
+  return json({
+    success: true,
+    events: result.results || []
+  });
+}
+
+
+// ============================================================
+// DELIVERIES
+// ============================================================
+
+async function createDelivery(request, env) {
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "تسليم المشروع متاح للمستقل فقط"
+    }, 403);
+  }
+
+  const projectId = getIdFromPath(request);
+
+  if (!projectId) {
+    return json({
+      success: false,
+      error: "معرف المشروع غير صحيح"
+    }, 400);
+  }
+
+  const execution = await env.DB
+    .prepare(`
+      SELECT *
+      FROM project_executions
+      WHERE project_id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
+
+  if (!execution) {
+    return json({
+      success: false,
+      error: "لا يوجد تنفيذ لهذا المشروع"
+    }, 404);
+  }
+
+  if (execution.freelancer_id !== user.id) {
+    return json({
+      success: false,
+      error: "لا تملك صلاحية تسليم هذا المشروع"
+    }, 403);
+  }
+
+  if (
+    !["in_progress", "revision_requested"]
+      .includes(execution.status)
+  ) {
+    return json({
+      success: false,
+      error: "لا يمكن التسليم في الحالة الحالية"
+    }, 400);
+  }
+
+  const body = await readJson(request);
+
+  if (!body) {
+    return json({
+      success: false,
+      error: "بيانات غير صحيحة"
+    }, 400);
+  }
+
+  const message = cleanString(body.message);
+  const fileUrl = cleanString(
+    body.file_url || body.fileUrl
+  );
+
+  if (message.length < 10) {
+    return json({
+      success: false,
+      error: "رسالة التسليم قصيرة جدًا"
+    }, 400);
+  }
+
+  const latest = await env.DB
+    .prepare(`
+      SELECT COALESCE(MAX(version), 0) AS max_version
+      FROM project_deliveries
+      WHERE execution_id = ?
+    `)
+    .bind(execution.id)
+    .first();
+
+  const version =
+    Number(latest?.max_version || 0) + 1;
+
+  const deliveryResult = await env.DB
+    .prepare(`
+      INSERT INTO project_deliveries
+      (
+        execution_id,
+        project_id,
+        freelancer_id,
+        version,
+        message,
+        file_url,
+        status
+      )
+      VALUES (?, ?, ?, ?, ?, ?, 'submitted')
+    `)
+    .bind(
+      execution.id,
+      projectId,
+      user.id,
+      version,
+      message,
+      fileUrl || null
+    )
+    .run();
+
+  await env.DB.batch([
+    env.DB.prepare(`
+      UPDATE project_executions
+      SET
+        status = 'submitted',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(execution.id),
+
+    env.DB.prepare(`
+      UPDATE project_revision_requests
+      SET
+        status = 'resolved',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE execution_id = ?
+      AND status = 'open'
+    `).bind(execution.id),
+
+    env.DB.prepare(`
+      INSERT INTO project_events
+      (
+        project_id,
+        user_id,
+        event_type,
+        message
+      )
+      VALUES (?, ?, 'delivery_submitted', ?)
+    `).bind(
+      projectId,
+      user.id,
+      `تم إرسال التسليم رقم ${version}`
+    )
+  ]);
+
+  return json({
+    success: true,
+    message: "تم إرسال التسليم بنجاح",
+    delivery_id: deliveryResult.meta.last_row_id,
+    version
+  }, 201);
+}
+
+
+async function requestRevision(request, env) {
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  if (user.role !== "client") {
+    return json({
+      success: false,
+      error: "طلب التعديل متاح للعميل فقط"
+    }, 403);
+  }
+
+  const deliveryId = getIdFromPath(request);
+
+  if (!deliveryId) {
+    return json({
+      success: false,
+      error: "معرف التسليم غير صحيح"
+    }, 400);
+  }
+
+  const delivery = await env.DB
+    .prepare(`
+      SELECT
+        d.*,
+        e.status AS execution_status,
+        e.client_id,
+        e.freelancer_id
+      FROM project_deliveries d
+      JOIN project_executions e
+        ON e.id = d.execution_id
+      WHERE d.id = ?
+      LIMIT 1
+    `)
+    .bind(deliveryId)
+    .first();
+
+  if (!delivery) {
+    return json({
+      success: false,
+      error: "التسليم غير موجود"
+    }, 404);
+  }
+
+  if (delivery.client_id !== user.id) {
+    return json({
+      success: false,
+      error: "لا تملك صلاحية طلب تعديل"
+    }, 403);
+  }
+
+  if (delivery.execution_status !== "submitted") {
+    return json({
+      success: false,
+      error: "التسليم ليس بانتظار المراجعة"
+    }, 400);
+  }
+
+  if (delivery.status !== "submitted") {
+    return json({
+      success: false,
+      error: "حالة التسليم لا تسمح بطلب تعديل"
+    }, 400);
+  }
+
+  const body = await readJson(request);
+
+  if (!body) {
+    return json({
+      success: false,
+      error: "بيانات غير صحيحة"
+    }, 400);
+  }
+
+  const message = cleanString(
+    body.message ||
+    body.reason ||
+    body.revision_message
+  );
+
+  if (message.length < 5) {
+    return json({
+      success: false,
+      error: "يرجى كتابة تفاصيل التعديل"
+    }, 400);
+  }
+
+  const existing = await env.DB
+    .prepare(`
+      SELECT id
+      FROM project_revision_requests
+      WHERE delivery_id = ?
+      AND status = 'open'
+      LIMIT 1
+    `)
+    .bind(deliveryId)
+    .first();
+
+  if (existing) {
+    return json({
+      success: false,
+      error: "يوجد طلب تعديل مفتوح لهذا التسليم"
+    }, 409);
+  }
+
+  const revisionResult = await env.DB
+    .prepare(`
+      INSERT INTO project_revision_requests
+      (
+        delivery_id,
+        execution_id,
+        project_id,
+        client_id,
+        message,
+        status
+      )
+      VALUES (?, ?, ?, ?, ?, 'open')
+    `)
+    .bind(
+      deliveryId,
+      delivery.execution_id,
+      delivery.project_id,
+      user.id,
+      message
+    )
+    .run();
+
+  await env.DB.batch([
+    env.DB.prepare(`
+      UPDATE project_deliveries
+      SET
+        status = 'revision_requested',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(deliveryId),
+
+    env.DB.prepare(`
+      UPDATE project_executions
+      SET
+        status = 'revision_requested',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(delivery.execution_id),
+
+    env.DB.prepare(`
+      INSERT INTO project_events
+      (
+        project_id,
+        user_id,
+        event_type,
+        message
+      )
+      VALUES (?, ?, 'revision_requested', ?)
+    `).bind(
+      delivery.project_id,
+      user.id,
+      message
+    )
+  ]);
+
+  return json({
+    success: true,
+    message: "تم إرسال طلب التعديل",
+    revision_id: revisionResult.meta.last_row_id
+  }, 201);
+}
+
+
+async function acceptDelivery(request, env) {
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  if (user.role !== "client") {
+    return json({
+      success: false,
+      error: "قبول التسليم متاح للعميل فقط"
+    }, 403);
+  }
+
+  const deliveryId = getIdFromPath(request);
+
+  if (!deliveryId) {
+    return json({
+      success: false,
+      error: "معرف التسليم غير صحيح"
+    }, 400);
+  }
+
+  const delivery = await env.DB
+    .prepare(`
+      SELECT
+        d.*,
+        e.status AS execution_status,
+        e.client_id
+      FROM project_deliveries d
+      JOIN project_executions e
+        ON e.id = d.execution_id
+      WHERE d.id = ?
+      LIMIT 1
+    `)
+    .bind(deliveryId)
+    .first();
+
+  if (!delivery) {
+    return json({
+      success: false,
+      error: "التسليم غير موجود"
+    }, 404);
+  }
+
+  if (delivery.client_id !== user.id) {
+    return json({
+      success: false,
+      error: "لا تملك صلاحية قبول هذا التسليم"
+    }, 403);
+  }
+
+  if (delivery.execution_status !== "submitted") {
+    return json({
+      success: false,
+      error: "التنفيذ ليس بانتظار القبول"
+    }, 400);
+  }
+
+  if (delivery.status !== "submitted") {
+    return json({
+      success: false,
+      error: "التسليم ليس صالحًا للقبول"
+    }, 400);
+  }
+
+  await env.DB.batch([
+    env.DB.prepare(`
+      UPDATE project_deliveries
+      SET
+        status = 'accepted',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(deliveryId),
+
+    env.DB.prepare(`
+      UPDATE project_executions
+      SET
+        status = 'completed',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(delivery.execution_id),
+
+    env.DB.prepare(`
+      UPDATE projects
+      SET
+        status = 'completed',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(delivery.project_id),
+
+    env.DB.prepare(`
+      UPDATE project_revision_requests
+      SET
+        status = 'resolved',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE execution_id = ?
+      AND status = 'open'
+    `).bind(delivery.execution_id),
+
+    env.DB.prepare(`
+      INSERT INTO project_events
+      (
+        project_id,
+        user_id,
+        event_type,
+        message
+      )
+      VALUES (?, ?, 'project_completed', ?)
+    `).bind(
+      delivery.project_id,
+      user.id,
+      "تم قبول التسليم وإنهاء المشروع بنجاح"
+    )
+  ]);
+
+  return json({
+    success: true,
+    message: "تم قبول التسليم وإنهاء المشروع"
+  });
+}
+
+
+// ============================================================
+// PORTFOLIO TABLE
+// ============================================================
+
+async function ensurePortfolioTable(env) {
+  await env.DB
+    .prepare(`
+      CREATE TABLE IF NOT EXISTS portfolio_items (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        title TEXT NOT NULL,
+        description TEXT NOT NULL,
+        category TEXT NOT NULL,
+        image_url TEXT,
+        project_url TEXT,
+        skills TEXT,
+        status TEXT NOT NULL DEFAULT 'active',
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+    .run();
+
+  await env.DB
+    .prepare(`
+      CREATE INDEX IF NOT EXISTS idx_portfolio_user
+      ON portfolio_items(user_id)
+    `)
+    .run();
+
+  await env.DB
+    .prepare(`
+      CREATE INDEX IF NOT EXISTS idx_portfolio_status
+      ON portfolio_items(status)
+    `)
+    .run();
+
+  await env.DB
+    .prepare(`
+      CREATE INDEX IF NOT EXISTS idx_portfolio_category
+      ON portfolio_items(category)
+    `)
+    .run();
+}
+
+
+// ============================================================
+// CREATE PORTFOLIO
+// ============================================================
+
+async function createPortfolio(request, env) {
+  await ensurePortfolioTable(env);
+
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "إضافة الأعمال متاحة للمستقلين فقط"
+    }, 403);
+  }
+
+  const body = await readJson(request);
+
+  if (!body) {
+    return json({
+      success: false,
+      error: "بيانات غير صحيحة"
+    }, 400);
+  }
+
+  const title = cleanString(body.title);
+  const description = cleanString(body.description);
+  const category = cleanString(body.category);
+
+  const imageUrl = cleanString(
+    body.image_url ||
+    body.image ||
+    body.cover_image ||
+    body.coverImage
+  );
+
+  const projectUrl = cleanString(
+    body.project_url ||
+    body.projectUrl ||
+    body.url
+  );
+
+  const skills = normalizeSkills(
+    body.skills ||
+    body.technologies ||
+    body.tech_stack
+  );
+
+  const status =
+    cleanString(body.status) || "active";
+
+  if (title.length < 3) {
+    return json({
+      success: false,
+      error: "عنوان العمل قصير جدًا"
+    }, 400);
+  }
+
+  if (description.length < 10) {
+    return json({
+      success: false,
+      error: "وصف العمل قصير جدًا"
+    }, 400);
+  }
+
+  if (!category) {
+    return json({
+      success: false,
+      error: "تصنيف العمل مطلوب"
+    }, 400);
+  }
+
+  if (!["active", "hidden"].includes(status)) {
+    return json({
+      success: false,
+      error: "حالة العمل غير صحيحة"
+    }, 400);
+  }
+
+  const result = await env.DB
+    .prepare(`
+      INSERT INTO portfolio_items
+      (
+        user_id,
+        title,
+        description,
+        category,
+        image_url,
+        project_url,
+        skills,
+        status
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `)
+    .bind(
+      user.id,
+      title,
+      description,
+      category,
+      imageUrl || null,
+      projectUrl || null,
+      skills || null,
+      status
+    )
+    .run();
+
+  return json({
+    success: true,
+    message: "تمت إضافة العمل إلى معرض أعمالك",
+    portfolio_id: result.meta.last_row_id
+  }, 201);
+}
+
+
+// ============================================================
+// GET PORTFOLIO
+// ============================================================
+
+async function getPortfolio(request, env) {
+  await ensurePortfolioTable(env);
+
+  const url = new URL(request.url);
+
+  const category = cleanString(
+    url.searchParams.get("category")
+  );
+
+  const search = cleanString(
+    url.searchParams.get("q") ||
+    url.searchParams.get("search")
+  );
+
+  let limit = Number(
+    url.searchParams.get("limit") || 50
+  );
+
+  let offset = Number(
+    url.searchParams.get("offset") || 0
+  );
+
+  if (!Number.isInteger(limit) || limit <= 0) {
+    limit = 50;
+  }
+
+  if (limit > 100) {
+    limit = 100;
+  }
+
+  if (!Number.isInteger(offset) || offset < 0) {
+    offset = 0;
+  }
+
+  let query = `
+    SELECT
+      p.id,
+      p.user_id,
+      p.title,
+      p.description,
+      p.category,
+      p.image_url,
+      p.project_url,
+      p.skills,
+      p.status,
+      p.created_at,
+      p.updated_at,
+      u.full_name AS freelancer_name
+    FROM portfolio_items p
+    JOIN users u ON u.id = p.user_id
+    WHERE p.status = 'active'
+  `;
+
+  const params = [];
+
+  if (category) {
+    query += `
+      AND p.category = ?
+    `;
+
+    params.push(category);
+  }
+
+  if (search) {
+    const like = `%${search}%`;
+
+    query += `
+      AND (
+        p.title LIKE ?
+        OR p.description LIKE ?
+        OR p.category LIKE ?
+        OR COALESCE(p.skills, '') LIKE ?
+        OR u.full_name LIKE ?
+      )
+    `;
+
+    params.push(
+      like,
+      like,
+      like,
+      like,
+      like
+    );
+  }
+
+  query += `
+    ORDER BY p.id DESC
+    LIMIT ? OFFSET ?
+  `;
+
+  params.push(limit, offset);
+
+  const result = await env.DB
+    .prepare(query)
+    .bind(...params)
+    .all();
+
+  return json({
+    success: true,
+    portfolio: result.results || [],
+    pagination: {
+      limit,
+      offset,
+      count: (result.results || []).length
+    }
+  });
+}
+
+
+// ============================================================
+// MY PORTFOLIO
+// ============================================================
+
+async function getMyPortfolio(request, env) {
+  await ensurePortfolioTable(env);
+
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "معرض الأعمال متاح للمستقلين فقط"
+    }, 403);
+  }
+
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        user_id,
+        title,
+        description,
+        category,
+        image_url,
+        project_url,
+        skills,
+        status,
+        created_at,
+        updated_at
+      FROM portfolio_items
+      WHERE user_id = ?
+      ORDER BY id DESC
+    `)
+    .bind(user.id)
+    .all();
+
+  return json({
+    success: true,
+    portfolio: result.results || []
+  });
+}
+
+
+// ============================================================
+// PORTFOLIO DETAILS
+// ============================================================
+
+async function getPortfolioItem(request, env) {
+  await ensurePortfolioTable(env);
+
+  const id = getIdFromPath(request);
+
+  if (!id) {
+    return json({
+      success: false,
+      error: "معرف العمل غير صحيح"
+    }, 400);
+  }
+
+  const user = await authenticateUser(request, env);
+
+  let item;
+
+  if (user) {
+    item = await env.DB
+      .prepare(`
+        SELECT
+          p.id,
+          p.user_id,
+          p.title,
+          p.description,
+          p.category,
+          p.image_url,
+          p.project_url,
+          p.skills,
+          p.status,
+          p.created_at,
+          p.updated_at,
+          u.full_name AS freelancer_name
+        FROM portfolio_items p
+        JOIN users u ON u.id = p.user_id
+        WHERE p.id = ?
+        AND (
+          p.status = 'active'
+          OR p.user_id = ?
+        )
+        LIMIT 1
+      `)
+      .bind(id, user.id)
+      .first();
+  } else {
+    item = await env.DB
+      .prepare(`
+        SELECT
+          p.id,
+          p.user_id,
+          p.title,
+          p.description,
+          p.category,
+          p.image_url,
+          p.project_url,
+          p.skills,
+          p.status,
+          p.created_at,
+          p.updated_at,
+          u.full_name AS freelancer_name
+        FROM portfolio_items p
+        JOIN users u ON u.id = p.user_id
+        WHERE p.id = ?
+        AND p.status = 'active'
+        LIMIT 1
+      `)
+      .bind(id)
+      .first();
+  }
+
+  if (!item) {
+    return json({
+      success: false,
+      error: "العمل غير موجود"
+    }, 404);
+  }
+
+  return json({
+    success: true,
+    portfolio: item
+  });
+}
+
+
+// ============================================================
+// UPDATE PORTFOLIO
+// ============================================================
+
+async function updatePortfolio(request, env) {
+  await ensurePortfolioTable(env);
+
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "غير مسموح"
+    }, 403);
+  }
+
+  const id = getIdFromPath(request);
+
+  if (!id) {
+    return json({
+      success: false,
+      error: "معرف العمل غير صحيح"
+    }, 400);
+  }
+
+  const item = await env.DB
+    .prepare(`
+      SELECT *
+      FROM portfolio_items
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(id)
+    .first();
+
+  if (!item) {
+    return json({
+      success: false,
+      error: "العمل غير موجود"
+    }, 404);
+  }
+
+  if (item.user_id !== user.id) {
+    return json({
+      success: false,
+      error: "لا تملك صلاحية تعديل هذا العمل"
+    }, 403);
+  }
+
+  if (item.status === "deleted") {
+    return json({
+      success: false,
+      error: "هذا العمل محذوف"
+    }, 400);
+  }
+
+  const body = await readJson(request);
+
+  if (!body) {
+    return json({
+      success: false,
+      error: "بيانات غير صحيحة"
+    }, 400);
+  }
+
+  const title =
+    body.title !== undefined
+      ? cleanString(body.title)
+      : item.title;
+
+  const description =
+    body.description !== undefined
+      ? cleanString(body.description)
+      : item.description;
+
+  const category =
+    body.category !== undefined
+      ? cleanString(body.category)
+      : item.category;
+
+  const imageUrl =
+    body.image_url !== undefined ||
+    body.image !== undefined ||
+    body.cover_image !== undefined ||
+    body.coverImage !== undefined
+      ? cleanString(
+          body.image_url ||
+          body.image ||
+          body.cover_image ||
+          body.coverImage
+        )
+      : item.image_url;
+
+  const projectUrl =
+    body.project_url !== undefined ||
+    body.projectUrl !== undefined ||
+    body.url !== undefined
+      ? cleanString(
+          body.project_url ||
+          body.projectUrl ||
+          body.url
+        )
+      : item.project_url;
+
+  const skills =
+    body.skills !== undefined ||
+    body.technologies !== undefined ||
+    body.tech_stack !== undefined
+      ? normalizeSkills(
+          body.skills ||
+          body.technologies ||
+          body.tech_stack
+        )
+      : item.skills;
+
+  const status =
+    body.status !== undefined
+      ? cleanString(body.status)
+      : item.status;
+
+  if (title.length < 3) {
+    return json({
+      success: false,
+      error: "عنوان العمل قصير جدًا"
+    }, 400);
+  }
+
+  if (description.length < 10) {
+    return json({
+      success: false,
+      error: "وصف العمل قصير جدًا"
+    }, 400);
+  }
+
+  if (!category) {
+    return json({
+      success: false,
+      error: "تصنيف العمل مطلوب"
+    }, 400);
+  }
+
+  if (!["active", "hidden"].includes(status)) {
+    return json({
+      success: false,
+      error: "حالة العمل غير صحيحة"
+    }, 400);
+  }
+
+  await env.DB
+    .prepare(`
+      UPDATE portfolio_items
+      SET
+        title = ?,
+        description = ?,
+        category = ?,
+        image_url = ?,
+        project_url = ?,
+        skills = ?,
+        status = ?,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `)
+    .bind(
+      title,
+      description,
+      category,
+      imageUrl || null,
+      projectUrl || null,
+      skills || null,
+      status,
+      id
+    )
+    .run();
+
+  return json({
+    success: true,
+    message: "تم تحديث العمل بنجاح"
+  });
+}
+
+
+// ============================================================
+// DELETE PORTFOLIO - SOFT DELETE
+// ============================================================
+
+async function deletePortfolio(request, env) {
+  await ensurePortfolioTable(env);
+
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "غير مسموح"
+    }, 403);
+  }
+
+  const id = getIdFromPath(request);
+
+  if (!id) {
+    return json({
+      success: false,
+      error: "معرف العمل غير صحيح"
+    }, 400);
+  }
+
+  const item = await env.DB
+    .prepare(`
+      SELECT id, user_id, status
+      FROM portfolio_items
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(id)
+    .first();
+
+  if (!item) {
+    return json({
+      success: false,
+      error: "العمل غير موجود"
+    }, 404);
+  }
+
+  if (item.user_id !== user.id) {
+    return json({
+      success: false,
+      error: "لا تملك صلاحية حذف هذا العمل"
+    }, 403);
+  }
+
+  if (item.status === "deleted") {
+    return json({
+      success: false,
+      error: "العمل محذوف مسبقًا"
+    }, 400);
+  }
+
+  await env.DB
+    .prepare(`
+      UPDATE portfolio_items
+      SET
+        status = 'deleted',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `)
+    .bind(id)
+    .run();
+
+  return json({
+    success: true,
+    message: "تم حذف العمل بنجاح"
+  });
+}
+
+
+// ============================================================
+// DATABASE TEST
+// ============================================================
+
+async function testDatabase(env) {
+  await ensurePortfolioTable(env);
+
+  const tables = [
+    ["users", "users"],
+    ["services", "services"],
+    ["projects", "projects"],
+    ["proposals", "proposals"],
+    ["project_executions", "project_executions"],
+    ["project_deliveries", "project_deliveries"],
+    ["project_revision_requests", "project_revision_requests"],
+    ["project_events", "project_events"],
+    ["portfolio", "portfolio_items"]
+  ];
+
+  const counts = {};
+
+  for (const [key, table] of tables) {
+    try {
+      const result = await env.DB
+        .prepare(`SELECT COUNT(*) AS count FROM ${table}`)
+        .first();
+
+      counts[key] = Number(result?.count || 0);
+    } catch (error) {
+      counts[key] = null;
+    }
+  }
+
+  return json({
+    success: true,
+    message: "اتصال قاعدة البيانات يعمل",
+    counts
+  });
+}
+
+
+// ============================================================
+// AUTHENTICATION
+// ============================================================
+
+async function authenticateUser(request, env) {
+  const cookies = parseCookies(
+    request.headers.get("Cookie") || ""
+  );
+
+  const token = cookies.mihraf_session;
+
+  if (!token) {
     return null;
   }
 
-  return id;
+  const tokenHash = await sha256Hex(token);
+
+  const session = await env.DB
+    .prepare(`
+      SELECT
+        s.id AS session_id,
+        s.expires_at,
+        u.id,
+        u.full_name,
+        u.email,
+        u.role
+      FROM sessions s
+      JOIN users u ON u.id = s.user_id
+      WHERE s.token_hash = ?
+      LIMIT 1
+    `)
+    .bind(tokenHash)
+    .first();
+
+  if (!session) {
+    return null;
+  }
+
+  const expiresAt = new Date(session.expires_at);
+
+  if (
+    Number.isNaN(expiresAt.getTime()) ||
+    expiresAt.getTime() <= Date.now()
+  ) {
+    await env.DB
+      .prepare(`
+        DELETE FROM sessions
+        WHERE id = ?
+      `)
+      .bind(session.session_id)
+      .run();
+
+    return null;
+  }
+
+  return {
+    id: session.id,
+    full_name: session.full_name,
+    email: session.email,
+    role: session.role
+  };
 }
 
-// ==================================================
-// تشفير كلمة المرور PBKDF2
-// ==================================================
 
-async function hashPassword(
-  password,
-  salt
-) {
-  const key =
-    await crypto.subtle.importKey(
-      "raw",
-      encoder.encode(password),
-      "PBKDF2",
-      false,
-      ["deriveBits"]
-    );
+// ============================================================
+// PATH ID HELPER
+// ============================================================
 
-  const bits =
-    await crypto.subtle.deriveBits(
-      {
-        name: "PBKDF2",
-        salt: salt,
-        iterations: 100000,
-        hash: "SHA-256"
-      },
-      key,
-      256
-    );
+function getIdFromPath(request) {
+  const pathname = new URL(request.url).pathname;
+
+  const parts = pathname
+    .split("/")
+    .filter(Boolean);
+
+  /*
+    نبحث عن أول رقم داخل المسار بعد /api.
+
+    هذا يصلح للمسارات:
+
+    /api/projects/10
+    /api/projects/10/proposals
+    /api/proposals/25/accept
+    /api/proposals/25/reject
+    /api/deliveries/7/revision
+    /api/deliveries/7/accept
+    /api/portfolio/4
+  */
+
+  const apiIndex = parts.indexOf("api");
+
+  if (apiIndex === -1) {
+    return null;
+  }
+
+  for (let i = apiIndex + 1; i < parts.length; i++) {
+    if (/^\d+$/.test(parts[i])) {
+      const id = Number(parts[i]);
+
+      if (
+        Number.isInteger(id) &&
+        id > 0
+      ) {
+        return id;
+      }
+    }
+  }
+
+  return null;
+}
+
+
+// ============================================================
+// PASSWORD HASHING
+// ============================================================
+
+async function hashPassword(password) {
+  const saltBytes = randomBytes(16);
+
+  const salt = bytesToHex(saltBytes);
+
+  const hash = await hashPasswordWithSalt(
+    password,
+    salt
+  );
+
+  return {
+    hash,
+    salt
+  };
+}
+
+
+async function hashPasswordWithSalt(password, saltHex) {
+  const passwordKey = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(password),
+    {
+      name: "PBKDF2"
+    },
+    false,
+    [
+      "deriveBits"
+    ]
+  );
+
+  const saltBytes = hexToBytes(saltHex);
+
+  const derived = await crypto.subtle.deriveBits(
+    {
+      name: "PBKDF2",
+      salt: saltBytes,
+      iterations: 100000,
+      hash: "SHA-256"
+    },
+    passwordKey,
+    256
+  );
 
   return bytesToHex(
-    new Uint8Array(bits)
+    new Uint8Array(derived)
   );
 }
 
-// ==================================================
-// SHA-256
-// ==================================================
 
-async function sha256Hex(
-  value
-) {
+// ============================================================
+// SHA-256
+// ============================================================
+
+async function sha256Hex(value) {
   const data =
     typeof value === "string"
       ? encoder.encode(value)
       : value;
 
-  const hash =
-    await crypto.subtle.digest(
-      "SHA-256",
-      data
-    );
+  const hash = await crypto.subtle.digest(
+    "SHA-256",
+    data
+  );
 
   return bytesToHex(
     new Uint8Array(hash)
   );
 }
 
-// ==================================================
-// Token
-// ==================================================
 
-function randomToken(
-  length
-) {
+// ============================================================
+// RANDOM TOKEN
+// ============================================================
+
+function randomToken(bytes = 32) {
   return bytesToHex(
-    randomBytes(length)
+    randomBytes(bytes)
   );
 }
 
-// ==================================================
-// Random Bytes
-// ==================================================
 
-function randomBytes(
-  length
-) {
-  const bytes =
-    new Uint8Array(length);
+function randomBytes(length) {
+  const bytes = new Uint8Array(length);
 
-  crypto.getRandomValues(
-    bytes
-  );
+  crypto.getRandomValues(bytes);
 
   return bytes;
 }
 
-// ==================================================
-// Hex → Bytes
-// ==================================================
 
-function hexToBytes(
-  hex
-) {
-  const bytes =
-    new Uint8Array(
-      hex.length / 2
-    );
+// ============================================================
+// HEX HELPERS
+// ============================================================
+
+function hexToBytes(hex) {
+  const clean = String(hex || "");
+
+  if (
+    clean.length % 2 !== 0 ||
+    !/^[0-9a-fA-F]*$/.test(clean)
+  ) {
+    return new Uint8Array();
+  }
+
+  const bytes = new Uint8Array(
+    clean.length / 2
+  );
 
   for (
     let i = 0;
-    i < bytes.length;
-    i++
+    i < clean.length;
+    i += 2
   ) {
-    bytes[i] =
-      parseInt(
-        hex.substring(
-          i * 2,
-          i * 2 + 2
-        ),
-        16
-      );
+    bytes[i / 2] = parseInt(
+      clean.substring(i, i + 2),
+      16
+    );
   }
 
   return bytes;
 }
 
-// ==================================================
-// Bytes → Hex
-// ==================================================
 
-function bytesToHex(
-  bytes
-) {
-  return Array.from(
-    bytes
-  )
+function bytesToHex(bytes) {
+  return Array.from(bytes)
     .map(
       byte =>
         byte
@@ -4742,83 +3442,65 @@ function bytesToHex(
     .join("");
 }
 
-// ==================================================
-// مقارنة آمنة
-// ==================================================
 
-function constantTimeEqual(
-  a,
-  b
-) {
+// ============================================================
+// CONSTANT-TIME COMPARISON
+// ============================================================
+
+function constantTimeEqual(a, b) {
   if (
-    typeof a !== "string" ||
-    typeof b !== "string"
+    !(a instanceof Uint8Array) ||
+    !(b instanceof Uint8Array)
   ) {
     return false;
   }
 
-  if (
-    a.length !== b.length
-  ) {
+  if (a.length !== b.length) {
     return false;
   }
 
   let result = 0;
 
-  for (
-    let i = 0;
-    i < a.length;
-    i++
-  ) {
-    result |=
-      a.charCodeAt(i) ^
-      b.charCodeAt(i);
+  for (let i = 0; i < a.length; i++) {
+    result |= a[i] ^ b[i];
   }
 
   return result === 0;
 }
 
-// ==================================================
-// قراءة Cookies
-// ==================================================
 
-function parseCookies(
-  cookieHeader
-) {
+// ============================================================
+// COOKIES
+// ============================================================
+
+function parseCookies(cookieHeader) {
   const cookies = {};
 
-  cookieHeader
-    .split(";")
-    .forEach(
-      cookie => {
-        const index =
-          cookie.indexOf("=");
+  if (!cookieHeader) {
+    return cookies;
+  }
 
-        if (
-          index === -1
-        ) {
-          return;
-        }
+  const parts = cookieHeader.split(";");
 
-        const name =
-          cookie
-            .substring(
-              0,
-              index
-            )
-            .trim();
+  for (const part of parts) {
+    const index = part.indexOf("=");
 
-        const value =
-          cookie
-            .substring(
-              index + 1
-            )
-            .trim();
+    if (index === -1) {
+      continue;
+    }
 
-        cookies[name] =
-          value;
-      }
-    );
+    const key = part
+      .slice(0, index)
+      .trim();
+
+    const value = part
+      .slice(index + 1)
+      .trim();
+
+    if (key) {
+      cookies[key] = value;
+    }
+  }
 
   return cookies;
 }
