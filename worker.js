@@ -3,6 +3,11 @@ const encoder = new TextEncoder();
 const SESSION_DAYS = 7;
 const SESSION_MAX_AGE = SESSION_DAYS * 24 * 60 * 60;
 
+
+/* ============================================================
+   WORKER
+   ============================================================ */
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -30,6 +35,7 @@ export default {
         return await logout(request, env);
       }
 
+
       // =========================
       // SERVICES
       // =========================
@@ -53,6 +59,7 @@ export default {
       if (/^\/api\/services\/\d+$/.test(path) && method === "DELETE") {
         return await deleteService(request, env);
       }
+
 
       // =========================
       // PROJECTS
@@ -78,6 +85,7 @@ export default {
         return await deleteProject(request, env);
       }
 
+
       // =========================
       // PROPOSALS
       // =========================
@@ -102,6 +110,7 @@ export default {
         return await rejectProposal(request, env);
       }
 
+
       // =========================
       // EXECUTION
       // =========================
@@ -117,6 +126,7 @@ export default {
       if (/^\/api\/projects\/\d+\/events$/.test(path) && method === "GET") {
         return await getProjectEvents(request, env);
       }
+
 
       // =========================
       // DELIVERIES
@@ -134,8 +144,9 @@ export default {
         return await acceptDelivery(request, env);
       }
 
+
       // =========================
-      // PORTFOLIO / BUSINESSES
+      // PORTFOLIO
       // =========================
 
       if (path === "/api/portfolio" && method === "POST") {
@@ -162,6 +173,7 @@ export default {
         return await deletePortfolio(request, env);
       }
 
+
       // =========================
       // DATABASE TEST
       // =========================
@@ -169,6 +181,7 @@ export default {
       if (path === "/api/test" && method === "GET") {
         return await testDatabase(env);
       }
+
 
       // =========================
       // ASSETS
@@ -189,9 +202,9 @@ export default {
 };
 
 
-// ============================================================
-// RESPONSE HELPERS
-// ============================================================
+/* ============================================================
+   RESPONSE HELPERS
+   ============================================================ */
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -203,6 +216,7 @@ function json(data, status = 200, extraHeaders = {}) {
   });
 }
 
+
 async function readJson(request) {
   try {
     return await request.json();
@@ -211,6 +225,7 @@ async function readJson(request) {
   }
 }
 
+
 function cleanString(value) {
   if (value === undefined || value === null) {
     return "";
@@ -218,6 +233,7 @@ function cleanString(value) {
 
   return String(value).trim();
 }
+
 
 function normalizeSkills(value) {
   if (Array.isArray(value)) {
@@ -231,9 +247,64 @@ function normalizeSkills(value) {
 }
 
 
-// ============================================================
-// AUTH
-// ============================================================
+/* ============================================================
+   PROJECT SCHEMA COMPATIBILITY
+   ============================================================ */
+
+/*
+  المشكلة الموجودة عندك:
+  جدول projects لا يحتوي بالضرورة على client_id.
+
+  هذه الدالة تفحص الجدول وتتعرف تلقائيًا على عمود صاحب المشروع.
+  ندعم:
+    client_id
+    user_id
+    owner_id
+    freelancer_client_id
+
+  إذا وجد client_id نستخدمه مباشرة.
+*/
+
+let cachedProjectOwnerColumn = null;
+
+
+async function getProjectOwnerColumn(env) {
+  if (cachedProjectOwnerColumn) {
+    return cachedProjectOwnerColumn;
+  }
+
+  const result = await env.DB
+    .prepare(`PRAGMA table_info(projects)`)
+    .all();
+
+  const columns = (result.results || [])
+    .map(row => String(row.name || ""));
+
+  const candidates = [
+    "client_id",
+    "user_id",
+    "owner_id",
+    "clientId",
+    "ownerId"
+  ];
+
+  for (const candidate of candidates) {
+    if (columns.includes(candidate)) {
+      cachedProjectOwnerColumn = candidate;
+      return candidate;
+    }
+  }
+
+  throw new Error(
+    "جدول projects لا يحتوي على عمود معروف لصاحب المشروع. الأعمدة الموجودة: " +
+    columns.join(", ")
+  );
+}
+
+
+/* ============================================================
+   AUTH
+   ============================================================ */
 
 async function register(request, env) {
   const body = await readJson(request);
@@ -468,7 +539,10 @@ async function getMe(request, env) {
 
 
 async function logout(request, env) {
-  const cookies = parseCookies(request.headers.get("Cookie") || "");
+  const cookies = parseCookies(
+    request.headers.get("Cookie") || ""
+  );
+
   const token = cookies.mihraf_session;
 
   if (token) {
@@ -493,9 +567,9 @@ async function logout(request, env) {
 }
 
 
-// ============================================================
-// SERVICES
-// ============================================================
+/* ============================================================
+   SERVICES
+   ============================================================ */
 
 async function createService(request, env) {
   const user = await authenticateUser(request, env);
@@ -574,7 +648,9 @@ async function createService(request, env) {
 
 async function getServices(request, env) {
   const url = new URL(request.url);
-  const category = cleanString(url.searchParams.get("category"));
+  const category = cleanString(
+    url.searchParams.get("category")
+  );
 
   let query = `
     SELECT
@@ -859,9 +935,9 @@ async function deleteService(request, env) {
 }
 
 
-// ============================================================
-// PROJECTS
-// ============================================================
+/* ============================================================
+   PROJECTS
+   ============================================================ */
 
 async function createProject(request, env) {
   const user = await authenticateUser(request, env);
@@ -908,11 +984,13 @@ async function createProject(request, env) {
     }, 400);
   }
 
+  const ownerColumn = await getProjectOwnerColumn(env);
+
   const result = await env.DB
     .prepare(`
       INSERT INTO projects
       (
-        client_id,
+        ${ownerColumn},
         title,
         description,
         category,
@@ -938,21 +1016,20 @@ async function createProject(request, env) {
 }
 
 
-/*
-  ============================================================
-  تم تعديل هذه الدالة فقط
-  ============================================================
-*/
-
 async function getProjects(request, env) {
   try {
     const url = new URL(request.url);
-    const category = cleanString(url.searchParams.get("category"));
+    const category = cleanString(
+      url.searchParams.get("category")
+    );
+
+    const ownerColumn = await getProjectOwnerColumn(env);
 
     let query = `
       SELECT
         p.id,
-        p.client_id,
+        p.${ownerColumn} AS client_id,
+        p.${ownerColumn} AS project_owner_id,
         p.title,
         p.description,
         p.category,
@@ -962,7 +1039,7 @@ async function getProjects(request, env) {
         p.updated_at,
         u.full_name AS client_name
       FROM projects p
-      JOIN users u ON u.id = p.client_id
+      JOIN users u ON u.id = p.${ownerColumn}
       WHERE p.status = 'open'
     `;
 
@@ -1014,11 +1091,13 @@ async function getMyProjects(request, env) {
     }, 403);
   }
 
+  const ownerColumn = await getProjectOwnerColumn(env);
+
   const result = await env.DB
     .prepare(`
       SELECT
         id,
-        client_id,
+        ${ownerColumn} AS client_id,
         title,
         description,
         category,
@@ -1027,7 +1106,7 @@ async function getMyProjects(request, env) {
         created_at,
         updated_at
       FROM projects
-      WHERE client_id = ?
+      WHERE ${ownerColumn} = ?
       ORDER BY id DESC
     `)
     .bind(user.id)
@@ -1066,6 +1145,8 @@ async function updateProject(request, env) {
     }, 400);
   }
 
+  const ownerColumn = await getProjectOwnerColumn(env);
+
   const project = await env.DB
     .prepare(`
       SELECT *
@@ -1083,7 +1164,7 @@ async function updateProject(request, env) {
     }, 404);
   }
 
-  if (project.client_id !== user.id) {
+  if (Number(project[ownerColumn]) !== Number(user.id)) {
     return json({
       success: false,
       error: "لا تملك صلاحية تعديل المشروع"
@@ -1193,6 +1274,8 @@ async function deleteProject(request, env) {
     }, 400);
   }
 
+  const ownerColumn = await getProjectOwnerColumn(env);
+
   const project = await env.DB
     .prepare(`
       SELECT *
@@ -1210,7 +1293,7 @@ async function deleteProject(request, env) {
     }, 404);
   }
 
-  if (project.client_id !== user.id) {
+  if (Number(project[ownerColumn]) !== Number(user.id)) {
     return json({
       success: false,
       error: "لا تملك صلاحية إلغاء المشروع"
@@ -1248,9 +1331,9 @@ async function deleteProject(request, env) {
 }
 
 
-// ============================================================
-// PROPOSALS
-// ============================================================
+/* ============================================================
+   PROPOSALS
+   ============================================================ */
 
 async function createProposal(request, env) {
   const user = await authenticateUser(request, env);
@@ -1269,7 +1352,8 @@ async function createProposal(request, env) {
     }, 403);
   }
 
-  const parts = new URL(request.url).pathname
+  const parts = new URL(request.url)
+    .pathname
     .split("/")
     .filter(Boolean);
 
@@ -1281,6 +1365,8 @@ async function createProposal(request, env) {
       error: "معرف المشروع غير صحيح"
     }, 400);
   }
+
+  const ownerColumn = await getProjectOwnerColumn(env);
 
   const project = await env.DB
     .prepare(`
@@ -1306,7 +1392,7 @@ async function createProposal(request, env) {
     }, 400);
   }
 
-  if (project.client_id === user.id) {
+  if (Number(project[ownerColumn]) === Number(user.id)) {
     return json({
       success: false,
       error: "لا يمكنك التقديم على مشروعك"
@@ -1323,9 +1409,11 @@ async function createProposal(request, env) {
   }
 
   const price = Number(body.price);
+
   const deliveryDays = Number(
     body.delivery_days ?? body.deliveryDays
   );
+
   const message = cleanString(body.message);
 
   if (!Number.isFinite(price) || price < 0) {
@@ -1411,7 +1499,8 @@ async function getProjectProposals(request, env) {
     }, 401);
   }
 
-  const parts = new URL(request.url).pathname
+  const parts = new URL(request.url)
+    .pathname
     .split("/")
     .filter(Boolean);
 
@@ -1423,6 +1512,8 @@ async function getProjectProposals(request, env) {
       error: "معرف المشروع غير صحيح"
     }, 400);
   }
+
+  const ownerColumn = await getProjectOwnerColumn(env);
 
   const project = await env.DB
     .prepare(`
@@ -1441,7 +1532,7 @@ async function getProjectProposals(request, env) {
     }, 404);
   }
 
-  if (project.client_id !== user.id) {
+  if (Number(project[ownerColumn]) !== Number(user.id)) {
     return json({
       success: false,
       error: "لا تملك صلاحية مشاهدة عروض هذا المشروع"
@@ -1494,6 +1585,8 @@ async function getMyProposals(request, env) {
     }, 403);
   }
 
+  const ownerColumn = await getProjectOwnerColumn(env);
+
   const result = await env.DB
     .prepare(`
       SELECT
@@ -1513,7 +1606,7 @@ async function getMyProposals(request, env) {
         u.full_name AS client_name
       FROM proposals p
       JOIN projects pr ON pr.id = p.project_id
-      JOIN users u ON u.id = pr.client_id
+      JOIN users u ON u.id = pr.${ownerColumn}
       WHERE p.freelancer_id = ?
       ORDER BY p.id DESC
     `)
@@ -1553,11 +1646,13 @@ async function acceptProposal(request, env) {
     }, 400);
   }
 
+  const ownerColumn = await getProjectOwnerColumn(env);
+
   const proposal = await env.DB
     .prepare(`
       SELECT
         p.*,
-        pr.client_id,
+        pr.${ownerColumn} AS client_id,
         pr.status AS project_status,
         pr.title AS project_title
       FROM proposals p
@@ -1575,7 +1670,7 @@ async function acceptProposal(request, env) {
     }, 404);
   }
 
-  if (proposal.client_id !== user.id) {
+  if (Number(proposal.client_id) !== Number(user.id)) {
     return json({
       success: false,
       error: "لا تملك صلاحية قبول هذا العرض"
@@ -1687,7 +1782,7 @@ async function acceptProposal(request, env) {
     `).bind(
       proposal.project_id,
       user.id,
-      `تم قبول عرض المستقل وبدء تنفيذ المشروع`
+      "تم قبول عرض المستقل وبدء تنفيذ المشروع"
     )
   ]);
 
@@ -1735,11 +1830,13 @@ async function rejectProposal(request, env) {
     }, 400);
   }
 
+  const ownerColumn = await getProjectOwnerColumn(env);
+
   const proposal = await env.DB
     .prepare(`
       SELECT
         p.*,
-        pr.client_id
+        pr.${ownerColumn} AS client_id
       FROM proposals p
       JOIN projects pr ON pr.id = p.project_id
       WHERE p.id = ?
@@ -1755,7 +1852,7 @@ async function rejectProposal(request, env) {
     }, 404);
   }
 
-  if (proposal.client_id !== user.id) {
+  if (Number(proposal.client_id) !== Number(user.id)) {
     return json({
       success: false,
       error: "لا تملك صلاحية رفض هذا العرض"
@@ -1787,9 +1884,9 @@ async function rejectProposal(request, env) {
 }
 
 
-// ============================================================
-// EXECUTION
-// ============================================================
+/* ============================================================
+   EXECUTION
+   ============================================================ */
 
 async function getProjectExecution(request, env) {
   const user = await authenticateUser(request, env);
@@ -1837,8 +1934,8 @@ async function getProjectExecution(request, env) {
   }
 
   if (
-    execution.client_id !== user.id &&
-    execution.freelancer_id !== user.id
+    Number(execution.client_id) !== Number(user.id) &&
+    Number(execution.freelancer_id) !== Number(user.id)
   ) {
     return json({
       success: false,
@@ -1965,9 +2062,11 @@ async function getProjectEvents(request, env) {
     .first();
 
   if (!execution) {
+    const ownerColumn = await getProjectOwnerColumn(env);
+
     const project = await env.DB
       .prepare(`
-        SELECT client_id
+        SELECT ${ownerColumn}
         FROM projects
         WHERE id = ?
         LIMIT 1
@@ -1982,7 +2081,9 @@ async function getProjectEvents(request, env) {
       }, 404);
     }
 
-    if (project.client_id !== user.id) {
+    if (
+      Number(project[ownerColumn]) !== Number(user.id)
+    ) {
       return json({
         success: false,
         error: "لا تملك صلاحية مشاهدة الأحداث"
@@ -1990,8 +2091,8 @@ async function getProjectEvents(request, env) {
     }
   } else {
     if (
-      execution.client_id !== user.id &&
-      execution.freelancer_id !== user.id
+      Number(execution.client_id) !== Number(user.id) &&
+      Number(execution.freelancer_id) !== Number(user.id)
     ) {
       return json({
         success: false,
@@ -2020,9 +2121,9 @@ async function getProjectEvents(request, env) {
 }
 
 
-// ============================================================
-// DELIVERIES
-// ============================================================
+/* ============================================================
+   DELIVERIES
+   ============================================================ */
 
 async function createDelivery(request, env) {
   const user = await authenticateUser(request, env);
@@ -2067,7 +2168,7 @@ async function createDelivery(request, env) {
     }, 404);
   }
 
-  if (execution.freelancer_id !== user.id) {
+  if (Number(execution.freelancer_id) !== Number(user.id)) {
     return json({
       success: false,
       error: "لا تملك صلاحية تسليم هذا المشروع"
@@ -2094,6 +2195,7 @@ async function createDelivery(request, env) {
   }
 
   const message = cleanString(body.message);
+
   const fileUrl = cleanString(
     body.file_url || body.fileUrl
   );
@@ -2233,7 +2335,7 @@ async function requestRevision(request, env) {
     }, 404);
   }
 
-  if (delivery.client_id !== user.id) {
+  if (Number(delivery.client_id) !== Number(user.id)) {
     return json({
       success: false,
       error: "لا تملك صلاحية طلب تعديل"
@@ -2405,7 +2507,7 @@ async function acceptDelivery(request, env) {
     }, 404);
   }
 
-  if (delivery.client_id !== user.id) {
+  if (Number(delivery.client_id) !== Number(user.id)) {
     return json({
       success: false,
       error: "لا تملك صلاحية قبول هذا التسليم"
@@ -2483,9 +2585,9 @@ async function acceptDelivery(request, env) {
 }
 
 
-// ============================================================
-// PORTFOLIO TABLE
-// ============================================================
+/* ============================================================
+   PORTFOLIO TABLE
+   ============================================================ */
 
 async function ensurePortfolioTable(env) {
   await env.DB
@@ -2529,9 +2631,9 @@ async function ensurePortfolioTable(env) {
 }
 
 
-// ============================================================
-// CREATE PORTFOLIO
-// ============================================================
+/* ============================================================
+   CREATE PORTFOLIO
+   ============================================================ */
 
 async function createPortfolio(request, env) {
   await ensurePortfolioTable(env);
@@ -2650,9 +2752,9 @@ async function createPortfolio(request, env) {
 }
 
 
-// ============================================================
-// GET PORTFOLIO
-// ============================================================
+/* ============================================================
+   GET PORTFOLIO
+   ============================================================ */
 
 async function getPortfolio(request, env) {
   await ensurePortfolioTable(env);
@@ -2763,9 +2865,9 @@ async function getPortfolio(request, env) {
 }
 
 
-// ============================================================
-// MY PORTFOLIO
-// ============================================================
+/* ============================================================
+   MY PORTFOLIO
+   ============================================================ */
 
 async function getMyPortfolio(request, env) {
   await ensurePortfolioTable(env);
@@ -2814,9 +2916,9 @@ async function getMyPortfolio(request, env) {
 }
 
 
-// ============================================================
-// PORTFOLIO DETAILS
-// ============================================================
+/* ============================================================
+   PORTFOLIO DETAILS
+   ============================================================ */
 
 async function getPortfolioItem(request, env) {
   await ensurePortfolioTable(env);
@@ -2901,9 +3003,9 @@ async function getPortfolioItem(request, env) {
 }
 
 
-// ============================================================
-// UPDATE PORTFOLIO
-// ============================================================
+/* ============================================================
+   UPDATE PORTFOLIO
+   ============================================================ */
 
 async function updatePortfolio(request, env) {
   await ensurePortfolioTable(env);
@@ -3089,9 +3191,9 @@ async function updatePortfolio(request, env) {
 }
 
 
-// ============================================================
-// DELETE PORTFOLIO - SOFT DELETE
-// ============================================================
+/* ============================================================
+   DELETE PORTFOLIO
+   ============================================================ */
 
 async function deletePortfolio(request, env) {
   await ensurePortfolioTable(env);
@@ -3170,9 +3272,9 @@ async function deletePortfolio(request, env) {
 }
 
 
-// ============================================================
-// DATABASE TEST
-// ============================================================
+/* ============================================================
+   DATABASE TEST
+   ============================================================ */
 
 async function testDatabase(env) {
   await ensurePortfolioTable(env);
@@ -3194,26 +3296,53 @@ async function testDatabase(env) {
   for (const [key, table] of tables) {
     try {
       const result = await env.DB
-        .prepare(`SELECT COUNT(*) AS count FROM ${table}`)
+        .prepare(
+          `SELECT COUNT(*) AS count FROM ${table}`
+        )
         .first();
 
-      counts[key] = Number(result?.count || 0);
+      counts[key] = Number(
+        result?.count || 0
+      );
     } catch (error) {
       counts[key] = null;
     }
   }
 
+  let projectSchema = [];
+
+  try {
+    const result = await env.DB
+      .prepare(`PRAGMA table_info(projects)`)
+      .all();
+
+    projectSchema = result.results || [];
+  } catch (error) {
+    projectSchema = [];
+  }
+
+  let projectOwnerColumn = null;
+
+  try {
+    projectOwnerColumn =
+      await getProjectOwnerColumn(env);
+  } catch {
+    projectOwnerColumn = null;
+  }
+
   return json({
     success: true,
     message: "اتصال قاعدة البيانات يعمل",
-    counts
+    counts,
+    project_owner_column: projectOwnerColumn,
+    projects_schema: projectSchema
   });
 }
 
 
-// ============================================================
-// AUTHENTICATION
-// ============================================================
+/* ============================================================
+   AUTHENTICATION
+   ============================================================ */
 
 async function authenticateUser(request, env) {
   const cookies = parseCookies(
@@ -3249,7 +3378,9 @@ async function authenticateUser(request, env) {
     return null;
   }
 
-  const expiresAt = new Date(session.expires_at);
+  const expiresAt = new Date(
+    session.expires_at
+  );
 
   if (
     Number.isNaN(expiresAt.getTime()) ||
@@ -3275,38 +3406,30 @@ async function authenticateUser(request, env) {
 }
 
 
-// ============================================================
-// PATH ID HELPER
-// ============================================================
+/* ============================================================
+   PATH ID HELPER
+   ============================================================ */
 
 function getIdFromPath(request) {
-  const pathname = new URL(request.url).pathname;
+  const pathname =
+    new URL(request.url).pathname;
 
   const parts = pathname
     .split("/")
     .filter(Boolean);
 
-  /*
-    نبحث عن أول رقم داخل المسار بعد /api.
-
-    هذا يصلح للمسارات:
-
-    /api/projects/10
-    /api/projects/10/proposals
-    /api/proposals/25/accept
-    /api/proposals/25/reject
-    /api/deliveries/7/revision
-    /api/deliveries/7/accept
-    /api/portfolio/4
-  */
-
-  const apiIndex = parts.indexOf("api");
+  const apiIndex =
+    parts.indexOf("api");
 
   if (apiIndex === -1) {
     return null;
   }
 
-  for (let i = apiIndex + 1; i < parts.length; i++) {
+  for (
+    let i = apiIndex + 1;
+    i < parts.length;
+    i++
+  ) {
     if (/^\d+$/.test(parts[i])) {
       const id = Number(parts[i]);
 
@@ -3323,19 +3446,22 @@ function getIdFromPath(request) {
 }
 
 
-// ============================================================
-// PASSWORD HASHING
-// ============================================================
+/* ============================================================
+   PASSWORD HASHING
+   ============================================================ */
 
 async function hashPassword(password) {
-  const saltBytes = randomBytes(16);
+  const saltBytes =
+    randomBytes(16);
 
-  const salt = bytesToHex(saltBytes);
+  const salt =
+    bytesToHex(saltBytes);
 
-  const hash = await hashPasswordWithSalt(
-    password,
-    salt
-  );
+  const hash =
+    await hashPasswordWithSalt(
+      password,
+      salt
+    );
 
   return {
     hash,
@@ -3344,31 +3470,37 @@ async function hashPassword(password) {
 }
 
 
-async function hashPasswordWithSalt(password, saltHex) {
-  const passwordKey = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(password),
-    {
-      name: "PBKDF2"
-    },
-    false,
-    [
-      "deriveBits"
-    ]
-  );
+async function hashPasswordWithSalt(
+  password,
+  saltHex
+) {
+  const passwordKey =
+    await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(password),
+      {
+        name: "PBKDF2"
+      },
+      false,
+      [
+        "deriveBits"
+      ]
+    );
 
-  const saltBytes = hexToBytes(saltHex);
+  const saltBytes =
+    hexToBytes(saltHex);
 
-  const derived = await crypto.subtle.deriveBits(
-    {
-      name: "PBKDF2",
-      salt: saltBytes,
-      iterations: 100000,
-      hash: "SHA-256"
-    },
-    passwordKey,
-    256
-  );
+  const derived =
+    await crypto.subtle.deriveBits(
+      {
+        name: "PBKDF2",
+        salt: saltBytes,
+        iterations: 100000,
+        hash: "SHA-256"
+      },
+      passwordKey,
+      256
+    );
 
   return bytesToHex(
     new Uint8Array(derived)
@@ -3376,9 +3508,9 @@ async function hashPasswordWithSalt(password, saltHex) {
 }
 
 
-// ============================================================
-// SHA-256
-// ============================================================
+/* ============================================================
+   SHA-256
+   ============================================================ */
 
 async function sha256Hex(value) {
   const data =
@@ -3386,10 +3518,11 @@ async function sha256Hex(value) {
       ? encoder.encode(value)
       : value;
 
-  const hash = await crypto.subtle.digest(
-    "SHA-256",
-    data
-  );
+  const hash =
+    await crypto.subtle.digest(
+      "SHA-256",
+      data
+    );
 
   return bytesToHex(
     new Uint8Array(hash)
@@ -3397,9 +3530,9 @@ async function sha256Hex(value) {
 }
 
 
-// ============================================================
-// RANDOM TOKEN
-// ============================================================
+/* ============================================================
+   RANDOM TOKEN
+   ============================================================ */
 
 function randomToken(bytes = 32) {
   return bytesToHex(
@@ -3409,7 +3542,8 @@ function randomToken(bytes = 32) {
 
 
 function randomBytes(length) {
-  const bytes = new Uint8Array(length);
+  const bytes =
+    new Uint8Array(length);
 
   crypto.getRandomValues(bytes);
 
@@ -3417,12 +3551,13 @@ function randomBytes(length) {
 }
 
 
-// ============================================================
-// HEX HELPERS
-// ============================================================
+/* ============================================================
+   HEX HELPERS
+   ============================================================ */
 
 function hexToBytes(hex) {
-  const clean = String(hex || "");
+  const clean =
+    String(hex || "");
 
   if (
     clean.length % 2 !== 0 ||
@@ -3431,19 +3566,21 @@ function hexToBytes(hex) {
     return new Uint8Array();
   }
 
-  const bytes = new Uint8Array(
-    clean.length / 2
-  );
+  const bytes =
+    new Uint8Array(
+      clean.length / 2
+    );
 
   for (
     let i = 0;
     i < clean.length;
     i += 2
   ) {
-    bytes[i / 2] = parseInt(
-      clean.substring(i, i + 2),
-      16
-    );
+    bytes[i / 2] =
+      parseInt(
+        clean.substring(i, i + 2),
+        16
+      );
   }
 
   return bytes;
@@ -3462,9 +3599,9 @@ function bytesToHex(bytes) {
 }
 
 
-// ============================================================
-// CONSTANT-TIME COMPARISON
-// ============================================================
+/* ============================================================
+   CONSTANT-TIME COMPARISON
+   ============================================================ */
 
 function constantTimeEqual(a, b) {
   if (
@@ -3480,7 +3617,11 @@ function constantTimeEqual(a, b) {
 
   let result = 0;
 
-  for (let i = 0; i < a.length; i++) {
+  for (
+    let i = 0;
+    i < a.length;
+    i++
+  ) {
     result |= a[i] ^ b[i];
   }
 
@@ -3488,9 +3629,9 @@ function constantTimeEqual(a, b) {
 }
 
 
-// ============================================================
-// COOKIES
-// ============================================================
+/* ============================================================
+   COOKIES
+   ============================================================ */
 
 function parseCookies(cookieHeader) {
   const cookies = {};
@@ -3499,22 +3640,26 @@ function parseCookies(cookieHeader) {
     return cookies;
   }
 
-  const parts = cookieHeader.split(";");
+  const parts =
+    cookieHeader.split(";");
 
   for (const part of parts) {
-    const index = part.indexOf("=");
+    const index =
+      part.indexOf("=");
 
     if (index === -1) {
       continue;
     }
 
-    const key = part
-      .slice(0, index)
-      .trim();
+    const key =
+      part
+        .slice(0, index)
+        .trim();
 
-    const value = part
-      .slice(index + 1)
-      .trim();
+    const value =
+      part
+        .slice(index + 1)
+        .trim();
 
     if (key) {
       cookies[key] = value;
