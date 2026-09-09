@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>المشاريع - مهراف</title>
+
+  <title>تفاصيل المشروع | مِهراف</title>
 
   <style>
     * {
@@ -14,243 +15,296 @@
 
     body {
       font-family: Arial, Tahoma, sans-serif;
-      background: #f5f7fb;
-      color: #222;
-      line-height: 1.7;
+      background: #181b20;
+      color: #e7eaf0;
+      min-height: 100vh;
     }
 
-    header {
-      background: #fff;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 16px 20px;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    .header-content {
-      max-width: 1100px;
-      margin: auto;
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      height: 68px;
+      background: #20242a;
+      border-bottom: 1px solid #30363f;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 15px;
-    }
 
-    .logo {
-      font-size: 25px;
-      font-weight: bold;
-      color: #111827;
-      text-decoration: none;
-    }
-
-    .logo span {
-      color: #2563eb;
-    }
-
-    .back-btn {
-      text-decoration: none;
-      color: #374151;
-      background: #f3f4f6;
-      padding: 9px 15px;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    main {
-      max-width: 1100px;
-      margin: 35px auto;
       padding: 0 20px;
     }
 
-    .page-title {
-      margin-bottom: 25px;
+    .logo {
+      color: #4f8cff;
+      font-size: 25px;
+      font-weight: 800;
     }
 
-    .page-title h1 {
+    .back {
+      background: #242930;
+      border: 1px solid #30363f;
+      padding: 10px 16px;
+      border-radius: 10px;
+      color: #e7eaf0;
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 30px));
+      margin: 35px auto;
+    }
+
+    .loading,
+    .error {
+      background: #242930;
+      border: 1px solid #30363f;
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .error {
+      color: #ff8d8d;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 22px;
+    }
+
+    .card {
+      background: #242930;
+      border: 1px solid #30363f;
+      border-radius: 18px;
+      padding: 25px;
+      margin-bottom: 22px;
+    }
+
+    .title {
       font-size: 30px;
-      margin-bottom: 6px;
+      margin-bottom: 18px;
     }
 
-    .page-title p {
-      color: #6b7280;
-    }
-
-    .toolbar {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 16px;
+    .description {
+      color: #c4c9d2;
+      line-height: 1.9;
+      white-space: pre-wrap;
       margin-bottom: 25px;
-      display: flex;
+    }
+
+    .meta {
+      display: grid;
       gap: 12px;
-      flex-wrap: wrap;
     }
 
-    .toolbar select {
-      flex: 1;
-      min-width: 200px;
-      padding: 11px 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 15px;
-      font-family: inherit;
-      background: #fff;
+    .meta-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+
+      padding: 13px;
+
+      background: #20242a;
+      border-radius: 10px;
     }
 
-    .refresh-btn {
-      border: none;
-      background: #2563eb;
-      color: #fff;
-      padding: 11px 18px;
-      border-radius: 8px;
+    .muted {
+      color: #9da4af;
+    }
+
+    .value {
+      font-weight: bold;
+    }
+
+    .blue {
+      color: #4f8cff;
+    }
+
+    .btn {
+      width: 100%;
+      border: 0;
+      border-radius: 11px;
+
+      padding: 13px;
+
       cursor: pointer;
+
+      font-size: 15px;
+      font-weight: bold;
+
+      margin-top: 10px;
+    }
+
+    .btn-primary {
+      background: #4f8cff;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #3978e8;
+    }
+
+    .btn-danger {
+      background: #8d3038;
+      color: white;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: #cdd2da;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+
+      background: #181b20;
+      color: #e7eaf0;
+
+      border: 1px solid #30363f;
+      border-radius: 10px;
+
+      padding: 12px;
+
+      outline: none;
+
       font-size: 15px;
     }
 
-    .refresh-btn:hover {
-      background: #1d4ed8;
+    input:focus,
+    textarea:focus {
+      border-color: #4f8cff;
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
     }
 
     .message {
       display: none;
-      padding: 14px 16px;
+
+      padding: 12px;
+
       border-radius: 10px;
-      margin-bottom: 20px;
+
+      margin-top: 12px;
+
+      line-height: 1.6;
     }
 
-    .message.error {
+    .success {
       display: block;
-      background: #fee2e2;
-      color: #991b1b;
+
+      background: #173b29;
+      color: #82e5a9;
     }
 
-    .loading {
-      text-align: center;
-      padding: 50px 20px;
-      color: #6b7280;
+    .error-message {
+      display: block;
+
+      background: #401f24;
+      color: #ff9da7;
     }
 
-    .empty {
-      display: none;
-      text-align: center;
-      background: #fff;
-      border: 1px solid #e5e7eb;
+    .section-title {
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
+
+    .proposal {
+      border: 1px solid #30363f;
+
+      background: #20242a;
+
       border-radius: 14px;
-      padding: 50px 20px;
+
+      padding: 18px;
+
+      margin-bottom: 14px;
     }
 
-    .empty .icon {
-      font-size: 45px;
+    .proposal-head {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 10px;
+
       margin-bottom: 12px;
     }
 
-    .projects {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
-
-    .project-card {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 22px;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
-    }
-
-    .project-card h2 {
-      font-size: 21px;
-      color: #111827;
-      margin-bottom: 10px;
-    }
-
-    .description {
-      color: #4b5563;
-      margin-bottom: 18px;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    .details {
-      display: grid;
-      gap: 9px;
-      margin-bottom: 18px;
-    }
-
-    .detail {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      padding-bottom: 7px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    .detail span:first-child {
-      color: #6b7280;
-    }
-
-    .detail span:last-child {
+    .proposal-name {
       font-weight: bold;
+      font-size: 17px;
     }
 
-    .category {
-      display: inline-block;
-      background: #eff6ff;
-      color: #1d4ed8;
-      padding: 4px 10px;
-      border-radius: 20px;
+    .proposal-message {
+      color: #c4c9d2;
+
+      line-height: 1.7;
+
+      margin: 12px 0;
+
+      white-space: pre-wrap;
+    }
+
+    .proposal-data {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 10px;
+    }
+
+    .badge {
+      padding: 7px 10px;
+
+      border-radius: 8px;
+
+      background: #30363f;
+
+      color: #e7eaf0;
+
       font-size: 13px;
     }
 
-    .budget {
-      color: #166534;
+    .status-pending {
+      color: #ffd36b;
     }
 
-    .date {
-      color: #6b7280;
-      font-size: 14px;
+    .status-accepted {
+      color: #70e5a0;
     }
 
-    .view-btn {
-      display: block;
-      width: 100%;
-      text-align: center;
-      text-decoration: none;
-      background: #2563eb;
-      color: #fff;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 15px;
-      margin-top: 5px;
+    .status-rejected {
+      color: #ff858f;
     }
 
-    .view-btn:hover {
-      background: #1d4ed8;
+    .hidden {
+      display: none !important;
     }
 
-    @media (max-width: 600px) {
-      .header-content {
-        flex-direction: column;
-        align-items: stretch;
+    @media (max-width: 800px) {
+      .grid {
+        grid-template-columns: 1fr;
       }
 
-      .back-btn {
-        text-align: center;
-      }
-
-      .page-title h1 {
-        font-size: 25px;
-      }
-
-      .project-card {
-        padding: 18px;
-      }
-
-      .toolbar {
-        flex-direction: column;
-      }
-
-      .toolbar select,
-      .refresh-btn {
-        width: 100%;
+      .title {
+        font-size: 24px;
       }
     }
   </style>
@@ -258,261 +312,951 @@
 
 <body>
 
-<header>
-  <div class="header-content">
-    <a href="index.html" class="logo">
-      مِهراف<span>.</span>
-    </a>
+<header class="header">
 
-    <a href="dashboard.html" class="back-btn">
-      ← العودة إلى لوحة التحكم
-    </a>
-  </div>
+  <a href="index.html" class="logo">
+    مِهراف
+  </a>
+
+  <a href="projects.html" class="back">
+    العودة للمشاريع
+  </a>
+
 </header>
 
-<main>
 
-  <div class="page-title">
-    <h1>تصفح المشاريع</h1>
-    <p>اكتشف المشاريع المفتوحة وابحث عن فرصة مناسبة لمهاراتك.</p>
-  </div>
-
-  <div class="toolbar">
-
-    <select id="categoryFilter">
-      <option value="">جميع التصنيفات</option>
-      <option value="التصميم">التصميم</option>
-      <option value="البرمجة">البرمجة</option>
-      <option value="الكتابة">الكتابة</option>
-      <option value="التسويق">التسويق</option>
-      <option value="الفيديو">الفيديو</option>
-      <option value="الصوت">الصوت</option>
-      <option value="الأعمال">الأعمال</option>
-      <option value="أخرى">أخرى</option>
-    </select>
-
-    <button class="refresh-btn" onclick="loadProjects()">
-      🔄 تحديث المشاريع
-    </button>
-
-  </div>
-
-  <div id="message" class="message"></div>
+<main class="container">
 
   <div id="loading" class="loading">
-    جارٍ تحميل المشاريع...
+    جاري تحميل المشروع...
   </div>
 
-  <div id="empty" class="empty">
-    <div class="icon">📭</div>
-    <h2>لا توجد مشاريع حاليًا</h2>
-    <p>لم يتم العثور على مشاريع مفتوحة بهذا التصنيف.</p>
-  </div>
 
-  <div id="projects" class="projects"></div>
+  <div id="errorBox" class="error hidden"></div>
+
+
+  <div id="content" class="hidden">
+
+    <div class="grid">
+
+      <!-- تفاصيل المشروع -->
+
+      <div>
+
+        <div class="card">
+
+          <h1 id="projectTitle" class="title"></h1>
+
+          <div
+            id="projectDescription"
+            class="description">
+          </div>
+
+
+          <div class="meta">
+
+            <div class="meta-item">
+
+              <span class="muted">
+                التصنيف
+              </span>
+
+              <span
+                id="projectCategory"
+                class="value">
+              </span>
+
+            </div>
+
+
+            <div class="meta-item">
+
+              <span class="muted">
+                الميزانية
+              </span>
+
+              <span
+                id="projectBudget"
+                class="value blue">
+              </span>
+
+            </div>
+
+
+            <div class="meta-item">
+
+              <span class="muted">
+                صاحب المشروع
+              </span>
+
+              <span
+                id="projectOwner"
+                class="value">
+              </span>
+
+            </div>
+
+
+            <div class="meta-item">
+
+              <span class="muted">
+                الحالة
+              </span>
+
+              <span
+                id="projectStatus"
+                class="value">
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- عروض صاحب المشروع -->
+
+        <div
+          id="proposalsCard"
+          class="card hidden">
+
+          <h2 class="section-title">
+            العروض المقدمة
+          </h2>
+
+          <div id="proposalsList"></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- الجانب -->
+
+      <aside>
+
+
+        <!-- تقديم عرض -->
+
+        <div
+          id="applyCard"
+          class="card hidden">
+
+          <h2 class="section-title">
+            قدم عرضك
+          </h2>
+
+
+          <form id="proposalForm">
+
+
+            <div class="form-group">
+
+              <label for="price">
+                السعر
+              </label>
+
+              <input
+                id="price"
+                type="number"
+                min="1"
+                step="0.01"
+                placeholder="مثال: 50"
+                required>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="deliveryDays">
+                مدة التسليم بالأيام
+              </label>
+
+              <input
+                id="deliveryDays"
+                type="number"
+                min="1"
+                step="1"
+                placeholder="مثال: 5"
+                required>
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="message">
+                رسالة العرض
+              </label>
+
+              <textarea
+                id="message"
+                placeholder="اكتب لصاحب المشروع لماذا أنت مناسب لتنفيذ المشروع..."
+                required></textarea>
+
+            </div>
+
+
+            <button
+              class="btn btn-primary"
+              type="submit">
+
+              إرسال العرض
+
+            </button>
+
+
+            <div
+              id="formMessage"
+              class="message">
+            </div>
+
+          </form>
+
+        </div>
+
+
+        <!-- صاحب المشروع -->
+
+        <div
+          id="ownerCard"
+          class="card hidden">
+
+          <h2 class="section-title">
+            إدارة المشروع
+          </h2>
+
+          <p
+            class="muted"
+            style="line-height:1.8;">
+
+            يمكنك من هنا مراجعة العروض المقدمة
+            على مشروعك وقبول العرض المناسب.
+
+          </p>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
 
 </main>
 
+
 <script>
+
+  const params =
+    new URLSearchParams(location.search);
+
+  const projectId =
+    Number(params.get("id"));
+
 
   const loading =
     document.getElementById("loading");
 
-  const projectsContainer =
-    document.getElementById("projects");
+  const errorBox =
+    document.getElementById("errorBox");
 
-  const empty =
-    document.getElementById("empty");
-
-  const message =
-    document.getElementById("message");
-
-  const categoryFilter =
-    document.getElementById("categoryFilter");
+  const content =
+    document.getElementById("content");
 
 
-  function escapeHTML(value) {
+  const applyCard =
+    document.getElementById("applyCard");
 
-    if (value === null || value === undefined) {
-      return "";
-    }
+  const ownerCard =
+    document.getElementById("ownerCard");
 
-    return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+  const proposalsCard =
+    document.getElementById("proposalsCard");
+
+
+  let currentUser = null;
+
+  let currentProject = null;
+
+
+
+  function escapeHtml(value) {
+
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
   }
 
 
-  function formatDate(dateString) {
 
-    if (!dateString) {
-      return "-";
-    }
+  function statusText(status) {
 
-    const date = new Date(dateString);
+    const map = {
 
-    if (isNaN(date.getTime())) {
-      return dateString;
-    }
+      open: "مفتوح",
 
-    return date.toLocaleDateString("ar", {
-      year: "numeric",
-      month: "long",
-      day: "numeric"
-    });
+      in_progress: "قيد التنفيذ",
+
+      completed: "مكتمل",
+
+      cancelled: "ملغي"
+
+    };
+
+    return map[status] || status;
+
   }
 
 
-  function showError(text) {
 
-    message.textContent = text;
-    message.className = "message error";
+  function proposalStatusText(status) {
+
+    const map = {
+
+      pending: "قيد المراجعة",
+
+      accepted: "مقبول",
+
+      rejected: "مرفوض"
+
+    };
+
+    return map[status] || status;
+
   }
 
 
-  function clearMessage() {
 
-    message.textContent = "";
-    message.className = "message";
-  }
+  async function load() {
 
+    if (!projectId) {
 
-  async function loadProjects() {
+      showError(
+        "رقم المشروع غير صحيح"
+      );
 
-    clearMessage();
+      return;
 
-    loading.style.display = "block";
-    empty.style.display = "none";
-    projectsContainer.innerHTML = "";
-
-    const category =
-      categoryFilter.value;
-
-    let url = "/api/projects";
-
-    if (category) {
-      url += "?category=" +
-        encodeURIComponent(category);
     }
+
 
     try {
 
-      const response = await fetch(url, {
-        method: "GET",
-        credentials: "include"
-      });
+      const meResponse =
+        await fetch("/api/me", {
 
-      const data = await response.json();
+          credentials: "include",
 
-      loading.style.display = "none";
+          cache: "no-store"
 
-      if (!response.ok) {
+        });
+
+
+      const meData =
+        await meResponse.json();
+
+
+      if (
+        !meData.success ||
+        !meData.authenticated
+      ) {
+
+        location.href =
+          "login.html";
+
+        return;
+
+      }
+
+
+      currentUser =
+        meData.user;
+
+
+      const response =
+        await fetch(
+          `/api/projects/${projectId}`,
+          {
+            credentials: "include",
+            cache: "no-store"
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (
+        !response.ok ||
+        !data.success
+      ) {
 
         showError(
-          data.error || "تعذر تحميل المشاريع."
+          data.error ||
+          "تعذر تحميل المشروع"
         );
 
         return;
+
       }
 
-      const projects =
-        data.projects || [];
 
-      if (projects.length === 0) {
+      currentProject =
+        data.project;
 
-        empty.style.display = "block";
 
-        return;
+      document.getElementById(
+        "projectTitle"
+      ).textContent =
+        currentProject.title;
+
+
+      document.getElementById(
+        "projectDescription"
+      ).textContent =
+        currentProject.description;
+
+
+      document.getElementById(
+        "projectCategory"
+      ).textContent =
+        currentProject.category;
+
+
+      document.getElementById(
+        "projectBudget"
+      ).textContent =
+        `${Number(
+          currentProject.budget
+        ).toLocaleString()} $`;
+
+
+      document.getElementById(
+        "projectOwner"
+      ).textContent =
+        currentProject.owner_name ||
+        "غير معروف";
+
+
+      document.getElementById(
+        "projectStatus"
+      ).textContent =
+        statusText(
+          currentProject.status
+        );
+
+
+      loading.classList.add(
+        "hidden"
+      );
+
+      content.classList.remove(
+        "hidden"
+      );
+
+
+      if (
+        currentUser.role ===
+          "freelancer" &&
+        currentProject.can_apply
+      ) {
+
+        applyCard.classList.remove(
+          "hidden"
+        );
+
       }
 
-      projectsContainer.innerHTML =
-        projects
-          .map(project => createProjectCard(project))
-          .join("");
+
+      if (
+        currentProject.is_owner
+      ) {
+
+        ownerCard.classList.remove(
+          "hidden"
+        );
+
+        proposalsCard.classList.remove(
+          "hidden"
+        );
+
+        await loadProposals();
+
+      }
 
     } catch (error) {
 
-      loading.style.display = "none";
+      console.error(error);
 
       showError(
-        "حدث خطأ أثناء تحميل المشاريع. حاول مرة أخرى."
+        "حدث خطأ أثناء تحميل المشروع"
       );
+
     }
+
   }
 
 
-  function createProjectCard(project) {
 
-    return `
-      <article class="project-card">
+  async function loadProposals() {
 
-        <h2>
-          ${escapeHTML(project.title)}
-        </h2>
+    const list =
+      document.getElementById(
+        "proposalsList"
+      );
 
-        <div class="description">
-          ${escapeHTML(project.description)}
+
+    list.innerHTML =
+      "جاري تحميل العروض...";
+
+
+    try {
+
+      const response =
+        await fetch(
+          `/api/projects/${projectId}/proposals`,
+          {
+            credentials: "include",
+            cache: "no-store"
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (
+        !response.ok ||
+        !data.success
+      ) {
+
+        list.innerHTML = `
+          <div class="error">
+            ${escapeHtml(
+              data.error ||
+              "تعذر تحميل العروض"
+            )}
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      if (!data.proposals.length) {
+
+        list.innerHTML = `
+          <div class="muted">
+            لا توجد عروض مقدمة على هذا المشروع حتى الآن.
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      list.innerHTML =
+        data.proposals
+          .map(proposal => {
+
+
+            const statusClass =
+              proposal.status ===
+                "accepted"
+
+                ? "status-accepted"
+
+                : proposal.status ===
+                    "rejected"
+
+                  ? "status-rejected"
+
+                  : "status-pending";
+
+
+            const buttons =
+              proposal.status ===
+                "pending" &&
+              currentProject.status ===
+                "open"
+
+                ? `
+
+                  <button
+                    class="btn btn-primary"
+                    onclick="changeProposalStatus(
+                      ${proposal.id},
+                      'accepted'
+                    )">
+
+                    قبول العرض
+
+                  </button>
+
+
+                  <button
+                    class="btn btn-danger"
+                    onclick="changeProposalStatus(
+                      ${proposal.id},
+                      'rejected'
+                    )">
+
+                    رفض العرض
+
+                  </button>
+
+                `
+
+                : "";
+
+
+            return `
+
+              <div class="proposal">
+
+
+                <div class="proposal-head">
+
+                  <div class="proposal-name">
+
+                    ${escapeHtml(
+                      proposal.freelancer_name
+                    )}
+
+                  </div>
+
+
+                  <div
+                    class="${statusClass}">
+
+                    ${escapeHtml(
+                      proposalStatusText(
+                        proposal.status
+                      )
+                    )}
+
+                  </div>
+
+                </div>
+
+
+                <div class="proposal-data">
+
+                  <span class="badge">
+
+                    السعر:
+                    ${Number(
+                      proposal.price
+                    ).toLocaleString()} $
+
+                  </span>
+
+
+                  <span class="badge">
+
+                    التسليم:
+                    ${Number(
+                      proposal.delivery_days
+                    )} يوم
+
+                  </span>
+
+                </div>
+
+
+                <div class="proposal-message">
+
+                  ${escapeHtml(
+                    proposal.message
+                  )}
+
+                </div>
+
+
+                ${buttons}
+
+              </div>
+
+            `;
+
+          })
+          .join("");
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      list.innerHTML = `
+        <div class="error">
+          حدث خطأ أثناء تحميل العروض
         </div>
+      `;
 
-        <div class="details">
+    }
 
-          <div class="detail">
-            <span>التصنيف</span>
-
-            <span class="category">
-              ${escapeHTML(project.category)}
-            </span>
-          </div>
-
-          <div class="detail">
-            <span>الميزانية</span>
-
-            <span class="budget">
-              $${Number(project.budget).toFixed(2)}
-            </span>
-          </div>
-
-          <div class="detail">
-            <span>صاحب المشروع</span>
-
-            <span>
-              ${escapeHTML(project.client_name || "مستخدم")}
-            </span>
-          </div>
-
-          <div class="detail">
-            <span>تاريخ النشر</span>
-
-            <span class="date">
-              ${formatDate(project.created_at)}
-            </span>
-          </div>
-
-        </div>
-
-        <a
-          href="#"
-          class="view-btn"
-          onclick="return false;"
-        >
-          عرض تفاصيل المشروع
-        </a>
-
-      </article>
-    `;
   }
 
 
-  categoryFilter.addEventListener(
-    "change",
-    loadProjects
-  );
+
+  async function changeProposalStatus(
+    proposalId,
+    status
+  ) {
 
 
-  loadProjects();
+    const text =
+      status === "accepted"
+
+        ? "هل تريد قبول هذا العرض؟ سيتم رفض باقي العروض ونقل المشروع إلى قيد التنفيذ."
+
+        : "هل تريد رفض هذا العرض؟";
+
+
+    if (!confirm(text)) {
+
+      return;
+
+    }
+
+
+    try {
+
+      const response =
+        await fetch(
+          `/api/proposals/${proposalId}/status`,
+          {
+
+            method: "POST",
+
+            credentials: "include",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+              status
+            })
+
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (
+        !response.ok ||
+        !data.success
+      ) {
+
+        alert(
+          data.error ||
+          "تعذر تحديث العرض"
+        );
+
+        return;
+
+      }
+
+
+      alert(
+        data.message ||
+        "تم تحديث العرض"
+      );
+
+
+      location.reload();
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "حدث خطأ أثناء تحديث العرض"
+      );
+
+    }
+
+  }
+
+
+
+  document
+    .getElementById("proposalForm")
+    .addEventListener(
+      "submit",
+      async function(event) {
+
+        event.preventDefault();
+
+
+        const formMessage =
+          document.getElementById(
+            "formMessage"
+          );
+
+
+        formMessage.className =
+          "message";
+
+
+        formMessage.textContent =
+          "جاري إرسال العرض...";
+
+
+        const price =
+          Number(
+            document.getElementById(
+              "price"
+            ).value
+          );
+
+
+        const deliveryDays =
+          Number(
+            document.getElementById(
+              "deliveryDays"
+            ).value
+          );
+
+
+        const message =
+          document.getElementById(
+            "message"
+          ).value.trim();
+
+
+        try {
+
+          const response =
+            await fetch(
+              "/api/proposals",
+              {
+
+                method: "POST",
+
+                credentials: "include",
+
+                headers: {
+                  "Content-Type":
+                    "application/json"
+                },
+
+                body: JSON.stringify({
+
+                  project_id:
+                    projectId,
+
+                  price,
+
+                  delivery_days:
+                    deliveryDays,
+
+                  message
+
+                })
+
+              }
+            );
+
+
+          const data =
+            await response.json();
+
+
+          if (
+            !response.ok ||
+            !data.success
+          ) {
+
+            formMessage.className =
+              "message error-message";
+
+
+            formMessage.textContent =
+              data.error ||
+              "تعذر إرسال العرض";
+
+
+            return;
+
+          }
+
+
+          formMessage.className =
+            "message success";
+
+
+          formMessage.textContent =
+            "تم إرسال عرضك بنجاح";
+
+
+          document
+            .getElementById(
+              "proposalForm"
+            )
+            .reset();
+
+
+        } catch (error) {
+
+          console.error(error);
+
+
+          formMessage.className =
+            "message error-message";
+
+
+          formMessage.textContent =
+            "حدث خطأ أثناء إرسال العرض";
+
+        }
+
+      }
+    );
+
+
+
+  function showError(message) {
+
+    loading.classList.add(
+      "hidden"
+    );
+
+    content.classList.add(
+      "hidden"
+    );
+
+
+    errorBox.textContent =
+      message;
+
+
+    errorBox.classList.remove(
+      "hidden"
+    );
+
+  }
+
+
+
+  load();
 
 </script>
 
