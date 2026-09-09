@@ -299,9 +299,7 @@
 
   </div>
 
-
   <script>
-
     const loginForm =
       document.getElementById("loginForm");
 
@@ -321,7 +319,6 @@
       document.getElementById("showPassword");
 
 
-    // إظهار / إخفاء كلمة المرور
     showPassword.addEventListener("click", () => {
 
       if (passwordInput.type === "password") {
@@ -339,7 +336,6 @@
     });
 
 
-    // عرض رسالة
     function showMessage(text, type) {
 
       message.textContent = text;
@@ -348,7 +344,6 @@
     }
 
 
-    // تسجيل الدخول
     loginForm.addEventListener("submit", async (event) => {
 
       event.preventDefault();
@@ -371,7 +366,6 @@
       }
 
 
-      // تعطيل الزر أثناء الطلب
       loginButton.disabled = true;
       loginButton.textContent = "جاري تسجيل الدخول...";
 
@@ -399,14 +393,24 @@
         });
 
 
-        const data = await response.json();
+        let data = {};
+
+        try {
+          data = await response.json();
+        } catch {
+          data = {};
+        }
 
 
         if (!response.ok || !data.success) {
 
-          showMessage(
+          const errorMessage =
+            data.error ||
             data.message ||
-            "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+            `فشل تسجيل الدخول (رمز الخطأ ${response.status})`;
+
+          showMessage(
+            errorMessage,
             "error"
           );
 
@@ -417,15 +421,13 @@
         }
 
 
-        // نجاح تسجيل الدخول
         showMessage(
+          data.message ||
           "تم تسجيل الدخول بنجاح، جارٍ تحويلك...",
           "success"
         );
 
 
-        // الانتقال للصفحة الرئيسية مؤقتًا
-        // سنستبدلها لاحقًا بلوحة التحكم
         setTimeout(() => {
 
           window.location.href = "index.html";
@@ -435,7 +437,7 @@
 
       } catch (error) {
 
-        console.error(error);
+        console.error("Login error:", error);
 
         showMessage(
           "تعذر الاتصال بالخادم. حاول مرة أخرى.",
