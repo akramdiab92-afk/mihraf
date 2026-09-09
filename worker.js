@@ -938,45 +938,62 @@ async function createProject(request, env) {
 }
 
 
+/*
+  ============================================================
+  تم تعديل هذه الدالة فقط
+  ============================================================
+*/
+
 async function getProjects(request, env) {
-  const url = new URL(request.url);
-  const category = cleanString(url.searchParams.get("category"));
+  try {
+    const url = new URL(request.url);
+    const category = cleanString(url.searchParams.get("category"));
 
-  let query = `
-    SELECT
-      p.id,
-      p.client_id,
-      p.title,
-      p.description,
-      p.category,
-      p.budget,
-      p.status,
-      p.created_at,
-      p.updated_at,
-      u.full_name AS client_name
-    FROM projects p
-    JOIN users u ON u.id = p.client_id
-    WHERE p.status = 'open'
-  `;
+    let query = `
+      SELECT
+        p.id,
+        p.client_id,
+        p.title,
+        p.description,
+        p.category,
+        p.budget,
+        p.status,
+        p.created_at,
+        p.updated_at,
+        u.full_name AS client_name
+      FROM projects p
+      JOIN users u ON u.id = p.client_id
+      WHERE p.status = 'open'
+    `;
 
-  const params = [];
+    const params = [];
 
-  if (category) {
-    query += ` AND p.category = ? `;
-    params.push(category);
+    if (category) {
+      query += ` AND p.category = ? `;
+      params.push(category);
+    }
+
+    query += ` ORDER BY p.id DESC `;
+
+    const result = await env.DB
+      .prepare(query)
+      .bind(...params)
+      .all();
+
+    return json({
+      success: true,
+      projects: result.results || []
+    });
+
+  } catch (error) {
+    console.error("getProjects error:", error);
+
+    return json({
+      success: false,
+      error: "تعذر تحميل المشاريع من قاعدة البيانات",
+      details: error?.message || "Unknown database error"
+    }, 500);
   }
-
-  query += ` ORDER BY p.id DESC `;
-
-  const result = await env.DB
-    .prepare(query)
-    .bind(...params)
-    .all();
-
-  return json({
-    success: true,
-    projects: result.results || []
-  });
 }
 
 
@@ -1768,6 +1785,8 @@ async function rejectProposal(request, env) {
     message: "تم رفض العرض"
   });
 }
+
+
 // ============================================================
 // EXECUTION
 // ============================================================
