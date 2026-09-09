@@ -1,17 +1,15 @@
 const COOKIE_NAME = "mihraf_session";
 const SESSION_DAYS = 30;
 
-/* =========================================================
-   MIHRAF - AUTH FOUNDATION
-   Cloudflare Workers + D1
-   ========================================================= */
-
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
     try {
-      // API routes
+      /* =========================
+         AUTH
+         ========================= */
+
       if (url.pathname === "/api/register" && request.method === "POST") {
         return await register(request, env);
       }
@@ -28,7 +26,29 @@ export default {
         return await me(request, env);
       }
 
-      // Optional health check
+      /* =========================
+         PROJECTS
+         ========================= */
+
+      if (url.pathname === "/api/projects" && request.method === "GET") {
+        return await getProjects(request, env);
+      }
+
+      if (url.pathname === "/api/projects" && request.method === "POST") {
+        return await createProject(request, env);
+      }
+
+      if (url.pathname === "/api/projects/" && request.method === "GET") {
+        return json({
+          success: false,
+          error: "معرف المشروع غير موجود"
+        }, 400);
+      }
+
+      /* =========================
+         HEALTH
+         ========================= */
+
       if (url.pathname === "/api/health" && request.method === "GET") {
         return json({
           success: true,
@@ -37,7 +57,10 @@ export default {
         });
       }
 
-      // Serve website files
+      /* =========================
+         STATIC FILES
+         ========================= */
+
       if (env.ASSETS) {
         return await env.ASSETS.fetch(request);
       }
@@ -81,9 +104,11 @@ async function register(request, env) {
   const fullName = cleanText(body.full_name);
   const email = cleanEmail(body.email);
   const password = String(body.password || "");
-  const role = body.role === "freelancer"
-    ? "freelancer"
-    : "client";
+
+  const role =
+    body.role === "freelancer"
+      ? "freelancer"
+      : "client";
 
   if (!fullName) {
     return json({
@@ -99,7 +124,7 @@ async function register(request, env) {
     }, 400);
   }
 
-  if (!email) {
+  if (!email || !isValidEmail(email)) {
     return json({
       success: false,
       error: "يرجى إدخال بريد إلكتروني صحيح"
@@ -113,7 +138,6 @@ async function register(request, env) {
     }, 400);
   }
 
-  // Check existing email
   const existing = await env.DB
     .prepare(`
       SELECT id
@@ -131,7 +155,6 @@ async function register(request, env) {
     }, 409);
   }
 
-  // Create password hash + salt
   const passwordData = await createPasswordHash(password);
 
   const result = await env.DB
@@ -235,17 +258,14 @@ async function login(request, env) {
     }, 401);
   }
 
-  // Generate secure random session token
   const rawToken = generateToken();
-
-  // Store only SHA-256 hash of token
   const tokenHash = await sha256(rawToken);
 
   const expiresAt = new Date(
-    Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000
+    Date.now() +
+    SESSION_DAYS * 24 * 60 * 60 * 1000
   ).toISOString();
 
-  // Remove old sessions for this user
   await env.DB
     .prepare(`
       DELETE FROM sessions
@@ -254,7 +274,6 @@ async function login(request, env) {
     .bind(user.id)
     .run();
 
-  // Create new session
   await env.DB
     .prepare(`
       INSERT INTO sessions
@@ -359,7 +378,7 @@ async function logout(request, env) {
 
 
 /* =========================================================
-   CURRENT USER
+   ME
    ========================================================= */
 
 async function me(request, env) {
@@ -387,6 +406,192 @@ async function me(request, env) {
       created_at: user.created_at
     }
   });
+}
+
+
+/* =========================================================
+   GET MY PROJECTS
+   ========================================================= */
+
+async function getProjects(request, env) {
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        user_id,
+        title,
+        description,
+        budget,
+        category,
+        status,
+        created_at,
+        updated_at
+      FROM projects
+      WHERE user_id = ?
+      ORDER BY id DESC
+    `)
+    .bind(user.id)
+    .all();
+
+  return json({
+    success: true,
+    projects: result.results || [],
+    count: result.results?.length || 0
+  });
+}
+
+
+/* =========================================================
+   CREATE PROJECT
+   ========================================================= */
+
+async function createProject(request, env) {
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  // Only clients can create projects
+  if (user.role !== "client") {
+    return json({
+      success: false,
+      error: "إنشاء المشاريع متاح لأصحاب المشاريع فقط"
+    }, 403);
+  }
+
+  let body;
+
+  try {
+    body = await request.json();
+  } catch {
+    return json({
+      success: false,
+      error: "بيانات الطلب غير صحيحة"
+    }, 400);
+  }
+
+  const title = cleanText(body.title);
+  const description = cleanText(body.description);
+  const category = cleanText(body.category);
+  const budget = Number(body.budget);
+
+  if (!title) {
+    return json({
+      success: false,
+      error: "يرجى إدخال عنوان المشروع"
+    }, 400);
+  }
+
+  if (title.length < 3) {
+    return json({
+      success: false,
+      error: "عنوان المشروع قصير جدا"
+    }, 400);
+  }
+
+  if (!description) {
+    return json({
+      success: false,
+      error: "يرجى كتابة وصف المشروع"
+    }, 400);
+  }
+
+  if (description.length < 10) {
+    return json({
+      success: false,
+      error: "وصف المشروع يجب أن يكون أوضح"
+    }, 400);
+  }
+
+  if (!category) {
+    return json({
+      success: false,
+      error: "يرجى اختيار تصنيف المشروع"
+    }, 400);
+  }
+
+  if (
+    !Number.isFinite(budget) ||
+    budget <= 0
+  ) {
+    return json({
+      success: false,
+      error: "يرجى إدخال ميزانية صحيحة"
+    }, 400);
+  }
+
+  const result = await env.DB
+    .prepare(`
+      INSERT INTO projects
+      (
+        user_id,
+        title,
+        description,
+        budget,
+        category,
+        status
+      )
+      VALUES (?, ?, ?, ?, ?, 'open')
+    `)
+    .bind(
+      user.id,
+      title,
+      description,
+      budget,
+      category
+    )
+    .run();
+
+  if (!result.success) {
+    throw new Error("تعذر إنشاء المشروع");
+  }
+
+  const projectId =
+    result.meta?.last_row_id;
+
+  const project = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        user_id,
+        title,
+        description,
+        budget,
+        category,
+        status,
+        created_at,
+        updated_at
+      FROM projects
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
+
+  return json({
+    success: true,
+    message: "تم إنشاء المشروع بنجاح",
+    project
+  }, 201);
 }
 
 
@@ -427,7 +632,8 @@ async function getAuthenticatedUser(request, env) {
     return null;
   }
 
-  const expiresTime = Date.parse(session.expires_at);
+  const expiresTime =
+    Date.parse(session.expires_at);
 
   if (
     Number.isFinite(expiresTime) &&
@@ -455,15 +661,7 @@ async function getAuthenticatedUser(request, env) {
 
 
 /* =========================================================
-   PASSWORD HASHING
-   =========================================================
-   Existing database:
-   password_hash = 64 characters
-   password_salt = 32 characters
-
-   We use SHA-256:
-   hash = SHA256(password + salt)
-   salt = 16 random bytes represented as hex (32 chars)
+   PASSWORD
    ========================================================= */
 
 async function createPasswordHash(password) {
@@ -504,27 +702,21 @@ async function verifyPassword(
 }
 
 
-/* =========================================================
-   SHA-256
-   ========================================================= */
-
 async function sha256(value) {
-  const data = new TextEncoder().encode(value);
+  const data =
+    new TextEncoder().encode(value);
 
-  const hashBuffer = await crypto.subtle.digest(
-    "SHA-256",
-    data
-  );
+  const hashBuffer =
+    await crypto.subtle.digest(
+      "SHA-256",
+      data
+    );
 
   return bytesToHex(
     new Uint8Array(hashBuffer)
   );
 }
 
-
-/* =========================================================
-   CONSTANT TIME STRING COMPARISON
-   ========================================================= */
 
 function constantTimeEqual(a, b) {
   if (
@@ -541,7 +733,9 @@ function constantTimeEqual(a, b) {
   let result = 0;
 
   for (let i = 0; i < a.length; i++) {
-    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    result |=
+      a.charCodeAt(i) ^
+      b.charCodeAt(i);
   }
 
   return result === 0;
@@ -549,7 +743,7 @@ function constantTimeEqual(a, b) {
 
 
 /* =========================================================
-   RANDOM SESSION TOKEN
+   TOKEN
    ========================================================= */
 
 function generateToken() {
@@ -561,16 +755,13 @@ function generateToken() {
 }
 
 
-/* =========================================================
-   BYTES -> HEX
-   ========================================================= */
-
 function bytesToHex(bytes) {
   return Array.from(bytes)
     .map(
-      byte => byte
-        .toString(16)
-        .padStart(2, "0")
+      byte =>
+        byte
+          .toString(16)
+          .padStart(2, "0")
     )
     .join("");
 }
@@ -604,15 +795,12 @@ function clearSessionCookie() {
 }
 
 
-/* =========================================================
-   READ SESSION COOKIE
-   ========================================================= */
-
 function getSessionToken(request) {
   const cookieHeader =
     request.headers.get("Cookie") || "";
 
-  const cookies = cookieHeader.split(";");
+  const cookies =
+    cookieHeader.split(";");
 
   for (const cookie of cookies) {
     const trimmed = cookie.trim();
@@ -649,6 +837,13 @@ function cleanEmail(value) {
   return String(value || "")
     .trim()
     .toLowerCase();
+}
+
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+    email
+  );
 }
 
 
