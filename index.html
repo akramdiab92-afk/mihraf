@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مِهراف | MIHRAF</title>
-
-  <style>
+  <title>مِهراف | MIHRAF</title>  <style>
     * {
       box-sizing: border-box;
       margin: 0;
@@ -276,30 +273,40 @@
 
     .side-menu-content {
       flex: 1;
-      padding: 5px 10px;
+      padding: 3px 8px 8px;
       overflow-y: auto;
     }
 
-    /* عناوين الأقسام */
+    /* =========================
+       عناوين الأقسام
+    ========================== */
 
     .menu-section-title {
       color: #737b87;
       font-size: 10px;
       font-weight: 700;
-      padding: 5px 11px 3px;
+      padding: 7px 11px 3px;
+      line-height: 1.3;
     }
 
-    /* عناصر القائمة */
+    .account-section-title {
+      padding-top: 4px;
+      padding-bottom: 2px;
+    }
+
+    /* =========================
+       عناصر القائمة
+    ========================== */
 
     .menu-item {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
       width: 100%;
-      padding: 5px 11px;
-      margin-bottom: 1px;
-      min-height: 38px;
-      border-radius: 9px;
+      padding: 4px 10px;
+      margin-bottom: 0;
+      min-height: 36px;
+      border-radius: 8px;
       color: #c8cdd5;
       font-size: 13px;
       transition: 0.18s;
@@ -315,9 +322,9 @@
     }
 
     .menu-icon {
-      width: 29px;
-      height: 29px;
-      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
       background: #262b32;
       display: flex;
       align-items: center;
@@ -341,14 +348,8 @@
     }
 
     /* =========================
-       الحساب + لوحة التحكم
+       لوحة التحكم
     ========================== */
-
-    .account-section-title {
-      margin-top: 0;
-      padding-top: 2px;
-      padding-bottom: 2px;
-    }
 
     .dashboard-menu-item {
       margin-top: 0;
@@ -393,9 +394,9 @@
 
     .more-menu {
       display: none;
-      padding-right: 8px;
+      padding-right: 7px;
       border-right: 1px solid #30363f;
-      margin: 1px 8px 3px 0;
+      margin: 0 7px 2px 0;
     }
 
     .more-menu.active {
@@ -404,13 +405,13 @@
 
     .more-menu .menu-item {
       font-size: 12px;
-      padding: 5px 10px;
-      min-height: 36px;
+      padding: 3px 9px;
+      min-height: 34px;
     }
 
     .more-menu .menu-icon {
-      width: 27px;
-      height: 27px;
+      width: 26px;
+      height: 26px;
       font-size: 13px;
     }
 
@@ -433,15 +434,15 @@
     .logout-menu-btn {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
       width: 100%;
-      padding: 5px 11px;
-      margin-top: 2px;
-      min-height: 38px;
+      padding: 4px 10px;
+      margin-top: 1px;
+      min-height: 36px;
       border: none;
       background: transparent;
       color: #ef6f79;
-      border-radius: 9px;
+      border-radius: 8px;
       cursor: pointer;
       font-size: 13px;
       text-align: right;
@@ -466,7 +467,7 @@
     .menu-divider {
       height: 1px;
       background: var(--border);
-      margin: 4px 11px;
+      margin: 3px 10px;
     }
 
     /* =========================
@@ -896,1025 +897,785 @@
         width: 88vw;
       }
     }
-  </style>
-</head>
+  </style></head><body>  <header>
+    <div class="container nav">  <a href="index.html" class="logo">
+    مِهراف
+  </a>
 
-<body>
+  <nav class="nav-links">
+    <a href="#services">الخدمات</a>
+    <a href="#projects">المشاريع</a>
+    <a href="#professionals">المحترفون</a>
+  </nav>
 
-  <!-- =========================
-       HEADER
-  ========================== -->
+  <div class="auth-area" id="authArea">
 
-  <header>
-    <div class="container nav">
+    <a href="login.html"
+       class="login-link"
+       id="loginLink">
+      تسجيل الدخول
+    </a>
 
-      <a href="index.html" class="logo">
-        مِهراف
-      </a>
+    <a href="register.html"
+       class="register-btn"
+       id="registerLink">
+      إنشاء حساب
+    </a>
 
-      <nav class="nav-links">
-        <a href="#services">الخدمات</a>
-        <a href="#projects">المشاريع</a>
-        <a href="#professionals">المحترفون</a>
-      </nav>
+    <button
+      type="button"
+      class="menu-button"
+      id="menuButton"
+      aria-label="فتح القائمة"
+      aria-expanded="false"
+      style="display:none;"
+      onclick="openSideMenu()">
+      ☰
+    </button>
 
-      <div class="auth-area" id="authArea">
+  </div>
+</div>
 
-        <a href="login.html"
-           class="login-link"
-           id="loginLink">
-          تسجيل الدخول
-        </a>
-
-        <a href="register.html"
-           class="register-btn"
-           id="registerLink">
-          إنشاء حساب
-        </a>
-
-        <button
-          type="button"
-          class="menu-button"
-          id="menuButton"
-          aria-label="فتح القائمة"
-          aria-expanded="false"
-          style="display:none;"
-          onclick="openSideMenu()">
-          ☰
-        </button>
-
-      </div>
-    </div>
-  </header>
-
-
-  <!-- =========================
-       SIDE MENU
-  ========================== -->
-
-  <div
+  </header>  <div
     class="menu-overlay"
     id="menuOverlay"
     onclick="closeSideMenu()">
-  </div>
-
-
-  <aside
+  </div>  <aside
     class="side-menu"
     id="sideMenu"
-    aria-hidden="true">
+    aria-hidden="true"><div class="side-menu-header">
 
-    <!-- رأس القائمة -->
+  <div class="menu-header-top">
 
-    <div class="side-menu-header">
+    <div class="menu-brand">
+      مِهراف
+    </div>
 
-      <div class="menu-header-top">
+    <button
+      type="button"
+      class="close-menu"
+      onclick="closeSideMenu()"
+      aria-label="إغلاق القائمة">
+      ×
+    </button>
 
-        <div class="menu-brand">
-          مِهراف
-        </div>
+  </div>
 
-        <button
-          type="button"
-          class="close-menu"
-          onclick="closeSideMenu()"
-          aria-label="إغلاق القائمة">
-          ×
-        </button>
+  <div class="user-info">
 
-      </div>
+    <div
+      class="user-avatar"
+      id="userAvatar">
+      م
+    </div>
 
-      <div class="user-info">
+    <div class="user-details">
 
-        <div
-          class="user-avatar"
-          id="userAvatar">
-          م
-        </div>
+      <strong id="menuUserName">
+        المستخدم
+      </strong>
 
-        <div class="user-details">
-
-          <strong id="menuUserName">
-            المستخدم
-          </strong>
-
-          <span id="menuUserRole">
-            حساب مِهراف
-          </span>
-
-        </div>
-
-      </div>
+      <span id="menuUserRole">
+        حساب مِهراف
+      </span>
 
     </div>
 
+  </div>
 
-    <!-- محتوى القائمة -->
+</div>
 
-    <div class="side-menu-content">
+<div class="side-menu-content">
 
+  <!-- الحساب -->
 
-      <!-- =========================
-           الحساب
-      ========================== -->
+  <div class="menu-section-title account-section-title">
+    الحساب
+  </div>
 
-      <div class="menu-section-title account-section-title">
-        الحساب
-      </div>
+  <a
+    href="dashboard.html"
+    class="menu-item dashboard-menu-item">
 
-      <a
-        href="dashboard.html"
-        class="menu-item dashboard-menu-item">
-
-        <div class="menu-icon">
-          📊
-        </div>
-
-        <div class="menu-item-text">
-          لوحة التحكم
-        </div>
-
-        <div class="menu-item-arrow">
-          ‹
-        </div>
-
-      </a>
-
-
-      <!-- =========================
-           استكشف مهراف
-      ========================== -->
-
-      <div class="menu-section-title">
-        استكشف مِهراف
-      </div>
-
-
-      <a
-        href="projects.html"
-        class="menu-item">
-
-        <div class="menu-icon">
-          📁
-        </div>
-
-        <div class="menu-item-text">
-          تصفح المشاريع
-        </div>
-
-        <div class="menu-item-arrow">
-          ‹
-        </div>
-
-      </a>
-
-
-      <a
-        href="#professionals"
-        class="menu-item"
-        onclick="closeSideMenu()">
-
-        <div class="menu-icon">
-          👥
-        </div>
-
-        <div class="menu-item-text">
-          تصفح المنفذين
-        </div>
-
-        <div class="menu-item-arrow">
-          ‹
-        </div>
-
-      </a>
-
-
-      <a
-        href="#"
-        class="menu-item"
-        onclick="return false;">
-
-        <div class="menu-icon">
-          🖼️
-        </div>
-
-        <div class="menu-item-text">
-          تصفح الأعمال
-        </div>
-
-        <div class="menu-item-arrow">
-          ‹
-        </div>
-
-      </a>
-
-
-      <a
-        href="#services"
-        class="menu-item"
-        onclick="closeSideMenu()">
-
-        <div class="menu-icon">
-          💼
-        </div>
-
-        <div class="menu-item-text">
-          تصفح الخدمات
-        </div>
-
-        <div class="menu-item-arrow">
-          ‹
-        </div>
-
-      </a>
-
-
-      <a
-        href="#"
-        class="menu-item community-item"
-        onclick="return false;">
-
-        <div class="menu-icon">
-          💬
-        </div>
-
-        <div class="menu-item-text">
-          مجتمع مهراف
-        </div>
-
-        <div class="menu-item-arrow">
-          ‹
-        </div>
-
-      </a>
-
-
-      <a
-        href="#"
-        class="menu-item"
-        onclick="return false;">
-
-        <div class="menu-icon">
-          📖
-        </div>
-
-        <div class="menu-item-text">
-          الدليل الإرشادي
-        </div>
-
-        <div class="menu-item-arrow">
-          ‹
-        </div>
-
-      </a>
-
-
-      <a
-        href="#"
-        class="menu-item"
-        onclick="return false;">
-
-        <div class="menu-icon">
-          🛟
-        </div>
-
-        <div class="menu-item-text">
-          الدعم الفني
-        </div>
-
-        <div class="menu-item-arrow">
-          ‹
-        </div>
-
-      </a>
-
-
-      <!-- =========================
-           عرض المزيد
-      ========================== -->
-
-      <button
-        type="button"
-        class="menu-item more-toggle"
-        id="moreToggle"
-        onclick="toggleMoreMenu()">
-
-        <div class="menu-icon">
-          ⋯
-        </div>
-
-        <div class="menu-item-text">
-          عرض المزيد
-        </div>
-
-        <div class="menu-item-arrow">
-          ‹
-        </div>
-
-      </button>
-
-
-      <div
-        class="more-menu"
-        id="moreMenu">
-
-
-        <a
-          href="#"
-          class="menu-item"
-          onclick="return false;">
-
-          <div class="menu-icon">
-            🛡️
-          </div>
-
-          <div class="menu-item-text">
-            ضمان الحقوق
-          </div>
-
-        </a>
-
-
-        <a
-          href="#"
-          class="menu-item"
-          onclick="return false;">
-
-          <div class="menu-icon">
-            📣
-          </div>
-
-          <div class="menu-item-text">
-            التسويق بالعمولة
-          </div>
-
-        </a>
-
-
-        <a
-          href="#"
-          class="menu-item"
-          onclick="return false;">
-
-          <div class="menu-icon">
-            ❓
-          </div>
-
-          <div class="menu-item-text">
-            الأسئلة الشائعة
-          </div>
-
-        </a>
-
-
-        <a
-          href="#"
-          class="menu-item"
-          onclick="return false;">
-
-          <div class="menu-icon">
-            📝
-          </div>
-
-          <div class="menu-item-text">
-            مدونة مهراف
-          </div>
-
-        </a>
-
-
-        <a
-          href="#"
-          class="menu-item"
-          onclick="return false;">
-
-          <div class="menu-icon">
-            🔒
-          </div>
-
-          <div class="menu-item-text">
-            سياسة الخصوصية
-          </div>
-
-        </a>
-
-
-        <a
-          href="#"
-          class="menu-item"
-          onclick="return false;">
-
-          <div class="menu-icon">
-            📄
-          </div>
-
-          <div class="menu-item-text">
-            شروط الاستخدام
-          </div>
-
-        </a>
-
-      </div>
-
-
-      <!-- الفاصل -->
-
-      <div class="menu-divider"></div>
-
-
-      <!-- تسجيل الخروج -->
-
-      <button
-        type="button"
-        class="logout-menu-btn"
-        id="logoutMenuButton"
-        onclick="logoutUser()">
-
-        <div class="menu-icon">
-          🚪
-        </div>
-
-        <div class="menu-item-text">
-          تسجيل الخروج
-        </div>
-
-      </button>
-
+    <div class="menu-icon">
+      📊
     </div>
 
-  </aside>
-
-
-  <!-- =========================
-       HERO
-  ========================== -->
-
-  <section class="hero">
-
-    <div class="container hero-content">
-
-      <h1>
-        مِهراف —
-        <span>
-          مهارتك تستحق الفرصة
-        </span>
-      </h1>
-
-      <p>
-        منصة تجمع أصحاب المشاريع بالمستقلين والمحترفين لتنفيذ الخدمات والأعمال بسهولة.
-      </p>
-
-      <div class="hero-buttons">
-
-        <a
-          href="register.html"
-          class="primary-btn"
-          id="heroRegister">
-          إنشاء حساب
-        </a>
-
-        <a
-          href="login.html"
-          class="secondary-btn"
-          id="heroLogin">
-          تسجيل الدخول
-        </a>
-
-      </div>
-
+    <div class="menu-item-text">
+      لوحة التحكم
     </div>
 
-  </section>
-
-
-  <!-- =========================
-       SEARCH
-  ========================== -->
-
-  <section class="search-section">
-
-    <div class="container">
-
-      <div class="search-box">
-
-        <span class="search-icon">
-          🔎
-        </span>
-
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="ابحث عن خدمة أو مشروع...">
-
-        <button onclick="searchSite()">
-          بحث
-        </button>
-
-      </div>
-
+    <div class="menu-item-arrow">
+      ‹
     </div>
 
-  </section>
+  </a>
 
+  <!-- استكشف مهراف -->
 
-  <!-- =========================
-       SERVICES
-  ========================== -->
+  <div class="menu-section-title">
+    استكشف مِهراف
+  </div>
 
-  <section id="services">
+  <a
+    href="projects.html"
+    class="menu-item">
 
-    <div class="container">
-
-      <div class="section-title">
-
-        <h2>
-          استكشف الخدمات
-        </h2>
-
-        <p>
-          اختر المجال الذي تحتاج إليه
-        </p>
-
-      </div>
-
-
-      <div class="categories">
-
-
-        <div class="category">
-
-          <div class="category-icon">
-            🎨
-          </div>
-
-          <h3>
-            تصميم
-          </h3>
-
-          <p>
-            تصميمات إبداعية واحترافية
-          </p>
-
-        </div>
-
-
-        <div class="category">
-
-          <div class="category-icon">
-            ✍️
-          </div>
-
-          <h3>
-            كتابة وترجمة
-          </h3>
-
-          <p>
-            محتوى وترجمة بمختلف اللغات
-          </p>
-
-        </div>
-
-
-        <div class="category">
-
-          <div class="category-icon">
-            💻
-          </div>
-
-          <h3>
-            برمجة وتقنية
-          </h3>
-
-          <p>
-            مواقع وتطبيقات وحلول تقنية
-          </p>
-
-        </div>
-
-
-        <div class="category">
-
-          <div class="category-icon">
-            📊
-          </div>
-
-          <h3>
-            تسويق وأعمال
-          </h3>
-
-          <p>
-            تسويق وإدارة وتطوير الأعمال
-          </p>
-
-        </div>
-
-
-        <div class="category">
-
-          <div class="category-icon">
-            📁
-          </div>
-
-          <h3>
-            إدخال بيانات
-          </h3>
-
-          <p>
-            تنظيم وتنسيق البيانات
-          </p>
-
-        </div>
-
-
-        <div class="category">
-
-          <div class="category-icon">
-            🎬
-          </div>
-
-          <h3>
-            فيديو وصوت
-          </h3>
-
-          <p>
-            مونتاج وتحرير وإنتاج المحتوى
-          </p>
-
-        </div>
-
-
-        <div class="category">
-
-          <div class="category-icon">
-            ⚖️
-          </div>
-
-          <h3>
-            استشارات
-          </h3>
-
-          <p>
-            خبرات واستشارات متخصصة
-          </p>
-
-        </div>
-
-
-        <div class="category">
-
-          <div class="category-icon">
-            🛠️
-          </div>
-
-          <h3>
-            خدمات أخرى
-          </h3>
-
-          <p>
-            خدمات متنوعة حسب احتياجك
-          </p>
-
-        </div>
-
-
-      </div>
-
+    <div class="menu-icon">
+      📁
     </div>
 
-  </section>
-
-
-  <!-- =========================
-       FEATURED SERVICES
-  ========================== -->
-
-  <section>
-
-    <div class="container">
-
-      <div class="section-title">
-
-        <h2>
-          خدمات مميزة
-        </h2>
-
-        <p>
-          اكتشف خدمات يقدمها محترفون
-        </p>
-
-      </div>
-
-
-      <div class="cards">
-
-
-        <div class="card">
-
-          <div class="card-image">
-            صورة الخدمة
-          </div>
-
-          <div class="card-content">
-
-            <h3>
-              تصميم إعلان احترافي
-            </h3>
-
-            <p>
-              تصميم إعلان جذاب مناسب لمواقع التواصل الاجتماعي.
-            </p>
-
-            <div class="price">
-              ابتداءً من $5
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="card-image">
-            صورة الخدمة
-          </div>
-
-          <div class="card-content">
-
-            <h3>
-              إدخال وتنسيق البيانات
-            </h3>
-
-            <p>
-              تنظيم البيانات وتحويل الملفات وتنسيقها بشكل احترافي.
-            </p>
-
-            <div class="price">
-              ابتداءً من $5
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="card-image">
-            صورة الخدمة
-          </div>
-
-          <div class="card-content">
-
-            <h3>
-              تحسين وتعديل الصور
-            </h3>
-
-            <p>
-              تحسين جودة الصور والألوان والخلفيات بشكل احترافي.
-            </p>
-
-            <div class="price">
-              ابتداءً من $5
-            </div>
-
-          </div>
-
-        </div>
-
-
-      </div>
-
+    <div class="menu-item-text">
+      تصفح المشاريع
     </div>
 
-  </section>
-
-
-  <!-- =========================
-       PROJECTS
-  ========================== -->
-
-  <section id="projects">
-
-    <div class="container">
-
-      <div class="section-title">
-
-        <h2>
-          أحدث المشاريع
-        </h2>
-
-        <p>
-          مشاريع يبحث أصحابها عن محترفين لتنفيذها
-        </p>
-
-      </div>
-
-
-      <div class="cards">
-
-
-        <div class="card">
-
-          <div class="card-content">
-
-            <h3>
-              تصميم هوية بصرية
-            </h3>
-
-            <p>
-              أبحث عن مصمم لإنشاء هوية بصرية لمشروع جديد.
-            </p>
-
-            <div class="price">
-              $50 - $100
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="card-content">
-
-            <h3>
-              كتابة محتوى لموقع
-            </h3>
-
-            <p>
-              مطلوب كاتب محتوى لكتابة صفحات موقع إلكتروني.
-            </p>
-
-            <div class="price">
-              $30 - $70
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="card-content">
-
-            <h3>
-              تنظيم بيانات
-            </h3>
-
-            <p>
-              تحويل وترتيب بيانات من ملفات متعددة.
-            </p>
-
-            <div class="price">
-              $20 - $50
-            </div>
-
-          </div>
-
-        </div>
-
-
-      </div>
-
+    <div class="menu-item-arrow">
+      ‹
     </div>
 
-  </section>
+  </a>
 
+  <a
+    href="#professionals"
+    class="menu-item"
+    onclick="closeSideMenu()">
 
-  <!-- =========================
-       PROFESSIONALS
-  ========================== -->
-
-  <section id="professionals">
-
-    <div class="container">
-
-      <div class="section-title">
-
-        <h2>
-          المحترفون
-        </h2>
-
-        <p>
-          اكتشف أصحاب المهارات والخبرات
-        </p>
-
-      </div>
-
-
-      <div class="cards">
-
-
-        <div class="card">
-
-          <div class="card-content">
-
-            <h3>
-              مصممون محترفون
-            </h3>
-
-            <p>
-              ابحث عن مصممين لتنفيذ أعمالك الإبداعية.
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="card-content">
-
-            <h3>
-              مطورون ومبرمجون
-            </h3>
-
-            <p>
-              محترفون في البرمجة والتقنية وتطوير المواقع.
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="card-content">
-
-            <h3>
-              كتاب ومترجمون
-            </h3>
-
-            <p>
-              أصحاب خبرة في الكتابة والترجمة وصناعة المحتوى.
-            </p>
-
-          </div>
-
-        </div>
-
-
-      </div>
-
+    <div class="menu-icon">
+      👥
     </div>
 
-  </section>
+    <div class="menu-item-text">
+      تصفح المنفذين
+    </div>
 
+    <div class="menu-item-arrow">
+      ‹
+    </div>
 
-  <!-- =========================
-       CTA
-  ========================== -->
+  </a>
 
-  <section class="cta">
+  <a
+    href="#"
+    class="menu-item"
+    onclick="return false;">
 
-    <h2>
-      هل لديك مهارة؟
-    </h2>
+    <div class="menu-icon">
+      🖼️
+    </div>
 
-    <p>
-      أنشئ حسابك وابدأ بعرض خدماتك على مِهراف.
-    </p>
+    <div class="menu-item-text">
+      تصفح الأعمال
+    </div>
+
+    <div class="menu-item-arrow">
+      ‹
+    </div>
+
+  </a>
+
+  <a
+    href="#services"
+    class="menu-item"
+    onclick="closeSideMenu()">
+
+    <div class="menu-icon">
+      💼
+    </div>
+
+    <div class="menu-item-text">
+      تصفح الخدمات
+    </div>
+
+    <div class="menu-item-arrow">
+      ‹
+    </div>
+
+  </a>
+
+  <a
+    href="#"
+    class="menu-item community-item"
+    onclick="return false;">
+
+    <div class="menu-icon">
+      💬
+    </div>
+
+    <div class="menu-item-text">
+      مجتمع مهراف
+    </div>
+
+    <div class="menu-item-arrow">
+      ‹
+    </div>
+
+  </a>
+
+  <a
+    href="#"
+    class="menu-item"
+    onclick="return false;">
+
+    <div class="menu-icon">
+      📖
+    </div>
+
+    <div class="menu-item-text">
+      الدليل الإرشادي
+    </div>
+
+    <div class="menu-item-arrow">
+      ‹
+    </div>
+
+  </a>
+
+  <a
+    href="#"
+    class="menu-item"
+    onclick="return false;">
+
+    <div class="menu-icon">
+      🛟
+    </div>
+
+    <div class="menu-item-text">
+      الدعم الفني
+    </div>
+
+    <div class="menu-item-arrow">
+      ‹
+    </div>
+
+  </a>
+
+  <!-- عرض المزيد -->
+
+  <button
+    type="button"
+    class="menu-item more-toggle"
+    id="moreToggle"
+    onclick="toggleMoreMenu()">
+
+    <div class="menu-icon">
+      ⋯
+    </div>
+
+    <div class="menu-item-text">
+      عرض المزيد
+    </div>
+
+    <div class="menu-item-arrow">
+      ‹
+    </div>
+
+  </button>
+
+  <div
+    class="more-menu"
+    id="moreMenu">
+
+    <a
+      href="#"
+      class="menu-item"
+      onclick="return false;">
+
+      <div class="menu-icon">
+        🛡️
+      </div>
+
+      <div class="menu-item-text">
+        ضمان الحقوق
+      </div>
+
+    </a>
+
+    <a
+      href="#"
+      class="menu-item"
+      onclick="return false;">
+
+      <div class="menu-icon">
+        📣
+      </div>
+
+      <div class="menu-item-text">
+        التسويق بالعمولة
+      </div>
+
+    </a>
+
+    <a
+      href="#"
+      class="menu-item"
+      onclick="return false;">
+
+      <div class="menu-icon">
+        ❓
+      </div>
+
+      <div class="menu-item-text">
+        الأسئلة الشائعة
+      </div>
+
+    </a>
+
+    <a
+      href="#"
+      class="menu-item"
+      onclick="return false;">
+
+      <div class="menu-icon">
+        📝
+      </div>
+
+      <div class="menu-item-text">
+        مدونة مهراف
+      </div>
+
+    </a>
+
+    <a
+      href="#"
+      class="menu-item"
+      onclick="return false;">
+
+      <div class="menu-icon">
+        🔒
+      </div>
+
+      <div class="menu-item-text">
+        سياسة الخصوصية
+      </div>
+
+    </a>
+
+    <a
+      href="#"
+      class="menu-item"
+      onclick="return false;">
+
+      <div class="menu-icon">
+        📄
+      </div>
+
+      <div class="menu-item-text">
+        شروط الاستخدام
+      </div>
+
+    </a>
+
+  </div>
+
+  <div class="menu-divider"></div>
+
+  <button
+    type="button"
+    class="logout-menu-btn"
+    id="logoutMenuButton"
+    onclick="logoutUser()">
+
+    <div class="menu-icon">
+      🚪
+    </div>
+
+    <div class="menu-item-text">
+      تسجيل الخروج
+    </div>
+
+  </button>
+
+</div>
+
+  </aside>  <section class="hero"><div class="container hero-content">
+
+  <h1>
+    مِهراف —
+    <span>
+      مهارتك تستحق الفرصة
+    </span>
+  </h1>
+
+  <p>
+    منصة تجمع أصحاب المشاريع بالمستقلين والمحترفين لتنفيذ الخدمات والأعمال بسهولة.
+  </p>
+
+  <div class="hero-buttons">
 
     <a
       href="register.html"
-      id="ctaRegister">
-      ابدأ الآن
+      class="primary-btn"
+      id="heroRegister">
+      إنشاء حساب
     </a>
 
-  </section>
+    <a
+      href="login.html"
+      class="secondary-btn"
+      id="heroLogin">
+      تسجيل الدخول
+    </a>
 
+  </div>
 
-  <!-- =========================
-       FOOTER
-  ========================== -->
+</div>
 
-  <footer>
+  </section>  <section class="search-section"><div class="container">
 
-    <strong>
-      مِهراف | MIHRAF
-    </strong>
+  <div class="search-box">
+
+    <span class="search-icon">
+      🔎
+    </span>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="ابحث عن خدمة أو مشروع...">
+
+    <button onclick="searchSite()">
+      بحث
+    </button>
+
+  </div>
+
+</div>
+
+  </section>  <section id="services"><div class="container">
+
+  <div class="section-title">
+
+    <h2>
+      استكشف الخدمات
+    </h2>
 
     <p>
-      منصة للخدمات والمشاريع والمستقلين
+      اختر المجال الذي تحتاج إليه
     </p>
+
+  </div>
+
+  <div class="categories">
+
+    <div class="category">
+      <div class="category-icon">🎨</div>
+      <h3>تصميم</h3>
+      <p>تصميمات إبداعية واحترافية</p>
+    </div>
+
+    <div class="category">
+      <div class="category-icon">✍️</div>
+      <h3>كتابة وترجمة</h3>
+      <p>محتوى وترجمة بمختلف اللغات</p>
+    </div>
+
+    <div class="category">
+      <div class="category-icon">💻</div>
+      <h3>برمجة وتقنية</h3>
+      <p>مواقع وتطبيقات وحلول تقنية</p>
+    </div>
+
+    <div class="category">
+      <div class="category-icon">📊</div>
+      <h3>تسويق وأعمال</h3>
+      <p>تسويق وإدارة وتطوير الأعمال</p>
+    </div>
+
+    <div class="category">
+      <div class="category-icon">📁</div>
+      <h3>إدخال بيانات</h3>
+      <p>تنظيم وتنسيق البيانات</p>
+    </div>
+
+    <div class="category">
+      <div class="category-icon">🎬</div>
+      <h3>فيديو وصوت</h3>
+      <p>مونتاج وتحرير وإنتاج المحتوى</p>
+    </div>
+
+    <div class="category">
+      <div class="category-icon">⚖️</div>
+      <h3>استشارات</h3>
+      <p>خبرات واستشارات متخصصة</p>
+    </div>
+
+    <div class="category">
+      <div class="category-icon">🛠️</div>
+      <h3>خدمات أخرى</h3>
+      <p>خدمات متنوعة حسب احتياجك</p>
+    </div>
+
+  </div>
+
+</div>
+
+  </section>  <section><div class="container">
+
+  <div class="section-title">
+
+    <h2>
+      خدمات مميزة
+    </h2>
 
     <p>
-      © 2026 MIHRAF
+      اكتشف خدمات يقدمها محترفون
     </p>
 
-  </footer>
+  </div>
 
+  <div class="cards">
 
-  <!-- =========================
-       JAVASCRIPT
-  ========================== -->
+    <div class="card">
 
-  <script>
+      <div class="card-image">
+        صورة الخدمة
+      </div>
+
+      <div class="card-content">
+
+        <h3>
+          تصميم إعلان احترافي
+        </h3>
+
+        <p>
+          تصميم إعلان جذاب مناسب لمواقع التواصل الاجتماعي.
+        </p>
+
+        <div class="price">
+          ابتداءً من $5
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="card-image">
+        صورة الخدمة
+      </div>
+
+      <div class="card-content">
+
+        <h3>
+          إدخال وتنسيق البيانات
+        </h3>
+
+        <p>
+          تنظيم البيانات وتحويل الملفات وتنسيقها بشكل احترافي.
+        </p>
+
+        <div class="price">
+          ابتداءً من $5
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="card-image">
+        صورة الخدمة
+      </div>
+
+      <div class="card-content">
+
+        <h3>
+          تحسين وتعديل الصور
+        </h3>
+
+        <p>
+          تحسين جودة الصور والألوان والخلفيات بشكل احترافي.
+        </p>
+
+        <div class="price">
+          ابتداءً من $5
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+  </section>  <section id="projects"><div class="container">
+
+  <div class="section-title">
+
+    <h2>
+      أحدث المشاريع
+    </h2>
+
+    <p>
+      مشاريع يبحث أصحابها عن محترفين لتنفيذها
+    </p>
+
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+
+      <div class="card-content">
+
+        <h3>
+          تصميم هوية بصرية
+        </h3>
+
+        <p>
+          أبحث عن مصمم لإنشاء هوية بصرية لمشروع جديد.
+        </p>
+
+        <div class="price">
+          $50 - $100
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="card-content">
+
+        <h3>
+          كتابة محتوى لموقع
+        </h3>
+
+        <p>
+          مطلوب كاتب محتوى لكتابة صفحات موقع إلكتروني.
+        </p>
+
+        <div class="price">
+          $30 - $70
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="card-content">
+
+        <h3>
+          تنظيم بيانات
+        </h3>
+
+        <p>
+          تحويل وترتيب بيانات من ملفات متعددة.
+        </p>
+
+        <div class="price">
+          $20 - $50
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+  </section>  <section id="professionals"><div class="container">
+
+  <div class="section-title">
+
+    <h2>
+      المحترفون
+    </h2>
+
+    <p>
+      اكتشف أصحاب المهارات والخبرات
+    </p>
+
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+
+      <div class="card-content">
+
+        <h3>
+          مصممون محترفون
+        </h3>
+
+        <p>
+          ابحث عن مصممين لتنفيذ أعمالك الإبداعية.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="card-content">
+
+        <h3>
+          مطورون ومبرمجون
+        </h3>
+
+        <p>
+          محترفون في البرمجة والتقنية وتطوير المواقع.
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="card-content">
+
+        <h3>
+          كتاب ومترجمون
+        </h3>
+
+        <p>
+          أصحاب خبرة في الكتابة والترجمة وصناعة المحتوى.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+  </section>  <section class="cta"><h2>
+  هل لديك مهارة؟
+</h2>
+
+<p>
+  أنشئ حسابك وابدأ بعرض خدماتك على مِهراف.
+</p>
+
+<a
+  href="register.html"
+  id="ctaRegister">
+  ابدأ الآن
+</a>
+
+  </section>  <footer><strong>
+  مِهراف | MIHRAF
+</strong>
+
+<p>
+  منصة للخدمات والمشاريع والمستقلين
+</p>
+
+<p>
+  © 2026 MIHRAF
+</p>
+
+  </footer>  <script>
 
     const loginLink =
       document.getElementById("loginLink");
@@ -1958,11 +1719,6 @@
     const moreMenu =
       document.getElementById("moreMenu");
 
-
-    /* =========================
-       CHECK LOGIN
-    ========================== */
-
     async function checkLogin() {
 
       try {
@@ -1978,7 +1734,6 @@
 
         const data =
           await response.json();
-
 
         if (
           response.ok &&
@@ -2008,11 +1763,6 @@
 
     }
 
-
-    /* =========================
-       LOGGED IN
-    ========================== */
-
     function showLoggedInState(user) {
 
       loginLink.style.display = "none";
@@ -2021,14 +1771,11 @@
 
       menuButton.style.display = "flex";
 
-
       const fullName =
         user.full_name || "المستخدم";
 
-
       menuUserName.textContent =
         fullName;
-
 
       if (user.role === "client") {
 
@@ -2047,17 +1794,14 @@
 
       }
 
-
       userAvatar.textContent =
         fullName.trim().charAt(0) || "م";
-
 
       heroRegister.style.display =
         "none";
 
       heroLogin.style.display =
         "none";
-
 
       ctaRegister.textContent =
         "الانتقال إلى لوحة التحكم";
@@ -2066,11 +1810,6 @@
         "dashboard.html";
 
     }
-
-
-    /* =========================
-       LOGGED OUT
-    ========================== */
 
     function showLoggedOutState() {
 
@@ -2097,11 +1836,6 @@
 
     }
 
-
-    /* =========================
-       OPEN SIDE MENU
-    ========================== */
-
     function openSideMenu() {
 
       sideMenu.classList.add("active");
@@ -2123,11 +1857,6 @@
       );
 
     }
-
-
-    /* =========================
-       CLOSE SIDE MENU
-    ========================== */
 
     function closeSideMenu() {
 
@@ -2151,11 +1880,6 @@
 
     }
 
-
-    /* =========================
-       MORE MENU
-    ========================== */
-
     function toggleMoreMenu() {
 
       const isOpen =
@@ -2167,11 +1891,6 @@
       );
 
     }
-
-
-    /* =========================
-       ESCAPE
-    ========================== */
 
     document.addEventListener(
       "keydown",
@@ -2185,11 +1904,6 @@
 
       }
     );
-
-
-    /* =========================
-       LOGOUT
-    ========================== */
 
     async function logoutUser() {
 
@@ -2205,7 +1919,6 @@
 
       }
 
-
       try {
 
         const response =
@@ -2217,10 +1930,8 @@
             }
           );
 
-
         const data =
           await response.json();
-
 
         if (
           response.ok &&
@@ -2234,17 +1945,14 @@
 
         }
 
-
         throw new Error(
           data.message ||
           "تعذر تسجيل الخروج"
         );
 
-
       } catch (error) {
 
         console.error(error);
-
 
         if (logoutMenuButton) {
 
@@ -2258,7 +1966,6 @@
 
         }
 
-
         alert(
           error.message ||
           "تعذر الاتصال بالخادم"
@@ -2267,11 +1974,6 @@
       }
 
     }
-
-
-    /* =========================
-       SEARCH
-    ========================== */
 
     function searchSite() {
 
@@ -2283,7 +1985,6 @@
       const value =
         input.value.trim();
 
-
       if (!value) {
 
         input.focus();
@@ -2292,21 +1993,13 @@
 
       }
 
-
       alert(
         "ميزة البحث سيتم ربطها بالخدمات والمشاريع الحقيقية في الخطوة القادمة."
       );
 
     }
 
-
-    /* =========================
-       START
-    ========================== */
-
     checkLogin();
 
-  </script>
-
-</body>
+  </script></body>
 </html>
