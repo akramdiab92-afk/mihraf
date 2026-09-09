@@ -2739,3 +2739,603 @@ async function createPortfolio(request, env) {
       description,
       category,
       imageUrl || null,
+       
+    imageUrl || null,
+    projectUrl || null,
+    skills || null,
+    status
+  )
+  .run();
+
+  const itemId = result.meta?.last_row_id;
+
+  return json({
+    success: true,
+    message: "تمت إضافة العمل بنجاح",
+    item: {
+      id: itemId,
+      user_id: user.id,
+      title,
+      description,
+      category,
+      image_url: imageUrl || null,
+      project_url: projectUrl || null,
+      skills: skills || null,
+      status
+    }
+  }, 201);
+}
+
+
+/* ============================================================
+   GET PORTFOLIO
+   ============================================================ */
+
+async function getPortfolio(request, env) {
+  await ensurePortfolioTable(env);
+
+  const url = new URL(request.url);
+
+  const category = cleanString(
+    url.searchParams.get("category")
+  );
+
+  const search = cleanString(
+    url.searchParams.get("search")
+  );
+
+  let query = `
+    SELECT
+      p.id,
+      p.user_id,
+      p.title,
+      p.description,
+      p.category,
+      p.image_url,
+      p.project_url,
+      p.skills,
+      p.status,
+      p.created_at,
+      p.updated_at,
+      u.full_name
+    FROM portfolio_items p
+    INNER JOIN users u ON u.id = p.user_id
+    WHERE p.status = 'active'
+      AND u.role = 'freelancer'
+  `;
+
+  const params = [];
+
+  if (category) {
+    query += ` AND p.category = ? `;
+    params.push(category);
+  }
+
+  if (search) {
+    query += `
+      AND (
+        p.title LIKE ?
+        OR p.description LIKE ?
+        OR p.skills LIKE ?
+        OR u.full_name LIKE ?
+      )
+    `;
+
+    const pattern = `%${search}%`;
+
+    params.push(
+      pattern,
+      pattern,
+      pattern,
+      pattern
+    );
+  }
+
+  query += `
+    ORDER BY p.created_at DESC
+  `;
+
+  const result = await env.DB
+    .prepare(query)
+    .bind(...params)
+    .all();
+
+  return json({
+    success: true,
+    portfolio: result.results || []
+  });
+}
+
+
+/* ============================================================
+   MY PORTFOLIO
+   ============================================================ */
+
+async function getMyPortfolio(request, env) {
+  await ensurePortfolioTable(env);
+
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        user_id,
+        title,
+        description,
+        category,
+        image_url,
+        project_url,
+        skills,
+        status,
+        created_at,
+        updated_at
+      FROM portfolio_items
+      WHERE user_id = ?
+      ORDER BY created_at DESC
+    `)
+    .bind(user.id)
+    .all();
+
+  return json({
+    success: true,
+    portfolio: result.results || []
+  });
+}
+
+
+/* ============================================================
+   GET SINGLE PORTFOLIO ITEM
+   ============================================================ */
+
+async function getPortfolioItem(request, env) {
+  await ensurePortfolioTable(env);
+
+  const id = getIdFromPath(request);
+
+  if (!id) {
+    return json({
+      success: false,
+      error: "معرف العمل غير صحيح"
+    }, 400);
+  }
+
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        p.id,
+        p.user_id,
+        p.title,
+        p.description,
+        p.category,
+        p.image_url,
+        p.project_url,
+        p.skills,
+        p.status,
+        p.created_at,
+        p.updated_at,
+        u.full_name
+      FROM portfolio_items p
+      INNER JOIN users u ON u.id = p.user_id
+      WHERE p.id = ?
+      LIMIT 1
+    `)
+    .bind(id)
+    .first();
+
+  if (!result) {
+    return json({
+      success: false,
+      error: "العمل غير موجود"
+    }, 404);
+  }
+
+  return json({
+    success: true,
+    item: result
+  });
+}
+
+
+/* ============================================================
+   UPDATE PORTFOLIO
+   ============================================================ */
+
+async function updatePortfolio(request, env) {
+  await ensurePortfolioTable(env);
+
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "تعديل الأعمال متاح للمستقلين فقط"
+    }, 403);
+  }
+
+  const id = getIdFromPath(request);
+
+  if (!id) {
+    return json({
+      success: false,
+      error: "معرف العمل غير صحيح"
+    }, 400);
+  }
+
+  const existing = await env.DB
+    .prepare(`
+      SELECT *
+      FROM portfolio_items
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(id)
+    .first();
+
+  if (!existing) {
+    return json({
+      success: false,
+      error: "العمل غير موجود"
+    }, 404);
+  }
+
+  if (Number(existing.user_id) !== Number(user.id)) {
+    return json({
+      success: false,
+      error: "لا يمكنك تعديل هذا العمل"
+    }, 403);
+  }
+
+  const body = await readJson(request);
+
+  if (!body) {
+    return json({
+      success: false,
+      error: "بيانات غير صحيحة"
+    }, 400);
+  }
+
+  const title =
+    cleanString(body.title) || existing.title;
+
+  const description =
+    cleanString(body.description) || existing.description;
+
+  const category =
+    cleanString(body.category) || existing.category;
+
+  const imageUrl =
+    cleanString(
+      body.image_url ??
+      body.image ??
+      body.cover_image ??
+      body.coverImage
+    ) || existing.image_url || "";
+
+  const projectUrl =
+    cleanString(
+      body.project_url ??
+      body.projectUrl ??
+      body.url
+    ) || existing.project_url || "";
+
+  const skillsValue =
+    body.skills ??
+    body.technologies ??
+    body.tech_stack;
+
+  const skills =
+    skillsValue !== undefined
+      ? normalizeSkills(skillsValue)
+      : (existing.skills || "");
+
+  const status =
+    cleanString(body.status) ||
+    existing.status ||
+    "active";
+
+  if (title.length < 3) {
+    return json({
+      success: false,
+      error: "عنوان العمل قصير جدًا"
+    }, 400);
+  }
+
+  if (description.length < 10) {
+    return json({
+      success: false,
+      error: "وصف العمل قصير جدًا"
+    }, 400);
+  }
+
+  if (!category) {
+    return json({
+      success: false,
+      error: "تصنيف العمل مطلوب"
+    }, 400);
+  }
+
+  if (!["active", "hidden"].includes(status)) {
+    return json({
+      success: false,
+      error: "حالة العمل غير صحيحة"
+    }, 400);
+  }
+
+  await env.DB
+    .prepare(`
+      UPDATE portfolio_items
+      SET
+        title = ?,
+        description = ?,
+        category = ?,
+        image_url = ?,
+        project_url = ?,
+        skills = ?,
+        status = ?,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+        AND user_id = ?
+    `)
+    .bind(
+      title,
+      description,
+      category,
+      imageUrl || null,
+      projectUrl || null,
+      skills || null,
+      status,
+      id,
+      user.id
+    )
+    .run();
+
+  return json({
+    success: true,
+    message: "تم تعديل العمل بنجاح",
+    item: {
+      id: Number(id),
+      user_id: user.id,
+      title,
+      description,
+      category,
+      image_url: imageUrl || null,
+      project_url: projectUrl || null,
+      skills: skills || null,
+      status
+    }
+  });
+}
+
+
+/* ============================================================
+   DELETE PORTFOLIO
+   ============================================================ */
+
+async function deletePortfolio(request, env) {
+  await ensurePortfolioTable(env);
+
+  const user = await authenticateUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول"
+    }, 401);
+  }
+
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "حذف الأعمال متاح للمستقلين فقط"
+    }, 403);
+  }
+
+  const id = getIdFromPath(request);
+
+  if (!id) {
+    return json({
+      success: false,
+      error: "معرف العمل غير صحيح"
+    }, 400);
+  }
+
+  const existing = await env.DB
+    .prepare(`
+      SELECT id, user_id
+      FROM portfolio_items
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(id)
+    .first();
+
+  if (!existing) {
+    return json({
+      success: false,
+      error: "العمل غير موجود"
+    }, 404);
+  }
+
+  if (Number(existing.user_id) !== Number(user.id)) {
+    return json({
+      success: false,
+      error: "لا يمكنك حذف هذا العمل"
+    }, 403);
+  }
+
+  await env.DB
+    .prepare(`
+      DELETE FROM portfolio_items
+      WHERE id = ?
+        AND user_id = ?
+    `)
+    .bind(id, user.id)
+    .run();
+
+  return json({
+    success: true,
+    message: "تم حذف العمل بنجاح"
+  });
+}
+
+
+/* ============================================================
+   FREELANCERS
+   ============================================================ */
+
+async function getFreelancers(request, env) {
+  const url = new URL(request.url);
+
+  const search = cleanString(
+    url.searchParams.get("search")
+  );
+
+  let query = `
+    SELECT
+      u.id,
+      u.full_name,
+      u.email
+    FROM users u
+    WHERE u.role = 'freelancer'
+  `;
+
+  const params = [];
+
+  if (search) {
+    query += `
+      AND (
+        u.full_name LIKE ?
+        OR u.email LIKE ?
+      )
+    `;
+
+    const pattern = `%${search}%`;
+
+    params.push(
+      pattern,
+      pattern
+    );
+  }
+
+  query += `
+    ORDER BY u.id DESC
+  `;
+
+  const result = await env.DB
+    .prepare(query)
+    .bind(...params)
+    .all();
+
+  const freelancers = result.results || [];
+
+  /*
+   * نضيف عدد الأعمال لكل مستقل.
+   * إذا كان جدول portfolio_items موجودًا نستخدمه،
+   * وإذا لم يكن موجودًا ننشئه تلقائيًا.
+   */
+  await ensurePortfolioTable(env);
+
+  for (const freelancer of freelancers) {
+    const portfolioResult = await env.DB
+      .prepare(`
+        SELECT COUNT(*) AS count
+        FROM portfolio_items
+        WHERE user_id = ?
+          AND status = 'active'
+      `)
+      .bind(freelancer.id)
+      .first();
+
+    freelancer.portfolio_count =
+      Number(portfolioResult?.count || 0);
+  }
+
+  return json({
+    success: true,
+    freelancers
+  });
+}
+
+
+/* ============================================================
+   FREELANCER PROFILE
+   ============================================================ */
+
+async function getFreelancerProfile(request, env) {
+  const id = getIdFromPath(request);
+
+  if (!id) {
+    return json({
+      success: false,
+      error: "معرف المستقل غير صحيح"
+    }, 400);
+  }
+
+  const freelancer = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        full_name,
+        email
+      FROM users
+      WHERE id = ?
+        AND role = 'freelancer'
+      LIMIT 1
+    `)
+    .bind(id)
+    .first();
+
+  if (!freelancer) {
+    return json({
+      success: false,
+      error: "المستقل غير موجود"
+    }, 404);
+  }
+
+  await ensurePortfolioTable(env);
+
+  const portfolioResult = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        user_id,
+        title,
+        description,
+        category,
+        image_url,
+        project_url,
+        skills,
+        status,
+        created_at,
+        updated_at
+      FROM portfolio_items
+      WHERE user_id = ?
+        AND status = 'active'
+      ORDER BY created_at DESC
+    `)
+    .bind(id)
+    .all();
+
+  return json({
+    success: true,
+    freelancer: {
+      ...freelancer,
+      portfolio: portfolioResult.results || []
+    }
+  });
+}
