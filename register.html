@@ -10,181 +10,227 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
     }
 
     body {
+      font-family: Arial, Tahoma, sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
       min-height: 100vh;
-      background: linear-gradient(135deg, #071a33, #0d3b66);
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       padding: 20px;
     }
 
-    .register-box {
+    .container {
       width: 100%;
-      max-width: 470px;
-      background: white;
-      border-radius: 22px;
-      padding: 32px 25px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      max-width: 460px;
+      background: #fff;
+      border-radius: 18px;
+      padding: 35px 30px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
     }
 
     .logo {
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 10px;
+      font-size: 32px;
+      font-weight: bold;
+      color: #667eea;
     }
 
-    .logo h1 {
-      color: #0d3b66;
-      font-size: 34px;
-      margin-bottom: 8px;
-    }
-
-    .logo p {
+    .subtitle {
+      text-align: center;
       color: #777;
-      font-size: 14px;
+      margin-bottom: 30px;
+      font-size: 15px;
     }
 
     .form-group {
-      margin-bottom: 17px;
+      margin-bottom: 18px;
     }
 
     label {
       display: block;
-      margin-bottom: 7px;
-      color: #222;
+      margin-bottom: 8px;
       font-weight: bold;
-      font-size: 14px;
+      color: #333;
     }
 
-    input {
+    input,
+    select {
       width: 100%;
-      padding: 14px;
+      padding: 13px 14px;
       border: 1px solid #ddd;
-      border-radius: 11px;
+      border-radius: 10px;
       font-size: 15px;
       outline: none;
-      background: #fafafa;
+      transition: 0.2s;
+      background: #fff;
     }
 
-    input:focus {
-      border-color: #0d3b66;
-      background: white;
+    input:focus,
+    select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.12);
     }
 
-    .account-types {
+    .roles {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
+      margin-top: 8px;
     }
 
-    .type-option {
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 15px 10px;
+    .role-option {
+      position: relative;
+    }
+
+    .role-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .role-label {
+      display: block;
       text-align: center;
+      padding: 14px 8px;
+      border: 2px solid #e2e2e2;
+      border-radius: 10px;
       cursor: pointer;
+      color: #555;
       transition: 0.2s;
+      font-weight: bold;
     }
 
-    .type-option:hover {
-      border-color: #0d3b66;
-    }
-
-    .type-option input {
-      width: auto;
-      margin-left: 5px;
+    .role-option input:checked + .role-label {
+      border-color: #667eea;
+      background: #f1f3ff;
+      color: #667eea;
     }
 
     .terms {
       display: flex;
-      gap: 8px;
       align-items: flex-start;
+      gap: 8px;
       margin: 18px 0;
       font-size: 13px;
       color: #666;
-      line-height: 1.6;
     }
 
     .terms input {
       width: auto;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
-    .register-btn {
+    .terms a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    button {
       width: 100%;
       border: none;
-      border-radius: 12px;
-      padding: 15px;
-      background: #0d3b66;
+      border-radius: 10px;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
+      transition: 0.2s;
     }
 
-    .register-btn:hover {
-      background: #092b4b;
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(102,126,234,0.25);
     }
 
-    .register-btn:disabled {
+    button:disabled {
       opacity: 0.7;
       cursor: not-allowed;
+      transform: none;
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 18px;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .message.error {
+      display: block;
+      background: #fff0f0;
+      border: 1px solid #ffbcbc;
+      color: #b42318;
+    }
+
+    .message.success {
+      display: block;
+      background: #effcf3;
+      border: 1px solid #a6e3b5;
+      color: #18743a;
     }
 
     .login-link {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 22px;
       color: #666;
       font-size: 14px;
     }
 
     .login-link a {
-      color: #0d3b66;
+      color: #667eea;
       font-weight: bold;
       text-decoration: none;
     }
 
-    .back {
-      display: block;
-      text-align: center;
-      margin-top: 18px;
-      color: #777;
-      text-decoration: none;
-      font-size: 13px;
+    .debug-title {
+      font-weight: bold;
+      margin-bottom: 5px;
     }
 
-    @media (max-width: 450px) {
-      .register-box {
-        padding: 27px 18px;
-      }
-
-      .account-types {
-        grid-template-columns: 1fr;
-      }
+    .debug-details {
+      direction: ltr;
+      text-align: left;
+      background: rgba(0,0,0,0.04);
+      padding: 8px;
+      border-radius: 6px;
+      margin-top: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      overflow-x: auto;
     }
   </style>
 </head>
 
 <body>
 
-  <div class="register-box">
+  <div class="container">
 
-    <div class="logo">
-      <h1>مِهراف</h1>
-      <p>أنشئ حسابك وابدأ رحلتك معنا</p>
+    <div class="logo">مِهراف</div>
+
+    <div class="subtitle">
+      أنشئ حسابك وابدأ العمل على منصة مِهراف
     </div>
+
+    <div id="message" class="message"></div>
 
     <form id="registerForm">
 
       <div class="form-group">
-        <label for="name">الاسم الكامل</label>
+        <label for="full_name">الاسم الكامل</label>
         <input
           type="text"
-          id="name"
-          placeholder="اكتب اسمك الكامل"
+          id="full_name"
+          name="full_name"
+          placeholder="أدخل اسمك الكامل"
           autocomplete="name"
           required
         >
@@ -195,6 +241,7 @@
         <input
           type="email"
           id="email"
+          name="email"
           placeholder="example@email.com"
           autocomplete="email"
           required
@@ -206,21 +253,23 @@
         <input
           type="password"
           id="password"
-          placeholder="8 أحرف على الأقل"
-          minlength="8"
+          name="password"
+          placeholder="أدخل كلمة المرور"
           autocomplete="new-password"
+          minlength="6"
           required
         >
       </div>
 
       <div class="form-group">
-        <label for="confirmPassword">تأكيد كلمة المرور</label>
+        <label for="confirm_password">تأكيد كلمة المرور</label>
         <input
           type="password"
-          id="confirmPassword"
+          id="confirm_password"
+          name="confirm_password"
           placeholder="أعد كتابة كلمة المرور"
-          minlength="8"
           autocomplete="new-password"
+          minlength="6"
           required
         >
       </div>
@@ -228,38 +277,45 @@
       <div class="form-group">
         <label>نوع الحساب</label>
 
-        <div class="account-types">
+        <div class="roles">
 
-          <label class="type-option">
+          <div class="role-option">
             <input
               type="radio"
-              name="accountType"
+              id="client"
+              name="role"
               value="client"
               checked
             >
-            👤 أريد شراء الخدمات
-          </label>
+            <label class="role-label" for="client">
+              طالب خدمة
+            </label>
+          </div>
 
-          <label class="type-option">
+          <div class="role-option">
             <input
               type="radio"
-              name="accountType"
+              id="freelancer"
+              name="role"
               value="freelancer"
             >
-            💼 أريد تقديم الخدمات
-          </label>
+            <label class="role-label" for="freelancer">
+              منفذ
+            </label>
+          </div>
 
         </div>
       </div>
 
-      <label class="terms">
+      <div class="terms">
         <input type="checkbox" id="terms" required>
-        <span>
-          أوافق على شروط الاستخدام وسياسة الخصوصية الخاصة بمنصة مِهراف.
-        </span>
-      </label>
 
-      <button class="register-btn" id="registerButton" type="submit">
+        <label for="terms">
+          أوافق على شروط استخدام منصة مِهراف
+        </label>
+      </div>
+
+      <button type="submit" id="registerButton">
         إنشاء الحساب
       </button>
 
@@ -270,80 +326,80 @@
       <a href="login.html">تسجيل الدخول</a>
     </div>
 
-    <a class="back" href="index.html">
-      ← العودة إلى الصفحة الرئيسية
-    </a>
-
   </div>
 
   <script>
-    const registerForm = document.getElementById("registerForm");
-    const registerButton = document.getElementById("registerButton");
+    const form = document.getElementById("registerForm");
+    const button = document.getElementById("registerButton");
+    const messageBox = document.getElementById("message");
 
-    registerForm.addEventListener("submit", async (event) => {
+    function showMessage(text, type = "error") {
+      messageBox.className = "message " + type;
+      messageBox.innerHTML = text;
+      messageBox.style.display = "block";
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    form.addEventListener("submit", async function(event) {
       event.preventDefault();
 
-      const fullName =
-        document.getElementById("name").value.trim();
+      messageBox.style.display = "none";
 
-      const email =
-        document.getElementById("email").value.trim().toLowerCase();
+      const full_name = document.getElementById("full_name").value.trim();
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const password = document.getElementById("password").value;
+      const confirm_password = document.getElementById("confirm_password").value;
+      const role = document.querySelector('input[name="role"]:checked')?.value;
 
-      const password =
-        document.getElementById("password").value;
-
-      const confirmPassword =
-        document.getElementById("confirmPassword").value;
-
-      const roleElement =
-        document.querySelector('input[name="accountType"]:checked');
-
-      const role =
-        roleElement ? roleElement.value : "";
-
-      const terms =
-        document.getElementById("terms").checked;
-
-      if (!fullName || !email || !password || !confirmPassword) {
-        alert("يرجى تعبئة جميع الحقول.");
+      if (!full_name) {
+        showMessage("يرجى إدخال الاسم الكامل.");
         return;
       }
 
-      if (password !== confirmPassword) {
-        alert("كلمتا المرور غير متطابقتين.");
+      if (!email) {
+        showMessage("يرجى إدخال البريد الإلكتروني.");
         return;
       }
 
-      if (password.length < 8) {
-        alert("كلمة المرور يجب أن تكون 8 أحرف على الأقل.");
+      if (password.length < 6) {
+        showMessage("كلمة المرور يجب أن تكون 6 أحرف على الأقل.");
+        return;
+      }
+
+      if (password !== confirm_password) {
+        showMessage("كلمتا المرور غير متطابقتين.");
         return;
       }
 
       if (!role) {
-        alert("اختر نوع الحساب.");
+        showMessage("يرجى اختيار نوع الحساب.");
         return;
       }
 
-      if (!terms) {
-        alert("يجب الموافقة على شروط الاستخدام.");
-        return;
-      }
-
-      registerButton.disabled = true;
-      registerButton.textContent = "جار إنشاء الحساب...";
+      button.disabled = true;
+      button.textContent = "جار إنشاء الحساب...";
 
       try {
         const response = await fetch("/api/register", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
           credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
           body: JSON.stringify({
-            full_name: fullName,
-            email: email,
-            password: password,
-            role: role
+            full_name,
+            email,
+            password,
+            role
           })
         });
 
@@ -351,41 +407,78 @@
 
         try {
           result = await response.json();
-        } catch {
-          result = {};
+        } catch (jsonError) {
+          const rawText = await response.text().catch(() => "");
+          result = {
+            error: "الخادم لم يرجع استجابة JSON صحيحة.",
+            details: rawText || "لا توجد تفاصيل إضافية."
+          };
         }
 
-        if (!response.ok || !result.success) {
+        console.log("REGISTER STATUS:", response.status);
+        console.log("REGISTER RESPONSE:", result);
+
+        if (!response.ok || result.success === false) {
 
           const errorMessage =
             result.error ||
             result.message ||
-            `تعذر إنشاء الحساب (رمز الخطأ ${response.status})`;
+            "حدث خطأ غير معروف أثناء إنشاء الحساب.";
 
-          alert(errorMessage);
+          const details =
+            result.details ||
+            result.detail ||
+            "";
 
-          registerButton.disabled = false;
-          registerButton.textContent = "إنشاء الحساب";
+          let html =
+            "<div class='debug-title'>" +
+            escapeHtml(errorMessage) +
+            "</div>";
+
+          html +=
+            "<div>رمز HTTP: " +
+            escapeHtml(response.status) +
+            "</div>";
+
+          if (details) {
+            html +=
+              "<div class='debug-details'>" +
+              escapeHtml(details) +
+              "</div>";
+          }
+
+          showMessage(html, "error");
+
           return;
         }
 
-        alert(
-          result.message ||
-          "تم إنشاء حسابك بنجاح 🎉"
+        showMessage(
+          escapeHtml(
+            result.message ||
+            "تم إنشاء الحساب بنجاح. سيتم تحويلك إلى صفحة تسجيل الدخول..."
+          ),
+          "success"
         );
 
-        window.location.href = "login.html";
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 1000);
 
       } catch (error) {
 
-        console.error("Register error:", error);
+        console.error("REGISTER FETCH ERROR:", error);
 
-        alert(
-          "تعذر الاتصال بالخادم. تأكد من اتصال الإنترنت وحاول مرة أخرى."
+        showMessage(
+          "<div class='debug-title'>تعذر الاتصال بالخادم</div>" +
+          "<div class='debug-details'>" +
+          escapeHtml(error?.message || error) +
+          "</div>",
+          "error"
         );
 
-        registerButton.disabled = false;
-        registerButton.textContent = "إنشاء الحساب";
+      } finally {
+        button.disabled = false;
+        button.textContent = "إنشاء الحساب";
       }
     });
   </script>
