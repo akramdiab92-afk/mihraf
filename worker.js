@@ -4,10 +4,6 @@ export default {
       const url = new URL(request.url);
       const path = url.pathname;
 
-      // =========================
-      // API
-      // =========================
-
       if (path === "/api/register" && request.method === "POST") {
         return await register(request, env);
       }
@@ -23,10 +19,6 @@ export default {
       if (path === "/api/me" && request.method === "GET") {
         return await me(request, env);
       }
-
-      // =========================
-      // Static files
-      // =========================
 
       return await env.ASSETS.fetch(request);
 
@@ -92,8 +84,7 @@ async function register(request, env) {
     }, 400);
   }
 
-  // التحقق من وجود البريد مسبقا
-  const existing = await env.my_binding
+  const existing = await env.DB
     .prepare(`
       SELECT id
       FROM users
@@ -110,14 +101,13 @@ async function register(request, env) {
     }, 409);
   }
 
-  // إنشاء كلمة مرور آمنة
   const { hash, salt } = await hashPassword(password);
 
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
 
   try {
-    await env.my_binding
+    await env.DB
       .prepare(`
         INSERT INTO users (
           id,
@@ -144,7 +134,6 @@ async function register(request, env) {
   } catch (error) {
     console.error("Register database error:", error);
 
-    // في حال كان مخطط users مختلفا قليلا
     return json({
       success: false,
       error: "تعذر إنشاء الحساب",
@@ -191,7 +180,7 @@ async function login(request, env) {
     }, 400);
   }
 
-  const user = await env.my_binding
+  const user = await env.DB
     .prepare(`
       SELECT *
       FROM users
@@ -232,17 +221,15 @@ async function login(request, env) {
     }, 401);
   }
 
-  // إنشاء جلسة
   const sessionId = randomToken(48);
   const createdAt = new Date();
 
-  // مدة الجلسة: 30 يوم
   const expiresAt = new Date(
     createdAt.getTime() + 30 * 24 * 60 * 60 * 1000
   );
 
   try {
-    await env.my_binding
+    await env.DB
       .prepare(`
         INSERT INTO sessions (
           id,
@@ -321,7 +308,7 @@ async function me(request, env) {
     });
   }
 
-  const session = await env.my_binding
+  const session = await env.DB
     .prepare(`
       SELECT
         sessions.id AS session_id,
@@ -354,7 +341,7 @@ async function me(request, env) {
 
   if (!Number.isFinite(expiresTime) || expiresTime <= Date.now()) {
     try {
-      await env.my_binding
+      await env.DB
         .prepare(`
           DELETE FROM sessions
           WHERE id = ?
@@ -407,7 +394,7 @@ async function logout(request, env) {
 
   if (sessionId) {
     try {
-      await env.my_binding
+      await env.DB
         .prepare(`
           DELETE FROM sessions
           WHERE id = ?
@@ -650,3 +637,13 @@ function json(data, status = 200) {
     }
   );
 }
+
+بعد النسخ:
+
+1. احفظ "worker.js" في GitHub.
+2. اعمل Commit.
+3. انتظر Cloudflare حتى يكتمل الـ Deployment.
+4. افتح مِهراف.
+5. جرب إنشاء حساب جديد.
+
+إذا طلع خطأ هذه المرة، ابعتلي الخطأ حرفيا وما تعدل أي شيء ثاني.
