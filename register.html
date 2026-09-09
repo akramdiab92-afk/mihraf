@@ -177,7 +177,7 @@
       <p>أنشئ حسابك وابدأ رحلتك معنا</p>
     </div>
 
-    <form onsubmit="registerUser(event)">
+    <form id="registerForm">
 
       <div class="form-group">
         <label for="name">الاسم الكامل</label>
@@ -254,10 +254,12 @@
 
       <label class="terms">
         <input type="checkbox" id="terms" required>
-        <span>أوافق على شروط الاستخدام وسياسة الخصوصية الخاصة بمنصة مِهراف.</span>
+        <span>
+          أوافق على شروط الاستخدام وسياسة الخصوصية الخاصة بمنصة مِهراف.
+        </span>
       </label>
 
-      <button class="register-btn" type="submit">
+      <button class="register-btn" id="registerButton" type="submit">
         إنشاء الحساب
       </button>
 
@@ -275,21 +277,32 @@
   </div>
 
   <script>
-    async function registerUser(event) {
+    const registerForm = document.getElementById("registerForm");
+    const registerButton = document.getElementById("registerButton");
+
+    registerForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
-      const fullName = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirmPassword").value;
+      const fullName =
+        document.getElementById("name").value.trim();
 
-      const roleElement = document.querySelector(
-        'input[name="accountType"]:checked'
-      );
+      const email =
+        document.getElementById("email").value.trim().toLowerCase();
 
-      const role = roleElement ? roleElement.value : "";
+      const password =
+        document.getElementById("password").value;
 
-      const terms = document.getElementById("terms").checked;
+      const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+      const roleElement =
+        document.querySelector('input[name="accountType"]:checked');
+
+      const role =
+        roleElement ? roleElement.value : "";
+
+      const terms =
+        document.getElementById("terms").checked;
 
       if (!fullName || !email || !password || !confirmPassword) {
         alert("يرجى تعبئة جميع الحقول.");
@@ -316,10 +329,8 @@
         return;
       }
 
-      const button = document.querySelector(".register-btn");
-
-      button.disabled = true;
-      button.textContent = "جار إنشاء الحساب...";
+      registerButton.disabled = true;
+      registerButton.textContent = "جار إنشاء الحساب...";
 
       try {
         const response = await fetch("/api/register", {
@@ -327,6 +338,7 @@
           headers: {
             "Content-Type": "application/json"
           },
+          credentials: "include",
           body: JSON.stringify({
             full_name: fullName,
             email: email,
@@ -335,31 +347,47 @@
           })
         });
 
-        const result = await response.json();
+        let result = {};
+
+        try {
+          result = await response.json();
+        } catch {
+          result = {};
+        }
 
         if (!response.ok || !result.success) {
-          alert(
-            result.message || "حدث خطأ أثناء إنشاء الحساب."
-          );
 
-          button.disabled = false;
-          button.textContent = "إنشاء الحساب";
+          const errorMessage =
+            result.error ||
+            result.message ||
+            `تعذر إنشاء الحساب (رمز الخطأ ${response.status})`;
+
+          alert(errorMessage);
+
+          registerButton.disabled = false;
+          registerButton.textContent = "إنشاء الحساب";
           return;
         }
 
-        alert("تم إنشاء حسابك بنجاح 🎉");
+        alert(
+          result.message ||
+          "تم إنشاء حسابك بنجاح 🎉"
+        );
 
         window.location.href = "login.html";
 
       } catch (error) {
-        console.error(error);
 
-        alert("تعذر الاتصال بالخادم. حاول مرة أخرى.");
+        console.error("Register error:", error);
 
-        button.disabled = false;
-        button.textContent = "إنشاء الحساب";
+        alert(
+          "تعذر الاتصال بالخادم. تأكد من اتصال الإنترنت وحاول مرة أخرى."
+        );
+
+        registerButton.disabled = false;
+        registerButton.textContent = "إنشاء الحساب";
       }
-    }
+    });
   </script>
 
 </body>
