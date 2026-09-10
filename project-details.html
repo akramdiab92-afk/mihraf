@@ -1,5 +1,4 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
-<head>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>تفاصيل المشروع - مِهراف</title>  <style>
@@ -681,13 +680,6 @@
       const data =
         await response.json();
 
-      /*
-       * Worker الحالي يرجع:
-       * authenticated: true
-       *
-       * وندعم logged_in أيضا
-       * للتوافق مع أي نسخة قديمة.
-       */
       const isAuthenticated =
         data.authenticated === true ||
         data.logged_in === true;
@@ -735,7 +727,26 @@
       return null;
     }
 
-    return data.project;
+    /*
+     * Worker يرجع:
+     *
+     * {
+     *   success: true,
+     *   project: {...},
+     *   is_owner: true/false,
+     *   can_apply: true/false
+     * }
+     *
+     * لذلك ندمج القيم داخل المشروع
+     * حتى تستطيع بقية الصفحة استخدامها.
+     */
+    return {
+      ...data.project,
+      can_apply:
+        data.can_apply === true,
+      is_owner:
+        data.is_owner === true
+    };
   }
 
   function renderProject(project) {
