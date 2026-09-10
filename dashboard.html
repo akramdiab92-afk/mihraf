@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,24 +9,38 @@
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
-      font-family: Arial, Tahoma, sans-serif;
-      background: #181b20;
-      color: #e7eaf0;
+      font-family: Tahoma, Arial, sans-serif;
+      background: #0b1120;
+      color: #f8fafc;
+      min-height: 100vh;
     }
 
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1150px, 94%);
+      margin: auto;
+    }
+
+    /* Header */
     header {
-      background: #1d2127;
-      border-bottom: 1px solid #30363f;
-      padding: 16px 20px;
+      background: #111827;
+      border-bottom: 1px solid #1f2937;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .header-inner {
-      max-width: 1100px;
-      margin: auto;
+      min-height: 70px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -35,244 +48,273 @@
     }
 
     .logo {
-      color: #4f8cff;
-      text-decoration: none;
-      font-size: 26px;
+      font-size: 27px;
       font-weight: bold;
+      color: #22c55e;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 10px;
     }
 
-    .home,
-    .logout {
-      color: #9da4af;
-      text-decoration: none;
+    .home-btn,
+    .logout-btn {
+      border: 1px solid #374151;
+      background: #172033;
+      color: #e5e7eb;
+      padding: 10px 16px;
+      border-radius: 10px;
+      cursor: pointer;
       font-size: 14px;
       transition: .2s;
     }
 
-    .home:hover {
-      color: #4f8cff;
+    .home-btn:hover {
+      background: #1f2937;
     }
 
-    .logout {
-      border: 1px solid #3a424d;
-      background: #242930;
-      border-radius: 8px;
-      padding: 8px 13px;
-      cursor: pointer;
-      font-family: inherit;
+    .logout-btn {
+      border-color: #7f1d1d;
+      color: #fecaca;
+      background: #3f1515;
     }
 
-    .logout:hover {
-      color: #ef6f79;
-      border-color: #ef6f79;
+    .logout-btn:hover {
+      background: #571b1b;
     }
 
+    /* Main */
     main {
-      max-width: 1100px;
-      margin: 35px auto;
-      padding: 0 20px;
+      padding: 35px 0 50px;
     }
 
     .welcome {
-      background: #20242a;
-      border: 1px solid #30363f;
-      border-radius: 16px;
+      background: linear-gradient(135deg, #111827, #172033);
+      border: 1px solid #263244;
+      border-radius: 18px;
       padding: 25px;
-      margin-bottom: 25px;
+      margin-bottom: 28px;
     }
 
     .welcome h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
-      color: #e7eaf0;
-    }
-
-    .welcome p {
-      margin: 6px 0;
-      color: #9da4af;
-    }
-
-    .role {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 8px 13px;
-      background: #292f37;
-      border: 1px solid #343b44;
-      border-radius: 20px;
-      font-size: 14px;
-      color: #c8cdd5;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 15px;
-      margin-bottom: 30px;
-    }
-
-    .stat {
-      background: #20242a;
-      border: 1px solid #30363f;
-      border-radius: 14px;
-      padding: 20px;
-    }
-
-    .stat-icon {
       font-size: 25px;
       margin-bottom: 10px;
     }
 
-    .stat-title {
-      color: #9da4af;
-      font-size: 13px;
-      margin-bottom: 7px;
+    .welcome h1 span {
+      color: #22c55e;
     }
 
-    .stat-value {
-      color: #e7eaf0;
-      font-size: 25px;
-      font-weight: bold;
-    }
-
-    .section-title {
-      margin: 30px 0 15px;
-      font-size: 21px;
-      color: #e7eaf0;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 16px;
-    }
-
-    .card {
-      background: #242930;
-      border: 1px solid #30363f;
-      border-radius: 14px;
-      padding: 22px;
-      text-decoration: none;
-      color: #e7eaf0;
-      transition: .2s;
-      position: relative;
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-      background: #2a3038;
-      border-color: #39414c;
-      box-shadow: 0 8px 22px rgba(0, 0, 0, .18);
-    }
-
-    .icon {
-      font-size: 30px;
-      margin-bottom: 12px;
-    }
-
-    .card h3 {
-      margin: 0 0 7px;
-      font-size: 18px;
-      color: #e7eaf0;
-    }
-
-    .card p {
-      margin: 0;
-      color: #9da4af;
-      line-height: 1.6;
+    .welcome p {
+      color: #94a3b8;
+      line-height: 1.8;
       font-size: 14px;
     }
 
+    .account-info {
+      margin-top: 12px;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .role-badge {
+      display: inline-block;
+      margin-right: 7px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: #14532d;
+      color: #bbf7d0;
+      font-size: 12px;
+    }
+
+    /* Stats */
+    .section-title {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 35px;
+    }
+
+    .stat-card {
+      background: #111827;
+      border: 1px solid #263244;
+      border-radius: 16px;
+      padding: 20px;
+      min-height: 125px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::after {
+      content: "";
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      left: -25px;
+      bottom: -35px;
+      background: #22c55e;
+      opacity: .06;
+      border-radius: 50%;
+    }
+
+    .stat-label {
+      color: #94a3b8;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .stat-number {
+      font-size: 31px;
+      font-weight: bold;
+      color: #f8fafc;
+    }
+
+    .stat-card.green .stat-number {
+      color: #22c55e;
+    }
+
+    .stat-card.orange .stat-number {
+      color: #f59e0b;
+    }
+
+    .stat-card.blue .stat-number {
+      color: #60a5fa;
+    }
+
+    .stat-card.red .stat-number {
+      color: #f87171;
+    }
+
+    /* Dashboard sections */
+    .dashboard-section {
+      background: #111827;
+      border: 1px solid #263244;
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 22px;
+    }
+
+    .dashboard-section h2 {
+      font-size: 19px;
+      margin-bottom: 18px;
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 13px;
+    }
+
+    .dashboard-link {
+      display: block;
+      background: #172033;
+      border: 1px solid #2b374a;
+      border-radius: 12px;
+      padding: 17px;
+      transition: .2s;
+    }
+
+    .dashboard-link:hover {
+      border-color: #22c55e;
+      transform: translateY(-2px);
+      background: #1a263a;
+    }
+
+    .dashboard-link strong {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 15px;
+    }
+
+    .dashboard-link span {
+      display: block;
+      color: #94a3b8;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
     .coming {
-      opacity: .65;
+      opacity: .6;
       cursor: default;
     }
 
     .coming:hover {
       transform: none;
-      box-shadow: none;
-      background: #242930;
-      border-color: #30363f;
+      border-color: #2b374a;
+      background: #172033;
     }
 
-    .badge {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background: #2d333b;
-      color: #9da4af;
-      border: 1px solid #3a424d;
-      font-size: 11px;
-      padding: 5px 8px;
-      border-radius: 12px;
-    }
-
-    #loading {
+    /* Loading / error */
+    .loading {
+      color: #94a3b8;
       text-align: center;
-      padding: 50px;
-      color: #9da4af;
-    }
-
-    #content {
-      display: none;
+      padding: 25px;
+      background: #111827;
+      border: 1px solid #263244;
+      border-radius: 16px;
+      margin-bottom: 25px;
     }
 
     .error {
+      display: none;
+      background: #3f1515;
+      border: 1px solid #7f1d1d;
+      color: #fecaca;
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 20px;
       text-align: center;
-      padding: 40px;
-      color: #ef6f79;
+      font-size: 14px;
     }
 
-    .retry {
-      margin-top: 15px;
-      padding: 10px 18px;
-      border: 1px solid #3a424d;
-      background: #242930;
-      color: #e7eaf0;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: inherit;
+    /* Hidden role sections */
+    .role-section {
+      display: none;
     }
 
-    .retry:hover {
-      border-color: #4f8cff;
+    /* Footer */
+    footer {
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+      padding: 20px 0 35px;
     }
 
-    @media (max-width: 600px) {
-
-      header {
-        padding: 14px;
+    /* Mobile */
+    @media (max-width: 850px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
 
+      .links-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 550px) {
       .header-inner {
-        gap: 10px;
+        min-height: 62px;
       }
 
       .logo {
         font-size: 23px;
       }
 
-      .header-actions {
-        gap: 8px;
-      }
-
-      .home {
+      .home-btn,
+      .logout-btn {
+        padding: 8px 10px;
         font-size: 12px;
-      }
-
-      .logout {
-        font-size: 12px;
-        padding: 7px 9px;
       }
 
       main {
-        margin: 22px auto;
-        padding: 0 14px;
+        padding-top: 22px;
       }
 
       .welcome {
@@ -280,24 +322,29 @@
       }
 
       .welcome h1 {
-        font-size: 23px;
+        font-size: 21px;
       }
 
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
         gap: 10px;
       }
 
-      .stat {
+      .stat-card {
+        min-height: 110px;
         padding: 15px;
       }
 
-      .stat-value {
-        font-size: 22px;
+      .stat-number {
+        font-size: 27px;
       }
 
-      .cards {
+      .links-grid {
         grid-template-columns: 1fr;
+      }
+
+      .dashboard-section {
+        padding: 17px;
       }
     }
   </style>
@@ -306,686 +353,340 @@
 <body>
 
   <header>
+    <div class="container header-inner">
 
-    <div class="header-inner">
-
-      <a href="index.html" class="logo">
-        مِهراف
-      </a>
+      <a href="index.html" class="logo">مِهراف</a>
 
       <div class="header-actions">
-
-        <a href="index.html" class="home">
-          ← الرئيسية
-        </a>
-
-        <button
-          type="button"
-          class="logout"
-          id="logoutButton"
-        >
-          تسجيل الخروج
-        </button>
-
+        <a href="index.html" class="home-btn">الرئيسية</a>
+        <button class="logout-btn" id="logoutBtn">تسجيل الخروج</button>
       </div>
 
     </div>
-
   </header>
 
-
   <main>
+    <div class="container">
 
-    <div id="loading">
-      جارٍ تحميل لوحة التحكم...
-    </div>
+      <div class="error" id="errorBox"></div>
 
-
-    <div
-      id="error"
-      class="error"
-      style="display:none;"
-    ></div>
-
-
-    <div id="content">
-
-      <!-- معلومات الحساب -->
-
-      <div class="welcome">
-
+      <!-- Welcome -->
+      <section class="welcome">
         <h1>
-          مرحبًا، <span id="userName"></span> 👋
+          أهلا بك <span id="userName">...</span>
         </h1>
 
-        <p id="userEmail"></p>
+        <p>
+          هذه لوحة التحكم الخاصة بك في منصة مِهراف.
+        </p>
 
-        <div
-          class="role"
-          id="userRole"
-        ></div>
+        <div class="account-info">
+          البريد الإلكتروني:
+          <strong id="userEmail">...</strong>
 
+          <span class="role-badge" id="userRole">...</span>
+        </div>
+      </section>
+
+
+      <!-- Loading -->
+      <div class="loading" id="loadingBox">
+        جار تحميل الإحصائيات...
       </div>
 
 
-      <!-- الإحصائيات -->
+      <!-- Freelancer Stats -->
+      <section class="role-section" id="freelancerStats">
 
-      <div class="stats">
+        <h2 class="section-title">إحصائياتك</h2>
 
-        <div class="stat">
+        <div class="stats-grid">
 
-          <div class="stat-icon">
-            📊
+          <div class="stat-card green">
+            <div class="stat-label">إجمالي العروض</div>
+            <div class="stat-number" id="totalProposals">0</div>
           </div>
 
-          <div class="stat-title">
-            حالة الحساب
+          <div class="stat-card orange">
+            <div class="stat-label">العروض قيد الانتظار</div>
+            <div class="stat-number" id="pendingProposals">0</div>
           </div>
 
-          <div
-            class="stat-value"
-            id="accountStatus"
-          >
-            نشط
+          <div class="stat-card blue">
+            <div class="stat-label">العروض المقبولة</div>
+            <div class="stat-number" id="acceptedProposals">0</div>
           </div>
 
-        </div>
-
-
-        <div class="stat">
-
-          <div class="stat-icon">
-            📁
+          <div class="stat-card red">
+            <div class="stat-label">العروض المرفوضة</div>
+            <div class="stat-number" id="rejectedProposals">0</div>
           </div>
-
-          <div class="stat-title">
-            المشاريع
-          </div>
-
-          <div
-            class="stat-value"
-            id="projectsCount"
-          >
-            0
-          </div>
-
-        </div>
-
-
-        <div
-          class="stat"
-          id="proposalsStat"
-          style="display:none;"
-        >
-
-          <div class="stat-icon">
-            📨
-          </div>
-
-          <div class="stat-title">
-            العروض المقدمة
-          </div>
-
-          <div
-            class="stat-value"
-            id="proposalsCount"
-          >
-            0
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- لوحة المستقل -->
-
-      <section
-        id="freelancerSection"
-        style="display:none;"
-      >
-
-        <h2 class="section-title">
-          إدارة حسابك كمستقل
-        </h2>
-
-        <div class="cards">
-
-          <a
-            href="my-services.html"
-            class="card"
-          >
-
-            <div class="icon">
-              💼
-            </div>
-
-            <h3>
-              خدماتي
-            </h3>
-
-            <p>
-              إدارة الخدمات التي تقدمها للعملاء.
-            </p>
-
-          </a>
-
-
-          <a
-            href="add-service.html"
-            class="card"
-          >
-
-            <div class="icon">
-              ➕
-            </div>
-
-            <h3>
-              إضافة خدمة
-            </h3>
-
-            <p>
-              انشر خدمة جديدة على مِهراف.
-            </p>
-
-          </a>
-
-
-          <a
-            href="projects.html"
-            class="card"
-          >
-
-            <div class="icon">
-              📋
-            </div>
-
-            <h3>
-              تصفح المشاريع
-            </h3>
-
-            <p>
-              ابحث عن المشاريع المناسبة لمهاراتك.
-            </p>
-
-          </a>
-
-
-          <a
-            href="#"
-            class="card coming"
-            onclick="return false;"
-          >
-
-            <span class="badge">
-              قريبًا
-            </span>
-
-            <div class="icon">
-              📨
-            </div>
-
-            <h3>
-              طلبات العمل
-            </h3>
-
-            <p>
-              تابع عروضك وطلبات العمل.
-            </p>
-
-          </a>
 
         </div>
 
       </section>
 
 
-      <!-- لوحة العميل -->
+      <!-- Client Stats -->
+      <section class="role-section" id="clientStats">
 
-      <section
-        id="clientSection"
-        style="display:none;"
-      >
+        <h2 class="section-title">إحصائيات مشاريعك</h2>
 
-        <h2 class="section-title">
-          إدارة مشاريعك
-        </h2>
+        <div class="stats-grid">
 
-        <div class="cards">
+          <div class="stat-card green">
+            <div class="stat-label">إجمالي المشاريع</div>
+            <div class="stat-number" id="totalProjects">0</div>
+          </div>
 
-          <a
-            href="projects.html"
-            class="card"
-          >
+          <div class="stat-card orange">
+            <div class="stat-label">المشاريع المفتوحة</div>
+            <div class="stat-number" id="openProjects">0</div>
+          </div>
 
-            <div class="icon">
-              📁
-            </div>
+          <div class="stat-card blue">
+            <div class="stat-label">قيد التنفيذ</div>
+            <div class="stat-number" id="inProgressProjects">0</div>
+          </div>
 
-            <h3>
-              مشاريعي
-            </h3>
+          <div class="stat-card red">
+            <div class="stat-label">المشاريع المكتملة</div>
+            <div class="stat-number" id="completedProjects">0</div>
+          </div>
 
-            <p>
-              عرض وإدارة المشاريع التي نشرتها.
-            </p>
+        </div>
 
+      </section>
+
+
+      <!-- Freelancer Dashboard -->
+      <section class="dashboard-section role-section" id="freelancerSection">
+
+        <h2>قسم المستقل</h2>
+
+        <div class="links-grid">
+
+          <a href="my-services.html" class="dashboard-link">
+            <strong>خدماتي</strong>
+            <span>عرض وإدارة الخدمات التي تقدمها.</span>
           </a>
 
-
-          <a
-            href="add-project.html"
-            class="card"
-          >
-
-            <div class="icon">
-              ➕
-            </div>
-
-            <h3>
-              نشر مشروع
-            </h3>
-
-            <p>
-              انشر مشروعًا جديدًا واحصل على عروض المستقلين.
-            </p>
-
+          <a href="add-service.html" class="dashboard-link">
+            <strong>إضافة خدمة</strong>
+            <span>أضف خدمة جديدة وابدأ بعرضها للعملاء.</span>
           </a>
 
-
-          <a
-            href="#"
-            class="card coming"
-            onclick="return false;"
-          >
-
-            <span class="badge">
-              قريبًا
-            </span>
-
-            <div class="icon">
-              📨
-            </div>
-
-            <h3>
-              طلباتي
-            </h3>
-
-            <p>
-              تابع الخدمات والطلبات الخاصة بك.
-            </p>
-
+          <a href="projects.html" class="dashboard-link">
+            <strong>تصفح المشاريع</strong>
+            <span>ابحث عن مشاريع مناسبة وقدم عروضك.</span>
           </a>
+
+          <div class="dashboard-link coming">
+            <strong>طلبات العمل</strong>
+            <span>ستتوفر هذه الميزة قريبا.</span>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- Client Dashboard -->
+      <section class="dashboard-section role-section" id="clientSection">
+
+        <h2>قسم العميل</h2>
+
+        <div class="links-grid">
+
+          <a href="projects.html" class="dashboard-link">
+            <strong>مشاريعي</strong>
+            <span>عرض وإدارة المشاريع التي قمت بنشرها.</span>
+          </a>
+
+          <a href="add-project.html" class="dashboard-link">
+            <strong>نشر مشروع</strong>
+            <span>أنشئ مشروعا جديدا واستقبل عروض المستقلين.</span>
+          </a>
+
+          <div class="dashboard-link coming">
+            <strong>طلباتي</strong>
+            <span>ستتوفر هذه الميزة قريبا.</span>
+          </div>
+
+          <div class="dashboard-link coming">
+            <strong>إدارة المشاريع</strong>
+            <span>ستتوفر أدوات إدارة متقدمة قريبا.</span>
+          </div>
 
         </div>
 
       </section>
 
     </div>
-
   </main>
+
+
+  <footer>
+    مِهراف | منصة الخدمات والمشاريع
+  </footer>
 
 
   <script>
 
+    const loadingBox = document.getElementById("loadingBox");
+    const errorBox = document.getElementById("errorBox");
+
+    function showError(message) {
+      errorBox.textContent = message;
+      errorBox.style.display = "block";
+    }
+
+    function hideLoading() {
+      loadingBox.style.display = "none";
+    }
+
     async function loadDashboard() {
 
-      const loading =
-        document.getElementById("loading");
-
-      const content =
-        document.getElementById("content");
-
-      const errorBox =
-        document.getElementById("error");
-
       try {
 
-        loading.style.display = "block";
-        content.style.display = "none";
-        errorBox.style.display = "none";
+        // الحصول على بيانات المستخدم
+        const meResponse = await fetch("/api/me", {
+          method: "GET",
+          credentials: "include"
+        });
 
+        const meData = await meResponse.json();
 
-        /*
-         * جلب بيانات المستخدم
-         */
-
-        const meResponse =
-          await fetch("/api/me", {
-            method: "GET",
-            credentials: "include",
-            cache: "no-store"
-          });
-
-
-        if (!meResponse.ok) {
-
-          window.location.href =
-            "login.html";
-
+        if (!meResponse.ok || !meData.success || !meData.user) {
+          window.location.href = "login.html";
           return;
         }
 
+        const user = meData.user;
 
-        const meData =
-          await meResponse.json();
+        document.getElementById("userName").textContent =
+          user.full_name || user.name || "مستخدم مِهراف";
 
+        document.getElementById("userEmail").textContent =
+          user.email || "";
 
-        if (
-          !meData.success ||
-          !meData.authenticated ||
-          !meData.user
-        ) {
+        const role = user.role || "";
 
-          window.location.href =
-            "login.html";
+        if (role === "freelancer") {
 
-          return;
-        }
+          document.getElementById("userRole").textContent = "مستقل";
 
+          document.getElementById("freelancerStats").style.display = "block";
+          document.getElementById("freelancerSection").style.display = "block";
 
-        const user =
-          meData.user;
+        } else if (role === "client") {
 
+          document.getElementById("userRole").textContent = "عميل";
 
-        /*
-         * عرض بيانات الحساب
-         */
+          document.getElementById("clientStats").style.display = "block";
+          document.getElementById("clientSection").style.display = "block";
 
-        document.getElementById(
-          "userName"
-        ).textContent =
-          user.full_name ||
-          "المستخدم";
+        } else {
 
-
-        document.getElementById(
-          "userEmail"
-        ).textContent =
-          user.email ||
-          "";
-
-
-        document.getElementById(
-          "accountStatus"
-        ).textContent =
-          "نشط";
-
-
-        /*
-         * حساب مستقل
-         */
-
-        if (
-          user.role === "freelancer"
-        ) {
-
-          document.getElementById(
-            "userRole"
-          ).textContent =
-            "💼 حساب مستقل";
-
-
-          document.getElementById(
-            "freelancerSection"
-          ).style.display =
-            "block";
-
-
-          document.getElementById(
-            "proposalsStat"
-          ).style.display =
-            "block";
-
-
-          /*
-           * جلب عروض المستقل الحقيقية
-           */
-
-          try {
-
-            const proposalsResponse =
-              await fetch(
-                "/api/my-proposals",
-                {
-                  method: "GET",
-                  credentials: "include",
-                  cache: "no-store"
-                }
-              );
-
-
-            if (proposalsResponse.ok) {
-
-              const proposalsData =
-                await proposalsResponse.json();
-
-
-              if (
-                proposalsData.success &&
-                Array.isArray(
-                  proposalsData.proposals
-                )
-              ) {
-
-                document.getElementById(
-                  "proposalsCount"
-                ).textContent =
-                  proposalsData.proposals.length;
-
-              }
-
-            }
-
-          } catch (error) {
-
-            console.error(
-              "Proposals loading error:",
-              error
-            );
-
-          }
-
-
-          /*
-           * عدد المشاريع الخاصة بالمستقل
-           *
-           * الـ Worker الحالي يعيد المشاريع
-           * التي يملكها المستخدم فقط.
-           * لذلك لا نستخدمه لإظهار مشاريع التصفح
-           * حتى لا نعطي رقما غير صحيح.
-           */
-
-          document.getElementById(
-            "projectsCount"
-          ).textContent =
-            "—";
+          document.getElementById("userRole").textContent = role || "حساب";
 
         }
 
 
-        /*
-         * حساب عميل
-         */
+        // جلب الإحصائيات الحقيقية من Worker + D1
+        const statsResponse = await fetch("/api/dashboard-stats", {
+          method: "GET",
+          credentials: "include"
+        });
 
-        else {
+        const statsData = await statsResponse.json();
 
-          document.getElementById(
-            "userRole"
-          ).textContent =
-            "👤 حساب عميل";
-
-
-          document.getElementById(
-            "clientSection"
-          ).style.display =
-            "block";
+        if (!statsResponse.ok || !statsData.success) {
+          throw new Error(
+            statsData.error || "تعذر تحميل الإحصائيات"
+          );
+        }
 
 
-          /*
-           * جلب مشاريع العميل الحقيقية
-           */
+        if (statsData.role === "freelancer") {
 
-          try {
+          const stats = statsData.stats || {};
 
-            const projectsResponse =
-              await fetch(
-                "/api/projects",
-                {
-                  method: "GET",
-                  credentials: "include",
-                  cache: "no-store"
-                }
-              );
+          document.getElementById("totalProposals").textContent =
+            Number(stats.total_proposals || 0);
 
+          document.getElementById("pendingProposals").textContent =
+            Number(stats.pending_proposals || 0);
 
-            if (projectsResponse.ok) {
+          document.getElementById("acceptedProposals").textContent =
+            Number(stats.accepted_proposals || 0);
 
-              const projectsData =
-                await projectsResponse.json();
-
-
-              if (
-                projectsData.success &&
-                Array.isArray(
-                  projectsData.projects
-                )
-              ) {
-
-                document.getElementById(
-                  "projectsCount"
-                ).textContent =
-                  projectsData.projects.length;
-
-              }
-
-            }
-
-          } catch (error) {
-
-            console.error(
-              "Projects loading error:",
-              error
-            );
-
-          }
+          document.getElementById("rejectedProposals").textContent =
+            Number(stats.rejected_proposals || 0);
 
         }
 
 
-        /*
-         * إظهار اللوحة
-         */
+        if (statsData.role === "client") {
 
-        loading.style.display =
-          "none";
+          const stats = statsData.stats || {};
 
-        content.style.display =
-          "block";
+          document.getElementById("totalProjects").textContent =
+            Number(stats.total_projects || 0);
 
+          document.getElementById("openProjects").textContent =
+            Number(stats.open_projects || 0);
+
+          document.getElementById("inProgressProjects").textContent =
+            Number(stats.in_progress_projects || 0);
+
+          document.getElementById("completedProjects").textContent =
+            Number(stats.completed_projects || 0);
+
+        }
+
+
+        hideLoading();
 
       } catch (error) {
 
-        console.error(
-          "Dashboard error:",
-          error
+        console.error(error);
+
+        hideLoading();
+
+        showError(
+          error.message || "حدث خطأ أثناء تحميل لوحة التحكم"
         );
-
-
-        loading.style.display =
-          "none";
-
-
-        errorBox.innerHTML = `
-          تعذر الاتصال بالخادم. حاول مرة أخرى.
-          <br>
-          <button
-            type="button"
-            class="retry"
-            onclick="loadDashboard()"
-          >
-            إعادة المحاولة
-          </button>
-        `;
-
-
-        errorBox.style.display =
-          "block";
 
       }
 
     }
 
 
-    /*
-     * تسجيل الخروج
-     */
+    // تسجيل الخروج
+    document.getElementById("logoutBtn").addEventListener("click", async function () {
 
-    async function logout() {
-
-      const button =
-        document.getElementById(
-          "logoutButton"
-        );
-
+      const button = this;
 
       button.disabled = true;
-
-      button.textContent =
-        "جارٍ تسجيل الخروج...";
-
+      button.textContent = "جار تسجيل الخروج...";
 
       try {
 
-        const response =
-          await fetch(
-            "/api/logout",
-            {
-              method: "POST",
-              credentials: "include",
-              cache: "no-store"
-            }
-          );
-
-
-        if (response.ok) {
-
-          window.location.href =
-            "login.html";
-
-          return;
-
-        }
-
+        await fetch("/api/logout", {
+          method: "POST",
+          credentials: "include"
+        });
 
       } catch (error) {
 
-        console.error(
-          "Logout error:",
-          error
-        );
+        console.error(error);
 
       }
 
+      window.location.href = "login.html";
 
-      button.disabled = false;
-
-      button.textContent =
-        "تسجيل الخروج";
-
-      alert(
-        "تعذر تسجيل الخروج. حاول مرة أخرى."
-      );
-
-    }
-
-
-    document
-      .getElementById("logoutButton")
-      .addEventListener(
-        "click",
-        logout
-      );
+    });
 
 
     loadDashboard();
