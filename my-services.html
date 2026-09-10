@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>خدماتي | مِهراف</title>
-
-  <style>
+  <title>خدماتي | مِهراف</title>  <style>
     * {
       box-sizing: border-box;
     }
@@ -52,10 +49,6 @@
     }
 
     .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
       margin-bottom: 25px;
     }
 
@@ -67,16 +60,6 @@
     .subtitle {
       margin: 0;
       color: #6b7280;
-    }
-
-    .add-btn {
-      display: inline-block;
-      background: #111827;
-      color: white;
-      text-decoration: none;
-      padding: 12px 18px;
-      border-radius: 9px;
-      font-weight: bold;
     }
 
     .message {
@@ -186,48 +169,28 @@
         align-items: stretch;
         flex-direction: column;
       }
-
-      .add-btn {
-        text-align: center;
-      }
     }
-  </style>
-</head>
-
-<body>
-
-<header>
+  </style></head><body><header>
   <div class="header-inner">
     <a href="index.html" class="logo">مِهراف</a>
     <a href="dashboard.html" class="back">← لوحة التحكم</a>
   </div>
-</header>
-
-<main>
-
-  <div class="top">
+</header><main>  <div class="top">
     <div>
       <h1>خدماتي</h1>
       <p class="subtitle">إدارة الخدمات التي تقدمها للعملاء على مِهراف.</p>
     </div>
-
-    <a href="add-service.html" class="add-btn">+ إضافة خدمة</a>
-  </div>
-
-  <div id="loading" class="loading">
+  </div>  <div id="loading" class="loading">
     جارٍ تحميل خدماتك...
-  </div>
+  </div>  <div id="message" class="message"></div>  <div id="services" class="services"></div></main><script>
+  const servicesContainer =
+    document.getElementById("services");
 
-  <div id="message" class="message"></div>
+  const loading =
+    document.getElementById("loading");
 
-  <div id="services" class="services"></div>
-
-</main>
-
-<script>
-  const servicesContainer = document.getElementById("services");
-  const loading = document.getElementById("loading");
-  const message = document.getElementById("message");
+  const message =
+    document.getElementById("message");
 
   function escapeHtml(text) {
     const div = document.createElement("div");
@@ -249,167 +212,261 @@
 
   async function loadServices() {
     try {
-      const meResponse = await fetch("/api/me", {
-        credentials: "include"
-      });
+      const meResponse =
+        await fetch("/api/me", {
+          credentials: "include"
+        });
 
       if (!meResponse.ok) {
         window.location.href = "login.html";
         return;
       }
 
-      const me = await meResponse.json();
+      const me =
+        await meResponse.json();
 
-      if (!me.user || me.user.role !== "freelancer") {
-        window.location.href = "dashboard.html";
+      if (
+        !me.user ||
+        me.user.role !== "freelancer"
+      ) {
+        window.location.href =
+          "dashboard.html";
         return;
       }
 
-      const response = await fetch("/api/my-services", {
-        credentials: "include"
-      });
+      const response =
+        await fetch("/api/my-services", {
+          credentials: "include"
+        });
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       loading.style.display = "none";
 
-      if (!response.ok || !data.success) {
-        showMessage(data.message || "حدث خطأ أثناء تحميل الخدمات.");
+      if (
+        !response.ok ||
+        !data.success
+      ) {
+        showMessage(
+          data.message ||
+          data.error ||
+          "حدث خطأ أثناء تحميل الخدمات."
+        );
         return;
       }
 
-      const services = data.services || [];
+      const services =
+        data.services || [];
 
       if (services.length === 0) {
-        showMessage("لا توجد لديك خدمات حتى الآن. أضف أول خدمة لك.");
+        showMessage(
+          "لا توجد لديك خدمات حتى الآن. أضف أول خدمة لك."
+        );
         return;
       }
 
-      servicesContainer.innerHTML = services.map(service => `
-        <div class="service">
-          <span class="status ${escapeHtml(service.status)}">
-            ${escapeHtml(statusText(service.status))}
-          </span>
+      servicesContainer.innerHTML =
+        services.map(service => `
+          <div class="service">
 
-          <h2>${escapeHtml(service.title)}</h2>
-
-          <div class="description">
-            ${escapeHtml(service.description)}
-          </div>
-
-          <div class="info">
-            <span class="price">
-              ${escapeHtml(String(service.price))} دولار
+            <span class="status ${escapeHtml(service.status)}">
+              ${escapeHtml(
+                statusText(service.status)
+              )}
             </span>
 
-            <span class="category">
-              ${escapeHtml(service.category)}
-            </span>
+            <h2>
+              ${escapeHtml(service.title)}
+            </h2>
+
+            <div class="description">
+              ${escapeHtml(service.description)}
+            </div>
+
+            <div class="info">
+              <span class="price">
+                ${escapeHtml(
+                  String(service.price)
+                )} دولار
+              </span>
+
+              <span class="category">
+                ${escapeHtml(service.category)}
+              </span>
+            </div>
+
+            <div class="actions">
+
+              <button
+                onclick="editService(${service.id})"
+              >
+                ✏️ تعديل
+              </button>
+
+              ${
+                service.status === "active"
+                ? `
+                  <button
+                    onclick="toggleService(${service.id}, 'paused')"
+                  >
+                    ⏸️ إيقاف
+                  </button>
+                `
+                : service.status === "paused"
+                ? `
+                  <button
+                    onclick="toggleService(${service.id}, 'active')"
+                  >
+                    ▶️ تفعيل
+                  </button>
+                `
+                : ""
+              }
+
+              ${
+                service.status !== "deleted"
+                ? `
+                  <button
+                    onclick="deleteService(${service.id})"
+                  >
+                    🗑️ حذف
+                  </button>
+                `
+                : ""
+              }
+
+            </div>
+
           </div>
-
-          <div class="actions">
-
-            <button onclick="editService(${service.id})">
-              ✏️ تعديل
-            </button>
-
-            ${
-              service.status === "active"
-              ? `<button onclick="toggleService(${service.id}, 'paused')">
-                   ⏸️ إيقاف
-                 </button>`
-              : service.status === "paused"
-              ? `<button onclick="toggleService(${service.id}, 'active')">
-                   ▶️ تفعيل
-                 </button>`
-              : ""
-            }
-
-            ${
-              service.status !== "deleted"
-              ? `<button onclick="deleteService(${service.id})">
-                   🗑️ حذف
-                 </button>`
-              : ""
-            }
-
-          </div>
-        </div>
-      `).join("");
+        `).join("");
 
     } catch (error) {
       loading.style.display = "none";
-      showMessage("تعذر الاتصال بالخادم.");
+      showMessage(
+        "تعذر الاتصال بالخادم."
+      );
       console.error(error);
     }
   }
 
   function editService(id) {
-    window.location.href = "edit-service.html?id=" + encodeURIComponent(id);
+    window.location.href =
+      "edit-service.html?id=" +
+      encodeURIComponent(id);
   }
 
-  async function toggleService(id, status) {
-    const action = status === "paused" ? "إيقاف" : "تفعيل";
+  async function toggleService(
+    id,
+    status
+  ) {
+    const action =
+      status === "paused"
+        ? "إيقاف"
+        : "تفعيل";
 
-    if (!confirm(`هل تريد ${action} هذه الخدمة؟`)) {
+    if (
+      !confirm(
+        `هل تريد ${action} هذه الخدمة؟`
+      )
+    ) {
       return;
     }
 
     try {
-      const response = await fetch("/api/services/" + id, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          status: status
-        })
-      });
+      const response =
+        await fetch(
+          "/api/services/" + id,
+          {
+            method: "PUT",
+            credentials: "include",
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+            body: JSON.stringify({
+              status: status
+            })
+          }
+        );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
-      if (!response.ok || !data.success) {
-        alert(data.message || "تعذر تعديل حالة الخدمة.");
+      if (
+        !response.ok ||
+        !data.success
+      ) {
+        alert(
+          data.message ||
+          data.error ||
+          "تعذر تعديل حالة الخدمة."
+        );
         return;
       }
 
-      alert(data.message || "تم تحديث الخدمة.");
+      alert(
+        data.message ||
+        "تم تحديث الخدمة."
+      );
+
       loadServices();
 
     } catch (error) {
-      alert("تعذر الاتصال بالخادم.");
+      alert(
+        "تعذر الاتصال بالخادم."
+      );
     }
   }
 
   async function deleteService(id) {
-    if (!confirm("هل أنت متأكد من حذف هذه الخدمة؟")) {
+    if (
+      !confirm(
+        "هل أنت متأكد من حذف هذه الخدمة؟"
+      )
+    ) {
       return;
     }
 
     try {
-      const response = await fetch("/api/services/" + id, {
-        method: "DELETE",
-        credentials: "include"
-      });
+      const response =
+        await fetch(
+          "/api/services/" + id,
+          {
+            method: "DELETE",
+            credentials: "include"
+          }
+        );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
-      if (!response.ok || !data.success) {
-        alert(data.message || "تعذر حذف الخدمة.");
+      if (
+        !response.ok ||
+        !data.success
+      ) {
+        alert(
+          data.message ||
+          data.error ||
+          "تعذر حذف الخدمة."
+        );
         return;
       }
 
-      alert(data.message || "تم حذف الخدمة.");
+      alert(
+        data.message ||
+        "تم حذف الخدمة."
+      );
+
       loadServices();
 
     } catch (error) {
-      alert("تعذر الاتصال بالخادم.");
+      alert(
+        "تعذر الاتصال بالخادم."
+      );
     }
   }
 
   loadServices();
-</script>
-
-</body>
+</script></body>
 </html>
