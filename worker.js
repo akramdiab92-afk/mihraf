@@ -3309,6 +3309,76 @@ async function requestRevision(
   }, 201);
 }
 
+// MY SERVICES
+async function getMyServices(
+  request,
+  env
+) {
+  try {
+    const user =
+      await getAuthenticatedUser(
+        request,
+        env
+      );
+
+    if (!user) {
+      return json({
+        success: false,
+        error:
+          "يجب تسجيل الدخول أولا"
+      }, 401);
+    }
+
+    if (user.role !== "freelancer") {
+      return json({
+        success: false,
+        error:
+          "هذه الصفحة مخصصة للمنفذين فقط"
+      }, 403);
+    }
+
+    const result =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            user_id,
+            title,
+            description,
+            price,
+            category,
+            status,
+            created_at,
+            updated_at
+          FROM services
+          WHERE user_id = ?
+          ORDER BY id DESC
+        `)
+        .bind(Number(user.id))
+        .all();
+
+    return json({
+      success: true,
+      services:
+        result.results || []
+    });
+
+  } catch (error) {
+    console.error(
+      "getMyServices error:",
+      error
+    );
+
+    return json({
+      success: false,
+      error:
+        "حدث خطأ أثناء تحميل الخدمات"
+    }, 500);
+  }
+}
+
+// PASSWORD
+async function createPasswordHash(
 
 // PASSWORD
 async function createPasswordHash(
