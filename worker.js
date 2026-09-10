@@ -6,66 +6,44 @@ export default {
     const url = new URL(request.url);
 
     try {
-      // ======================================================
       // AUTH
-      // ======================================================
-
-      if (
-        url.pathname === "/api/register" &&
-        request.method === "POST"
-      ) {
+      if (url.pathname === "/api/register" && request.method === "POST") {
         return await register(request, env);
       }
 
-      if (
-        url.pathname === "/api/login" &&
-        request.method === "POST"
-      ) {
+      if (url.pathname === "/api/login" && request.method === "POST") {
         return await login(request, env);
       }
 
-      if (
-        url.pathname === "/api/logout" &&
-        request.method === "POST"
-      ) {
+      if (url.pathname === "/api/logout" && request.method === "POST") {
         return await logout(request, env);
       }
 
-      if (
-        url.pathname === "/api/me" &&
-        request.method === "GET"
-      ) {
+      if (url.pathname === "/api/me" && request.method === "GET") {
         return await me(request, env);
       }
 
-
-      // ======================================================
-      // PROJECTS
-      // ======================================================
-
+      // DASHBOARD STATISTICS
       if (
-        url.pathname === "/api/projects" &&
+        url.pathname === "/api/dashboard-stats" &&
         request.method === "GET"
       ) {
+        return await getDashboardStats(request, env);
+      }
+
+      // PROJECTS
+      if (url.pathname === "/api/projects" && request.method === "GET") {
         return await getProjects(request, env);
       }
 
-      if (
-        url.pathname === "/api/projects" &&
-        request.method === "POST"
-      ) {
+      if (url.pathname === "/api/projects" && request.method === "POST") {
         return await createProject(request, env);
       }
 
-      // Project details
-      const projectMatch = url.pathname.match(
-        /^\/api\/projects\/(\d+)$/
-      );
+      const projectMatch =
+        url.pathname.match(/^\/api\/projects\/(\d+)$/);
 
-      if (
-        projectMatch &&
-        request.method === "GET"
-      ) {
+      if (projectMatch && request.method === "GET") {
         return await getProject(
           request,
           env,
@@ -73,16 +51,10 @@ export default {
         );
       }
 
-      // Project proposals
       const projectProposalsMatch =
-        url.pathname.match(
-          /^\/api\/projects\/(\d+)\/proposals$/
-        );
+        url.pathname.match(/^\/api\/projects\/(\d+)\/proposals$/);
 
-      if (
-        projectProposalsMatch &&
-        request.method === "GET"
-      ) {
+      if (projectProposalsMatch && request.method === "GET") {
         return await getProjectProposals(
           request,
           env,
@@ -90,11 +62,7 @@ export default {
         );
       }
 
-
-      // ======================================================
       // PROPOSALS
-      // ======================================================
-
       if (
         url.pathname === "/api/proposals" &&
         request.method === "POST"
@@ -110,9 +78,7 @@ export default {
       }
 
       const proposalStatusMatch =
-        url.pathname.match(
-          /^\/api\/proposals\/(\d+)\/status$/
-        );
+        url.pathname.match(/^\/api\/proposals\/(\d+)\/status$/);
 
       if (
         proposalStatusMatch &&
@@ -125,11 +91,7 @@ export default {
         );
       }
 
-
-      // ======================================================
       // HEALTH
-      // ======================================================
-
       if (
         url.pathname === "/api/health" &&
         request.method === "GET"
@@ -141,11 +103,7 @@ export default {
         });
       }
 
-
-      // ======================================================
       // STATIC FILES
-      // ======================================================
-
       if (env.ASSETS) {
         return await env.ASSETS.fetch(request);
       }
@@ -153,8 +111,7 @@ export default {
       return new Response("Not Found", {
         status: 404,
         headers: {
-          "Content-Type":
-            "text/plain; charset=UTF-8"
+          "Content-Type": "text/plain; charset=UTF-8"
         }
       });
 
@@ -164,19 +121,14 @@ export default {
       return json({
         success: false,
         error: "حدث خطأ داخلي في الخادم",
-        details:
-          error?.message ||
-          String(error)
+        details: error?.message || String(error)
       }, 500);
     }
   }
 };
 
 
-// ==========================================================
 // REGISTER
-// ==========================================================
-
 async function register(request, env) {
   let body;
 
@@ -192,7 +144,6 @@ async function register(request, env) {
   const fullName = cleanText(body.full_name);
   const email = cleanEmail(body.email);
   const password = String(body.password || "");
-
   const role =
     body.role === "freelancer"
       ? "freelancer"
@@ -222,8 +173,7 @@ async function register(request, env) {
   if (password.length < 6) {
     return json({
       success: false,
-      error:
-        "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
+      error: "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
     }, 400);
   }
 
@@ -269,18 +219,14 @@ async function register(request, env) {
     .run();
 
   if (!result.success) {
-    throw new Error(
-      "تعذر إنشاء الحساب"
-    );
+    throw new Error("تعذر إنشاء الحساب");
   }
 
   return json({
     success: true,
     message: "تم إنشاء الحساب بنجاح",
     user: {
-      id:
-        result.meta?.last_row_id ??
-        null,
+      id: result.meta?.last_row_id ?? null,
       full_name: fullName,
       email,
       role
@@ -289,10 +235,7 @@ async function register(request, env) {
 }
 
 
-// ==========================================================
 // LOGIN
-// ==========================================================
-
 async function login(request, env) {
   let body;
 
@@ -306,14 +249,12 @@ async function login(request, env) {
   }
 
   const email = cleanEmail(body.email);
-  const password =
-    String(body.password || "");
+  const password = String(body.password || "");
 
   if (!email || !password) {
     return json({
       success: false,
-      error:
-        "يرجى إدخال البريد الإلكتروني وكلمة المرور"
+      error: "يرجى إدخال البريد الإلكتروني وكلمة المرور"
     }, 400);
   }
 
@@ -337,8 +278,7 @@ async function login(request, env) {
   if (!user) {
     return json({
       success: false,
-      error:
-        "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+      error: "البريد الإلكتروني أو كلمة المرور غير صحيحة"
     }, 401);
   }
 
@@ -352,16 +292,12 @@ async function login(request, env) {
   if (!validPassword) {
     return json({
       success: false,
-      error:
-        "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+      error: "البريد الإلكتروني أو كلمة المرور غير صحيحة"
     }, 401);
   }
 
-  const rawToken =
-    generateToken();
-
-  const tokenHash =
-    await sha256(rawToken);
+  const rawToken = generateToken();
+  const tokenHash = await sha256(rawToken);
 
   const expiresAt =
     new Date(
@@ -398,8 +334,7 @@ async function login(request, env) {
     )
     .run();
 
-  const headers =
-    new Headers();
+  const headers = new Headers();
 
   headers.set(
     "Set-Cookie",
@@ -419,15 +354,13 @@ async function login(request, env) {
   return new Response(
     JSON.stringify({
       success: true,
-      message:
-        "تم تسجيل الدخول بنجاح",
+      message: "تم تسجيل الدخول بنجاح",
       user: {
         id: user.id,
         full_name: user.full_name,
         email: user.email,
         role: user.role,
-        created_at:
-          user.created_at
+        created_at: user.created_at
       }
     }),
     {
@@ -438,10 +371,7 @@ async function login(request, env) {
 }
 
 
-// ==========================================================
 // LOGOUT
-// ==========================================================
-
 async function logout(request, env) {
   const token =
     getSessionToken(request);
@@ -459,8 +389,7 @@ async function logout(request, env) {
       .run();
   }
 
-  const headers =
-    new Headers();
+  const headers = new Headers();
 
   headers.set(
     "Set-Cookie",
@@ -480,8 +409,7 @@ async function logout(request, env) {
   return new Response(
     JSON.stringify({
       success: true,
-      message:
-        "تم تسجيل الخروج بنجاح"
+      message: "تم تسجيل الخروج بنجاح"
     }),
     {
       status: 200,
@@ -491,10 +419,7 @@ async function logout(request, env) {
 }
 
 
-// ==========================================================
 // ME
-// ==========================================================
-
 async function me(request, env) {
   const user =
     await getAuthenticatedUser(
@@ -515,21 +440,16 @@ async function me(request, env) {
     authenticated: true,
     user: {
       id: user.id,
-      full_name:
-        user.full_name,
+      full_name: user.full_name,
       email: user.email,
       role: user.role,
-      created_at:
-        user.created_at
+      created_at: user.created_at
     }
   });
 }
 
 
-// ==========================================================
 // GET AUTHENTICATED USER
-// ==========================================================
-
 async function getAuthenticatedUser(
   request,
   env
@@ -570,9 +490,7 @@ async function getAuthenticatedUser(
   }
 
   const expiresTime =
-    Date.parse(
-      session.expires_at
-    );
+    Date.parse(session.expires_at);
 
   if (
     Number.isFinite(expiresTime) &&
@@ -591,22 +509,179 @@ async function getAuthenticatedUser(
 
   return {
     id: session.id,
-    full_name:
-      session.full_name,
-    email:
-      session.email,
-    role:
-      session.role,
-    created_at:
-      session.created_at
+    full_name: session.full_name,
+    email: session.email,
+    role: session.role,
+    created_at: session.created_at
   };
 }
 
 
-// ==========================================================
-// GET MY PROJECTS
-// ==========================================================
+// DASHBOARD STATISTICS
+async function getDashboardStats(
+  request,
+  env
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
 
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  // CLIENT
+  if (user.role === "client") {
+    const results =
+      await env.DB.batch([
+
+        env.DB.prepare(`
+          SELECT COUNT(*) AS count
+          FROM projects
+          WHERE user_id = ?
+        `).bind(user.id),
+
+        env.DB.prepare(`
+          SELECT COUNT(*) AS count
+          FROM projects
+          WHERE user_id = ?
+            AND status = 'open'
+        `).bind(user.id),
+
+        env.DB.prepare(`
+          SELECT COUNT(*) AS count
+          FROM projects
+          WHERE user_id = ?
+            AND status = 'in_progress'
+        `).bind(user.id),
+
+        env.DB.prepare(`
+          SELECT COUNT(*) AS count
+          FROM projects
+          WHERE user_id = ?
+            AND status = 'completed'
+        `).bind(user.id)
+
+      ]);
+
+    return json({
+      success: true,
+      role: "client",
+      stats: {
+        total_projects:
+          Number(
+            results[0]
+              ?.results?.[0]
+              ?.count || 0
+          ),
+
+        open_projects:
+          Number(
+            results[1]
+              ?.results?.[0]
+              ?.count || 0
+          ),
+
+        in_progress_projects:
+          Number(
+            results[2]
+              ?.results?.[0]
+              ?.count || 0
+          ),
+
+        completed_projects:
+          Number(
+            results[3]
+              ?.results?.[0]
+              ?.count || 0
+          )
+      }
+    });
+  }
+
+
+  // FREELANCER
+  if (user.role === "freelancer") {
+    const results =
+      await env.DB.batch([
+
+        env.DB.prepare(`
+          SELECT COUNT(*) AS count
+          FROM proposals
+          WHERE freelancer_id = ?
+        `).bind(user.id),
+
+        env.DB.prepare(`
+          SELECT COUNT(*) AS count
+          FROM proposals
+          WHERE freelancer_id = ?
+            AND status = 'pending'
+        `).bind(user.id),
+
+        env.DB.prepare(`
+          SELECT COUNT(*) AS count
+          FROM proposals
+          WHERE freelancer_id = ?
+            AND status = 'accepted'
+        `).bind(user.id),
+
+        env.DB.prepare(`
+          SELECT COUNT(*) AS count
+          FROM proposals
+          WHERE freelancer_id = ?
+            AND status = 'rejected'
+        `).bind(user.id)
+
+      ]);
+
+    return json({
+      success: true,
+      role: "freelancer",
+      stats: {
+        total_proposals:
+          Number(
+            results[0]
+              ?.results?.[0]
+              ?.count || 0
+          ),
+
+        pending_proposals:
+          Number(
+            results[1]
+              ?.results?.[0]
+              ?.count || 0
+          ),
+
+        accepted_proposals:
+          Number(
+            results[2]
+              ?.results?.[0]
+              ?.count || 0
+          ),
+
+        rejected_proposals:
+          Number(
+            results[3]
+              ?.results?.[0]
+              ?.count || 0
+          )
+      }
+    });
+  }
+
+  return json({
+    success: false,
+    error: "نوع الحساب غير معروف"
+  }, 400);
+}
+
+
+// GET MY PROJECTS
 async function getProjects(
   request,
   env
@@ -620,8 +695,7 @@ async function getProjects(
   if (!user) {
     return json({
       success: false,
-      error:
-        "يجب تسجيل الدخول أولا"
+      error: "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -658,10 +732,7 @@ async function getProjects(
 }
 
 
-// ==========================================================
 // CREATE PROJECT
-// ==========================================================
-
 async function createProject(
   request,
   env
@@ -675,8 +746,7 @@ async function createProject(
   if (!user) {
     return json({
       success: false,
-      error:
-        "يجب تسجيل الدخول أولا"
+      error: "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -691,13 +761,11 @@ async function createProject(
   let body;
 
   try {
-    body =
-      await request.json();
+    body = await request.json();
   } catch {
     return json({
       success: false,
-      error:
-        "بيانات الطلب غير صحيحة"
+      error: "بيانات الطلب غير صحيحة"
     }, 400);
   }
 
@@ -716,40 +784,35 @@ async function createProject(
   if (!title) {
     return json({
       success: false,
-      error:
-        "يرجى إدخال عنوان المشروع"
+      error: "يرجى إدخال عنوان المشروع"
     }, 400);
   }
 
   if (title.length < 3) {
     return json({
       success: false,
-      error:
-        "عنوان المشروع قصير جدا"
+      error: "عنوان المشروع قصير جدا"
     }, 400);
   }
 
   if (!description) {
     return json({
       success: false,
-      error:
-        "يرجى كتابة وصف المشروع"
+      error: "يرجى كتابة وصف المشروع"
     }, 400);
   }
 
   if (description.length < 10) {
     return json({
       success: false,
-      error:
-        "وصف المشروع يجب أن يكون أوضح"
+      error: "وصف المشروع يجب أن يكون أوضح"
     }, 400);
   }
 
   if (!category) {
     return json({
       success: false,
-      error:
-        "يرجى اختيار تصنيف المشروع"
+      error: "يرجى اختيار تصنيف المشروع"
     }, 400);
   }
 
@@ -759,8 +822,7 @@ async function createProject(
   ) {
     return json({
       success: false,
-      error:
-        "يرجى إدخال ميزانية صحيحة"
+      error: "يرجى إدخال ميزانية صحيحة"
     }, 400);
   }
 
@@ -825,10 +887,7 @@ async function createProject(
 }
 
 
-// ==========================================================
 // GET PROJECT DETAILS
-// ==========================================================
-
 async function getProject(
   request,
   env,
@@ -843,8 +902,7 @@ async function getProject(
   if (!user) {
     return json({
       success: false,
-      error:
-        "يجب تسجيل الدخول أولا"
+      error: "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -854,8 +912,7 @@ async function getProject(
   ) {
     return json({
       success: false,
-      error:
-        "معرف المشروع غير صحيح"
+      error: "معرف المشروع غير صحيح"
     }, 400);
   }
 
@@ -885,8 +942,7 @@ async function getProject(
   if (!project) {
     return json({
       success: false,
-      error:
-        "المشروع غير موجود"
+      error: "المشروع غير موجود"
     }, 404);
   }
 
@@ -905,10 +961,7 @@ async function getProject(
 }
 
 
-// ==========================================================
 // CREATE PROPOSAL
-// ==========================================================
-
 async function createProposal(
   request,
   env
@@ -922,8 +975,7 @@ async function createProposal(
   if (!user) {
     return json({
       success: false,
-      error:
-        "يجب تسجيل الدخول أولا"
+      error: "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -938,13 +990,11 @@ async function createProposal(
   let body;
 
   try {
-    body =
-      await request.json();
+    body = await request.json();
   } catch {
     return json({
       success: false,
-      error:
-        "بيانات الطلب غير صحيحة"
+      error: "بيانات الطلب غير صحيحة"
     }, 400);
   }
 
@@ -966,8 +1016,7 @@ async function createProposal(
   ) {
     return json({
       success: false,
-      error:
-        "معرف المشروع غير صحيح"
+      error: "معرف المشروع غير صحيح"
     }, 400);
   }
 
@@ -977,8 +1026,7 @@ async function createProposal(
   ) {
     return json({
       success: false,
-      error:
-        "يرجى إدخال سعر صحيح"
+      error: "يرجى إدخال سعر صحيح"
     }, 400);
   }
 
@@ -1026,8 +1074,7 @@ async function createProposal(
   if (!project) {
     return json({
       success: false,
-      error:
-        "المشروع غير موجود"
+      error: "المشروع غير موجود"
     }, 404);
   }
 
@@ -1134,10 +1181,7 @@ async function createProposal(
 }
 
 
-// ==========================================================
 // GET MY PROPOSALS
-// ==========================================================
-
 async function getMyProposals(
   request,
   env
@@ -1151,8 +1195,7 @@ async function getMyProposals(
   if (!user) {
     return json({
       success: false,
-      error:
-        "يجب تسجيل الدخول أولا"
+      error: "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -1191,10 +1234,7 @@ async function getMyProposals(
 }
 
 
-// ==========================================================
 // GET PROJECT PROPOSALS
-// ==========================================================
-
 async function getProjectProposals(
   request,
   env,
@@ -1209,8 +1249,7 @@ async function getProjectProposals(
   if (!user) {
     return json({
       success: false,
-      error:
-        "يجب تسجيل الدخول أولا"
+      error: "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -1220,8 +1259,7 @@ async function getProjectProposals(
   ) {
     return json({
       success: false,
-      error:
-        "معرف المشروع غير صحيح"
+      error: "معرف المشروع غير صحيح"
     }, 400);
   }
 
@@ -1243,8 +1281,7 @@ async function getProjectProposals(
   if (!project) {
     return json({
       success: false,
-      error:
-        "المشروع غير موجود"
+      error: "المشروع غير موجود"
     }, 404);
   }
 
@@ -1291,10 +1328,7 @@ async function getProjectProposals(
 }
 
 
-// ==========================================================
 // UPDATE PROPOSAL STATUS
-// ==========================================================
-
 async function updateProposalStatus(
   request,
   env,
@@ -1309,8 +1343,7 @@ async function updateProposalStatus(
   if (!user) {
     return json({
       success: false,
-      error:
-        "يجب تسجيل الدخول أولا"
+      error: "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -1320,21 +1353,18 @@ async function updateProposalStatus(
   ) {
     return json({
       success: false,
-      error:
-        "معرف العرض غير صحيح"
+      error: "معرف العرض غير صحيح"
     }, 400);
   }
 
   let body;
 
   try {
-    body =
-      await request.json();
+    body = await request.json();
   } catch {
     return json({
       success: false,
-      error:
-        "بيانات الطلب غير صحيحة"
+      error: "بيانات الطلب غير صحيحة"
     }, 400);
   }
 
@@ -1352,8 +1382,7 @@ async function updateProposalStatus(
   ) {
     return json({
       success: false,
-      error:
-        "حالة العرض غير صحيحة"
+      error: "حالة العرض غير صحيحة"
     }, 400);
   }
 
@@ -1379,12 +1408,10 @@ async function updateProposalStatus(
   if (!proposal) {
     return json({
       success: false,
-      error:
-        "العرض غير موجود"
+      error: "العرض غير موجود"
     }, 404);
   }
 
-  // Only project owner can accept/reject
   if (
     proposal.project_owner_id !==
     user.id
@@ -1397,8 +1424,7 @@ async function updateProposalStatus(
   }
 
   if (
-    proposal.project_status !==
-    "open"
+    proposal.project_status !== "open"
   ) {
     return json({
       success: false,
@@ -1408,6 +1434,7 @@ async function updateProposalStatus(
   }
 
   if (status === "accepted") {
+
     const result =
       await env.DB
         .prepare(`
@@ -1468,6 +1495,7 @@ async function updateProposalStatus(
     }
 
   } else {
+
     const result =
       await env.DB
         .prepare(`
@@ -1523,10 +1551,7 @@ async function updateProposalStatus(
 }
 
 
-// ==========================================================
 // PASSWORD
-// ==========================================================
-
 async function createPasswordHash(
   password
 ) {
@@ -1574,14 +1599,10 @@ async function verifyPassword(
 }
 
 
-// ==========================================================
 // SHA-256
-// ==========================================================
-
 async function sha256(value) {
   const data =
-    new TextEncoder()
-      .encode(value);
+    new TextEncoder().encode(value);
 
   const hashBuffer =
     await crypto.subtle.digest(
@@ -1595,14 +1616,8 @@ async function sha256(value) {
 }
 
 
-// ==========================================================
 // CONSTANT TIME COMPARISON
-// ==========================================================
-
-function constantTimeEqual(
-  a,
-  b
-) {
+function constantTimeEqual(a, b) {
   if (
     typeof a !== "string" ||
     typeof b !== "string"
@@ -1630,10 +1645,7 @@ function constantTimeEqual(
 }
 
 
-// ==========================================================
 // TOKEN
-// ==========================================================
-
 function generateToken() {
   const bytes =
     crypto.getRandomValues(
@@ -1644,10 +1656,7 @@ function generateToken() {
 }
 
 
-// ==========================================================
 // BYTES TO HEX
-// ==========================================================
-
 function bytesToHex(bytes) {
   return Array.from(bytes)
     .map(
@@ -1660,13 +1669,8 @@ function bytesToHex(bytes) {
 }
 
 
-// ==========================================================
 // COOKIE
-// ==========================================================
-
-function buildSessionCookie(
-  token
-) {
+function buildSessionCookie(token) {
   return [
     `${COOKIE_NAME}=${token}`,
     "Path=/",
@@ -1695,24 +1699,15 @@ function clearSessionCookie() {
 }
 
 
-// ==========================================================
 // READ SESSION COOKIE
-// ==========================================================
-
-function getSessionToken(
-  request
-) {
+function getSessionToken(request) {
   const cookieHeader =
-    request.headers.get(
-      "Cookie"
-    ) || "";
+    request.headers.get("Cookie") || "";
 
   const cookies =
     cookieHeader.split(";");
 
-  for (
-    const cookie of cookies
-  ) {
+  for (const cookie of cookies) {
     const trimmed =
       cookie.trim();
 
@@ -1733,10 +1728,7 @@ function getSessionToken(
 }
 
 
-// ==========================================================
 // HELPERS
-// ==========================================================
-
 function cleanText(value) {
   return String(value || "")
     .trim()
@@ -1769,6 +1761,7 @@ function json(
       headers: {
         "Content-Type":
           "application/json; charset=UTF-8",
+
         "Cache-Control":
           "no-store"
       }
