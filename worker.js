@@ -40,6 +40,38 @@ export default {
         return await createProject(request, env);
       }
 
+      const projectExecutionMatch =
+        url.pathname.match(
+          /^\/api\/projects\/(\d+)\/execution$/
+        );
+
+      if (
+        projectExecutionMatch &&
+        request.method === "GET"
+      ) {
+        return await getProjectExecution(
+          request,
+          env,
+          Number(projectExecutionMatch[1])
+        );
+      }
+
+      const projectDeliveryMatch =
+        url.pathname.match(
+          /^\/api\/projects\/(\d+)\/deliveries$/
+        );
+
+      if (
+        projectDeliveryMatch &&
+        request.method === "POST"
+      ) {
+        return await createDelivery(
+          request,
+          env,
+          Number(projectDeliveryMatch[1])
+        );
+      }
+
       const projectMatch =
         url.pathname.match(/^\/api\/projects\/(\d+)$/);
 
@@ -52,9 +84,14 @@ export default {
       }
 
       const projectProposalsMatch =
-        url.pathname.match(/^\/api\/projects\/(\d+)\/proposals$/);
+        url.pathname.match(
+          /^\/api\/projects\/(\d+)\/proposals$/
+        );
 
-      if (projectProposalsMatch && request.method === "GET") {
+      if (
+        projectProposalsMatch &&
+        request.method === "GET"
+      ) {
         return await getProjectProposals(
           request,
           env,
@@ -78,7 +115,9 @@ export default {
       }
 
       const proposalStatusMatch =
-        url.pathname.match(/^\/api\/proposals\/(\d+)\/status$/);
+        url.pathname.match(
+          /^\/api\/proposals\/(\d+)\/status$/
+        );
 
       if (
         proposalStatusMatch &&
@@ -88,6 +127,39 @@ export default {
           request,
           env,
           Number(proposalStatusMatch[1])
+        );
+      }
+
+      // DELIVERIES
+      const deliveryAcceptMatch =
+        url.pathname.match(
+          /^\/api\/deliveries\/(\d+)\/accept$/
+        );
+
+      if (
+        deliveryAcceptMatch &&
+        request.method === "POST"
+      ) {
+        return await acceptDelivery(
+          request,
+          env,
+          Number(deliveryAcceptMatch[1])
+        );
+      }
+
+      const deliveryRevisionMatch =
+        url.pathname.match(
+          /^\/api\/deliveries\/(\d+)\/revision$/
+        );
+
+      if (
+        deliveryRevisionMatch &&
+        request.method === "POST"
+      ) {
+        return await requestRevision(
+          request,
+          env,
+          Number(deliveryRevisionMatch[1])
         );
       }
 
@@ -111,7 +183,8 @@ export default {
       return new Response("Not Found", {
         status: 404,
         headers: {
-          "Content-Type": "text/plain; charset=UTF-8"
+          "Content-Type":
+            "text/plain; charset=UTF-8"
         }
       });
 
@@ -121,7 +194,9 @@ export default {
       return json({
         success: false,
         error: "حدث خطأ داخلي في الخادم",
-        details: error?.message || String(error)
+        details:
+          error?.message ||
+          String(error)
       }, 500);
     }
   }
@@ -141,9 +216,15 @@ async function register(request, env) {
     }, 400);
   }
 
-  const fullName = cleanText(body.full_name);
-  const email = cleanEmail(body.email);
-  const password = String(body.password || "");
+  const fullName =
+    cleanText(body.full_name);
+
+  const email =
+    cleanEmail(body.email);
+
+  const password =
+    String(body.password || "");
+
   const role =
     body.role === "freelancer"
       ? "freelancer"
@@ -159,74 +240,85 @@ async function register(request, env) {
   if (fullName.length < 2) {
     return json({
       success: false,
-      error: "الاسم يجب أن يكون حرفين على الأقل"
+      error:
+        "الاسم يجب أن يكون حرفين على الأقل"
     }, 400);
   }
 
   if (!email || !isValidEmail(email)) {
     return json({
       success: false,
-      error: "يرجى إدخال بريد إلكتروني صحيح"
+      error:
+        "يرجى إدخال بريد إلكتروني صحيح"
     }, 400);
   }
 
   if (password.length < 6) {
     return json({
       success: false,
-      error: "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
+      error:
+        "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
     }, 400);
   }
 
-  const existing = await env.DB
-    .prepare(`
-      SELECT id
-      FROM users
-      WHERE LOWER(email) = LOWER(?)
-      LIMIT 1
-    `)
-    .bind(email)
-    .first();
+  const existing =
+    await env.DB
+      .prepare(`
+        SELECT id
+        FROM users
+        WHERE LOWER(email) = LOWER(?)
+        LIMIT 1
+      `)
+      .bind(email)
+      .first();
 
   if (existing) {
     return json({
       success: false,
-      error: "البريد الإلكتروني مستخدم مسبقا"
+      error:
+        "البريد الإلكتروني مستخدم مسبقا"
     }, 409);
   }
 
   const passwordData =
     await createPasswordHash(password);
 
-  const result = await env.DB
-    .prepare(`
-      INSERT INTO users
-      (
-        full_name,
+  const result =
+    await env.DB
+      .prepare(`
+        INSERT INTO users
+        (
+          full_name,
+          email,
+          password_hash,
+          password_salt,
+          role
+        )
+        VALUES (?, ?, ?, ?, ?)
+      `)
+      .bind(
+        fullName,
         email,
-        password_hash,
-        password_salt,
+        passwordData.hash,
+        passwordData.salt,
         role
       )
-      VALUES (?, ?, ?, ?, ?)
-    `)
-    .bind(
-      fullName,
-      email,
-      passwordData.hash,
-      passwordData.salt,
-      role
-    )
-    .run();
+      .run();
 
   if (!result.success) {
-    throw new Error("تعذر إنشاء الحساب");
+    throw new Error(
+      "تعذر إنشاء الحساب"
+    );
   }
 
   return json({
     success: true,
-    message: "تم إنشاء الحساب بنجاح",
+    message:
+      "تم إنشاء الحساب بنجاح",
     user: {
-      id: result.meta?.last_row_id ?? null,
+      id:
+        result.meta?.last_row_id ??
+        null,
       full_name: fullName,
       email,
       role
@@ -244,41 +336,48 @@ async function login(request, env) {
   } catch {
     return json({
       success: false,
-      error: "بيانات الطلب غير صحيحة"
+      error:
+        "بيانات الطلب غير صحيحة"
     }, 400);
   }
 
-  const email = cleanEmail(body.email);
-  const password = String(body.password || "");
+  const email =
+    cleanEmail(body.email);
+
+  const password =
+    String(body.password || "");
 
   if (!email || !password) {
     return json({
       success: false,
-      error: "يرجى إدخال البريد الإلكتروني وكلمة المرور"
+      error:
+        "يرجى إدخال البريد الإلكتروني وكلمة المرور"
     }, 400);
   }
 
-  const user = await env.DB
-    .prepare(`
-      SELECT
-        id,
-        full_name,
-        email,
-        password_hash,
-        password_salt,
-        role,
-        created_at
-      FROM users
-      WHERE LOWER(email) = LOWER(?)
-      LIMIT 1
-    `)
-    .bind(email)
-    .first();
+  const user =
+    await env.DB
+      .prepare(`
+        SELECT
+          id,
+          full_name,
+          email,
+          password_hash,
+          password_salt,
+          role,
+          created_at
+        FROM users
+        WHERE LOWER(email) = LOWER(?)
+        LIMIT 1
+      `)
+      .bind(email)
+      .first();
 
   if (!user) {
     return json({
       success: false,
-      error: "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+      error:
+        "البريد الإلكتروني أو كلمة المرور غير صحيحة"
     }, 401);
   }
 
@@ -292,12 +391,16 @@ async function login(request, env) {
   if (!validPassword) {
     return json({
       success: false,
-      error: "البريد الإلكتروني أو كلمة المرور غير صحيحة"
+      error:
+        "البريد الإلكتروني أو كلمة المرور غير صحيحة"
     }, 401);
   }
 
-  const rawToken = generateToken();
-  const tokenHash = await sha256(rawToken);
+  const rawToken =
+    generateToken();
+
+  const tokenHash =
+    await sha256(rawToken);
 
   const expiresAt =
     new Date(
@@ -334,7 +437,8 @@ async function login(request, env) {
     )
     .run();
 
-  const headers = new Headers();
+  const headers =
+    new Headers();
 
   headers.set(
     "Set-Cookie",
@@ -354,13 +458,16 @@ async function login(request, env) {
   return new Response(
     JSON.stringify({
       success: true,
-      message: "تم تسجيل الدخول بنجاح",
+      message:
+        "تم تسجيل الدخول بنجاح",
       user: {
         id: user.id,
-        full_name: user.full_name,
+        full_name:
+          user.full_name,
         email: user.email,
         role: user.role,
-        created_at: user.created_at
+        created_at:
+          user.created_at
       }
     }),
     {
@@ -389,7 +496,8 @@ async function logout(request, env) {
       .run();
   }
 
-  const headers = new Headers();
+  const headers =
+    new Headers();
 
   headers.set(
     "Set-Cookie",
@@ -409,7 +517,8 @@ async function logout(request, env) {
   return new Response(
     JSON.stringify({
       success: true,
-      message: "تم تسجيل الخروج بنجاح"
+      message:
+        "تم تسجيل الخروج بنجاح"
     }),
     {
       status: 200,
@@ -440,10 +549,12 @@ async function me(request, env) {
     authenticated: true,
     user: {
       id: user.id,
-      full_name: user.full_name,
+      full_name:
+        user.full_name,
       email: user.email,
       role: user.role,
-      created_at: user.created_at
+      created_at:
+        user.created_at
     }
   });
 }
@@ -490,7 +601,9 @@ async function getAuthenticatedUser(
   }
 
   const expiresTime =
-    Date.parse(session.expires_at);
+    Date.parse(
+      session.expires_at
+    );
 
   if (
     Number.isFinite(expiresTime) &&
@@ -509,10 +622,12 @@ async function getAuthenticatedUser(
 
   return {
     id: session.id,
-    full_name: session.full_name,
+    full_name:
+      session.full_name,
     email: session.email,
     role: session.role,
-    created_at: session.created_at
+    created_at:
+      session.created_at
   };
 }
 
@@ -531,7 +646,8 @@ async function getDashboardStats(
   if (!user) {
     return json({
       success: false,
-      error: "يجب تسجيل الدخول أولا"
+      error:
+        "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -604,7 +720,6 @@ async function getDashboardStats(
     });
   }
 
-
   // FREELANCER
   if (user.role === "freelancer") {
     const results =
@@ -676,7 +791,8 @@ async function getDashboardStats(
 
   return json({
     success: false,
-    error: "نوع الحساب غير معروف"
+    error:
+      "نوع الحساب غير معروف"
   }, 400);
 }
 
@@ -695,14 +811,14 @@ async function getProjects(
   if (!user) {
     return json({
       success: false,
-      error: "يجب تسجيل الدخول أولا"
+      error:
+        "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
   let result;
 
-  // CLIENT:
-  // صاحب المشروع يرى مشاريعه فقط
+  // CLIENT
   if (user.role === "client") {
     result =
       await env.DB
@@ -728,10 +844,10 @@ async function getProjects(
         .all();
   }
 
-  // FREELANCER:
-  // المستقل يرى جميع المشاريع المفتوحة
-  // ولا يرى مشروعه نفسه
-  else if (user.role === "freelancer") {
+  // FREELANCER
+  else if (
+    user.role === "freelancer"
+  ) {
     result =
       await env.DB
         .prepare(`
@@ -760,7 +876,8 @@ async function getProjects(
   else {
     return json({
       success: false,
-      error: "نوع الحساب غير معروف"
+      error:
+        "نوع الحساب غير معروف"
     }, 400);
   }
 
@@ -788,7 +905,8 @@ async function createProject(
   if (!user) {
     return json({
       success: false,
-      error: "يجب تسجيل الدخول أولا"
+      error:
+        "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -807,7 +925,8 @@ async function createProject(
   } catch {
     return json({
       success: false,
-      error: "بيانات الطلب غير صحيحة"
+      error:
+        "بيانات الطلب غير صحيحة"
     }, 400);
   }
 
@@ -826,35 +945,40 @@ async function createProject(
   if (!title) {
     return json({
       success: false,
-      error: "يرجى إدخال عنوان المشروع"
+      error:
+        "يرجى إدخال عنوان المشروع"
     }, 400);
   }
 
   if (title.length < 3) {
     return json({
       success: false,
-      error: "عنوان المشروع قصير جدا"
+      error:
+        "عنوان المشروع قصير جدا"
     }, 400);
   }
 
   if (!description) {
     return json({
       success: false,
-      error: "يرجى كتابة وصف المشروع"
+      error:
+        "يرجى كتابة وصف المشروع"
     }, 400);
   }
 
   if (description.length < 10) {
     return json({
       success: false,
-      error: "وصف المشروع يجب أن يكون أوضح"
+      error:
+        "وصف المشروع يجب أن يكون أوضح"
     }, 400);
   }
 
   if (!category) {
     return json({
       success: false,
-      error: "يرجى اختيار تصنيف المشروع"
+      error:
+        "يرجى اختيار تصنيف المشروع"
     }, 400);
   }
 
@@ -864,7 +988,8 @@ async function createProject(
   ) {
     return json({
       success: false,
-      error: "يرجى إدخال ميزانية صحيحة"
+      error:
+        "يرجى إدخال ميزانية صحيحة"
     }, 400);
   }
 
@@ -944,7 +1069,8 @@ async function getProject(
   if (!user) {
     return json({
       success: false,
-      error: "يجب تسجيل الدخول أولا"
+      error:
+        "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -954,7 +1080,8 @@ async function getProject(
   ) {
     return json({
       success: false,
-      error: "معرف المشروع غير صحيح"
+      error:
+        "معرف المشروع غير صحيح"
     }, 400);
   }
 
@@ -984,7 +1111,8 @@ async function getProject(
   if (!project) {
     return json({
       success: false,
-      error: "المشروع غير موجود"
+      error:
+        "المشروع غير موجود"
     }, 404);
   }
 
@@ -995,7 +1123,8 @@ async function getProject(
     Number(user.id);
 
   const isOwner =
-    projectOwnerId === currentUserId;
+    projectOwnerId ===
+    currentUserId;
 
   const canApply =
     user.role === "freelancer" &&
@@ -1028,7 +1157,8 @@ async function createProposal(
   if (!user) {
     return json({
       success: false,
-      error: "يجب تسجيل الدخول أولا"
+      error:
+        "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -1047,7 +1177,8 @@ async function createProposal(
   } catch {
     return json({
       success: false,
-      error: "بيانات الطلب غير صحيحة"
+      error:
+        "بيانات الطلب غير صحيحة"
     }, 400);
   }
 
@@ -1069,7 +1200,8 @@ async function createProposal(
   ) {
     return json({
       success: false,
-      error: "معرف المشروع غير صحيح"
+      error:
+        "معرف المشروع غير صحيح"
     }, 400);
   }
 
@@ -1079,7 +1211,8 @@ async function createProposal(
   ) {
     return json({
       success: false,
-      error: "يرجى إدخال سعر صحيح"
+      error:
+        "يرجى إدخال سعر صحيح"
     }, 400);
   }
 
@@ -1127,11 +1260,15 @@ async function createProposal(
   if (!project) {
     return json({
       success: false,
-      error: "المشروع غير موجود"
+      error:
+        "المشروع غير موجود"
     }, 404);
   }
 
-  if (project.user_id === user.id) {
+  if (
+    Number(project.user_id) ===
+    Number(user.id)
+  ) {
     return json({
       success: false,
       error:
@@ -1248,7 +1385,8 @@ async function getMyProposals(
   if (!user) {
     return json({
       success: false,
-      error: "يجب تسجيل الدخول أولا"
+      error:
+        "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -1302,7 +1440,8 @@ async function getProjectProposals(
   if (!user) {
     return json({
       success: false,
-      error: "يجب تسجيل الدخول أولا"
+      error:
+        "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -1312,7 +1451,8 @@ async function getProjectProposals(
   ) {
     return json({
       success: false,
-      error: "معرف المشروع غير صحيح"
+      error:
+        "معرف المشروع غير صحيح"
     }, 400);
   }
 
@@ -1334,11 +1474,15 @@ async function getProjectProposals(
   if (!project) {
     return json({
       success: false,
-      error: "المشروع غير موجود"
+      error:
+        "المشروع غير موجود"
     }, 404);
   }
 
-  if (project.user_id !== user.id) {
+  if (
+    Number(project.user_id) !==
+    Number(user.id)
+  ) {
     return json({
       success: false,
       error:
@@ -1396,7 +1540,8 @@ async function updateProposalStatus(
   if (!user) {
     return json({
       success: false,
-      error: "يجب تسجيل الدخول أولا"
+      error:
+        "يجب تسجيل الدخول أولا"
     }, 401);
   }
 
@@ -1406,7 +1551,8 @@ async function updateProposalStatus(
   ) {
     return json({
       success: false,
-      error: "معرف العرض غير صحيح"
+      error:
+        "معرف العرض غير صحيح"
     }, 400);
   }
 
@@ -1417,7 +1563,8 @@ async function updateProposalStatus(
   } catch {
     return json({
       success: false,
-      error: "بيانات الطلب غير صحيحة"
+      error:
+        "بيانات الطلب غير صحيحة"
     }, 400);
   }
 
@@ -1435,7 +1582,8 @@ async function updateProposalStatus(
   ) {
     return json({
       success: false,
-      error: "حالة العرض غير صحيحة"
+      error:
+        "حالة العرض غير صحيحة"
     }, 400);
   }
 
@@ -1446,6 +1594,8 @@ async function updateProposalStatus(
           p.id,
           p.project_id,
           p.freelancer_id,
+          p.price,
+          p.delivery_days,
           p.status,
           pr.user_id AS project_owner_id,
           pr.status AS project_status
@@ -1461,13 +1611,14 @@ async function updateProposalStatus(
   if (!proposal) {
     return json({
       success: false,
-      error: "العرض غير موجود"
+      error:
+        "العرض غير موجود"
     }, 404);
   }
 
   if (
-    proposal.project_owner_id !==
-    user.id
+    Number(proposal.project_owner_id) !==
+    Number(user.id)
   ) {
     return json({
       success: false,
@@ -1477,7 +1628,8 @@ async function updateProposalStatus(
   }
 
   if (
-    proposal.project_status !== "open"
+    proposal.project_status !==
+    "open"
   ) {
     return json({
       success: false,
@@ -1488,9 +1640,39 @@ async function updateProposalStatus(
 
   if (status === "accepted") {
 
-    const result =
+    const existingExecution =
       await env.DB
         .prepare(`
+          SELECT id
+          FROM project_executions
+          WHERE project_id = ?
+          LIMIT 1
+        `)
+        .bind(proposal.project_id)
+        .first();
+
+    if (existingExecution) {
+      return json({
+        success: false,
+        error:
+          "المشروع لديه تنفيذ قائم بالفعل"
+      }, 409);
+    }
+
+    const dueAt =
+      new Date(
+        Date.now() +
+        Number(proposal.delivery_days) *
+        24 *
+        60 *
+        60 *
+        1000
+      ).toISOString();
+
+    const results =
+      await env.DB.batch([
+
+        env.DB.prepare(`
           UPDATE proposals
           SET
             status = 'rejected',
@@ -1498,53 +1680,82 @@ async function updateProposalStatus(
           WHERE project_id = ?
             AND id != ?
             AND status = 'pending'
-        `)
-        .bind(
+        `).bind(
           proposal.project_id,
           proposalId
-        )
-        .run();
+        ),
 
-    if (!result.success) {
-      throw new Error(
-        "تعذر تحديث العروض الأخرى"
-      );
-    }
-
-    const accepted =
-      await env.DB
-        .prepare(`
+        env.DB.prepare(`
           UPDATE proposals
           SET
             status = 'accepted',
             updated_at = CURRENT_TIMESTAMP
           WHERE id = ?
-        `)
-        .bind(proposalId)
-        .run();
+        `).bind(proposalId),
 
-    if (!accepted.success) {
-      throw new Error(
-        "تعذر قبول العرض"
-      );
-    }
-
-    const project =
-      await env.DB
-        .prepare(`
+        env.DB.prepare(`
           UPDATE projects
           SET
             status = 'in_progress',
             updated_at = CURRENT_TIMESTAMP
           WHERE id = ?
-        `)
-        .bind(proposal.project_id)
-        .run();
+            AND status = 'open'
+        `).bind(
+          proposal.project_id
+        ),
 
-    if (!project.success) {
-      throw new Error(
-        "تعذر تحديث حالة المشروع"
-      );
+        env.DB.prepare(`
+          INSERT INTO project_executions
+          (
+            project_id,
+            proposal_id,
+            freelancer_id,
+            due_at,
+            status
+          )
+          VALUES (?, ?, ?, ?, 'in_progress')
+        `).bind(
+          proposal.project_id,
+          proposalId,
+          proposal.freelancer_id,
+          dueAt
+        ),
+
+        env.DB.prepare(`
+          INSERT INTO project_events
+          (
+            project_id,
+            execution_id,
+            user_id,
+            event_type,
+            message
+          )
+          SELECT
+            ?,
+            id,
+            ?,
+            'execution_started',
+            'تم قبول العرض وبدء تنفيذ المشروع'
+          FROM project_executions
+          WHERE project_id = ?
+          LIMIT 1
+        `).bind(
+          proposal.project_id,
+          user.id,
+          proposal.project_id
+        )
+
+      ]);
+
+    for (const result of results) {
+      if (
+        result &&
+        result.success === false
+      ) {
+        throw new Error(
+          "تعذر تنفيذ عملية قبول العرض"
+        );
+      }
     }
 
   } else {
@@ -1595,12 +1806,1108 @@ async function updateProposalStatus(
     success: true,
     message:
       status === "accepted"
-        ? "تم قبول العرض وتحديث حالة المشروع"
+        ? "تم قبول العرض وبدء تنفيذ المشروع"
         : status === "rejected"
           ? "تم رفض العرض"
           : "تم تحديث حالة العرض",
     proposal: updated
   });
+}
+
+
+// ENSURE PROJECT EXECUTION
+async function ensureProjectExecution(
+  env,
+  projectId
+) {
+  const existing =
+    await env.DB
+      .prepare(`
+        SELECT
+          e.id,
+          e.project_id,
+          e.proposal_id,
+          e.freelancer_id,
+          e.start_at,
+          e.due_at,
+          e.status,
+          e.completed_at,
+          e.created_at,
+          e.updated_at
+        FROM project_executions e
+        WHERE e.project_id = ?
+        LIMIT 1
+      `)
+      .bind(projectId)
+      .first();
+
+  if (existing) {
+    return existing;
+  }
+
+  const project =
+    await env.DB
+      .prepare(`
+        SELECT
+          id,
+          user_id,
+          status
+        FROM projects
+        WHERE id = ?
+        LIMIT 1
+      `)
+      .bind(projectId)
+      .first();
+
+  if (!project) {
+    return null;
+  }
+
+  if (
+    project.status !==
+    "in_progress"
+  ) {
+    return null;
+  }
+
+  const acceptedProposal =
+    await env.DB
+      .prepare(`
+        SELECT
+          id,
+          project_id,
+          freelancer_id,
+          delivery_days,
+          status
+        FROM proposals
+        WHERE project_id = ?
+          AND status = 'accepted'
+        ORDER BY id DESC
+        LIMIT 1
+      `)
+      .bind(projectId)
+      .first();
+
+  if (!acceptedProposal) {
+    return null;
+  }
+
+  const dueAt =
+    new Date(
+      Date.now() +
+      Number(
+        acceptedProposal.delivery_days
+      ) *
+      24 *
+      60 *
+      60 *
+      1000
+    ).toISOString();
+
+  const existingByProposal =
+    await env.DB
+      .prepare(`
+        SELECT
+          id,
+          project_id,
+          proposal_id,
+          freelancer_id,
+          start_at,
+          due_at,
+          status,
+          completed_at,
+          created_at,
+          updated_at
+        FROM project_executions
+        WHERE proposal_id = ?
+        LIMIT 1
+      `)
+      .bind(
+        acceptedProposal.id
+      )
+      .first();
+
+  if (existingByProposal) {
+    return existingByProposal;
+  }
+
+  const result =
+    await env.DB
+      .prepare(`
+        INSERT INTO project_executions
+        (
+          project_id,
+          proposal_id,
+          freelancer_id,
+          due_at,
+          status
+        )
+        VALUES (?, ?, ?, ?, 'in_progress')
+      `)
+      .bind(
+        projectId,
+        acceptedProposal.id,
+        acceptedProposal.freelancer_id,
+        dueAt
+      )
+      .run();
+
+  if (!result.success) {
+    const retry =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            project_id,
+            proposal_id,
+            freelancer_id,
+            start_at,
+            due_at,
+            status,
+            completed_at,
+            created_at,
+            updated_at
+          FROM project_executions
+          WHERE project_id = ?
+          LIMIT 1
+        `)
+        .bind(projectId)
+        .first();
+
+    if (retry) {
+      return retry;
+    }
+
+    throw new Error(
+      "تعذر إنشاء تنفيذ المشروع"
+    );
+  }
+
+  const execution =
+    await env.DB
+      .prepare(`
+        SELECT
+          id,
+          project_id,
+          proposal_id,
+          freelancer_id,
+          start_at,
+          due_at,
+          status,
+          completed_at,
+          created_at,
+          updated_at
+        FROM project_executions
+        WHERE project_id = ?
+        LIMIT 1
+      `)
+      .bind(projectId)
+      .first();
+
+  if (execution) {
+    await env.DB
+      .prepare(`
+        INSERT INTO project_events
+        (
+          project_id,
+          execution_id,
+          user_id,
+          event_type,
+          message
+        )
+        VALUES (?, ?, ?, 'execution_started', ?)
+      `)
+      .bind(
+        projectId,
+        execution.id,
+        project.user_id,
+        "تم إنشاء تنفيذ المشروع بعد قبول العرض"
+      )
+      .run();
+  }
+
+  return execution;
+}
+
+
+// GET PROJECT EXECUTION
+async function getProjectExecution(
+  request,
+  env,
+  projectId
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
+
+  if (!user) {
+    return json({
+      success: false,
+      error:
+        "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  if (
+    !Number.isInteger(projectId) ||
+    projectId <= 0
+  ) {
+    return json({
+      success: false,
+      error:
+        "معرف المشروع غير صحيح"
+    }, 400);
+  }
+
+  const project =
+    await env.DB
+      .prepare(`
+        SELECT
+          id,
+          user_id,
+          title,
+          status
+        FROM projects
+        WHERE id = ?
+        LIMIT 1
+      `)
+      .bind(projectId)
+      .first();
+
+  if (!project) {
+    return json({
+      success: false,
+      error:
+        "المشروع غير موجود"
+    }, 404);
+  }
+
+  const execution =
+    await ensureProjectExecution(
+      env,
+      projectId
+    );
+
+  if (!execution) {
+    return json({
+      success: false,
+      error:
+        "لا يوجد تنفيذ قائم لهذا المشروع"
+    }, 404);
+  }
+
+  const isClientOwner =
+    Number(project.user_id) ===
+    Number(user.id);
+
+  const isFreelancer =
+    Number(execution.freelancer_id) ===
+    Number(user.id);
+
+  if (
+    !isClientOwner &&
+    !isFreelancer
+  ) {
+    return json({
+      success: false,
+      error:
+        "غير مسموح لك بمشاهدة تنفيذ هذا المشروع"
+    }, 403);
+  }
+
+  const proposal =
+    await env.DB
+      .prepare(`
+        SELECT
+          p.id,
+          p.project_id,
+          p.freelancer_id,
+          p.price,
+          p.delivery_days,
+          p.message,
+          p.status,
+          p.created_at,
+          p.updated_at,
+          u.full_name AS freelancer_name
+        FROM proposals p
+        LEFT JOIN users u
+          ON u.id = p.freelancer_id
+        WHERE p.id = ?
+        LIMIT 1
+      `)
+      .bind(
+        execution.proposal_id
+      )
+      .first();
+
+  const latestDelivery =
+    await env.DB
+      .prepare(`
+        SELECT
+          d.id,
+          d.execution_id,
+          d.freelancer_id,
+          d.version,
+          d.message,
+          d.file_url,
+          d.status,
+          d.created_at
+        FROM project_deliveries d
+        WHERE d.execution_id = ?
+        ORDER BY d.version DESC
+        LIMIT 1
+      `)
+      .bind(execution.id)
+      .first();
+
+  const revision =
+    await env.DB
+      .prepare(`
+        SELECT
+          r.id,
+          r.execution_id,
+          r.delivery_id,
+          r.client_id,
+          r.message,
+          r.status,
+          r.created_at,
+          r.resolved_at
+        FROM project_revision_requests r
+        WHERE r.execution_id = ?
+        ORDER BY r.id DESC
+        LIMIT 1
+      `)
+      .bind(execution.id)
+      .first();
+
+  const events =
+    await env.DB
+      .prepare(`
+        SELECT
+          e.id,
+          e.project_id,
+          e.execution_id,
+          e.user_id,
+          e.event_type,
+          e.message,
+          e.created_at,
+          u.full_name AS user_name
+        FROM project_events e
+        LEFT JOIN users u
+          ON u.id = e.user_id
+        WHERE e.project_id = ?
+        ORDER BY e.id DESC
+        LIMIT 50
+      `)
+      .bind(projectId)
+      .all();
+
+  return json({
+    success: true,
+    project,
+    execution,
+    proposal,
+    latest_delivery:
+      latestDelivery || null,
+    revision_request:
+      revision || null,
+    events:
+      events.results || [],
+    is_client_owner:
+      isClientOwner,
+    is_freelancer:
+      isFreelancer
+  });
+}
+
+
+// CREATE DELIVERY
+async function createDelivery(
+  request,
+  env,
+  projectId
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
+
+  if (!user) {
+    return json({
+      success: false,
+      error:
+        "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error:
+        "إرسال التسليم متاح للمستقل فقط"
+    }, 403);
+  }
+
+  if (
+    !Number.isInteger(projectId) ||
+    projectId <= 0
+  ) {
+    return json({
+      success: false,
+      error:
+        "معرف المشروع غير صحيح"
+    }, 400);
+  }
+
+  let body;
+
+  try {
+    body = await request.json();
+  } catch {
+    return json({
+      success: false,
+      error:
+        "بيانات الطلب غير صحيحة"
+    }, 400);
+  }
+
+  const message =
+    cleanText(body.message);
+
+  const fileUrl =
+    cleanText(body.file_url);
+
+  if (!message) {
+    return json({
+      success: false,
+      error:
+        "يرجى كتابة رسالة التسليم"
+    }, 400);
+  }
+
+  if (message.length < 5) {
+    return json({
+      success: false,
+      error:
+        "رسالة التسليم قصيرة جدا"
+    }, 400);
+  }
+
+  const execution =
+    await ensureProjectExecution(
+      env,
+      projectId
+    );
+
+  if (!execution) {
+    return json({
+      success: false,
+      error:
+        "لا يوجد تنفيذ قائم لهذا المشروع"
+    }, 404);
+  }
+
+  if (
+    Number(execution.freelancer_id) !==
+    Number(user.id)
+  ) {
+    return json({
+      success: false,
+      error:
+        "غير مسموح لك بتسليم هذا المشروع"
+    }, 403);
+  }
+
+  if (
+    execution.status ===
+    "completed"
+  ) {
+    return json({
+      success: false,
+      error:
+        "تم إكمال المشروع ولا يمكن إرسال تسليم جديد"
+    }, 400);
+  }
+
+  if (
+    execution.status !==
+      "in_progress" &&
+    execution.status !==
+      "revision_requested"
+  ) {
+    return json({
+      success: false,
+      error:
+        "حالة التنفيذ الحالية لا تسمح بالتسليم"
+    }, 400);
+  }
+
+  const maxVersion =
+    await env.DB
+      .prepare(`
+        SELECT
+          MAX(version) AS max_version
+        FROM project_deliveries
+        WHERE execution_id = ?
+      `)
+      .bind(execution.id)
+      .first();
+
+  const version =
+    Number(
+      maxVersion?.max_version || 0
+    ) + 1;
+
+  const result =
+    await env.DB
+      .prepare(`
+        INSERT INTO project_deliveries
+        (
+          execution_id,
+          freelancer_id,
+          version,
+          message,
+          file_url,
+          status
+        )
+        VALUES (?, ?, ?, ?, ?, 'submitted')
+      `)
+      .bind(
+        execution.id,
+        user.id,
+        version,
+        message,
+        fileUrl || null
+      )
+      .run();
+
+  if (!result.success) {
+    throw new Error(
+      "تعذر إنشاء التسليم"
+    );
+  }
+
+  const deliveryId =
+    result.meta?.last_row_id;
+
+  await env.DB.batch([
+
+    env.DB.prepare(`
+      UPDATE project_executions
+      SET
+        status = 'submitted',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(execution.id),
+
+    env.DB.prepare(`
+      UPDATE project_revision_requests
+      SET
+        status = 'resolved',
+        resolved_at = CURRENT_TIMESTAMP
+      WHERE execution_id = ?
+        AND status = 'open'
+    `).bind(execution.id),
+
+    env.DB.prepare(`
+      INSERT INTO project_events
+      (
+        project_id,
+        execution_id,
+        user_id,
+        event_type,
+        message
+      )
+      VALUES (?, ?, ?, 'delivery_submitted', ?)
+    `).bind(
+      projectId,
+      execution.id,
+      user.id,
+      `تم إرسال التسليم رقم ${version}`
+    )
+
+  ]);
+
+  const delivery =
+    await env.DB
+      .prepare(`
+        SELECT
+          id,
+          execution_id,
+          freelancer_id,
+          version,
+          message,
+          file_url,
+          status,
+          created_at
+        FROM project_deliveries
+        WHERE id = ?
+        LIMIT 1
+      `)
+      .bind(deliveryId)
+      .first();
+
+  return json({
+    success: true,
+    message:
+      version === 1
+        ? "تم إرسال التسليم بنجاح"
+        : `تم إرسال النسخة رقم ${version} بنجاح`,
+    delivery
+  }, 201);
+}
+
+
+// ACCEPT DELIVERY
+async function acceptDelivery(
+  request,
+  env,
+  deliveryId
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
+
+  if (!user) {
+    return json({
+      success: false,
+      error:
+        "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  if (user.role !== "client") {
+    return json({
+      success: false,
+      error:
+        "قبول التسليم متاح لصاحب المشروع فقط"
+    }, 403);
+  }
+
+  if (
+    !Number.isInteger(deliveryId) ||
+    deliveryId <= 0
+  ) {
+    return json({
+      success: false,
+      error:
+        "معرف التسليم غير صحيح"
+    }, 400);
+  }
+
+  const delivery =
+    await env.DB
+      .prepare(`
+        SELECT
+          d.id,
+          d.execution_id,
+          d.freelancer_id,
+          d.version,
+          d.status AS delivery_status,
+          e.project_id,
+          e.status AS execution_status,
+          p.user_id AS project_owner_id,
+          p.status AS project_status
+        FROM project_deliveries d
+        INNER JOIN project_executions e
+          ON e.id = d.execution_id
+        INNER JOIN projects p
+          ON p.id = e.project_id
+        WHERE d.id = ?
+        LIMIT 1
+      `)
+      .bind(deliveryId)
+      .first();
+
+  if (!delivery) {
+    return json({
+      success: false,
+      error:
+        "التسليم غير موجود"
+    }, 404);
+  }
+
+  if (
+    Number(delivery.project_owner_id) !==
+    Number(user.id)
+  ) {
+    return json({
+      success: false,
+      error:
+        "غير مسموح لك بقبول هذا التسليم"
+    }, 403);
+  }
+
+  if (
+    delivery.execution_status ===
+    "completed"
+  ) {
+    return json({
+      success: false,
+      error:
+        "المشروع مكتمل بالفعل"
+    }, 400);
+  }
+
+  if (
+    delivery.delivery_status !==
+    "submitted"
+  ) {
+    return json({
+      success: false,
+      error:
+        "هذا التسليم لا يمكن قبوله حاليا"
+    }, 400);
+  }
+
+  const results =
+    await env.DB.batch([
+
+      env.DB.prepare(`
+        UPDATE project_deliveries
+        SET
+          status = 'accepted'
+        WHERE id = ?
+          AND status = 'submitted'
+      `).bind(deliveryId),
+
+      env.DB.prepare(`
+        UPDATE project_executions
+        SET
+          status = 'completed',
+          completed_at = CURRENT_TIMESTAMP,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `).bind(delivery.execution_id),
+
+      env.DB.prepare(`
+        UPDATE projects
+        SET
+          status = 'completed',
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `).bind(delivery.project_id),
+
+      env.DB.prepare(`
+        UPDATE project_revision_requests
+        SET
+          status = 'resolved',
+          resolved_at = CURRENT_TIMESTAMP
+        WHERE execution_id = ?
+          AND status = 'open'
+      `).bind(delivery.execution_id),
+
+      env.DB.prepare(`
+        INSERT INTO project_events
+        (
+          project_id,
+          execution_id,
+          user_id,
+          event_type,
+          message
+        )
+        VALUES (?, ?, ?, 'delivery_accepted', ?)
+      `).bind(
+        delivery.project_id,
+        delivery.execution_id,
+        user.id,
+        `تم قبول التسليم رقم ${delivery.version}`
+      ),
+
+      env.DB.prepare(`
+        INSERT INTO project_events
+        (
+          project_id,
+          execution_id,
+          user_id,
+          event_type,
+          message
+        )
+        VALUES (?, ?, ?, 'project_completed', 'تم إكمال المشروع بنجاح')
+      `).bind(
+        delivery.project_id,
+        delivery.execution_id,
+        user.id
+      )
+
+    ]);
+
+  for (const result of results) {
+    if (
+      result &&
+      result.success === false
+    ) {
+      throw new Error(
+        "تعذر إكمال المشروع"
+      );
+    }
+  }
+
+  return json({
+    success: true,
+    message:
+      "تم قبول التسليم وإكمال المشروع",
+    project_id:
+      delivery.project_id,
+    execution_id:
+      delivery.execution_id,
+    delivery_id:
+      deliveryId
+  });
+}
+
+
+// REQUEST REVISION
+async function requestRevision(
+  request,
+  env,
+  deliveryId
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
+
+  if (!user) {
+    return json({
+      success: false,
+      error:
+        "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  if (user.role !== "client") {
+    return json({
+      success: false,
+      error:
+        "طلب التعديل متاح لصاحب المشروع فقط"
+    }, 403);
+  }
+
+  if (
+    !Number.isInteger(deliveryId) ||
+    deliveryId <= 0
+  ) {
+    return json({
+      success: false,
+      error:
+        "معرف التسليم غير صحيح"
+    }, 400);
+  }
+
+  let body;
+
+  try {
+    body = await request.json();
+  } catch {
+    return json({
+      success: false,
+      error:
+        "بيانات الطلب غير صحيحة"
+    }, 400);
+  }
+
+  const message =
+    cleanText(body.message);
+
+  if (!message) {
+    return json({
+      success: false,
+      error:
+        "يرجى كتابة تفاصيل التعديل المطلوب"
+    }, 400);
+  }
+
+  if (message.length < 5) {
+    return json({
+      success: false,
+      error:
+        "تفاصيل التعديل قصيرة جدا"
+    }, 400);
+  }
+
+  const delivery =
+    await env.DB
+      .prepare(`
+        SELECT
+          d.id,
+          d.execution_id,
+          d.version,
+          d.status AS delivery_status,
+          e.project_id,
+          e.status AS execution_status,
+          p.user_id AS project_owner_id,
+          p.status AS project_status
+        FROM project_deliveries d
+        INNER JOIN project_executions e
+          ON e.id = d.execution_id
+        INNER JOIN projects p
+          ON p.id = e.project_id
+        WHERE d.id = ?
+        LIMIT 1
+      `)
+      .bind(deliveryId)
+      .first();
+
+  if (!delivery) {
+    return json({
+      success: false,
+      error:
+        "التسليم غير موجود"
+    }, 404);
+  }
+
+  if (
+    Number(delivery.project_owner_id) !==
+    Number(user.id)
+  ) {
+    return json({
+      success: false,
+      error:
+        "غير مسموح لك بطلب تعديل على هذا التسليم"
+    }, 403);
+  }
+
+  if (
+    delivery.execution_status ===
+    "completed"
+  ) {
+    return json({
+      success: false,
+      error:
+        "المشروع مكتمل ولا يمكن طلب تعديل"
+    }, 400);
+  }
+
+  if (
+    delivery.delivery_status !==
+    "submitted"
+  ) {
+    return json({
+      success: false,
+      error:
+        "لا يمكن طلب تعديل على هذا التسليم حاليا"
+    }, 400);
+  }
+
+  const openRevision =
+    await env.DB
+      .prepare(`
+        SELECT id
+        FROM project_revision_requests
+        WHERE execution_id = ?
+          AND status = 'open'
+        LIMIT 1
+      `)
+      .bind(delivery.execution_id)
+      .first();
+
+  if (openRevision) {
+    return json({
+      success: false,
+      error:
+        "يوجد طلب تعديل مفتوح بالفعل"
+    }, 409);
+  }
+
+  const results =
+    await env.DB.batch([
+
+      env.DB.prepare(`
+        UPDATE project_deliveries
+        SET
+          status = 'revision_requested'
+        WHERE id = ?
+      `).bind(deliveryId),
+
+      env.DB.prepare(`
+        UPDATE project_executions
+        SET
+          status = 'revision_requested',
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `).bind(delivery.execution_id),
+
+      env.DB.prepare(`
+        INSERT INTO project_revision_requests
+        (
+          execution_id,
+          delivery_id,
+          client_id,
+          message,
+          status
+        )
+        VALUES (?, ?, ?, ?, 'open')
+      `).bind(
+        delivery.execution_id,
+        deliveryId,
+        user.id,
+        message
+      ),
+
+      env.DB.prepare(`
+        INSERT INTO project_events
+        (
+          project_id,
+          execution_id,
+          user_id,
+          event_type,
+          message
+        )
+        VALUES (?, ?, ?, 'revision_requested', ?)
+      `).bind(
+        delivery.project_id,
+        delivery.execution_id,
+        user.id,
+        `تم طلب تعديل على التسليم رقم ${delivery.version}: ${message}`
+      )
+
+    ]);
+
+  for (const result of results) {
+    if (
+      result &&
+      result.success === false
+    ) {
+      throw new Error(
+        "تعذر تسجيل طلب التعديل"
+      );
+    }
+  }
+
+  const revision =
+    await env.DB
+      .prepare(`
+        SELECT
+          id,
+          execution_id,
+          delivery_id,
+          client_id,
+          message,
+          status,
+          created_at,
+          resolved_at
+        FROM project_revision_requests
+        WHERE execution_id = ?
+        ORDER BY id DESC
+        LIMIT 1
+      `)
+      .bind(delivery.execution_id)
+      .first();
+
+  return json({
+    success: true,
+    message:
+      "تم إرسال طلب التعديل للمستقل",
+    revision_request:
+      revision
+  }, 201);
 }
 
 
