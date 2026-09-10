@@ -41,7 +41,14 @@
       font-weight: bold;
     }
 
-    .home {
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .home,
+    .logout {
       color: #9da4af;
       text-decoration: none;
       font-size: 14px;
@@ -50,6 +57,20 @@
 
     .home:hover {
       color: #4f8cff;
+    }
+
+    .logout {
+      border: 1px solid #3a424d;
+      background: #242930;
+      border-radius: 8px;
+      padding: 8px 13px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .logout:hover {
+      color: #ef6f79;
+      border-color: #ef6f79;
     }
 
     main {
@@ -86,6 +107,37 @@
       border-radius: 20px;
       font-size: 14px;
       color: #c8cdd5;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .stat {
+      background: #20242a;
+      border: 1px solid #30363f;
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    .stat-icon {
+      font-size: 25px;
+      margin-bottom: 10px;
+    }
+
+    .stat-title {
+      color: #9da4af;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .stat-value {
+      color: #e7eaf0;
+      font-size: 25px;
+      font-weight: bold;
     }
 
     .section-title {
@@ -175,23 +227,110 @@
       padding: 40px;
       color: #ef6f79;
     }
+
+    .retry {
+      margin-top: 15px;
+      padding: 10px 18px;
+      border: 1px solid #3a424d;
+      background: #242930;
+      color: #e7eaf0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .retry:hover {
+      border-color: #4f8cff;
+    }
+
+    @media (max-width: 600px) {
+
+      header {
+        padding: 14px;
+      }
+
+      .header-inner {
+        gap: 10px;
+      }
+
+      .logo {
+        font-size: 23px;
+      }
+
+      .header-actions {
+        gap: 8px;
+      }
+
+      .home {
+        font-size: 12px;
+      }
+
+      .logout {
+        font-size: 12px;
+        padding: 7px 9px;
+      }
+
+      main {
+        margin: 22px auto;
+        padding: 0 14px;
+      }
+
+      .welcome {
+        padding: 20px;
+      }
+
+      .welcome h1 {
+        font-size: 23px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .stat {
+        padding: 15px;
+      }
+
+      .stat-value {
+        font-size: 22px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
 <body>
 
   <header>
+
     <div class="header-inner">
 
       <a href="index.html" class="logo">
         مِهراف
       </a>
 
-      <a href="index.html" class="home">
-        ← الصفحة الرئيسية
-      </a>
+      <div class="header-actions">
+
+        <a href="index.html" class="home">
+          ← الرئيسية
+        </a>
+
+        <button
+          type="button"
+          class="logout"
+          id="logoutButton"
+        >
+          تسجيل الخروج
+        </button>
+
+      </div>
 
     </div>
+
   </header>
 
 
@@ -211,6 +350,8 @@
 
     <div id="content">
 
+      <!-- معلومات الحساب -->
+
       <div class="welcome">
 
         <h1>
@@ -227,6 +368,76 @@
       </div>
 
 
+      <!-- الإحصائيات -->
+
+      <div class="stats">
+
+        <div class="stat">
+
+          <div class="stat-icon">
+            📊
+          </div>
+
+          <div class="stat-title">
+            حالة الحساب
+          </div>
+
+          <div
+            class="stat-value"
+            id="accountStatus"
+          >
+            نشط
+          </div>
+
+        </div>
+
+
+        <div class="stat">
+
+          <div class="stat-icon">
+            📁
+          </div>
+
+          <div class="stat-title">
+            المشاريع
+          </div>
+
+          <div
+            class="stat-value"
+            id="projectsCount"
+          >
+            0
+          </div>
+
+        </div>
+
+
+        <div
+          class="stat"
+          id="proposalsStat"
+          style="display:none;"
+        >
+
+          <div class="stat-icon">
+            📨
+          </div>
+
+          <div class="stat-title">
+            العروض المقدمة
+          </div>
+
+          <div
+            class="stat-value"
+            id="proposalsCount"
+          >
+            0
+          </div>
+
+        </div>
+
+      </div>
+
+
       <!-- لوحة المستقل -->
 
       <section
@@ -235,7 +446,7 @@
       >
 
         <h2 class="section-title">
-          إدارة خدماتك
+          إدارة حسابك كمستقل
         </h2>
 
         <div class="cards">
@@ -244,7 +455,10 @@
             href="my-services.html"
             class="card"
           >
-            <div class="icon">💼</div>
+
+            <div class="icon">
+              💼
+            </div>
 
             <h3>
               خدماتي
@@ -253,6 +467,7 @@
             <p>
               إدارة الخدمات التي تقدمها للعملاء.
             </p>
+
           </a>
 
 
@@ -260,7 +475,10 @@
             href="add-service.html"
             class="card"
           >
-            <div class="icon">➕</div>
+
+            <div class="icon">
+              ➕
+            </div>
 
             <h3>
               إضافة خدمة
@@ -269,16 +487,18 @@
             <p>
               انشر خدمة جديدة على مِهراف.
             </p>
+
           </a>
 
-
-          <!-- تصفح المشاريع: مفعل -->
 
           <a
             href="projects.html"
             class="card"
           >
-            <div class="icon">📋</div>
+
+            <div class="icon">
+              📋
+            </div>
 
             <h3>
               تصفح المشاريع
@@ -287,6 +507,7 @@
             <p>
               ابحث عن المشاريع المناسبة لمهاراتك.
             </p>
+
           </a>
 
 
@@ -295,11 +516,14 @@
             class="card coming"
             onclick="return false;"
           >
+
             <span class="badge">
               قريبًا
             </span>
 
-            <div class="icon">📨</div>
+            <div class="icon">
+              📨
+            </div>
 
             <h3>
               طلبات العمل
@@ -308,6 +532,7 @@
             <p>
               تابع عروضك وطلبات العمل.
             </p>
+
           </a>
 
         </div>
@@ -328,13 +553,14 @@
 
         <div class="cards">
 
-          <!-- مشاريعي -->
-
           <a
             href="projects.html"
             class="card"
           >
-            <div class="icon">📁</div>
+
+            <div class="icon">
+              📁
+            </div>
 
             <h3>
               مشاريعي
@@ -343,16 +569,18 @@
             <p>
               عرض وإدارة المشاريع التي نشرتها.
             </p>
+
           </a>
 
-
-          <!-- نشر مشروع -->
 
           <a
             href="add-project.html"
             class="card"
           >
-            <div class="icon">➕</div>
+
+            <div class="icon">
+              ➕
+            </div>
 
             <h3>
               نشر مشروع
@@ -361,21 +589,23 @@
             <p>
               انشر مشروعًا جديدًا واحصل على عروض المستقلين.
             </p>
+
           </a>
 
-
-          <!-- طلباتي -->
 
           <a
             href="#"
             class="card coming"
             onclick="return false;"
           >
+
             <span class="badge">
               قريبًا
             </span>
 
-            <div class="icon">📨</div>
+            <div class="icon">
+              📨
+            </div>
 
             <h3>
               طلباتي
@@ -384,6 +614,7 @@
             <p>
               تابع الخدمات والطلبات الخاصة بك.
             </p>
+
           </a>
 
         </div>
@@ -399,54 +630,67 @@
 
     async function loadDashboard() {
 
+      const loading =
+        document.getElementById("loading");
+
+      const content =
+        document.getElementById("content");
+
+      const errorBox =
+        document.getElementById("error");
+
       try {
 
-        const response =
+        loading.style.display = "block";
+        content.style.display = "none";
+        errorBox.style.display = "none";
+
+
+        /*
+         * جلب بيانات المستخدم
+         */
+
+        const meResponse =
           await fetch("/api/me", {
+            method: "GET",
             credentials: "include",
             cache: "no-store"
           });
 
 
-        if (!response.ok) {
+        if (!meResponse.ok) {
 
           window.location.href =
             "login.html";
 
           return;
-
         }
 
 
-        const data =
-          await response.json();
+        const meData =
+          await meResponse.json();
 
 
-        if (!data.user) {
+        if (
+          !meData.success ||
+          !meData.authenticated ||
+          !meData.user
+        ) {
 
           window.location.href =
             "login.html";
 
           return;
-
         }
 
 
         const user =
-          data.user;
+          meData.user;
 
 
-        document.getElementById(
-          "loading"
-        ).style.display =
-          "none";
-
-
-        document.getElementById(
-          "content"
-        ).style.display =
-          "block";
-
+        /*
+         * عرض بيانات الحساب
+         */
 
         document.getElementById(
           "userName"
@@ -462,9 +706,18 @@
           "";
 
 
+        document.getElementById(
+          "accountStatus"
+        ).textContent =
+          "نشط";
+
+
+        /*
+         * حساب مستقل
+         */
+
         if (
-          user.role ===
-          "freelancer"
+          user.role === "freelancer"
         ) {
 
           document.getElementById(
@@ -478,7 +731,84 @@
           ).style.display =
             "block";
 
-        } else {
+
+          document.getElementById(
+            "proposalsStat"
+          ).style.display =
+            "block";
+
+
+          /*
+           * جلب عروض المستقل الحقيقية
+           */
+
+          try {
+
+            const proposalsResponse =
+              await fetch(
+                "/api/my-proposals",
+                {
+                  method: "GET",
+                  credentials: "include",
+                  cache: "no-store"
+                }
+              );
+
+
+            if (proposalsResponse.ok) {
+
+              const proposalsData =
+                await proposalsResponse.json();
+
+
+              if (
+                proposalsData.success &&
+                Array.isArray(
+                  proposalsData.proposals
+                )
+              ) {
+
+                document.getElementById(
+                  "proposalsCount"
+                ).textContent =
+                  proposalsData.proposals.length;
+
+              }
+
+            }
+
+          } catch (error) {
+
+            console.error(
+              "Proposals loading error:",
+              error
+            );
+
+          }
+
+
+          /*
+           * عدد المشاريع الخاصة بالمستقل
+           *
+           * الـ Worker الحالي يعيد المشاريع
+           * التي يملكها المستخدم فقط.
+           * لذلك لا نستخدمه لإظهار مشاريع التصفح
+           * حتى لا نعطي رقما غير صحيح.
+           */
+
+          document.getElementById(
+            "projectsCount"
+          ).textContent =
+            "—";
+
+        }
+
+
+        /*
+         * حساب عميل
+         */
+
+        else {
 
           document.getElementById(
             "userRole"
@@ -491,38 +821,171 @@
           ).style.display =
             "block";
 
+
+          /*
+           * جلب مشاريع العميل الحقيقية
+           */
+
+          try {
+
+            const projectsResponse =
+              await fetch(
+                "/api/projects",
+                {
+                  method: "GET",
+                  credentials: "include",
+                  cache: "no-store"
+                }
+              );
+
+
+            if (projectsResponse.ok) {
+
+              const projectsData =
+                await projectsResponse.json();
+
+
+              if (
+                projectsData.success &&
+                Array.isArray(
+                  projectsData.projects
+                )
+              ) {
+
+                document.getElementById(
+                  "projectsCount"
+                ).textContent =
+                  projectsData.projects.length;
+
+              }
+
+            }
+
+          } catch (error) {
+
+            console.error(
+              "Projects loading error:",
+              error
+            );
+
+          }
+
         }
 
-      } catch (error) {
 
-        document.getElementById(
-          "loading"
-        ).style.display =
+        /*
+         * إظهار اللوحة
+         */
+
+        loading.style.display =
           "none";
 
-
-        const errorBox =
-          document.getElementById(
-            "error"
-          );
-
-
-        errorBox.textContent =
-          "تعذر الاتصال بالخادم. حاول مرة أخرى.";
-
-
-        errorBox.style.display =
+        content.style.display =
           "block";
 
+
+      } catch (error) {
 
         console.error(
           "Dashboard error:",
           error
         );
 
+
+        loading.style.display =
+          "none";
+
+
+        errorBox.innerHTML = `
+          تعذر الاتصال بالخادم. حاول مرة أخرى.
+          <br>
+          <button
+            type="button"
+            class="retry"
+            onclick="loadDashboard()"
+          >
+            إعادة المحاولة
+          </button>
+        `;
+
+
+        errorBox.style.display =
+          "block";
+
       }
 
     }
+
+
+    /*
+     * تسجيل الخروج
+     */
+
+    async function logout() {
+
+      const button =
+        document.getElementById(
+          "logoutButton"
+        );
+
+
+      button.disabled = true;
+
+      button.textContent =
+        "جارٍ تسجيل الخروج...";
+
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/logout",
+            {
+              method: "POST",
+              credentials: "include",
+              cache: "no-store"
+            }
+          );
+
+
+        if (response.ok) {
+
+          window.location.href =
+            "login.html";
+
+          return;
+
+        }
+
+
+      } catch (error) {
+
+        console.error(
+          "Logout error:",
+          error
+        );
+
+      }
+
+
+      button.disabled = false;
+
+      button.textContent =
+        "تسجيل الخروج";
+
+      alert(
+        "تعذر تسجيل الخروج. حاول مرة أخرى."
+      );
+
+    }
+
+
+    document
+      .getElementById("logoutButton")
+      .addEventListener(
+        "click",
+        logout
+      );
 
 
     loadDashboard();
