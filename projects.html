@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>مشاريعي | مِهراف</title>
+  <meta name="description" content="تصفح المشاريع المفتوحة في مِهراف وابحث عن فرصة مناسبة لمهاراتك.">
+  <title>تصفح المشاريع | مِهراف</title>
 
   <style>
     * {
@@ -13,11 +13,27 @@
       padding: 0;
     }
 
+    :root {
+      --bg: #181b20;
+      --bg-soft: #20242a;
+      --card: #242930;
+      --card-hover: #2a3038;
+      --border: #30363f;
+      --text: #e7eaf0;
+      --muted: #9da4af;
+      --blue: #4f8cff;
+      --blue-dark: #3978e8;
+      --white: #ffffff;
+      --success: #35c759;
+      --danger: #ff5c5c;
+    }
+
     body {
       font-family: Arial, Tahoma, sans-serif;
-      background: #181b20;
-      color: #e7eaf0;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
+      line-height: 1.7;
     }
 
     a {
@@ -25,164 +41,316 @@
       text-decoration: none;
     }
 
-    .header {
-      height: 68px;
-      background: #20242a;
-      border-bottom: 1px solid #30363f;
+    .container {
+      width: min(1100px, calc(100% - 30px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(24, 27, 32, 0.96);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+
+    .header-inner {
+      min-height: 70px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      gap: 15px;
     }
 
     .logo {
-      color: #4f8cff;
       font-size: 25px;
       font-weight: 800;
+      color: var(--blue);
     }
 
-    .back {
-      background: #242930;
-      border: 1px solid #30363f;
-      padding: 10px 16px;
-      border-radius: 10px;
-    }
-
-    .container {
-      width: min(1100px, calc(100% - 30px));
-      margin: 35px auto;
-    }
-
-    .page-title {
-      font-size: 30px;
-      margin-bottom: 10px;
-    }
-
-    .page-description {
-      color: #9da4af;
-      margin-bottom: 30px;
-      line-height: 1.7;
-    }
-
-    .loading,
-    .error,
-    .empty {
-      background: #242930;
-      border: 1px solid #30363f;
-      border-radius: 16px;
-      padding: 30px;
-      text-align: center;
-    }
-
-    .error {
-      color: #ff8d8d;
-    }
-
-    .empty {
-      color: #9da4af;
-    }
-
-    .projects {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
-    }
-
-    .project-card {
-      background: #242930;
-      border: 1px solid #30363f;
-      border-radius: 17px;
-      padding: 22px;
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 14px;
       transition: 0.2s;
     }
 
-    .project-card:hover {
-      background: #2a3038;
-      transform: translateY(-2px);
+    .back-link:hover {
+      color: var(--white);
     }
 
-    .project-title {
-      font-size: 21px;
-      font-weight: bold;
-      margin-bottom: 12px;
+    main {
+      padding: 45px 0 70px;
     }
 
-    .project-description {
-      color: #b9c0ca;
-      line-height: 1.7;
-      margin-bottom: 18px;
+    .page-head {
+      margin-bottom: 25px;
     }
 
-    .project-meta {
+    .page-head h1 {
+      font-size: clamp(28px, 5vw, 38px);
+      margin-bottom: 8px;
+    }
+
+    .page-head p {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 25px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--muted);
+      padding: 9px 14px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .filter-btn:hover {
+      background: var(--card-hover);
+      color: var(--text);
+    }
+
+    .filter-btn.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: var(--white);
+    }
+
+    .refresh-btn {
+      border: 0;
+      background: var(--blue);
+      color: var(--white);
+      padding: 10px 16px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+
+    .refresh-btn:hover {
+      background: var(--blue-dark);
+    }
+
+    .refresh-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .projects-grid {
       display: grid;
-      gap: 9px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      transition: 0.2s;
+      display: flex;
+      flex-direction: column;
+      min-height: 300px;
+    }
+
+    .project-card:hover {
+      background: var(--card-hover);
+      transform: translateY(-2px);
+      border-color: #3d4652;
+    }
+
+    .project-card h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .description {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+      margin-bottom: 18px;
+      white-space: pre-wrap;
+      flex: 1;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
       margin-bottom: 18px;
     }
 
-    .meta-row {
+    .meta-box {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .meta-label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+
+    .meta-value {
+      display: block;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .project-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 15px;
+    }
+
+    .owner {
       display: flex;
       justify-content: space-between;
-      gap: 15px;
-      padding: 10px 12px;
-      background: #20242a;
-      border-radius: 9px;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 13px;
     }
 
-    .muted {
-      color: #9da4af;
+    .owner-label {
+      color: var(--muted);
     }
 
-    .budget {
-      color: #4f8cff;
-      font-weight: bold;
-    }
-
-    .status {
-      color: #70e5a0;
-      font-weight: bold;
+    .owner-name {
+      color: var(--text);
+      font-weight: 700;
     }
 
     .details-btn {
       display: block;
       width: 100%;
-      background: #4f8cff;
-      color: #fff;
       text-align: center;
-      border-radius: 10px;
-      padding: 12px;
-      font-weight: bold;
+      background: var(--blue);
+      color: var(--white);
+      padding: 11px 15px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 700;
       transition: 0.2s;
     }
 
     .details-btn:hover {
-      background: #3978e8;
+      background: var(--blue-dark);
     }
 
-    .retry-btn {
+    .status {
+      display: inline-block;
+      font-size: 12px;
+      padding: 4px 9px;
+      border-radius: 20px;
+      background: rgba(53, 199, 89, 0.12);
+      color: var(--success);
+      margin-bottom: 10px;
+    }
+
+    .loading,
+    .empty,
+    .error {
+      text-align: center;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 35px 20px;
+    }
+
+    .loading {
+      color: var(--muted);
+    }
+
+    .empty {
+      color: var(--muted);
+    }
+
+    .error {
+      color: var(--danger);
+    }
+
+    .error button {
       margin-top: 15px;
       border: 0;
-      border-radius: 10px;
-      background: #4f8cff;
+      background: var(--blue);
       color: white;
-      padding: 11px 20px;
+      padding: 10px 18px;
+      border-radius: 9px;
       cursor: pointer;
-      font-weight: bold;
+      font-family: inherit;
     }
 
     .hidden {
       display: none !important;
     }
 
-    @media (max-width: 750px) {
-      .projects {
-        grid-template-columns: 1fr;
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 25px 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: min(100% - 20px, 1100px);
       }
 
-      .page-title {
-        font-size: 25px;
+      main {
+        padding-top: 30px;
+      }
+
+      .header-inner {
+        min-height: 62px;
+      }
+
+      .logo {
+        font-size: 22px;
+      }
+
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .refresh-btn {
+        width: 100%;
+      }
+
+      .meta {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -190,107 +358,236 @@
 
 <body>
 
-<header class="header">
-  <a href="index.html" class="logo">مِهراف</a>
+<header>
+  <div class="container header-inner">
+    <a href="index.html" class="logo">مِهراف</a>
 
-  <a href="index.html" class="back">
-    العودة للرئيسية
-  </a>
+    <a href="dashboard.html" class="back-link">
+      ← العودة إلى لوحة التحكم
+    </a>
+  </div>
 </header>
 
-<main class="container">
+<main>
+  <div class="container">
 
-  <h1 class="page-title">
-    مشاريعي
-  </h1>
+    <section class="page-head">
+      <h1>تصفح المشاريع</h1>
+      <p>اكتشف المشاريع المفتوحة وابحث عن فرصة مناسبة لمهاراتك.</p>
+    </section>
 
-  <p class="page-description">
-    إدارة المشاريع التي قمت بنشرها على منصة مهراف.
-  </p>
+    <section class="toolbar">
+      <div class="filters">
+        <button class="filter-btn active" data-category="all">جميع التصنيفات</button>
+        <button class="filter-btn" data-category="التصميم">التصميم</button>
+        <button class="filter-btn" data-category="البرمجة">البرمجة</button>
+        <button class="filter-btn" data-category="الكتابة">الكتابة</button>
+        <button class="filter-btn" data-category="التسويق">التسويق</button>
+        <button class="filter-btn" data-category="الفيديو">الفيديو</button>
+        <button class="filter-btn" data-category="الصوت">الصوت</button>
+        <button class="filter-btn" data-category="الأعمال">الأعمال</button>
+        <button class="filter-btn" data-category="أخرى">أخرى</button>
+      </div>
 
-  <div id="loading" class="loading">
-    جاري تحميل المشاريع...
+      <button id="refreshBtn" class="refresh-btn">
+        🔄 تحديث المشاريع
+      </button>
+    </section>
+
+    <div id="loading" class="loading">
+      جاري تحميل المشاريع...
+    </div>
+
+    <div id="error" class="error hidden">
+      <div id="errorMessage">حدث خطأ أثناء تحميل المشاريع.</div>
+      <button id="retryBtn">إعادة المحاولة</button>
+    </div>
+
+    <div id="empty" class="empty hidden">
+      لا توجد مشاريع حاليا.
+    </div>
+
+    <section id="projectsGrid" class="projects-grid hidden"></section>
+
   </div>
-
-  <div id="errorBox" class="error hidden">
-    <div id="errorText"></div>
-
-    <button id="retryBtn" class="retry-btn">
-      حاول مرة أخرى
-    </button>
-  </div>
-
-  <div id="emptyBox" class="empty hidden">
-    لا يوجد لديك مشاريع منشورة حتى الآن.
-  </div>
-
-  <div id="projects" class="projects hidden"></div>
-
 </main>
+
+<footer>
+  <div class="container">
+    مِهراف — منصة تجمع أصحاب المشاريع بالمستقلين والمحترفين
+  </div>
+</footer>
 
 <script>
   const loading = document.getElementById("loading");
-  const errorBox = document.getElementById("errorBox");
-  const errorText = document.getElementById("errorText");
-  const emptyBox = document.getElementById("emptyBox");
-  const projectsBox = document.getElementById("projects");
+  const errorBox = document.getElementById("error");
+  const errorMessage = document.getElementById("errorMessage");
+  const emptyBox = document.getElementById("empty");
+  const projectsGrid = document.getElementById("projectsGrid");
+  const refreshBtn = document.getElementById("refreshBtn");
   const retryBtn = document.getElementById("retryBtn");
 
-  function escapeHtml(value) {
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+  const filterButtons = document.querySelectorAll(".filter-btn");
+
+  let allProjects = [];
+  let currentCategory = "all";
+
+  function escapeHTML(value) {
+    const div = document.createElement("div");
+    div.textContent = value == null ? "" : String(value);
+    return div.innerHTML;
   }
 
-  function statusText(status) {
-    const statuses = {
-      open: "مفتوح",
-      in_progress: "قيد التنفيذ",
-      completed: "مكتمل",
-      cancelled: "ملغي"
-    };
+  function formatBudget(value) {
+    const number = Number(value);
 
-    return statuses[status] || status || "غير محدد";
+    if (!Number.isFinite(number)) {
+      return "$0.00";
+    }
+
+    return "$" + number.toFixed(2);
+  }
+
+  function formatDate(value) {
+    if (!value) {
+      return "غير محدد";
+    }
+
+    const date = new Date(String(value).replace(" ", "T"));
+
+    if (Number.isNaN(date.getTime())) {
+      return escapeHTML(value);
+    }
+
+    return date.toLocaleDateString("ar-EG", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
+  }
+
+  function getOwnerName(project) {
+    return (
+      project.owner_name ||
+      project.full_name ||
+      project.owner ||
+      "مستخدم"
+    );
   }
 
   function showLoading() {
     loading.classList.remove("hidden");
     errorBox.classList.add("hidden");
     emptyBox.classList.add("hidden");
-    projectsBox.classList.add("hidden");
+    projectsGrid.classList.add("hidden");
   }
 
   function showError(message) {
     loading.classList.add("hidden");
+    projectsGrid.classList.add("hidden");
     emptyBox.classList.add("hidden");
-    projectsBox.classList.add("hidden");
 
-    errorText.textContent =
-      message || "حدث خطأ أثناء تحميل المشاريع.";
-
+    errorMessage.textContent = message || "حدث خطأ أثناء تحميل المشاريع.";
     errorBox.classList.remove("hidden");
   }
 
-  async function loadProjects() {
+  function renderProjects() {
+    projectsGrid.innerHTML = "";
 
+    const filteredProjects =
+      currentCategory === "all"
+        ? allProjects
+        : allProjects.filter(project =>
+            String(project.category || "") === currentCategory
+          );
+
+    loading.classList.add("hidden");
+    errorBox.classList.add("hidden");
+
+    if (!filteredProjects.length) {
+      projectsGrid.classList.add("hidden");
+      emptyBox.classList.remove("hidden");
+      return;
+    }
+
+    emptyBox.classList.add("hidden");
+    projectsGrid.classList.remove("hidden");
+
+    filteredProjects.forEach(project => {
+      const id = Number(project.id);
+
+      if (!Number.isFinite(id)) {
+        return;
+      }
+
+      const title = escapeHTML(project.title || "مشروع بدون عنوان");
+      const description = escapeHTML(
+        project.description || "لا يوجد وصف للمشروع."
+      );
+      const category = escapeHTML(project.category || "أخرى");
+      const ownerName = escapeHTML(getOwnerName(project));
+      const budget = formatBudget(project.budget);
+      const createdAt = formatDate(project.created_at);
+
+      const card = document.createElement("article");
+      card.className = "project-card";
+
+      card.innerHTML = `
+        <span class="status">مفتوح</span>
+
+        <h2>${title}</h2>
+
+        <div class="description">${description}</div>
+
+        <div class="meta">
+          <div class="meta-box">
+            <span class="meta-label">التصنيف</span>
+            <span class="meta-value">${category}</span>
+          </div>
+
+          <div class="meta-box">
+            <span class="meta-label">الميزانية</span>
+            <span class="meta-value">${budget}</span>
+          </div>
+        </div>
+
+        <div class="project-footer">
+          <div class="owner">
+            <span class="owner-label">صاحب المشروع</span>
+            <span class="owner-name">${ownerName}</span>
+          </div>
+
+          <div class="owner">
+            <span class="owner-label">تاريخ النشر</span>
+            <span>${createdAt}</span>
+          </div>
+
+          <a
+            class="details-btn"
+            href="project.html?id=${encodeURIComponent(id)}"
+          >
+            عرض تفاصيل المشروع
+          </a>
+        </div>
+      `;
+
+      projectsGrid.appendChild(card);
+    });
+  }
+
+  async function loadProjects() {
     showLoading();
+    refreshBtn.disabled = true;
 
     try {
-
-      const response = await fetch(
-        "/api/projects",
-        {
-          method: "GET",
-          credentials: "include",
-          cache: "no-store",
-          headers: {
-            "Accept": "application/json"
-          }
+      const response = await fetch("/api/projects", {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store",
+        headers: {
+          "Accept": "application/json"
         }
-      );
+      });
 
       const rawText = await response.text();
 
@@ -298,18 +595,12 @@
 
       try {
         data = JSON.parse(rawText);
-      } catch (jsonError) {
-
-        console.error("Invalid JSON:", rawText);
-
-        showError(
-          "الخادم أرسل استجابة غير صالحة."
-        );
-
-        return;
+      } catch (parseError) {
+        console.error("Projects API returned invalid JSON:", rawText);
+        throw new Error("استجابة الخادم غير صالحة.");
       }
 
-      console.log("Projects API:", data);
+      console.log("Projects API:", response.status, data);
 
       if (response.status === 401) {
         window.location.href = "login.html";
@@ -317,104 +608,46 @@
       }
 
       if (!response.ok || data.success !== true) {
-
-        showError(
+        throw new Error(
           data.error ||
           data.message ||
-          "حدث خطأ أثناء تحميل المشاريع."
+          "تعذر تحميل المشاريع."
         );
-
-        return;
       }
 
-      const projects = Array.isArray(data.projects)
+      allProjects = Array.isArray(data.projects)
         ? data.projects
         : [];
 
-      loading.classList.add("hidden");
-
-      if (projects.length === 0) {
-
-        emptyBox.classList.remove("hidden");
-
-        return;
-      }
-
-      projectsBox.innerHTML = projects.map(project => {
-
-        const id = encodeURIComponent(project.id);
-
-        return `
-          <article class="project-card">
-
-            <h2 class="project-title">
-              ${escapeHtml(project.title)}
-            </h2>
-
-            <div class="project-description">
-              ${escapeHtml(project.description)}
-            </div>
-
-            <div class="project-meta">
-
-              <div class="meta-row">
-                <span class="muted">
-                  التصنيف
-                </span>
-
-                <span>
-                  ${escapeHtml(project.category)}
-                </span>
-              </div>
-
-              <div class="meta-row">
-                <span class="muted">
-                  الميزانية
-                </span>
-
-                <span class="budget">
-                  ${Number(project.budget || 0).toLocaleString()} $
-                </span>
-              </div>
-
-              <div class="meta-row">
-                <span class="muted">
-                  الحالة
-                </span>
-
-                <span class="status">
-                  ${escapeHtml(statusText(project.status))}
-                </span>
-              </div>
-
-            </div>
-
-            <a
-              class="details-btn"
-              href="project.html?id=${id}">
-              تفاصيل المشروع
-            </a>
-
-          </article>
-        `;
-      }).join("");
-
-      projectsBox.classList.remove("hidden");
+      renderProjects();
 
     } catch (error) {
-
-      console.error("Projects loading error:", error);
+      console.error("Error loading projects:", error);
 
       showError(
-        "تعذر الاتصال بالخادم. حاول مرة أخرى."
+        error.message ||
+        "حدث خطأ أثناء تحميل المشاريع. حاول مرة أخرى."
       );
+
+    } finally {
+      refreshBtn.disabled = false;
     }
   }
 
-  retryBtn.addEventListener(
-    "click",
-    loadProjects
-  );
+  filterButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      filterButtons.forEach(btn => btn.classList.remove("active"));
+
+      button.classList.add("active");
+
+      currentCategory = button.dataset.category || "all";
+
+      renderProjects();
+    });
+  });
+
+  refreshBtn.addEventListener("click", loadProjects);
+  retryBtn.addEventListener("click", loadProjects);
 
   loadProjects();
 </script>
