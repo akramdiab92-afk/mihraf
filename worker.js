@@ -23,6 +23,37 @@ export default {
         return await me(request, env);
       }
 
+      // NOTIFICATIONS
+      if (
+        url.pathname === "/api/notifications" &&
+        request.method === "GET"
+      ) {
+        return await getNotifications(request, env);
+      }
+
+      if (
+        url.pathname === "/api/notifications/read-all" &&
+        request.method === "POST"
+      ) {
+        return await markAllNotificationsRead(request, env);
+      }
+
+      const notificationReadMatch =
+        url.pathname.match(
+          /^\/api\/notifications\/(\d+)\/read$/
+        );
+
+      if (
+        notificationReadMatch &&
+        request.method === "POST"
+      ) {
+        return await markNotificationRead(
+          request,
+          env,
+          Number(notificationReadMatch[1])
+        );
+      }
+
       // DASHBOARD STATISTICS
       if (
         url.pathname === "/api/dashboard-stats" &&
@@ -629,6 +660,266 @@ async function getAuthenticatedUser(
     created_at:
       session.created_at
   };
+}
+
+
+// ================================
+// NOTIFICATIONS
+// ================================
+
+// CREATE NOTIFICATION
+async function createNotification(
+  env,
+  {
+    userId,
+    type,
+    title,
+    message,
+    projectId = null,
+    deliveryId = null,
+    proposalId = null
+  }
+) {
+  try {
+    if (
+      !env.DB ||
+      !userId ||
+      !type ||
+      !title ||
+      !message
+    ) {
+      return null;
+    }
+
+    const result =
+      await env.DB
+        .prepare(`
+          INSERT INTO notifications
+          (
+            user_id,
+            type,
+            title,
+            message,
+            project_id,
+            delivery_id,
+            proposal_id,
+            is_read
+          )
+          VALUES (?, ?, ?, ?, ?, ?, ?, 0)
+        `)
+        .bind(
+          userId,
+          type,
+          title,
+          message,
+          projectId,
+          deliveryId,
+          proposalId
+        )
+        .run();
+
+    if (!result.success) {
+      console.error(
+        "Notification insert failed"
+      );
+      return null;
+    }
+
+    return result.meta?.last_row_id || null;
+
+  } catch (error) {
+    console.error(
+      "Notification error:",
+      error
+    );
+
+    return null;
+  }
+}
+
+
+// GET NOTIFICATIONS
+async function getNotifications(
+  request,
+  env
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
+
+  if (!user) {
+    return json({
+      success: false,
+      error:
+        "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  const result =
+    await env.DB
+      .prepare(`
+        SELECT
+          id,
+          user_id,
+          type,
+          title,
+          message,
+          project_id,
+          delivery_id,
+          proposal_id,
+          is_read,
+          created_at
+        FROM notifications
+        WHERE user_id = ?
+        ORDER BY id DESC
+        LIMIT 50
+      `)
+      .bind(user.id)
+      .all();
+
+  const notifications =
+    (result.results || []).map(
+      notification => ({
+        ...notification,
+
+        is_read:
+          Number(notification.is_read) === 1,
+
+        action_url:
+          notification.project_id
+            ? `project-details.html?id=${encodeURIComponent(
+                notification.project_id
+              )}`
+            : null
+      })
+    );
+
+  const unreadResult =
+    await env.DB
+      .prepare(`
+        SELECT COUNT(*) AS count
+        FROM notifications
+        WHERE user_id = ?
+          AND is_read = 0
+      `)
+      .bind(user.id)
+      .first();
+
+  return json({
+    success: true,
+    notifications,
+    unread_count:
+      Number(
+        unreadResult?.count || 0
+      )
+  });
+}
+
+
+// MARK ONE NOTIFICATION AS READ
+async function markNotificationRead(
+  request,
+  env,
+  notificationId
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
+
+  if (!user) {
+    return json({
+      success: false,
+      error:
+        "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  if (
+    !Number.isInteger(notificationId) ||
+    notificationId <= 0
+  ) {
+    return json({
+      success: false,
+      error:
+        "معرف الإشعار غير صحيح"
+    }, 400);
+  }
+
+  const result =
+    await env.DB
+      .prepare(`
+        UPDATE notifications
+        SET
+          is_read = 1
+        WHERE id = ?
+          AND user_id = ?
+      `)
+      .bind(
+        notificationId,
+        user.id
+      )
+      .run();
+
+  if (!result.success) {
+    throw new Error(
+      "تعذر تحديث الإشعار"
+    );
+  }
+
+  return json({
+    success: true,
+    message:
+      "تم تحديد الإشعار كمقروء"
+  });
+}
+
+
+// MARK ALL NOTIFICATIONS AS READ
+async function markAllNotificationsRead(
+  request,
+  env
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
+
+  if (!user) {
+    return json({
+      success: false,
+      error:
+        "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  const result =
+    await env.DB
+      .prepare(`
+        UPDATE notifications
+        SET
+          is_read = 1
+        WHERE user_id = ?
+          AND is_read = 0
+      `)
+      .bind(user.id)
+      .run();
+
+  if (!result.success) {
+    throw new Error(
+      "تعذر تحديث الإشعارات"
+    );
+  }
+
+  return json({
+    success: true,
+    message:
+      "تم تحديد جميع الإشعارات كمقروءة"
+  });
 }
 
 
@@ -1249,6 +1540,7 @@ async function createProposal(
         SELECT
           id,
           user_id,
+          title,
           status
         FROM projects
         WHERE id = ?
@@ -1361,6 +1653,17 @@ async function createProposal(
       `)
       .bind(proposalId)
       .first();
+
+  // NOTIFY PROJECT OWNER
+  await createNotification(env, {
+    userId: project.user_id,
+    type: "new_proposal",
+    title: "عرض جديد على مشروعك",
+    message:
+      `وصل عرض جديد على مشروع "${project.title}" بقيمة $${price} ومدة تسليم ${deliveryDays} يوم`,
+    projectId: project.id,
+    proposalId
+  });
 
   return json({
     success: true,
@@ -1597,6 +1900,7 @@ async function updateProposalStatus(
           p.price,
           p.delivery_days,
           p.status,
+          pr.title AS project_title,
           pr.user_id AS project_owner_id,
           pr.status AS project_status
         FROM proposals p
@@ -1758,6 +2062,17 @@ async function updateProposalStatus(
       }
     }
 
+    // NOTIFY FREELANCER
+    await createNotification(env, {
+      userId: proposal.freelancer_id,
+      type: "proposal_accepted",
+      title: "تم قبول عرضك",
+      message:
+        `تم قبول عرضك على مشروع "${proposal.project_title}" وبدأ تنفيذ المشروع. السعر المتفق عليه $${proposal.price} ومدة التسليم ${proposal.delivery_days} يوم`,
+      projectId: proposal.project_id,
+      proposalId
+    });
+
   } else {
 
     const result =
@@ -1779,6 +2094,19 @@ async function updateProposalStatus(
       throw new Error(
         "تعذر تحديث حالة العرض"
       );
+    }
+
+    // NOTIFY FREELANCER WHEN REJECTED
+    if (status === "rejected") {
+      await createNotification(env, {
+        userId: proposal.freelancer_id,
+        type: "proposal_rejected",
+        title: "تم رفض عرضك",
+        message:
+          `تم رفض عرضك على مشروع "${proposal.project_title}"`,
+        projectId: proposal.project_id,
+        proposalId
+      });
     }
   }
 
@@ -2431,6 +2759,41 @@ async function createDelivery(
 
   ]);
 
+  // GET PROJECT OWNER FOR NOTIFICATION
+  const projectOwner =
+    await env.DB
+      .prepare(`
+        SELECT
+          p.user_id,
+          p.title
+        FROM projects p
+        WHERE p.id = ?
+        LIMIT 1
+      `)
+      .bind(projectId)
+      .first();
+
+  // NOTIFY CLIENT
+  if (projectOwner) {
+    await createNotification(env, {
+      userId: projectOwner.user_id,
+      type:
+        version === 1
+          ? "new_delivery"
+          : "redelivery",
+      title:
+        version === 1
+          ? "تم إرسال تسليم جديد"
+          : "تم إرسال نسخة معدلة",
+      message:
+        version === 1
+          ? `تم إرسال التسليم رقم 1 لمشروع "${projectOwner.title}"`
+          : `تم إرسال النسخة رقم ${version} المعدلة لمشروع "${projectOwner.title}"`,
+      projectId,
+      deliveryId
+    });
+  }
+
   const delivery =
     await env.DB
       .prepare(`
@@ -2512,6 +2875,7 @@ async function acceptDelivery(
           e.project_id,
           e.status AS execution_status,
           p.user_id AS project_owner_id,
+          p.title AS project_title,
           p.status AS project_status
         FROM project_deliveries d
         INNER JOIN project_executions e
@@ -2648,6 +3012,28 @@ async function acceptDelivery(
     }
   }
 
+  // NOTIFY FREELANCER
+  await createNotification(env, {
+    userId: delivery.freelancer_id,
+    type: "delivery_accepted",
+    title: "تم قبول التسليم",
+    message:
+      `تم قبول التسليم رقم ${delivery.version} وإكمال مشروع "${delivery.project_title}" بنجاح`,
+    projectId: delivery.project_id,
+    deliveryId
+  });
+
+  // PROJECT COMPLETED NOTIFICATION
+  await createNotification(env, {
+    userId: delivery.freelancer_id,
+    type: "project_completed",
+    title: "تم إكمال المشروع",
+    message:
+      `تم إكمال مشروع "${delivery.project_title}" بنجاح`,
+    projectId: delivery.project_id,
+    deliveryId
+  });
+
   return json({
     success: true,
     message:
@@ -2738,11 +3124,13 @@ async function requestRevision(
         SELECT
           d.id,
           d.execution_id,
+          d.freelancer_id,
           d.version,
           d.status AS delivery_status,
           e.project_id,
           e.status AS execution_status,
           p.user_id AS project_owner_id,
+          p.title AS project_title,
           p.status AS project_status
         FROM project_deliveries d
         INNER JOIN project_executions e
@@ -2880,6 +3268,17 @@ async function requestRevision(
       );
     }
   }
+
+  // NOTIFY FREELANCER
+  await createNotification(env, {
+    userId: delivery.freelancer_id,
+    type: "revision_requested",
+    title: "مطلوب تعديل على التسليم",
+    message:
+      `طلب العميل تعديلا على التسليم رقم ${delivery.version} في مشروع "${delivery.project_title}": ${message}`,
+    projectId: delivery.project_id,
+    deliveryId
+  });
 
   const revision =
     await env.DB
