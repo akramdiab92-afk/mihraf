@@ -1,7 +1,11 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تفاصيل المشروع - مِهراف</title>  <style>
+  <title>تفاصيل المشروع - مِهراف</title>
+
+  <style>
     * {
       box-sizing: border-box;
     }
@@ -66,7 +70,8 @@
 
     .project-card,
     .proposal-box,
-    .proposals-box {
+    .proposals-box,
+    .execution-box {
       background: #ffffff;
       border-radius: 16px;
       padding: 30px;
@@ -83,6 +88,10 @@
 
     h2 {
       margin-top: 0;
+      color: #111827;
+    }
+
+    h3 {
       color: #111827;
     }
 
@@ -159,7 +168,8 @@
     .proposal-btn,
     .submit-btn,
     .accept-btn,
-    .reject-btn {
+    .reject-btn,
+    .revision-btn {
       display: inline-block;
       width: 100%;
       padding: 15px;
@@ -190,6 +200,14 @@
 
     .reject-btn:hover {
       background: #b91c1c;
+    }
+
+    .revision-btn {
+      background: #d97706;
+    }
+
+    .revision-btn:hover {
+      background: #b45309;
     }
 
     button:disabled {
@@ -321,6 +339,11 @@
       color: #991b1b;
     }
 
+    .proposal-status.withdrawn {
+      background: #f3f4f6;
+      color: #374151;
+    }
+
     .empty-proposals {
       background: #f9fafb;
       padding: 20px;
@@ -330,8 +353,202 @@
       margin-top: 15px;
     }
 
+    .execution-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .execution-status {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .execution-status.in_progress {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .execution-status.submitted {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .execution-status.revision_requested {
+      background: #ffedd5;
+      color: #9a3412;
+    }
+
+    .execution-status.completed {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .execution-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .execution-info-item {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 15px;
+      background: #f9fafb;
+    }
+
+    .execution-info-label {
+      display: block;
+      color: #6b7280;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .execution-info-value {
+      font-weight: bold;
+    }
+
+    .delivery-card,
+    .revision-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 18px;
+      margin-top: 15px;
+    }
+
+    .delivery-card {
+      background: #f9fafb;
+    }
+
+    .revision-card {
+      background: #fff7ed;
+      border-color: #fed7aa;
+    }
+
+    .delivery-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .delivery-version {
+      font-weight: bold;
+    }
+
+    .delivery-status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .delivery-status.submitted {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .delivery-status.accepted {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .delivery-status.revision_requested {
+      background: #ffedd5;
+      color: #9a3412;
+    }
+
+    .delivery-message {
+      white-space: pre-wrap;
+      line-height: 1.8;
+      background: #ffffff;
+      padding: 13px;
+      border-radius: 9px;
+      margin: 12px 0;
+    }
+
+    .file-link {
+      display: inline-block;
+      color: #2563eb;
+      font-weight: bold;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .execution-actions {
+      margin-top: 20px;
+    }
+
+    .execution-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .timeline {
+      margin-top: 25px;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 0 20px 20px 0;
+      border-right: 2px solid #dbeafe;
+    }
+
+    .timeline-item:last-child {
+      border-right-color: transparent;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      right: -6px;
+      top: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #2563eb;
+    }
+
+    .timeline-message {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .timeline-date {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    .execution-empty {
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      color: #6b7280;
+    }
+
     .hidden {
       display: none !important;
+    }
+
+    @media (max-width: 700px) {
+      .execution-info {
+        grid-template-columns: 1fr;
+      }
+
+      .execution-actions-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 600px) {
@@ -346,7 +563,8 @@
 
       .project-card,
       .proposal-box,
-      .proposals-box {
+      .proposals-box,
+      .execution-box {
         padding: 20px;
       }
 
@@ -358,153 +576,485 @@
         flex-direction: column;
       }
     }
-  </style></head><body><header>
+  </style>
+</head>
+
+<body>
+
+<header>
   <div class="header-inner">
-    <div class="logo">مِهراف</div><a href="projects.html" class="back">
-  ← العودة إلى المشاريع
-</a>
+    <div class="logo">مِهراف</div>
 
+    <a href="projects.html" class="back">
+      ← العودة إلى المشاريع
+    </a>
   </div>
-</header><main>  <div id="loading" class="loading">
+</header>
+
+<main>
+
+  <div id="loading" class="loading">
     جارٍ تحميل تفاصيل المشروع...
-  </div>  <div id="error" class="error" style="display:none;"></div>  <div id="notFound" class="not-found" style="display:none;">
+  </div>
+
+  <div id="error" class="error" style="display:none;"></div>
+
+  <div id="notFound" class="not-found" style="display:none;">
     <h2>المشروع غير موجود</h2>
-    <p>قد يكون المشروع قد تم حذفه أو لم يعد متاحا.</p><a href="projects.html" class="back">
-  العودة إلى المشاريع
-</a>
+    <p>قد يكون المشروع قد تم حذفه أو لم يعد متاحا.</p>
 
-  </div>  <section id="project" class="project"><div class="project-card">
-
-  <h1 id="title"></h1>
-
-  <div class="description" id="description"></div>
-
-  <div class="details">
-
-    <div class="detail">
-      <span class="detail-label">التصنيف</span>
-      <span class="detail-value" id="category"></span>
-    </div>
-
-    <div class="detail">
-      <span class="detail-label">الميزانية</span>
-      <span class="detail-value budget" id="budget"></span>
-    </div>
-
-    <div class="detail">
-      <span class="detail-label">صاحب المشروع</span>
-      <span class="detail-value" id="client"></span>
-    </div>
-
-    <div class="detail">
-      <span class="detail-label">تاريخ النشر</span>
-      <span class="detail-value" id="date"></span>
-    </div>
-
-    <div class="detail">
-      <span class="detail-label">حالة المشروع</span>
-      <span class="status" id="status"></span>
-    </div>
-
+    <a href="projects.html" class="back">
+      العودة إلى المشاريع
+    </a>
   </div>
 
-  <div id="action" class="action">
+  <section id="project" class="project">
 
-    <button
-      id="proposalButton"
-      class="proposal-btn"
-      type="button"
+    <div class="project-card">
+
+      <h1 id="title"></h1>
+
+      <div class="description" id="description"></div>
+
+      <div class="details">
+
+        <div class="detail">
+          <span class="detail-label">التصنيف</span>
+          <span class="detail-value" id="category"></span>
+        </div>
+
+        <div class="detail">
+          <span class="detail-label">الميزانية</span>
+          <span class="detail-value budget" id="budget"></span>
+        </div>
+
+        <div class="detail">
+          <span class="detail-label">صاحب المشروع</span>
+          <span class="detail-value" id="client"></span>
+        </div>
+
+        <div class="detail">
+          <span class="detail-label">تاريخ النشر</span>
+          <span class="detail-value" id="date"></span>
+        </div>
+
+        <div class="detail">
+          <span class="detail-label">حالة المشروع</span>
+          <span class="status" id="status"></span>
+        </div>
+
+      </div>
+
+      <div id="action" class="action">
+
+        <button
+          id="proposalButton"
+          class="proposal-btn"
+          type="button"
+        >
+          تقديم عرض على المشروع
+        </button>
+
+        <div id="actionNotice" class="notice">
+          يمكنك تقديم عرضك على هذا المشروع.
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         نظام التنفيذ
+    ========================== -->
+
+    <div
+      id="executionBox"
+      class="execution-box hidden"
     >
-      تقديم عرض على المشروع
-    </button>
 
-    <div id="actionNotice" class="notice">
-      يمكنك تقديم عرضك على هذا المشروع.
-    </div>
+      <div class="execution-header">
 
-  </div>
+        <h2>تنفيذ المشروع</h2>
 
-</div>
+        <span
+          id="executionStatus"
+          class="execution-status"
+        >
+          -
+        </span>
 
-<div
-  id="proposalFormBox"
-  class="proposal-box hidden"
->
+      </div>
 
-  <h2>تقديم عرض</h2>
+      <div
+        id="executionMessage"
+        class="message"
+      ></div>
 
-  <div id="proposalMessage" class="message"></div>
+      <div class="execution-info">
 
-  <form id="proposalForm">
+        <div class="execution-info-item">
 
-    <div class="form-group">
-      <label for="proposalPrice">
-        السعر بالدولار
-      </label>
+          <span class="execution-info-label">
+            سعر الاتفاق
+          </span>
 
-      <input
-        type="number"
-        id="proposalPrice"
-        min="0.01"
-        step="0.01"
-        required
+          <span
+            id="executionPrice"
+            class="execution-info-value"
+          >
+            -
+          </span>
+
+        </div>
+
+        <div class="execution-info-item">
+
+          <span class="execution-info-label">
+            بداية التنفيذ
+          </span>
+
+          <span
+            id="executionStart"
+            class="execution-info-value"
+          >
+            -
+          </span>
+
+        </div>
+
+        <div class="execution-info-item">
+
+          <span class="execution-info-label">
+            موعد التسليم
+          </span>
+
+          <span
+            id="executionDue"
+            class="execution-info-value"
+          >
+            -
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- طلب التعديل -->
+
+      <div
+        id="revisionCard"
+        class="revision-card hidden"
       >
-    </div>
 
-    <div class="form-group">
-      <label for="deliveryDays">
-        مدة التسليم بالأيام
-      </label>
+        <h3>
+          طلب تعديل من صاحب المشروع
+        </h3>
 
-      <input
-        type="number"
-        id="deliveryDays"
-        min="1"
-        step="1"
-        required
+        <div
+          id="revisionMessage"
+          class="delivery-message"
+        ></div>
+
+        <div
+          id="revisionDate"
+          class="timeline-date"
+        ></div>
+
+      </div>
+
+
+      <!-- آخر تسليم -->
+
+      <div id="latestDeliveryContainer">
+
+        <h3>
+          آخر تسليم
+        </h3>
+
+        <div
+          id="latestDelivery"
+          class="execution-empty"
+        >
+          لا يوجد تسليم حتى الآن.
+        </div>
+
+      </div>
+
+
+      <!-- نموذج تسليم المستقل -->
+
+      <div
+        id="deliveryFormBox"
+        class="hidden"
       >
+
+        <div
+          style="
+            border-top:1px solid #e5e7eb;
+            margin-top:25px;
+            padding-top:25px;
+          "
+        >
+
+          <h3>
+            إرسال التسليم
+          </h3>
+
+          <form id="deliveryForm">
+
+            <div class="form-group">
+
+              <label for="deliveryText">
+                رسالة التسليم
+              </label>
+
+              <textarea
+                id="deliveryText"
+                minlength="5"
+                maxlength="5000"
+                required
+                placeholder="اكتب تفاصيل العمل الذي تم إنجازه..."
+              ></textarea>
+
+            </div>
+
+            <div class="form-group">
+
+              <label for="fileUrl">
+                رابط الملف
+                <span style="font-weight:normal;color:#6b7280;">
+                  (اختياري)
+                </span>
+              </label>
+
+              <input
+                type="url"
+                id="fileUrl"
+                maxlength="2000"
+                placeholder="https://..."
+              >
+
+            </div>
+
+            <button
+              type="submit"
+              class="submit-btn"
+              id="submitDelivery"
+            >
+              إرسال التسليم
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+
+      <!-- أزرار العميل -->
+
+      <div
+        id="clientDeliveryActions"
+        class="execution-actions hidden"
+      >
+
+        <div class="execution-actions-grid">
+
+          <button
+            type="button"
+            id="acceptDeliveryButton"
+            class="accept-btn"
+          >
+            قبول التسليم وإنهاء المشروع
+          </button>
+
+          <button
+            type="button"
+            id="requestRevisionButton"
+            class="revision-btn"
+          >
+            طلب تعديل
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- نموذج طلب التعديل -->
+
+      <div
+        id="revisionFormBox"
+        class="hidden"
+        style="
+          margin-top:20px;
+          padding-top:20px;
+          border-top:1px solid #e5e7eb;
+        "
+      >
+
+        <h3>
+          طلب تعديل
+        </h3>
+
+        <form id="revisionForm">
+
+          <div class="form-group">
+
+            <label for="revisionText">
+              اكتب المطلوب تعديله
+            </label>
+
+            <textarea
+              id="revisionText"
+              minlength="5"
+              maxlength="5000"
+              required
+              placeholder="وضح للمستقل التعديلات المطلوبة..."
+            ></textarea>
+
+          </div>
+
+          <button
+            type="submit"
+            class="revision-btn"
+            id="submitRevision"
+          >
+            إرسال طلب التعديل
+          </button>
+
+        </form>
+
+      </div>
+
+
+      <!-- سجل المشروع -->
+
+      <div class="timeline">
+
+        <h3>
+          سجل المشروع
+        </h3>
+
+        <div id="eventsList">
+          <div class="execution-empty">
+            لا توجد أحداث مسجلة حتى الآن.
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
-    <div class="form-group">
-      <label for="proposalText">
-        رسالة العرض
-      </label>
 
-      <textarea
-        id="proposalText"
-        minlength="10"
-        maxlength="3000"
-        required
-        placeholder="اكتب رسالتك لصاحب المشروع..."
-      ></textarea>
-    </div>
+    <!-- =========================
+         تقديم عرض
+    ========================== -->
 
-    <button
-      type="submit"
-      class="submit-btn"
-      id="submitProposal"
+    <div
+      id="proposalFormBox"
+      class="proposal-box hidden"
     >
-      إرسال العرض
-    </button>
 
-  </form>
+      <h2>تقديم عرض</h2>
 
-</div>
+      <div
+        id="proposalMessage"
+        class="message"
+      ></div>
 
-<div
-  id="clientProposalsBox"
-  class="proposals-box hidden"
->
+      <form id="proposalForm">
 
-  <h2>العروض المقدمة على مشروعك</h2>
+        <div class="form-group">
 
-  <div id="clientProposalsMessage" class="message"></div>
+          <label for="proposalPrice">
+            السعر بالدولار
+          </label>
 
-  <div id="clientProposalsList"></div>
+          <input
+            type="number"
+            id="proposalPrice"
+            min="0.01"
+            step="0.01"
+            required
+          >
 
-</div>
+        </div>
 
-  </section></main><script>
+        <div class="form-group">
+
+          <label for="deliveryDays">
+            مدة التسليم بالأيام
+          </label>
+
+          <input
+            type="number"
+            id="deliveryDays"
+            min="1"
+            step="1"
+            required
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="proposalText">
+            رسالة العرض
+          </label>
+
+          <textarea
+            id="proposalText"
+            minlength="10"
+            maxlength="3000"
+            required
+            placeholder="اكتب رسالتك لصاحب المشروع..."
+          ></textarea>
+
+        </div>
+
+        <button
+          type="submit"
+          class="submit-btn"
+          id="submitProposal"
+        >
+          إرسال العرض
+        </button>
+
+      </form>
+
+    </div>
+
+
+    <!-- =========================
+         عروض العميل
+    ========================== -->
+
+    <div
+      id="clientProposalsBox"
+      class="proposals-box hidden"
+    >
+
+      <h2>
+        العروض المقدمة على مشروعك
+      </h2>
+
+      <div
+        id="clientProposalsMessage"
+        class="message"
+      ></div>
+
+      <div id="clientProposalsList"></div>
+
+    </div>
+
+  </section>
+</main>
+
+
+<script>
 
   const loading =
     document.getElementById("loading");
@@ -545,9 +1095,72 @@
   const actionNotice =
     document.getElementById("actionNotice");
 
+  const executionBox =
+    document.getElementById("executionBox");
+
+  const executionStatus =
+    document.getElementById("executionStatus");
+
+  const executionMessage =
+    document.getElementById("executionMessage");
+
+  const executionPrice =
+    document.getElementById("executionPrice");
+
+  const executionStart =
+    document.getElementById("executionStart");
+
+  const executionDue =
+    document.getElementById("executionDue");
+
+  const latestDelivery =
+    document.getElementById("latestDelivery");
+
+  const deliveryFormBox =
+    document.getElementById("deliveryFormBox");
+
+  const deliveryForm =
+    document.getElementById("deliveryForm");
+
+  const submitDelivery =
+    document.getElementById("submitDelivery");
+
+  const clientDeliveryActions =
+    document.getElementById("clientDeliveryActions");
+
+  const acceptDeliveryButton =
+    document.getElementById("acceptDeliveryButton");
+
+  const requestRevisionButton =
+    document.getElementById("requestRevisionButton");
+
+  const revisionFormBox =
+    document.getElementById("revisionFormBox");
+
+  const revisionForm =
+    document.getElementById("revisionForm");
+
+  const submitRevision =
+    document.getElementById("submitRevision");
+
+  const revisionCard =
+    document.getElementById("revisionCard");
+
+  const revisionMessage =
+    document.getElementById("revisionMessage");
+
+  const revisionDate =
+    document.getElementById("revisionDate");
+
+  const eventsList =
+    document.getElementById("eventsList");
+
+
   let currentProjectId = null;
   let currentProject = null;
   let currentUser = null;
+  let currentExecutionData = null;
+
 
   const projectStatusNames = {
     open: "مفتوح",
@@ -556,12 +1169,29 @@
     cancelled: "ملغى"
   };
 
+
+  const executionStatusNames = {
+    in_progress: "قيد التنفيذ",
+    submitted: "بانتظار مراجعة العميل",
+    revision_requested: "مطلوب تعديل",
+    completed: "مكتمل"
+  };
+
+
+  const deliveryStatusNames = {
+    submitted: "بانتظار مراجعة العميل",
+    accepted: "مقبول",
+    revision_requested: "مطلوب تعديل"
+  };
+
+
   const proposalStatusNames = {
     pending: "قيد المراجعة",
     accepted: "مقبول",
     rejected: "مرفوض",
     withdrawn: "منسحب"
   };
+
 
   function escapeHTML(value) {
 
@@ -580,6 +1210,7 @@
       .replace(/'/g, "&#039;");
   }
 
+
   function formatDate(dateString) {
 
     if (!dateString) {
@@ -587,7 +1218,11 @@
     }
 
     const date =
-      new Date(dateString);
+      new Date(
+        String(dateString).includes("T")
+          ? dateString
+          : dateString.replace(" ", "T")
+      );
 
     if (isNaN(date.getTime())) {
       return dateString;
@@ -603,6 +1238,37 @@
     );
   }
 
+
+  function formatDateTime(dateString) {
+
+    if (!dateString) {
+      return "-";
+    }
+
+    const date =
+      new Date(
+        String(dateString).includes("T")
+          ? dateString
+          : dateString.replace(" ", "T")
+      );
+
+    if (isNaN(date.getTime())) {
+      return dateString;
+    }
+
+    return date.toLocaleString(
+      "ar",
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      }
+    );
+  }
+
+
   function showError(text) {
 
     loading.style.display = "none";
@@ -616,22 +1282,29 @@
     errorBox.style.display = "block";
   }
 
+
   function showProposalMessage(
     text,
     type = "error"
   ) {
 
     if (!text) {
+
       proposalMessage.textContent = "";
-      proposalMessage.className = "message";
+
+      proposalMessage.className =
+        "message";
+
       return;
     }
 
-    proposalMessage.textContent = text;
+    proposalMessage.textContent =
+      text;
 
     proposalMessage.className =
       "message " + type;
   }
+
 
   function clearProposalMessage() {
 
@@ -641,14 +1314,20 @@
       "message";
   }
 
+
   function showClientMessage(
     text,
     type = "error"
   ) {
 
     if (!text) {
-      clientProposalsMessage.textContent = "";
-      clientProposalsMessage.className = "message";
+
+      clientProposalsMessage.textContent =
+        "";
+
+      clientProposalsMessage.className =
+        "message";
+
       return;
     }
 
@@ -658,6 +1337,31 @@
     clientProposalsMessage.className =
       "message " + type;
   }
+
+
+  function showExecutionMessage(
+    text,
+    type = "error"
+  ) {
+
+    if (!text) {
+
+      executionMessage.textContent =
+        "";
+
+      executionMessage.className =
+        "message";
+
+      return;
+    }
+
+    executionMessage.textContent =
+      text;
+
+    executionMessage.className =
+      "message " + type;
+  }
+
 
   async function loadCurrentUser() {
 
@@ -673,7 +1377,9 @@
         );
 
       if (!response.ok) {
+
         currentUser = null;
+
         return;
       }
 
@@ -688,8 +1394,12 @@
         isAuthenticated &&
         data.user
       ) {
-        currentUser = data.user;
+
+        currentUser =
+          data.user;
+
       } else {
+
         currentUser = null;
       }
 
@@ -698,6 +1408,7 @@
       currentUser = null;
     }
   }
+
 
   async function fetchProject() {
 
@@ -727,19 +1438,6 @@
       return null;
     }
 
-    /*
-     * Worker يرجع:
-     *
-     * {
-     *   success: true,
-     *   project: {...},
-     *   is_owner: true/false,
-     *   can_apply: true/false
-     * }
-     *
-     * لذلك ندمج القيم داخل المشروع
-     * حتى تستطيع بقية الصفحة استخدامها.
-     */
     return {
       ...data.project,
       can_apply:
@@ -748,6 +1446,88 @@
         data.is_owner === true
     };
   }
+
+
+  async function fetchExecution() {
+
+    try {
+
+      const response =
+        await fetch(
+          "/api/projects/" +
+          currentProjectId +
+          "/execution",
+          {
+            method: "GET",
+            credentials: "include"
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+
+        if (
+          response.status === 404 ||
+          data.error ===
+          "لا يوجد تنفيذ قائم لهذا المشروع"
+        ) {
+
+          currentExecutionData = null;
+
+          executionBox.classList.add(
+            "hidden"
+          );
+
+          return null;
+        }
+
+        throw new Error(
+          data.message ||
+          data.error ||
+          "تعذر تحميل تنفيذ المشروع."
+        );
+      }
+
+      if (
+        !data.execution
+      ) {
+
+        currentExecutionData = null;
+
+        executionBox.classList.add(
+          "hidden"
+        );
+
+        return null;
+      }
+
+      currentExecutionData =
+        data;
+
+      return data;
+
+    } catch (error) {
+
+      if (
+        error.message ===
+        "لا يوجد تنفيذ قائم لهذا المشروع"
+      ) {
+
+        currentExecutionData = null;
+
+        executionBox.classList.add(
+          "hidden"
+        );
+
+        return null;
+      }
+
+      throw error;
+    }
+  }
+
 
   function renderProject(project) {
 
@@ -808,6 +1588,7 @@
     statusElement.className =
       "status " + status;
   }
+
 
   async function loadProject() {
 
@@ -872,6 +1653,8 @@
 
       await setupActions();
 
+      await loadExecutionAndRender();
+
     } catch (error) {
 
       showError(
@@ -880,6 +1663,42 @@
       );
     }
   }
+
+
+  async function loadExecutionAndRender() {
+
+    if (
+      !currentProject ||
+      currentProject.status === "open"
+    ) {
+
+      executionBox.classList.add(
+        "hidden"
+      );
+
+      return;
+    }
+
+    try {
+
+      const data =
+        await fetchExecution();
+
+      if (!data) {
+        return;
+      }
+
+      renderExecution(data);
+
+    } catch (error) {
+
+      showExecutionMessage(
+        error.message ||
+        "تعذر تحميل بيانات التنفيذ."
+      );
+    }
+  }
+
 
   async function refreshProjectAndProposals() {
 
@@ -896,6 +1715,8 @@
 
       await setupActions();
 
+      await loadExecutionAndRender();
+
       return true;
 
     } catch (error) {
@@ -908,6 +1729,7 @@
       return false;
     }
   }
+
 
   async function setupActions() {
 
@@ -922,19 +1744,34 @@
     proposalButton.style.display =
       "none";
 
+
     if (!currentUser) {
 
-      proposalButton.style.display =
-        "block";
+      if (
+        currentProject &&
+        currentProject.status ===
+        "open"
+      ) {
 
-      proposalButton.textContent =
-        "تسجيل الدخول لتقديم عرض";
+        proposalButton.style.display =
+          "block";
 
-      actionNotice.textContent =
-        "يجب تسجيل الدخول بحساب مستقل لتقديم عرض.";
+        proposalButton.textContent =
+          "تسجيل الدخول لتقديم عرض";
+
+        actionNotice.textContent =
+          "يجب تسجيل الدخول بحساب مستقل لتقديم عرض.";
+
+      } else {
+
+        actionNotice.textContent =
+          "يجب تسجيل الدخول لمتابعة تنفيذ المشروع.";
+
+      }
 
       return;
     }
+
 
     const isOwner =
       currentProject.is_owner === true ||
@@ -942,6 +1779,7 @@
       Number(currentUser.id) ||
       Number(currentProject.client_id) ===
       Number(currentUser.id);
+
 
     if (
       currentUser.role ===
@@ -956,7 +1794,7 @@
         actionNotice.textContent =
           currentProject.status === "open"
             ? "هذا مشروعك. يمكنك مشاهدة وإدارة العروض المقدمة عليه."
-            : "هذا مشروعك. يمكنك مشاهدة العروض المقدمة عليه.";
+            : "هذا مشروعك. يمكنك متابعة تنفيذ المشروع.";
 
         clientProposalsBox.classList.remove(
           "hidden"
@@ -976,6 +1814,7 @@
       return;
     }
 
+
     if (
       currentUser.role ===
       "freelancer"
@@ -993,7 +1832,7 @@
           "none";
 
         actionNotice.textContent =
-          "هذا المشروع لم يعد مفتوحا لاستقبال العروض.";
+          "يمكنك متابعة تنفيذ المشروع من قسم التنفيذ أدناه.";
 
         return;
       }
@@ -1021,12 +1860,14 @@
       return;
     }
 
+
     proposalButton.style.display =
       "none";
 
     actionNotice.textContent =
       "لا يمكن تنفيذ هذا الإجراء بهذا الحساب.";
   }
+
 
   proposalButton.addEventListener(
     "click",
@@ -1079,6 +1920,7 @@
       }
     }
   );
+
 
   proposalForm.addEventListener(
     "submit",
@@ -1235,6 +2077,7 @@
     }
   );
 
+
   async function loadClientProposals() {
 
     clientProposalsList.innerHTML =
@@ -1309,6 +2152,7 @@
         "";
     }
   }
+
 
   function createProposalCard(
     proposal
@@ -1419,6 +2263,7 @@
     `;
   }
 
+
   async function updateProposalStatus(
     proposalId,
     newStatus,
@@ -1487,7 +2332,7 @@
 
       showClientMessage(
         newStatus === "accepted"
-          ? "تم قبول العرض وبدء تنفيذ المشروع. تم رفض العروض المعلقة الأخرى."
+          ? "تم قبول العرض وبدء تنفيذ المشروع."
           : "تم رفض العرض.",
         "success"
       );
@@ -1507,6 +2352,7 @@
       }
     }
   }
+
 
   async function acceptProposal(
     proposalId,
@@ -1529,6 +2375,7 @@
     );
   }
 
+
   async function rejectProposal(
     proposalId,
     button
@@ -1550,11 +2397,673 @@
     );
   }
 
+
   window.acceptProposal =
     acceptProposal;
 
   window.rejectProposal =
     rejectProposal;
+
+
+  function renderExecution(data) {
+
+    if (
+      !data ||
+      !data.execution
+    ) {
+
+      executionBox.classList.add(
+        "hidden"
+      );
+
+      return;
+    }
+
+    currentExecutionData =
+      data;
+
+    executionBox.classList.remove(
+      "hidden"
+    );
+
+    showExecutionMessage("");
+
+    const execution =
+      data.execution;
+
+    const proposal =
+      data.proposal || {};
+
+    const status =
+      execution.status ||
+      "in_progress";
+
+    executionStatus.textContent =
+      executionStatusNames[status] ||
+      status;
+
+    executionStatus.className =
+      "execution-status " + status;
+
+    const price =
+      Number(proposal.price);
+
+    executionPrice.textContent =
+      Number.isFinite(price)
+        ? "$" + price.toFixed(2)
+        : "-";
+
+    executionStart.textContent =
+      formatDateTime(
+        execution.start_at
+      );
+
+    executionDue.textContent =
+      formatDateTime(
+        execution.due_at
+      );
+
+
+    renderLatestDelivery(
+      data.latest_delivery
+    );
+
+
+    renderRevisionRequest(
+      data.revision_request
+    );
+
+
+    renderEvents(
+      data.events || []
+    );
+
+
+    const isFreelancer =
+      data.is_freelancer === true;
+
+    const isClientOwner =
+      data.is_client_owner === true;
+
+
+    deliveryFormBox.classList.add(
+      "hidden"
+    );
+
+    clientDeliveryActions.classList.add(
+      "hidden"
+    );
+
+    revisionFormBox.classList.add(
+      "hidden"
+    );
+
+
+    if (isFreelancer) {
+
+      if (
+        status === "in_progress" ||
+        status === "revision_requested"
+      ) {
+
+        deliveryFormBox.classList.remove(
+          "hidden"
+        );
+
+      }
+
+    }
+
+
+    if (isClientOwner) {
+
+      if (
+        data.latest_delivery &&
+        data.latest_delivery.status ===
+        "submitted"
+      ) {
+
+        clientDeliveryActions.classList.remove(
+          "hidden"
+        );
+
+      }
+
+    }
+
+
+    if (
+      status === "completed"
+    ) {
+
+      deliveryFormBox.classList.add(
+        "hidden"
+      );
+
+      clientDeliveryActions.classList.add(
+        "hidden"
+      );
+
+      revisionFormBox.classList.add(
+        "hidden"
+      );
+    }
+  }
+
+
+  function renderLatestDelivery(
+    delivery
+  ) {
+
+    if (!delivery) {
+
+      latestDelivery.innerHTML =
+        `
+          <div class="execution-empty">
+            لا يوجد تسليم حتى الآن.
+          </div>
+        `;
+
+      return;
+    }
+
+    const status =
+      delivery.status ||
+      "submitted";
+
+    const version =
+      Number(delivery.version);
+
+    latestDelivery.innerHTML =
+      `
+        <div class="delivery-card">
+
+          <div class="delivery-meta">
+
+            <span class="delivery-version">
+              النسخة ${
+                Number.isFinite(version)
+                  ? version
+                  : "-"
+              }
+            </span>
+
+            <span class="delivery-status ${escapeHTML(status)}">
+              ${escapeHTML(
+                deliveryStatusNames[status] ||
+                status
+              )}
+            </span>
+
+          </div>
+
+          <div class="timeline-date">
+            تاريخ التسليم:
+            ${formatDateTime(
+              delivery.created_at
+            )}
+          </div>
+
+          <div class="delivery-message">
+            ${escapeHTML(
+              delivery.message
+            )}
+          </div>
+
+          ${
+            delivery.file_url
+            ? `
+              <a
+                class="file-link"
+                href="${escapeHTML(delivery.file_url)}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                فتح ملف التسليم
+              </a>
+            `
+            : `
+              <div class="timeline-date">
+                لا يوجد ملف مرفق.
+              </div>
+            `
+          }
+
+        </div>
+      `;
+  }
+
+
+  function renderRevisionRequest(
+    revision
+  ) {
+
+    if (!revision) {
+
+      revisionCard.classList.add(
+        "hidden"
+      );
+
+      return;
+    }
+
+    revisionCard.classList.remove(
+      "hidden"
+    );
+
+    revisionMessage.textContent =
+      revision.message ||
+      "";
+
+    revisionDate.textContent =
+      "تاريخ الطلب: " +
+      formatDateTime(
+        revision.created_at
+      );
+  }
+
+
+  function renderEvents(events) {
+
+    if (
+      !events ||
+      events.length === 0
+    ) {
+
+      eventsList.innerHTML =
+        `
+          <div class="execution-empty">
+            لا توجد أحداث مسجلة حتى الآن.
+          </div>
+        `;
+
+      return;
+    }
+
+    eventsList.innerHTML =
+      events
+        .map(
+          event =>
+            `
+              <div class="timeline-item">
+
+                <span class="timeline-dot"></span>
+
+                <div class="timeline-message">
+                  ${escapeHTML(
+                    event.message ||
+                    ""
+                  )}
+                </div>
+
+                <div class="timeline-date">
+                  ${formatDateTime(
+                    event.created_at
+                  )}
+                </div>
+
+              </div>
+            `
+        )
+        .join("");
+  }
+
+
+  deliveryForm.addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+      showExecutionMessage("");
+
+      if (
+        !currentExecutionData ||
+        !currentExecutionData.execution
+      ) {
+
+        showExecutionMessage(
+          "لا يوجد تنفيذ قائم لهذا المشروع."
+        );
+
+        return;
+      }
+
+      const message =
+        document.getElementById(
+          "deliveryText"
+        ).value.trim();
+
+      const fileUrl =
+        document.getElementById(
+          "fileUrl"
+        ).value.trim();
+
+
+      if (
+        message.length < 5
+      ) {
+
+        showExecutionMessage(
+          "رسالة التسليم يجب أن تكون 5 أحرف على الأقل."
+        );
+
+        return;
+      }
+
+
+      submitDelivery.disabled =
+        true;
+
+      submitDelivery.textContent =
+        "جار إرسال التسليم...";
+
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/projects/" +
+            currentProjectId +
+            "/deliveries",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+              credentials: "include",
+              body:
+                JSON.stringify({
+                  message,
+                  file_url:
+                    fileUrl || null
+                })
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+          showExecutionMessage(
+            data.message ||
+            data.error ||
+            "تعذر إرسال التسليم."
+          );
+
+          return;
+        }
+
+
+        showExecutionMessage(
+          "تم إرسال التسليم بنجاح.",
+          "success"
+        );
+
+
+        deliveryForm.reset();
+
+
+        await loadExecutionAndRender();
+
+
+      } catch (error) {
+
+        showExecutionMessage(
+          "حدث خطأ أثناء إرسال التسليم."
+        );
+
+      } finally {
+
+        submitDelivery.disabled =
+          false;
+
+        submitDelivery.textContent =
+          "إرسال التسليم";
+      }
+    }
+  );
+
+
+  acceptDeliveryButton.addEventListener(
+    "click",
+    async function() {
+
+      const confirmed =
+        confirm(
+          "هل أنت متأكد من قبول التسليم؟\n\nسيتم إنهاء تنفيذ المشروع وتحويل حالته إلى «مكتمل»."
+        );
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      acceptDeliveryButton.disabled =
+        true;
+
+      requestRevisionButton.disabled =
+        true;
+
+
+      try {
+
+        const delivery =
+          currentExecutionData &&
+          currentExecutionData.latest_delivery;
+
+
+        if (!delivery) {
+
+          showExecutionMessage(
+            "لا يوجد تسليم لقبوله."
+          );
+
+          return;
+        }
+
+
+        const response =
+          await fetch(
+            "/api/deliveries/" +
+            delivery.id +
+            "/accept",
+            {
+              method: "POST",
+              credentials: "include"
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+          showExecutionMessage(
+            data.message ||
+            data.error ||
+            "تعذر قبول التسليم."
+          );
+
+          return;
+        }
+
+
+        showExecutionMessage(
+          "تم قبول التسليم وإنهاء المشروع بنجاح.",
+          "success"
+        );
+
+
+        await refreshProjectAndProposals();
+
+
+      } catch (error) {
+
+        showExecutionMessage(
+          "حدث خطأ أثناء قبول التسليم."
+        );
+
+      } finally {
+
+        acceptDeliveryButton.disabled =
+          false;
+
+        requestRevisionButton.disabled =
+          false;
+      }
+    }
+  );
+
+
+  requestRevisionButton.addEventListener(
+    "click",
+    function() {
+
+      revisionFormBox.classList.toggle(
+        "hidden"
+      );
+
+      if (
+        !revisionFormBox.classList.contains(
+          "hidden"
+        )
+      ) {
+
+        revisionFormBox.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
+    }
+  );
+
+
+  revisionForm.addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+      showExecutionMessage("");
+
+      const delivery =
+        currentExecutionData &&
+        currentExecutionData.latest_delivery;
+
+
+      if (!delivery) {
+
+        showExecutionMessage(
+          "لا يوجد تسليم لطلب تعديله."
+        );
+
+        return;
+      }
+
+
+      const message =
+        document.getElementById(
+          "revisionText"
+        ).value.trim();
+
+
+      if (
+        message.length < 5
+      ) {
+
+        showExecutionMessage(
+          "رسالة التعديل يجب أن تكون 5 أحرف على الأقل."
+        );
+
+        return;
+      }
+
+
+      submitRevision.disabled =
+        true;
+
+      submitRevision.textContent =
+        "جار إرسال طلب التعديل...";
+
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/deliveries/" +
+            delivery.id +
+            "/revision",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+              credentials: "include",
+              body:
+                JSON.stringify({
+                  message
+                })
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok) {
+
+          showExecutionMessage(
+            data.message ||
+            data.error ||
+            "تعذر إرسال طلب التعديل."
+          );
+
+          return;
+        }
+
+
+        showExecutionMessage(
+          "تم إرسال طلب التعديل للمستقل.",
+          "success"
+        );
+
+
+        revisionForm.reset();
+
+        revisionFormBox.classList.add(
+          "hidden"
+        );
+
+
+        await loadExecutionAndRender();
+
+
+      } catch (error) {
+
+        showExecutionMessage(
+          "حدث خطأ أثناء إرسال طلب التعديل."
+        );
+
+      } finally {
+
+        submitRevision.disabled =
+          false;
+
+        submitRevision.textContent =
+          "إرسال طلب التعديل";
+      }
+    }
+  );
+
 
   async function init() {
 
@@ -1563,7 +3072,10 @@
     await loadProject();
   }
 
+
   init();
 
-</script></body>
+</script>
+
+</body>
 </html>
