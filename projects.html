@@ -29,13 +29,10 @@
       height: 68px;
       background: #20242a;
       border-bottom: 1px solid #30363f;
-
       display: flex;
       align-items: center;
       justify-content: space-between;
-
       padding: 0 20px;
-
       position: sticky;
       top: 0;
       z-index: 10;
@@ -99,7 +96,6 @@
       border: 1px solid #30363f;
       border-radius: 17px;
       padding: 22px;
-
       transition: 0.2s;
     }
 
@@ -118,11 +114,6 @@
       color: #b9c0ca;
       line-height: 1.7;
       margin-bottom: 18px;
-
-      display: -webkit-box;
-      -webkit-line-clamp: 4;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
     }
 
     .project-meta {
@@ -135,9 +126,7 @@
       display: flex;
       justify-content: space-between;
       gap: 15px;
-
       padding: 10px 12px;
-
       background: #20242a;
       border-radius: 9px;
     }
@@ -159,18 +148,12 @@
     .details-btn {
       display: block;
       width: 100%;
-
       background: #4f8cff;
       color: #fff;
-
       text-align: center;
-
       border-radius: 10px;
-
       padding: 12px;
-
       font-weight: bold;
-
       transition: 0.2s;
     }
 
@@ -180,17 +163,12 @@
 
     .retry-btn {
       margin-top: 15px;
-
       border: 0;
       border-radius: 10px;
-
       background: #4f8cff;
       color: white;
-
       padding: 11px 20px;
-
       cursor: pointer;
-
       font-weight: bold;
     }
 
@@ -213,17 +191,12 @@
 <body>
 
 <header class="header">
-
-  <a href="index.html" class="logo">
-    مِهراف
-  </a>
+  <a href="index.html" class="logo">مِهراف</a>
 
   <a href="index.html" class="back">
     العودة للرئيسية
   </a>
-
 </header>
-
 
 <main class="container">
 
@@ -235,125 +208,71 @@
     إدارة المشاريع التي قمت بنشرها على منصة مهراف.
   </p>
 
-
   <div id="loading" class="loading">
     جاري تحميل المشاريع...
   </div>
 
-
   <div id="errorBox" class="error hidden">
+    <div id="errorText"></div>
 
-    <div id="errorText">
-      حدث خطأ أثناء تحميل المشاريع.
-    </div>
-
-    <button
-      id="retryBtn"
-      class="retry-btn">
+    <button id="retryBtn" class="retry-btn">
       حاول مرة أخرى
     </button>
-
   </div>
 
-
-  <div
-    id="emptyBox"
-    class="empty hidden">
-
+  <div id="emptyBox" class="empty hidden">
     لا يوجد لديك مشاريع منشورة حتى الآن.
-
   </div>
 
-
-  <div
-    id="projects"
-    class="projects hidden">
-  </div>
+  <div id="projects" class="projects hidden"></div>
 
 </main>
 
-
 <script>
-
-  const loading =
-    document.getElementById("loading");
-
-  const errorBox =
-    document.getElementById("errorBox");
-
-  const errorText =
-    document.getElementById("errorText");
-
-  const emptyBox =
-    document.getElementById("emptyBox");
-
-  const projectsBox =
-    document.getElementById("projects");
-
-  const retryBtn =
-    document.getElementById("retryBtn");
-
+  const loading = document.getElementById("loading");
+  const errorBox = document.getElementById("errorBox");
+  const errorText = document.getElementById("errorText");
+  const emptyBox = document.getElementById("emptyBox");
+  const projectsBox = document.getElementById("projects");
+  const retryBtn = document.getElementById("retryBtn");
 
   function escapeHtml(value) {
-
     return String(value ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
   }
 
-
   function statusText(status) {
-
     const statuses = {
-
       open: "مفتوح",
-
       in_progress: "قيد التنفيذ",
-
       completed: "مكتمل",
-
       cancelled: "ملغي"
-
     };
 
     return statuses[status] || status || "غير محدد";
-
   }
-
 
   function showLoading() {
-
     loading.classList.remove("hidden");
-
     errorBox.classList.add("hidden");
-
     emptyBox.classList.add("hidden");
-
     projectsBox.classList.add("hidden");
-
   }
 
-
   function showError(message) {
-
     loading.classList.add("hidden");
-
     emptyBox.classList.add("hidden");
-
     projectsBox.classList.add("hidden");
 
     errorText.textContent =
-      message ||
-      "حدث خطأ أثناء تحميل المشاريع. حاول مرة أخرى.";
+      message || "حدث خطأ أثناء تحميل المشاريع.";
 
     errorBox.classList.remove("hidden");
-
   }
-
 
   async function loadProjects() {
 
@@ -361,132 +280,84 @@
 
     try {
 
-      const meResponse =
-        await fetch("/api/me", {
-
+      const response = await fetch(
+        "/api/projects",
+        {
           method: "GET",
-
           credentials: "include",
+          cache: "no-store",
+          headers: {
+            "Accept": "application/json"
+          }
+        }
+      );
 
-          cache: "no-store"
-
-        });
-
-
-      let meData;
-
-      try {
-
-        meData =
-          await meResponse.json();
-
-      } catch {
-
-        showError(
-          "تعذر التحقق من تسجيل الدخول."
-        );
-
-        return;
-
-      }
-
-
-      if (
-        !meResponse.ok ||
-        !meData.success ||
-        !meData.authenticated
-      ) {
-
-        window.location.href =
-          "login.html";
-
-        return;
-
-      }
-
-
-      const response =
-        await fetch("/api/projects", {
-
-          method: "GET",
-
-          credentials: "include",
-
-          cache: "no-store"
-
-        });
-
+      const rawText = await response.text();
 
       let data;
 
       try {
+        data = JSON.parse(rawText);
+      } catch (jsonError) {
 
-        data =
-          await response.json();
-
-      } catch {
+        console.error("Invalid JSON:", rawText);
 
         showError(
           "الخادم أرسل استجابة غير صالحة."
         );
 
         return;
-
       }
 
+      console.log("Projects API:", data);
 
-      if (
-        !response.ok ||
-        !data.success
-      ) {
+      if (response.status === 401) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      if (!response.ok || data.success !== true) {
 
         showError(
           data.error ||
-          "حدث خطأ أثناء تحميل المشاريع. حاول مرة أخرى."
+          data.message ||
+          "حدث خطأ أثناء تحميل المشاريع."
         );
 
         return;
-
       }
 
-
-      const projects =
-        Array.isArray(data.projects)
-          ? data.projects
-          : [];
-
+      const projects = Array.isArray(data.projects)
+        ? data.projects
+        : [];
 
       loading.classList.add("hidden");
-
 
       if (projects.length === 0) {
 
         emptyBox.classList.remove("hidden");
 
         return;
-
       }
 
+      projectsBox.innerHTML = projects.map(project => {
 
-      projectsBox.innerHTML =
-        projects.map(project => `
+        const id = encodeURIComponent(project.id);
 
+        return `
           <article class="project-card">
 
             <h2 class="project-title">
               ${escapeHtml(project.title)}
             </h2>
 
-
             <div class="project-description">
               ${escapeHtml(project.description)}
             </div>
 
-
             <div class="project-meta">
 
               <div class="meta-row">
-
                 <span class="muted">
                   التصنيف
                 </span>
@@ -494,12 +365,9 @@
                 <span>
                   ${escapeHtml(project.category)}
                 </span>
-
               </div>
 
-
               <div class="meta-row">
-
                 <span class="muted">
                   الميزانية
                 </span>
@@ -507,67 +375,48 @@
                 <span class="budget">
                   ${Number(project.budget || 0).toLocaleString()} $
                 </span>
-
               </div>
 
-
               <div class="meta-row">
-
                 <span class="muted">
                   الحالة
                 </span>
 
                 <span class="status">
-                  ${escapeHtml(
-                    statusText(project.status)
-                  )}
+                  ${escapeHtml(statusText(project.status))}
                 </span>
-
               </div>
 
             </div>
 
-
             <a
               class="details-btn"
-              href="project.html?id=${encodeURIComponent(project.id)}">
-
+              href="project.html?id=${id}">
               تفاصيل المشروع
-
             </a>
 
           </article>
-
-        `).join("");
-
+        `;
+      }).join("");
 
       projectsBox.classList.remove("hidden");
 
-
     } catch (error) {
 
-      console.error(
-        "Projects loading error:",
-        error
-      );
+      console.error("Projects loading error:", error);
 
       showError(
         "تعذر الاتصال بالخادم. حاول مرة أخرى."
       );
-
     }
-
   }
-
 
   retryBtn.addEventListener(
     "click",
     loadProjects
   );
 
-
   loadProjects();
-
 </script>
 
 </body>
