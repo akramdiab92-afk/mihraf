@@ -564,7 +564,7 @@
 
           <a
             class="details-btn"
-            href="project.html?id=${encodeURIComponent(id)}"
+            href="project-details.html?id=${encodeURIComponent(id)}"
           >
             عرض تفاصيل المشروع
           </a>
