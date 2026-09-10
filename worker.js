@@ -1013,50 +1013,6 @@ async function getProject(
   });
 }
 
-  const project =
-    await env.DB
-      .prepare(`
-        SELECT
-          p.id,
-          p.user_id,
-          p.title,
-          p.description,
-          p.budget,
-          p.category,
-          p.status,
-          p.created_at,
-          p.updated_at,
-          u.full_name AS owner_name
-        FROM projects p
-        LEFT JOIN users u
-          ON u.id = p.user_id
-        WHERE p.id = ?
-        LIMIT 1
-      `)
-      .bind(projectId)
-      .first();
-
-  if (!project) {
-    return json({
-      success: false,
-      error: "المشروع غير موجود"
-    }, 404);
-  }
-
-  const canApply =
-    user.role === "freelancer" &&
-    project.user_id !== user.id &&
-    project.status === "open";
-
-  return json({
-    success: true,
-    project,
-    is_owner:
-      project.user_id === user.id,
-    can_apply: canApply
-  });
-}
-
 
 // CREATE PROPOSAL
 async function createProposal(
