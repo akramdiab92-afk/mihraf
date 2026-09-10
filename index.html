@@ -741,7 +741,352 @@
       background: var(--border);
       margin: 3px 10px;
     }
-  
+
+    /* =========================
+       HERO
+    ========================== */
+
+    .hero {
+      padding: 70px 0 45px;
+      text-align: center;
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(79, 140, 255, 0.13),
+          transparent 55%
+        );
+    }
+
+    .hero-content h1 {
+      font-size: 34px;
+      color: #f0f2f5;
+      margin-bottom: 15px;
+    }
+
+    .hero-content h1 span {
+      color: var(--blue);
+    }
+
+    .hero-content p {
+      max-width: 650px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* =========================
+       SEARCH
+    ========================== */
+
+    .search-section {
+      padding: 10px 0 45px;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 760px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 7px;
+    }
+
+    .search-icon {
+      padding-right: 10px;
+      font-size: 17px;
+    }
+
+    .search-box input {
+      flex: 1;
+      min-width: 0;
+      height: 42px;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .search-box input::placeholder {
+      color: #737b87;
+    }
+
+    .search-box button {
+      height: 42px;
+      padding: 0 20px;
+      border: none;
+      border-radius: 9px;
+      background: var(--blue);
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+
+    .search-box button:hover {
+      background: var(--blue-dark);
+    }
+
+    /* =========================
+       SECTIONS
+    ========================== */
+
+    section {
+      padding: 45px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .section-title h2 {
+      color: #f0f2f5;
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* =========================
+       CATEGORIES
+    ========================== */
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 13px;
+    }
+
+    .category {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 20px 15px;
+      text-align: center;
+      transition: 0.2s;
+    }
+
+    .category:hover {
+      background: var(--card-hover);
+      transform: translateY(-2px);
+    }
+
+    .category-icon {
+      font-size: 25px;
+      margin-bottom: 8px;
+    }
+
+    .category h3 {
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .category p {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    /* =========================
+       CARDS
+    ========================== */
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      overflow: hidden;
+      transition: 0.2s;
+    }
+
+    .card:hover {
+      background: var(--card-hover);
+      transform: translateY(-2px);
+    }
+
+    .card-image {
+      height: 150px;
+      background: #292f37;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #737b87;
+      font-size: 12px;
+    }
+
+    .card-content {
+      padding: 17px;
+    }
+
+    .card-content h3 {
+      color: var(--text);
+      font-size: 15px;
+      margin-bottom: 7px;
+    }
+
+    .card-content p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .price {
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    /* =========================
+       CTA
+    ========================== */
+
+    .cta {
+      text-align: center;
+      background:
+        linear-gradient(
+          180deg,
+          transparent,
+          rgba(79, 140, 255, 0.04)
+        );
+    }
+
+    .cta h2 {
+      color: #f0f2f5;
+      font-size: 25px;
+      margin-bottom: 8px;
+    }
+
+    .cta p {
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .cta a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 45px;
+      padding: 0 22px;
+      border-radius: 10px;
+      background: var(--blue);
+      color: white;
+      font-weight: 700;
+      font-size: 13px;
+      transition: 0.2s;
+    }
+
+    .cta a:hover {
+      background: var(--blue-dark);
+      transform: translateY(-1px);
+    }
+
+    /* =========================
+       FOOTER
+    ========================== */
+
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 30px 15px;
+      color: var(--muted);
+    }
+
+    footer strong {
+      display: block;
+      color: var(--blue);
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    footer p {
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================== */
+
+    @media (max-width: 900px) {
+      .categories {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .container {
+        width: 94%;
+      }
+
+      .hero {
+        padding-top: 50px;
+      }
+
+      .hero-content h1 {
+        font-size: 27px;
+      }
+
+      .hero-content p {
+        font-size: 13px;
+      }
+
+      .categories {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 9px;
+      }
+
+      .category {
+        padding: 15px 9px;
+      }
+
+      .category-icon {
+        font-size: 21px;
+      }
+
+      .category h3 {
+        font-size: 12px;
+      }
+
+      .category p {
+        font-size: 10px;
+      }
+
+      .notification-panel {
+        left: -45px;
+        width: min(350px, calc(100vw - 20px));
+      }
+
+      .search-box {
+        padding: 5px;
+      }
+
+      .search-box button {
+        padding: 0 15px;
+      }
+    }
   </style>
 </head>
 
@@ -1873,7 +2218,8 @@
 
     const moreMenu =
       document.getElementById("moreMenu");
-        
+
+
     /* =========================
        التحقق من تسجيل الدخول
     ========================== */
@@ -1895,12 +2241,6 @@
         const data =
           await response.json();
 
-
-        /*
-          مهم:
-          Worker يرجع authenticated
-          وليس logged_in
-        */
 
         if (
           response.ok &&
@@ -2123,12 +2463,17 @@
         logoutMenuButton.disabled =
           true;
 
-        logoutMenuButton
-          .querySelector(
+        const textElement =
+          logoutMenuButton.querySelector(
             ".menu-item-text"
-          )
-          .textContent =
-          "جاري تسجيل الخروج...";
+          );
+
+        if (textElement) {
+
+          textElement.textContent =
+            "جاري تسجيل الخروج...";
+
+        }
 
       }
 
@@ -2182,12 +2527,17 @@
           logoutMenuButton.disabled =
             false;
 
-          logoutMenuButton
-            .querySelector(
+          const textElement =
+            logoutMenuButton.querySelector(
               ".menu-item-text"
-            )
-            .textContent =
-            "تسجيل الخروج";
+            );
+
+          if (textElement) {
+
+            textElement.textContent =
+              "تسجيل الخروج";
+
+          }
 
         }
 
@@ -2373,6 +2723,11 @@
 
     function renderNotifications() {
 
+      if (!notificationList) {
+        return;
+      }
+
+
       notificationList.innerHTML =
         "";
 
@@ -2542,207 +2897,4 @@
                   notification.project_id
                     ? `project-details.html?id=${encodeURIComponent(notification.project_id)}`
                     : "index.html"
-                )
-              );
-
-            }
-          );
-
-
-          notificationList.appendChild(
-            item
-          );
-
-        }
-      );
-
-    }
-
-
-    async function loadNotifications() {
-
-      try {
-
-        const response =
-          await fetch(
-            "/api/notifications",
-            {
-              method: "GET",
-              credentials: "include",
-              cache: "no-store"
-            }
-          );
-
-
-        if (
-          !response.ok
-        ) {
-
-          return;
-
-        }
-
-
-        const data =
-          await response.json();
-
-
-        notificationsData =
-          Array.isArray(
-            data.notifications
-          )
-            ? data.notifications
-            : [];
-
-
-        updateNotificationBadge(
-          data.unread_count || 0
-        );
-
-
-        renderNotifications();
-
-
-      } catch (error) {
-
-        console.error(
-          "Notifications load error:",
-          error
-        );
-
-      }
-
-    }
-
-
-    async function openNotification(
-      notificationId,
-      actionUrl
-    ) {
-
-      try {
-
-        await fetch(
-          `/api/notifications/${notificationId}/read`,
-          {
-            method: "POST",
-            credentials: "include"
-          }
-        );
-
-      } catch (error) {
-
-        console.error(
-          "Notification read error:",
-          error
-        );
-
-      }
-
-
-      if (actionUrl) {
-
-        window.location.href =
-          actionUrl;
-
-      } else {
-
-        await loadNotifications();
-
-      }
-
-    }
-
-
-    async function markAllNotificationsRead() {
-
-      try {
-
-        const response =
-          await fetch(
-            "/api/notifications/read-all",
-            {
-              method: "POST",
-              credentials: "include"
-            }
-          );
-
-
-        if (
-          !response.ok
-        ) {
-
-          return;
-
-        }
-
-
-        notificationsData =
-          notificationsData.map(
-            notification => ({
-              ...notification,
-              is_read: 1
-            })
-          );
-
-
-        updateNotificationBadge(
-          0
-        );
-
-
-        renderNotifications();
-
-
-      } catch (error) {
-
-        console.error(
-          "Mark notifications read error:",
-          error
-        );
-
-      }
-
-    }
-
-
-    function toggleNotifications() {
-
-      if (
-        !notificationPanel
-      ) {
-
-        return;
-
-      }
-
-
-      const isOpen =
-        notificationPanel.classList.contains(
-          "active"
-        );
-
-
-      if (isOpen) {
-
-        closeNotifications();
-
-      } else {
-
-        notificationPanel.classList.add(
-          "active"
-        );
-
-        notificationPanel.setAttribute(
-          "aria-hidden",
-          "false"
-        );
-
-
-        notificationButton.setAttribute(
-          "aria-expanded",
-          "true"
-        );
-
-
-       
+               
