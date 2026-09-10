@@ -243,6 +243,190 @@
       gap: 8px;
     }
 
+    /* =========================
+       NOTIFICATIONS
+    ========================== */
+
+    .notification-wrapper {
+      position: relative;
+    }
+
+    .notification-button {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      color: var(--text);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 19px;
+    }
+
+    .notification-button:hover {
+      background: var(--card);
+      border-color: #3d4652;
+      transform: translateY(-1px);
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      min-width: 19px;
+      height: 19px;
+      padding: 0 5px;
+      border-radius: 10px;
+      background: #ef5350;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      line-height: 19px;
+      text-align: center;
+      border: 2px solid var(--bg);
+      box-shadow: 0 2px 7px rgba(0,0,0,.25);
+    }
+
+    .notification-panel {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      width: min(380px, calc(100vw - 24px));
+      max-height: 70vh;
+      overflow-y: auto;
+      background: #20242a;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.42);
+      z-index: 300;
+      display: none;
+    }
+
+    .notification-panel.active {
+      display: block;
+    }
+
+    .notification-panel-header {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 13px 14px;
+      background: #20242a;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .notification-panel-header strong {
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .notification-panel-header button {
+      border: none;
+      background: transparent;
+      color: var(--blue);
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .notification-panel-header button:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+
+    .notification-list {
+      padding: 6px;
+    }
+
+    .notification-item {
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 11px 10px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text);
+      text-align: right;
+      cursor: pointer;
+      transition: .18s;
+    }
+
+    .notification-item:hover {
+      background: #292f37;
+    }
+
+    .notification-item.unread {
+      background: rgba(79,140,255,.07);
+    }
+
+    .notification-item.unread:hover {
+      background: rgba(79,140,255,.12);
+    }
+
+    .notification-item-icon {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      border-radius: 9px;
+      background: #292f37;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .notification-item-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .notification-item-title {
+      display: block;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .notification-item-message {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    .notification-item-time {
+      display: block;
+      color: #68717d;
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .notification-unread-dot {
+      width: 7px;
+      height: 7px;
+      flex-shrink: 0;
+      margin-top: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .notification-empty {
+      padding: 28px 15px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
     .menu-button {
       width: 42px;
       height: 42px;
@@ -557,416 +741,7 @@
       background: var(--border);
       margin: 3px 10px;
     }
-
-    /* =========================
-       HERO
-    ========================== */
-
-    .hero {
-      padding: 82px 0 78px;
-      background:
-        radial-gradient(
-          circle at 50% 0%,
-          rgba(79, 140, 255, 0.13),
-          transparent 40%
-        ),
-        var(--bg);
-    }
-
-    .hero-content {
-      text-align: center;
-      max-width: 820px;
-      margin: auto;
-    }
-
-    .hero h1 {
-      font-size: 37px;
-      font-weight: 700;
-      color: #f0f2f5;
-      margin-bottom: 15px;
-      letter-spacing: -0.7px;
-    }
-
-    .hero h1 span {
-      color: var(--blue);
-    }
-
-    .hero p {
-      font-size: 16px;
-      color: var(--muted);
-      margin-bottom: 27px;
-    }
-
-    .hero-buttons {
-      display: none;
-    }
-
-    /* =========================
-       SEARCH
-    ========================== */
-
-    .search-section {
-      padding: 26px 0;
-      background: #1c2025;
-      border-top: 1px solid #242a31;
-      border-bottom: 1px solid #242a31;
-    }
-
-    .search-box {
-      max-width: 680px;
-      margin: auto;
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-
-    .search-icon {
-      position: absolute;
-      right: 16px;
-      color: #7f8895;
-      font-size: 17px;
-      pointer-events: none;
-    }
-
-    .search-box input {
-      width: 100%;
-      height: 50px;
-      border: 1px solid #343b44;
-      border-radius: 13px;
-      padding: 0 46px 0 95px;
-      font-size: 13px;
-      outline: none;
-      background: #252a31;
-      color: #e5e7eb;
-      transition: 0.2s;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-    }
-
-    .search-box input::placeholder {
-      color: #7d8692;
-    }
-
-    .search-box input:focus {
-      border-color: rgba(79, 140, 255, 0.7);
-      background: #282e36;
-      box-shadow:
-        0 0 0 3px rgba(79, 140, 255, 0.08),
-        0 10px 30px rgba(0, 0, 0, 0.16);
-    }
-
-    .search-box button {
-      position: absolute;
-      left: 6px;
-      height: 38px;
-      padding: 0 17px;
-      border: none;
-      border-radius: 9px;
-      background: var(--blue);
-      color: white;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 700;
-      transition: 0.2s;
-    }
-
-    .search-box button:hover {
-      background: var(--blue-dark);
-    }
-
-    /* =========================
-       SECTIONS
-    ========================== */
-
-    section {
-      padding: 58px 0;
-    }
-
-    .section-title {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .section-title h2 {
-      font-size: 24px;
-      font-weight: 700;
-      color: #e8ebef;
-      margin-bottom: 6px;
-    }
-
-    .section-title p {
-      color: #858e9a;
-      font-size: 13px;
-    }
-
-    /* =========================
-       CATEGORIES
-    ========================== */
-
-    .categories {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
-
-    .category {
-      background: var(--card);
-      padding: 21px 13px;
-      border-radius: 12px;
-      text-align: center;
-      border: 1px solid var(--border);
-      transition: 0.22s;
-    }
-
-    .category:hover {
-      transform: translateY(-3px);
-      background: var(--card-hover);
-      border-color: #39414c;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
-    }
-
-    .category-icon {
-      font-size: 27px;
-      margin-bottom: 8px;
-    }
-
-    .category h3 {
-      font-size: 14px;
-      color: #e3e7ec;
-      margin-bottom: 4px;
-    }
-
-    .category p {
-      color: #858e9a;
-      font-size: 11px;
-    }
-
-    /* =========================
-       CARDS
-    ========================== */
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 17px;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      transition: 0.22s;
-    }
-
-    .card:hover {
-      transform: translateY(-3px);
-      background: var(--card-hover);
-      border-color: #39414c;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .card-image {
-      height: 150px;
-      background: #20252b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #737c88;
-      font-size: 12px;
-    }
-
-    .card-content {
-      padding: 17px;
-    }
-
-    .card h3 {
-      font-size: 15px;
-      margin-bottom: 7px;
-      color: #e5e8ed;
-    }
-
-    .card p {
-      color: #89919d;
-      font-size: 12px;
-      margin-bottom: 13px;
-    }
-
-    .price {
-      color: var(--blue);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    /* =========================
-       CTA
-    ========================== */
-
-    .cta {
-      background:
-        radial-gradient(
-          circle at 50% 0%,
-          rgba(79, 140, 255, 0.17),
-          transparent 55%
-        ),
-        #20252c;
-      color: white;
-      text-align: center;
-      padding: 58px 20px;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .cta h2 {
-      font-size: 25px;
-      margin-bottom: 9px;
-    }
-
-    .cta p {
-      color: #9da5b0;
-      font-size: 13px;
-      margin-bottom: 21px;
-    }
-
-    .cta a {
-      display: inline-block;
-      background: var(--blue);
-      color: white;
-      padding: 11px 23px;
-      border-radius: 9px;
-      font-size: 13px;
-      font-weight: 700;
-      transition: 0.2s;
-    }
-
-    .cta a:hover {
-      background: var(--blue-dark);
-      transform: translateY(-2px);
-    }
-
-    /* =========================
-       FOOTER
-    ========================== */
-
-    footer {
-      background: #14171b;
-      color: #777f8b;
-      text-align: center;
-      padding: 30px 15px;
-      border-top: 1px solid #22272d;
-    }
-
-    footer strong {
-      color: #dfe3e8;
-      display: block;
-      margin-bottom: 5px;
-      font-size: 14px;
-    }
-
-    footer p {
-      font-size: 11px;
-      margin-top: 2px;
-    }
-
-    /* =========================
-       RESPONSIVE
-    ========================== */
-
-    @media (max-width: 900px) {
-
-      .categories {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .cards {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      .hero h1 {
-        font-size: 32px;
-      }
-
-    }
-
-    @media (max-width: 600px) {
-
-      .container {
-        width: 94%;
-      }
-
-      .nav {
-        min-height: 62px;
-      }
-
-      .logo {
-        font-size: 23px;
-      }
-
-      .cards {
-        grid-template-columns: 1fr;
-      }
-
-      .categories {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-      }
-
-      .category {
-        padding: 18px 9px;
-      }
-
-      .hero {
-        padding: 62px 0;
-      }
-
-      .hero h1 {
-        font-size: 28px;
-      }
-
-      .hero p {
-        font-size: 14px;
-      }
-
-      .search-section {
-        padding: 20px 0;
-      }
-
-      .search-box input {
-        height: 48px;
-        padding-right: 42px;
-        padding-left: 82px;
-      }
-
-      .search-box button {
-        padding: 0 13px;
-        font-size: 11px;
-      }
-
-      .section-title h2 {
-        font-size: 22px;
-      }
-
-      .side-menu {
-        width: 88vw;
-      }
-
-      .auth-gate-card {
-        padding: 35px 22px;
-      }
-
-      .auth-gate-logo {
-        font-size: 30px;
-      }
-
-      .auth-gate-card h1 {
-        font-size: 22px;
-      }
-
-    }
-
+  
   </style>
 </head>
 
@@ -1069,6 +844,68 @@
 
         <div class="auth-area">
 
+          <!-- الإشعارات -->
+
+          <div class="notification-wrapper">
+
+            <button
+              type="button"
+              class="notification-button"
+              id="notificationButton"
+              aria-label="الإشعارات"
+              aria-expanded="false"
+              onclick="toggleNotifications()">
+
+              🔔
+
+              <span
+                class="notification-badge"
+                id="notificationBadge"
+                style="display:none;">
+                0
+              </span>
+
+            </button>
+
+            <div
+              class="notification-panel"
+              id="notificationPanel"
+              aria-hidden="true">
+
+              <div class="notification-panel-header">
+
+                <strong>
+                  الإشعارات
+                </strong>
+
+                <button
+                  type="button"
+                  id="markAllNotificationsButton"
+                  onclick="markAllNotificationsRead()">
+
+                  تحديد الكل كمقروء
+
+                </button>
+
+              </div>
+
+              <div
+                class="notification-list"
+                id="notificationList">
+
+                <div class="notification-empty">
+                  لا توجد إشعارات
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- القائمة -->
+
           <button
             type="button"
             class="menu-button"
@@ -1076,7 +913,9 @@
             aria-label="فتح القائمة"
             aria-expanded="false"
             onclick="openSideMenu()">
+
             ☰
+
           </button>
 
         </div>
@@ -1115,7 +954,9 @@
             class="close-menu"
             onclick="closeSideMenu()"
             aria-label="إغلاق القائمة">
+
             ×
+
           </button>
 
         </div>
@@ -1125,7 +966,9 @@
           <div
             class="user-avatar"
             id="userAvatar">
+
             م
+
           </div>
 
           <div class="user-details">
@@ -1535,51 +1378,138 @@
         <div class="categories">
 
           <div class="category">
-            <div class="category-icon">🎨</div>
-            <h3>تصميم</h3>
-            <p>تصميمات إبداعية واحترافية</p>
+
+            <div class="category-icon">
+              🎨
+            </div>
+
+            <h3>
+              تصميم
+            </h3>
+
+            <p>
+              تصميمات إبداعية واحترافية
+            </p>
+
           </div>
 
-          <div class="category">
-            <div class="category-icon">✍️</div>
-            <h3>كتابة وترجمة</h3>
-            <p>محتوى وترجمة بمختلف اللغات</p>
-          </div>
 
           <div class="category">
-            <div class="category-icon">💻</div>
-            <h3>برمجة وتقنية</h3>
-            <p>مواقع وتطبيقات وحلول تقنية</p>
+
+            <div class="category-icon">
+              ✍️
+            </div>
+
+            <h3>
+              كتابة وترجمة
+            </h3>
+
+            <p>
+              محتوى وترجمة بمختلف اللغات
+            </p>
+
           </div>
 
-          <div class="category">
-            <div class="category-icon">📊</div>
-            <h3>تسويق وأعمال</h3>
-            <p>تسويق وإدارة وتطوير الأعمال</p>
-          </div>
 
           <div class="category">
-            <div class="category-icon">📁</div>
-            <h3>إدخال بيانات</h3>
-            <p>تنظيم وتنسيق البيانات</p>
+
+            <div class="category-icon">
+              💻
+            </div>
+
+            <h3>
+              برمجة وتقنية
+            </h3>
+
+            <p>
+              مواقع وتطبيقات وحلول تقنية
+            </p>
+
           </div>
 
-          <div class="category">
-            <div class="category-icon">🎬</div>
-            <h3>فيديو وصوت</h3>
-            <p>مونتاج وتحرير وإنتاج المحتوى</p>
-          </div>
 
           <div class="category">
-            <div class="category-icon">⚖️</div>
-            <h3>استشارات</h3>
-            <p>خبرات واستشارات متخصصة</p>
+
+            <div class="category-icon">
+              📊
+            </div>
+
+            <h3>
+              تسويق وأعمال
+            </h3>
+
+            <p>
+              تسويق وإدارة وتطوير الأعمال
+            </p>
+
           </div>
 
+
           <div class="category">
-            <div class="category-icon">🛠️</div>
-            <h3>خدمات أخرى</h3>
-            <p>خدمات متنوعة حسب احتياجك</p>
+
+            <div class="category-icon">
+              📁
+            </div>
+
+            <h3>
+              إدخال بيانات
+            </h3>
+
+            <p>
+              تنظيم وتنسيق البيانات
+            </p>
+
+          </div>
+
+
+          <div class="category">
+
+            <div class="category-icon">
+              🎬
+            </div>
+
+            <h3>
+              فيديو وصوت
+            </h3>
+
+            <p>
+              مونتاج وتحرير وإنتاج المحتوى
+            </p>
+
+          </div>
+
+
+          <div class="category">
+
+            <div class="category-icon">
+              ⚖️
+            </div>
+
+            <h3>
+              استشارات
+            </h3>
+
+            <p>
+              خبرات واستشارات متخصصة
+            </p>
+
+          </div>
+
+
+          <div class="category">
+
+            <div class="category-icon">
+              🛠️
+            </div>
+
+            <h3>
+              خدمات أخرى
+            </h3>
+
+            <p>
+              خدمات متنوعة حسب احتياجك
+            </p>
+
           </div>
 
         </div>
@@ -1874,7 +1804,9 @@
       <a
         href="dashboard.html"
         id="ctaDashboard">
+
         الانتقال إلى لوحة التحكم
+
       </a>
 
     </section>
@@ -1941,8 +1873,7 @@
 
     const moreMenu =
       document.getElementById("moreMenu");
-
-
+        
     /* =========================
        التحقق من تسجيل الدخول
     ========================== */
@@ -2049,6 +1980,10 @@
       menuButton.style.display =
         "flex";
 
+
+      loadNotifications();
+      startNotificationPolling();
+
     }
 
 
@@ -2066,6 +2001,11 @@
 
       authGate.style.display =
         "flex";
+
+
+      stopNotificationPolling();
+      closeNotifications();
+      updateNotificationBadge(0);
 
     }
 
@@ -2164,6 +2104,7 @@
         ) {
 
           closeSideMenu();
+          closeNotifications();
 
         }
 
@@ -2213,6 +2154,8 @@
           data.success
         ) {
 
+          stopNotificationPolling();
+          closeNotifications();
           closeSideMenu();
 
           window.location.href =
@@ -2292,12 +2235,514 @@
 
 
     /* =========================
-       بدء التحقق
+       NOTIFICATIONS
     ========================== */
 
-    checkLogin();
+    let notificationsData = [];
+    let notificationPollTimer = null;
 
-  </script>
 
-</body>
-</html>
+    const notificationButton =
+      document.getElementById(
+        "notificationButton"
+      );
+
+    const notificationBadge =
+      document.getElementById(
+        "notificationBadge"
+      );
+
+    const notificationPanel =
+      document.getElementById(
+        "notificationPanel"
+      );
+
+    const notificationList =
+      document.getElementById(
+        "notificationList"
+      );
+
+    const markAllNotificationsButton =
+      document.getElementById(
+        "markAllNotificationsButton"
+      );
+
+
+    function getNotificationIcon(type) {
+
+      const icons = {
+
+        new_proposal: "💼",
+
+        proposal_accepted: "✅",
+
+        proposal_rejected: "❌",
+
+        execution_started: "🚀",
+
+        delivery_submitted: "📦",
+
+        revision_requested: "🔄",
+
+        delivery_accepted: "✅",
+
+        project_completed: "🎉"
+
+      };
+
+
+      return icons[type] || "🔔";
+
+    }
+
+
+    function formatNotificationTime(value) {
+
+      if (!value) return "";
+
+
+      const raw =
+        String(value);
+
+
+      const date =
+        new Date(
+          raw.includes("T")
+            ? raw
+            : raw.replace(" ", "T") + "Z"
+        );
+
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+
+        return raw;
+
+      }
+
+
+      return date.toLocaleString(
+        "ar",
+        {
+          day: "2-digit",
+          month: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      );
+
+    }
+
+
+    function updateNotificationBadge(count) {
+
+      const number =
+        Number(count) || 0;
+
+
+      if (number > 0) {
+
+        notificationBadge.textContent =
+          String(number);
+
+        notificationBadge.style.display =
+          "flex";
+
+      } else {
+
+        notificationBadge.style.display =
+          "none";
+
+      }
+
+
+      if (
+        markAllNotificationsButton
+      ) {
+
+        markAllNotificationsButton.disabled =
+          number === 0;
+
+      }
+
+    }
+
+
+    function renderNotifications() {
+
+      notificationList.innerHTML =
+        "";
+
+
+      if (
+        !notificationsData.length
+      ) {
+
+        const empty =
+          document.createElement(
+            "div"
+          );
+
+        empty.className =
+          "notification-empty";
+
+        empty.textContent =
+          "لا توجد إشعارات";
+
+        notificationList.appendChild(
+          empty
+        );
+
+        return;
+
+      }
+
+
+      notificationsData.forEach(
+        notification => {
+
+          const item =
+            document.createElement(
+              "button"
+            );
+
+
+          item.type =
+            "button";
+
+
+          item.className =
+            "notification-item" +
+            (
+              Number(
+                notification.is_read
+              ) === 0
+                ? " unread"
+                : ""
+            );
+
+
+          const icon =
+            document.createElement(
+              "div"
+            );
+
+          icon.className =
+            "notification-item-icon";
+
+          icon.textContent =
+            getNotificationIcon(
+              notification.type
+            );
+
+
+          const content =
+            document.createElement(
+              "div"
+            );
+
+          content.className =
+            "notification-item-content";
+
+
+          const title =
+            document.createElement(
+              "span"
+            );
+
+          title.className =
+            "notification-item-title";
+
+          title.textContent =
+            notification.title ||
+            "إشعار";
+
+
+          const message =
+            document.createElement(
+              "span"
+            );
+
+          message.className =
+            "notification-item-message";
+
+          message.textContent =
+            notification.message ||
+            "";
+
+
+          const time =
+            document.createElement(
+              "span"
+            );
+
+          time.className =
+            "notification-item-time";
+
+          time.textContent =
+            formatNotificationTime(
+              notification.created_at
+            );
+
+
+          content.appendChild(
+            title
+          );
+
+          content.appendChild(
+            message
+          );
+
+          content.appendChild(
+            time
+          );
+
+
+          item.appendChild(
+            icon
+          );
+
+          item.appendChild(
+            content
+          );
+
+
+          if (
+            Number(
+              notification.is_read
+            ) === 0
+          ) {
+
+            const dot =
+              document.createElement(
+                "span"
+              );
+
+            dot.className =
+              "notification-unread-dot";
+
+            item.appendChild(
+              dot
+            );
+
+          }
+
+
+          item.addEventListener(
+            "click",
+            () => {
+
+              openNotification(
+                notification.id,
+                notification.action_url ||
+                (
+                  notification.project_id
+                    ? `project-details.html?id=${encodeURIComponent(notification.project_id)}`
+                    : "index.html"
+                )
+              );
+
+            }
+          );
+
+
+          notificationList.appendChild(
+            item
+          );
+
+        }
+      );
+
+    }
+
+
+    async function loadNotifications() {
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/notifications",
+            {
+              method: "GET",
+              credentials: "include",
+              cache: "no-store"
+            }
+          );
+
+
+        if (
+          !response.ok
+        ) {
+
+          return;
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        notificationsData =
+          Array.isArray(
+            data.notifications
+          )
+            ? data.notifications
+            : [];
+
+
+        updateNotificationBadge(
+          data.unread_count || 0
+        );
+
+
+        renderNotifications();
+
+
+      } catch (error) {
+
+        console.error(
+          "Notifications load error:",
+          error
+        );
+
+      }
+
+    }
+
+
+    async function openNotification(
+      notificationId,
+      actionUrl
+    ) {
+
+      try {
+
+        await fetch(
+          `/api/notifications/${notificationId}/read`,
+          {
+            method: "POST",
+            credentials: "include"
+          }
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Notification read error:",
+          error
+        );
+
+      }
+
+
+      if (actionUrl) {
+
+        window.location.href =
+          actionUrl;
+
+      } else {
+
+        await loadNotifications();
+
+      }
+
+    }
+
+
+    async function markAllNotificationsRead() {
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/notifications/read-all",
+            {
+              method: "POST",
+              credentials: "include"
+            }
+          );
+
+
+        if (
+          !response.ok
+        ) {
+
+          return;
+
+        }
+
+
+        notificationsData =
+          notificationsData.map(
+            notification => ({
+              ...notification,
+              is_read: 1
+            })
+          );
+
+
+        updateNotificationBadge(
+          0
+        );
+
+
+        renderNotifications();
+
+
+      } catch (error) {
+
+        console.error(
+          "Mark notifications read error:",
+          error
+        );
+
+      }
+
+    }
+
+
+    function toggleNotifications() {
+
+      if (
+        !notificationPanel
+      ) {
+
+        return;
+
+      }
+
+
+      const isOpen =
+        notificationPanel.classList.contains(
+          "active"
+        );
+
+
+      if (isOpen) {
+
+        closeNotifications();
+
+      } else {
+
+        notificationPanel.classList.add(
+          "active"
+        );
+
+        notificationPanel.setAttribute(
+          "aria-hidden",
+          "false"
+        );
+
+
+        notificationButton.setAttribute(
+          "aria-expanded",
+          "true"
+        );
+
+
+       
