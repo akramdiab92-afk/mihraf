@@ -1,6 +1,11 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>إضافة خدمة | مِهراف</title>  <style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إضافة خدمة | مِهراف</title>
+
+  <style>
     * {
       box-sizing: border-box;
       margin: 0;
@@ -109,9 +114,7 @@
     textarea:focus,
     select:focus {
       border-color: #2563eb;
-      box-shadow:
-        0 0 0 3px
-        rgba(37, 99, 235, 0.08);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
     }
 
     textarea {
@@ -218,169 +221,184 @@
         font-size: 24px;
       }
     }
-  </style></head><body><header>
-  <div class="container nav"><a
-  href="index.html"
-  class="logo"
->
-  مِهراف
-</a>
+  </style>
+</head>
 
-<a
-  href="dashboard.html"
-  class="back-btn"
->
-  لوحة التحكم
-</a>
+<body>
+
+<header>
+  <div class="container nav">
+
+    <a href="index.html" class="logo">
+      مِهراف
+    </a>
+
+    <a href="dashboard.html" class="back-btn">
+      لوحة التحكم
+    </a>
 
   </div>
-</header><div id="loading">
+</header>
+
+<div id="loading">
   جاري التحقق من الحساب...
-</div><main id="content">  <div class="container"><div class="form-card">
+</div>
 
-  <div class="form-header">
+<main id="content">
 
-    <h1>
-      أضف خدمتك 🚀
-    </h1>
+  <div class="container">
 
-    <p>
-      اعرض مهارتك أمام العملاء على منصة مِهراف.
-      اكتب وصفًا واضحًا للخدمة وحدد السعر المناسب.
-    </p>
+    <div class="form-card">
 
-  </div>
+      <div class="form-header">
 
-  <div id="message"></div>
+        <h1>
+          أضف خدمتك 🚀
+        </h1>
 
-  <form id="serviceForm">
-
-    <div class="form-group">
-
-      <label for="title">
-        عنوان الخدمة
-      </label>
-
-      <input
-        type="text"
-        id="title"
-        name="title"
-        placeholder="مثال: تصميم شعار احترافي"
-        maxlength="120"
-        required
-      >
-
-    </div>
-
-    <div class="form-group">
-
-      <label for="description">
-        وصف الخدمة
-      </label>
-
-      <textarea
-        id="description"
-        name="description"
-        placeholder="اشرح للعميل بالتفصيل ماذا سيحصل عليه عند طلب خدمتك..."
-        maxlength="3000"
-        required
-      ></textarea>
-
-    </div>
-
-    <div class="form-group">
-
-      <label for="category">
-        التصنيف
-      </label>
-
-      <select
-        id="category"
-        name="category"
-        required
-      >
-
-        <option value="">
-          اختر تصنيف الخدمة
-        </option>
-
-        <option value="التصميم">
-          🎨 التصميم
-        </option>
-
-        <option value="البرمجة">
-          💻 البرمجة والتطوير
-        </option>
-
-        <option value="الكتابة">
-          ✍️ الكتابة والترجمة
-        </option>
-
-        <option value="التسويق">
-          📢 التسويق الرقمي
-        </option>
-
-        <option value="الفيديو">
-          🎬 الفيديو والرسوم المتحركة
-        </option>
-
-        <option value="الصوت">
-          🎙️ الصوتيات
-        </option>
-
-        <option value="الأعمال">
-          📊 الأعمال والاستشارات
-        </option>
-
-        <option value="أخرى">
-          📦 أخرى
-        </option>
-
-      </select>
-
-    </div>
-
-    <div class="form-group">
-
-      <label for="price">
-        سعر الخدمة
-      </label>
-
-      <div class="price-wrapper">
-
-        <input
-          type="number"
-          id="price"
-          name="price"
-          placeholder="مثال: 25"
-          min="1"
-          step="0.01"
-          required
-        >
-
-        <span class="currency">
-          دولار
-        </span>
+        <p>
+          اعرض مهارتك أمام العملاء على منصة مِهراف.
+          اكتب وصفًا واضحًا للخدمة وحدد السعر المناسب.
+        </p>
 
       </div>
 
+      <div id="message"></div>
+
+      <form id="serviceForm">
+
+        <div class="form-group">
+
+          <label for="title">
+            عنوان الخدمة
+          </label>
+
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="مثال: تصميم شعار احترافي"
+            maxlength="120"
+            required
+          >
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="description">
+            وصف الخدمة
+          </label>
+
+          <textarea
+            id="description"
+            name="description"
+            placeholder="اشرح للعميل بالتفصيل ماذا سيحصل عليه عند طلب خدمتك..."
+            maxlength="3000"
+            required
+          ></textarea>
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="category">
+            التصنيف
+          </label>
+
+          <select
+            id="category"
+            name="category"
+            required
+          >
+
+            <option value="">
+              اختر تصنيف الخدمة
+            </option>
+
+            <option value="التصميم">
+              🎨 التصميم
+            </option>
+
+            <option value="البرمجة">
+              💻 البرمجة والتطوير
+            </option>
+
+            <option value="الكتابة">
+              ✍️ الكتابة والترجمة
+            </option>
+
+            <option value="التسويق">
+              📢 التسويق الرقمي
+            </option>
+
+            <option value="الفيديو">
+              🎬 الفيديو والرسوم المتحركة
+            </option>
+
+            <option value="الصوت">
+              🎙️ الصوتيات
+            </option>
+
+            <option value="الأعمال">
+              📊 الأعمال والاستشارات
+            </option>
+
+            <option value="أخرى">
+              📦 أخرى
+            </option>
+
+          </select>
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="price">
+            سعر الخدمة
+          </label>
+
+          <div class="price-wrapper">
+
+            <input
+              type="number"
+              id="price"
+              name="price"
+              placeholder="مثال: 25"
+              min="1"
+              step="0.01"
+              required
+            >
+
+            <span class="currency">
+              دولار
+            </span>
+
+          </div>
+
+        </div>
+
+        <button
+          type="submit"
+          class="submit-btn"
+          id="submitBtn"
+        >
+          نشر الخدمة
+        </button>
+
+      </form>
+
     </div>
 
-    <button
-      type="submit"
-      class="submit-btn"
-      id="submitBtn"
-    >
-      نشر الخدمة
-    </button>
+  </div>
 
-  </form>
+</main>
 
-</div>
-
-  </div></main><footer>
+<footer>
   © 2026 MIHRAF — مِهراف
-</footer><script>
+</footer>
+
+<script>
 
   const loading =
     document.getElementById("loading");
@@ -398,13 +416,12 @@
     document.getElementById("submitBtn");
 
 
-  function showMessage(
-    text,
-    type
-  ) {
+  function showMessage(text, type) {
+
     message.textContent = text;
     message.className = type;
     message.style.display = "block";
+
   }
 
 
@@ -422,18 +439,25 @@
           }
         );
 
-      const data =
-        await response.json();
 
+      const raw =
+        await response.text();
 
-      /*
-        ندعم شكلين من استجابة /api/me:
-        logged_in: true
-        أو
-        authenticated: true
+      let data = {};
 
-        وكذلك نتأكد من وجود user.
-      */
+      try {
+
+        data = JSON.parse(raw);
+
+      } catch (error) {
+
+        data = {
+          success: false,
+          message: raw || "استجابة غير صالحة من الخادم."
+        };
+
+      }
+
 
       const isLoggedIn =
         (
@@ -489,7 +513,10 @@
 
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        "Check user error:",
+        error
+      );
 
       loading.style.display =
         "none";
@@ -642,32 +669,48 @@
           );
 
 
-        const data =
-          await response.json();
+        /*
+          نقرأ الرد كنص أولا.
+          هذا يمنع response.json()
+          من إخفاء الخطأ الحقيقي إذا
+          رجع الخادم HTML أو رد غير JSON.
+        */
+
+        const raw =
+          await response.text();
+
+
+        let data = {};
+
+
+        try {
+
+          data =
+            JSON.parse(raw);
+
+        } catch (error) {
+
+          data = {
+            success: false,
+            message:
+              raw ||
+              `خطأ من الخادم (${response.status})`
+          };
+
+        }
 
 
         if (
-          response.ok &&
-          data.success
+          !response.ok ||
+          !data.success
         ) {
 
           showMessage(
-            "تم نشر الخدمة بنجاح.",
-            "success"
+            data.message ||
+            data.error ||
+            `حدث خطأ من الخادم (${response.status})`,
+            "error"
           );
-
-
-          form.reset();
-
-
-          setTimeout(
-            function() {
-              window.location.href =
-                "my-services.html";
-            },
-            1000
-          );
-
 
           return;
 
@@ -676,15 +719,31 @@
 
         showMessage(
           data.message ||
-          data.error ||
-          "تعذر نشر الخدمة.",
-          "error"
+          "تم نشر الخدمة بنجاح.",
+          "success"
+        );
+
+
+        form.reset();
+
+
+        setTimeout(
+          function() {
+
+            window.location.href =
+              "my-services.html";
+
+          },
+          1000
         );
 
 
       } catch (error) {
 
-        console.error(error);
+        console.error(
+          "Create service error:",
+          error
+        );
 
         showMessage(
           "تعذر الاتصال بالخادم. حاول مرة أخرى.",
@@ -707,5 +766,7 @@
 
   checkUser();
 
-</script></body>
+</script>
+
+</body>
 </html>
