@@ -988,6 +988,60 @@ async function getProject(
     }, 404);
   }
 
+  const projectOwnerId =
+    Number(project.user_id);
+
+  const currentUserId =
+    Number(user.id);
+
+  const isOwner =
+    projectOwnerId === currentUserId;
+
+  const canApply =
+    user.role === "freelancer" &&
+    !isOwner &&
+    project.status === "open";
+
+  return json({
+    success: true,
+    project: {
+      ...project,
+      is_owner: isOwner
+    },
+    is_owner: isOwner,
+    can_apply: canApply
+  });
+}
+  const project =
+    await env.DB
+      .prepare(`
+        SELECT
+          p.id,
+          p.user_id,
+          p.title,
+          p.description,
+          p.budget,
+          p.category,
+          p.status,
+          p.created_at,
+          p.updated_at,
+          u.full_name AS owner_name
+        FROM projects p
+        LEFT JOIN users u
+          ON u.id = p.user_id
+        WHERE p.id = ?
+        LIMIT 1
+      `)
+      .bind(projectId)
+      .first();
+
+  if (!project) {
+    return json({
+      success: false,
+      error: "المشروع غير موجود"
+    }, 404);
+  }
+
   const canApply =
     user.role === "freelancer" &&
     project.user_id !== user.id &&
