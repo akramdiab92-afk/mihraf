@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>تفاصيل المشروع | مِهراف</title>
+  <title>مشاريعي | مِهراف</title>
 
   <style>
     * {
@@ -26,9 +26,6 @@
     }
 
     .header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
       height: 68px;
       background: #20242a;
       border-bottom: 1px solid #30363f;
@@ -38,6 +35,10 @@
       justify-content: space-between;
 
       padding: 0 20px;
+
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
     .logo {
@@ -51,7 +52,6 @@
       border: 1px solid #30363f;
       padding: 10px 16px;
       border-radius: 10px;
-      color: #e7eaf0;
     }
 
     .container {
@@ -59,8 +59,20 @@
       margin: 35px auto;
     }
 
+    .page-title {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .page-description {
+      color: #9da4af;
+      margin-bottom: 30px;
+      line-height: 1.7;
+    }
+
     .loading,
-    .error {
+    .error,
+    .empty {
       background: #242930;
       border: 1px solid #30363f;
       border-radius: 16px;
@@ -72,239 +84,127 @@
       color: #ff8d8d;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 350px;
-      gap: 22px;
+    .empty {
+      color: #9da4af;
     }
 
-    .card {
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .project-card {
       background: #242930;
       border: 1px solid #30363f;
-      border-radius: 18px;
-      padding: 25px;
-      margin-bottom: 22px;
+      border-radius: 17px;
+      padding: 22px;
+
+      transition: 0.2s;
     }
 
-    .title {
-      font-size: 30px;
+    .project-card:hover {
+      background: #2a3038;
+      transform: translateY(-2px);
+    }
+
+    .project-title {
+      font-size: 21px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .project-description {
+      color: #b9c0ca;
+      line-height: 1.7;
+      margin-bottom: 18px;
+
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .project-meta {
+      display: grid;
+      gap: 9px;
       margin-bottom: 18px;
     }
 
-    .description {
-      color: #c4c9d2;
-      line-height: 1.9;
-      white-space: pre-wrap;
-      margin-bottom: 25px;
-    }
-
-    .meta {
-      display: grid;
-      gap: 12px;
-    }
-
-    .meta-item {
+    .meta-row {
       display: flex;
       justify-content: space-between;
       gap: 15px;
 
-      padding: 13px;
+      padding: 10px 12px;
 
       background: #20242a;
-      border-radius: 10px;
+      border-radius: 9px;
     }
 
     .muted {
       color: #9da4af;
     }
 
-    .value {
-      font-weight: bold;
-    }
-
-    .blue {
+    .budget {
       color: #4f8cff;
+      font-weight: bold;
     }
 
-    .btn {
+    .status {
+      color: #70e5a0;
+      font-weight: bold;
+    }
+
+    .details-btn {
+      display: block;
       width: 100%;
-      border: 0;
-      border-radius: 11px;
 
-      padding: 13px;
+      background: #4f8cff;
+      color: #fff;
 
-      cursor: pointer;
+      text-align: center;
 
-      font-size: 15px;
+      border-radius: 10px;
+
+      padding: 12px;
+
       font-weight: bold;
 
-      margin-top: 10px;
+      transition: 0.2s;
     }
 
-    .btn-primary {
-      background: #4f8cff;
-      color: white;
-    }
-
-    .btn-primary:hover {
+    .details-btn:hover {
       background: #3978e8;
     }
 
-    .btn-danger {
-      background: #8d3038;
+    .retry-btn {
+      margin-top: 15px;
+
+      border: 0;
+      border-radius: 10px;
+
+      background: #4f8cff;
       color: white;
-    }
 
-    .form-group {
-      margin-bottom: 15px;
-    }
+      padding: 11px 20px;
 
-    label {
-      display: block;
-      margin-bottom: 7px;
-      color: #cdd2da;
-    }
+      cursor: pointer;
 
-    input,
-    textarea {
-      width: 100%;
-
-      background: #181b20;
-      color: #e7eaf0;
-
-      border: 1px solid #30363f;
-      border-radius: 10px;
-
-      padding: 12px;
-
-      outline: none;
-
-      font-size: 15px;
-    }
-
-    input:focus,
-    textarea:focus {
-      border-color: #4f8cff;
-    }
-
-    textarea {
-      min-height: 130px;
-      resize: vertical;
-    }
-
-    .message {
-      display: none;
-
-      padding: 12px;
-
-      border-radius: 10px;
-
-      margin-top: 12px;
-
-      line-height: 1.6;
-    }
-
-    .success {
-      display: block;
-
-      background: #173b29;
-      color: #82e5a9;
-    }
-
-    .error-message {
-      display: block;
-
-      background: #401f24;
-      color: #ff9da7;
-    }
-
-    .section-title {
-      font-size: 22px;
-      margin-bottom: 18px;
-    }
-
-    .proposal {
-      border: 1px solid #30363f;
-
-      background: #20242a;
-
-      border-radius: 14px;
-
-      padding: 18px;
-
-      margin-bottom: 14px;
-    }
-
-    .proposal-head {
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      gap: 10px;
-
-      margin-bottom: 12px;
-    }
-
-    .proposal-name {
       font-weight: bold;
-      font-size: 17px;
-    }
-
-    .proposal-message {
-      color: #c4c9d2;
-
-      line-height: 1.7;
-
-      margin: 12px 0;
-
-      white-space: pre-wrap;
-    }
-
-    .proposal-data {
-      display: flex;
-
-      flex-wrap: wrap;
-
-      gap: 10px;
-    }
-
-    .badge {
-      padding: 7px 10px;
-
-      border-radius: 8px;
-
-      background: #30363f;
-
-      color: #e7eaf0;
-
-      font-size: 13px;
-    }
-
-    .status-pending {
-      color: #ffd36b;
-    }
-
-    .status-accepted {
-      color: #70e5a0;
-    }
-
-    .status-rejected {
-      color: #ff858f;
     }
 
     .hidden {
       display: none !important;
     }
 
-    @media (max-width: 800px) {
-      .grid {
+    @media (max-width: 750px) {
+      .projects {
         grid-template-columns: 1fr;
       }
 
-      .title {
-        font-size: 24px;
+      .page-title {
+        font-size: 25px;
       }
     }
   </style>
@@ -318,8 +218,8 @@
     مِهراف
   </a>
 
-  <a href="projects.html" class="back">
-    العودة للمشاريع
+  <a href="index.html" class="back">
+    العودة للرئيسية
   </a>
 
 </header>
@@ -327,222 +227,47 @@
 
 <main class="container">
 
+  <h1 class="page-title">
+    مشاريعي
+  </h1>
+
+  <p class="page-description">
+    إدارة المشاريع التي قمت بنشرها على منصة مهراف.
+  </p>
+
+
   <div id="loading" class="loading">
-    جاري تحميل المشروع...
+    جاري تحميل المشاريع...
   </div>
 
 
-  <div id="errorBox" class="error hidden"></div>
+  <div id="errorBox" class="error hidden">
 
-
-  <div id="content" class="hidden">
-
-    <div class="grid">
-
-      <!-- تفاصيل المشروع -->
-
-      <div>
-
-        <div class="card">
-
-          <h1 id="projectTitle" class="title"></h1>
-
-          <div
-            id="projectDescription"
-            class="description">
-          </div>
-
-
-          <div class="meta">
-
-            <div class="meta-item">
-
-              <span class="muted">
-                التصنيف
-              </span>
-
-              <span
-                id="projectCategory"
-                class="value">
-              </span>
-
-            </div>
-
-
-            <div class="meta-item">
-
-              <span class="muted">
-                الميزانية
-              </span>
-
-              <span
-                id="projectBudget"
-                class="value blue">
-              </span>
-
-            </div>
-
-
-            <div class="meta-item">
-
-              <span class="muted">
-                صاحب المشروع
-              </span>
-
-              <span
-                id="projectOwner"
-                class="value">
-              </span>
-
-            </div>
-
-
-            <div class="meta-item">
-
-              <span class="muted">
-                الحالة
-              </span>
-
-              <span
-                id="projectStatus"
-                class="value">
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- عروض صاحب المشروع -->
-
-        <div
-          id="proposalsCard"
-          class="card hidden">
-
-          <h2 class="section-title">
-            العروض المقدمة
-          </h2>
-
-          <div id="proposalsList"></div>
-
-        </div>
-
-      </div>
-
-
-      <!-- الجانب -->
-
-      <aside>
-
-
-        <!-- تقديم عرض -->
-
-        <div
-          id="applyCard"
-          class="card hidden">
-
-          <h2 class="section-title">
-            قدم عرضك
-          </h2>
-
-
-          <form id="proposalForm">
-
-
-            <div class="form-group">
-
-              <label for="price">
-                السعر
-              </label>
-
-              <input
-                id="price"
-                type="number"
-                min="1"
-                step="0.01"
-                placeholder="مثال: 50"
-                required>
-
-            </div>
-
-
-            <div class="form-group">
-
-              <label for="deliveryDays">
-                مدة التسليم بالأيام
-              </label>
-
-              <input
-                id="deliveryDays"
-                type="number"
-                min="1"
-                step="1"
-                placeholder="مثال: 5"
-                required>
-
-            </div>
-
-
-            <div class="form-group">
-
-              <label for="message">
-                رسالة العرض
-              </label>
-
-              <textarea
-                id="message"
-                placeholder="اكتب لصاحب المشروع لماذا أنت مناسب لتنفيذ المشروع..."
-                required></textarea>
-
-            </div>
-
-
-            <button
-              class="btn btn-primary"
-              type="submit">
-
-              إرسال العرض
-
-            </button>
-
-
-            <div
-              id="formMessage"
-              class="message">
-            </div>
-
-          </form>
-
-        </div>
-
-
-        <!-- صاحب المشروع -->
-
-        <div
-          id="ownerCard"
-          class="card hidden">
-
-          <h2 class="section-title">
-            إدارة المشروع
-          </h2>
-
-          <p
-            class="muted"
-            style="line-height:1.8;">
-
-            يمكنك من هنا مراجعة العروض المقدمة
-            على مشروعك وقبول العرض المناسب.
-
-          </p>
-
-        </div>
-
-      </aside>
-
+    <div id="errorText">
+      حدث خطأ أثناء تحميل المشاريع.
     </div>
 
+    <button
+      id="retryBtn"
+      class="retry-btn">
+      حاول مرة أخرى
+    </button>
+
+  </div>
+
+
+  <div
+    id="emptyBox"
+    class="empty hidden">
+
+    لا يوجد لديك مشاريع منشورة حتى الآن.
+
+  </div>
+
+
+  <div
+    id="projects"
+    class="projects hidden">
   </div>
 
 </main>
@@ -550,37 +275,23 @@
 
 <script>
 
-  const params =
-    new URLSearchParams(location.search);
-
-  const projectId =
-    Number(params.get("id"));
-
-
   const loading =
     document.getElementById("loading");
 
   const errorBox =
     document.getElementById("errorBox");
 
-  const content =
-    document.getElementById("content");
+  const errorText =
+    document.getElementById("errorText");
 
+  const emptyBox =
+    document.getElementById("emptyBox");
 
-  const applyCard =
-    document.getElementById("applyCard");
+  const projectsBox =
+    document.getElementById("projects");
 
-  const ownerCard =
-    document.getElementById("ownerCard");
-
-  const proposalsCard =
-    document.getElementById("proposalsCard");
-
-
-  let currentUser = null;
-
-  let currentProject = null;
-
+  const retryBtn =
+    document.getElementById("retryBtn");
 
 
   function escapeHtml(value) {
@@ -595,10 +306,9 @@
   }
 
 
-
   function statusText(status) {
 
-    const map = {
+    const statuses = {
 
       open: "مفتوح",
 
@@ -610,47 +320,51 @@
 
     };
 
-    return map[status] || status;
+    return statuses[status] || status || "غير محدد";
 
   }
 
 
+  function showLoading() {
 
-  function proposalStatusText(status) {
+    loading.classList.remove("hidden");
 
-    const map = {
+    errorBox.classList.add("hidden");
 
-      pending: "قيد المراجعة",
+    emptyBox.classList.add("hidden");
 
-      accepted: "مقبول",
-
-      rejected: "مرفوض"
-
-    };
-
-    return map[status] || status;
+    projectsBox.classList.add("hidden");
 
   }
 
 
+  function showError(message) {
 
-  async function load() {
+    loading.classList.add("hidden");
 
-    if (!projectId) {
+    emptyBox.classList.add("hidden");
 
-      showError(
-        "رقم المشروع غير صحيح"
-      );
+    projectsBox.classList.add("hidden");
 
-      return;
+    errorText.textContent =
+      message ||
+      "حدث خطأ أثناء تحميل المشاريع. حاول مرة أخرى.";
 
-    }
+    errorBox.classList.remove("hidden");
 
+  }
+
+
+  async function loadProjects() {
+
+    showLoading();
 
     try {
 
       const meResponse =
         await fetch("/api/me", {
+
+          method: "GET",
 
           credentials: "include",
 
@@ -659,16 +373,31 @@
         });
 
 
-      const meData =
-        await meResponse.json();
+      let meData;
+
+      try {
+
+        meData =
+          await meResponse.json();
+
+      } catch {
+
+        showError(
+          "تعذر التحقق من تسجيل الدخول."
+        );
+
+        return;
+
+      }
 
 
       if (
+        !meResponse.ok ||
         !meData.success ||
         !meData.authenticated
       ) {
 
-        location.href =
+        window.location.href =
           "login.html";
 
         return;
@@ -676,22 +405,34 @@
       }
 
 
-      currentUser =
-        meData.user;
-
-
       const response =
-        await fetch(
-          `/api/projects/${projectId}`,
-          {
-            credentials: "include",
-            cache: "no-store"
-          }
+        await fetch("/api/projects", {
+
+          method: "GET",
+
+          credentials: "include",
+
+          cache: "no-store"
+
+        });
+
+
+      let data;
+
+      try {
+
+        data =
+          await response.json();
+
+      } catch {
+
+        showError(
+          "الخادم أرسل استجابة غير صالحة."
         );
 
+        return;
 
-      const data =
-        await response.json();
+      }
 
 
       if (
@@ -701,7 +442,7 @@
 
         showError(
           data.error ||
-          "تعذر تحميل المشروع"
+          "حدث خطأ أثناء تحميل المشاريع. حاول مرة أخرى."
         );
 
         return;
@@ -709,386 +450,109 @@
       }
 
 
-      currentProject =
-        data.project;
+      const projects =
+        Array.isArray(data.projects)
+          ? data.projects
+          : [];
 
 
-      document.getElementById(
-        "projectTitle"
-      ).textContent =
-        currentProject.title;
+      loading.classList.add("hidden");
 
 
-      document.getElementById(
-        "projectDescription"
-      ).textContent =
-        currentProject.description;
+      if (projects.length === 0) {
 
-
-      document.getElementById(
-        "projectCategory"
-      ).textContent =
-        currentProject.category;
-
-
-      document.getElementById(
-        "projectBudget"
-      ).textContent =
-        `${Number(
-          currentProject.budget
-        ).toLocaleString()} $`;
-
-
-      document.getElementById(
-        "projectOwner"
-      ).textContent =
-        currentProject.owner_name ||
-        "غير معروف";
-
-
-      document.getElementById(
-        "projectStatus"
-      ).textContent =
-        statusText(
-          currentProject.status
-        );
-
-
-      loading.classList.add(
-        "hidden"
-      );
-
-      content.classList.remove(
-        "hidden"
-      );
-
-
-      if (
-        currentUser.role ===
-          "freelancer" &&
-        currentProject.can_apply
-      ) {
-
-        applyCard.classList.remove(
-          "hidden"
-        );
-
-      }
-
-
-      if (
-        currentProject.is_owner
-      ) {
-
-        ownerCard.classList.remove(
-          "hidden"
-        );
-
-        proposalsCard.classList.remove(
-          "hidden"
-        );
-
-        await loadProposals();
-
-      }
-
-    } catch (error) {
-
-      console.error(error);
-
-      showError(
-        "حدث خطأ أثناء تحميل المشروع"
-      );
-
-    }
-
-  }
-
-
-
-  async function loadProposals() {
-
-    const list =
-      document.getElementById(
-        "proposalsList"
-      );
-
-
-    list.innerHTML =
-      "جاري تحميل العروض...";
-
-
-    try {
-
-      const response =
-        await fetch(
-          `/api/projects/${projectId}/proposals`,
-          {
-            credentials: "include",
-            cache: "no-store"
-          }
-        );
-
-
-      const data =
-        await response.json();
-
-
-      if (
-        !response.ok ||
-        !data.success
-      ) {
-
-        list.innerHTML = `
-          <div class="error">
-            ${escapeHtml(
-              data.error ||
-              "تعذر تحميل العروض"
-            )}
-          </div>
-        `;
+        emptyBox.classList.remove("hidden");
 
         return;
 
       }
 
 
-      if (!data.proposals.length) {
+      projectsBox.innerHTML =
+        projects.map(project => `
 
-        list.innerHTML = `
-          <div class="muted">
-            لا توجد عروض مقدمة على هذا المشروع حتى الآن.
-          </div>
-        `;
+          <article class="project-card">
 
-        return;
-
-      }
+            <h2 class="project-title">
+              ${escapeHtml(project.title)}
+            </h2>
 
 
-      list.innerHTML =
-        data.proposals
-          .map(proposal => {
+            <div class="project-description">
+              ${escapeHtml(project.description)}
+            </div>
 
 
-            const statusClass =
-              proposal.status ===
-                "accepted"
+            <div class="project-meta">
 
-                ? "status-accepted"
+              <div class="meta-row">
 
-                : proposal.status ===
-                    "rejected"
+                <span class="muted">
+                  التصنيف
+                </span>
 
-                  ? "status-rejected"
-
-                  : "status-pending";
-
-
-            const buttons =
-              proposal.status ===
-                "pending" &&
-              currentProject.status ===
-                "open"
-
-                ? `
-
-                  <button
-                    class="btn btn-primary"
-                    onclick="changeProposalStatus(
-                      ${proposal.id},
-                      'accepted'
-                    )">
-
-                    قبول العرض
-
-                  </button>
-
-
-                  <button
-                    class="btn btn-danger"
-                    onclick="changeProposalStatus(
-                      ${proposal.id},
-                      'rejected'
-                    )">
-
-                    رفض العرض
-
-                  </button>
-
-                `
-
-                : "";
-
-
-            return `
-
-              <div class="proposal">
-
-
-                <div class="proposal-head">
-
-                  <div class="proposal-name">
-
-                    ${escapeHtml(
-                      proposal.freelancer_name
-                    )}
-
-                  </div>
-
-
-                  <div
-                    class="${statusClass}">
-
-                    ${escapeHtml(
-                      proposalStatusText(
-                        proposal.status
-                      )
-                    )}
-
-                  </div>
-
-                </div>
-
-
-                <div class="proposal-data">
-
-                  <span class="badge">
-
-                    السعر:
-                    ${Number(
-                      proposal.price
-                    ).toLocaleString()} $
-
-                  </span>
-
-
-                  <span class="badge">
-
-                    التسليم:
-                    ${Number(
-                      proposal.delivery_days
-                    )} يوم
-
-                  </span>
-
-                </div>
-
-
-                <div class="proposal-message">
-
-                  ${escapeHtml(
-                    proposal.message
-                  )}
-
-                </div>
-
-
-                ${buttons}
+                <span>
+                  ${escapeHtml(project.category)}
+                </span>
 
               </div>
 
-            `;
 
-          })
-          .join("");
+              <div class="meta-row">
+
+                <span class="muted">
+                  الميزانية
+                </span>
+
+                <span class="budget">
+                  ${Number(project.budget || 0).toLocaleString()} $
+                </span>
+
+              </div>
+
+
+              <div class="meta-row">
+
+                <span class="muted">
+                  الحالة
+                </span>
+
+                <span class="status">
+                  ${escapeHtml(
+                    statusText(project.status)
+                  )}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <a
+              class="details-btn"
+              href="project.html?id=${encodeURIComponent(project.id)}">
+
+              تفاصيل المشروع
+
+            </a>
+
+          </article>
+
+        `).join("");
+
+
+      projectsBox.classList.remove("hidden");
 
 
     } catch (error) {
 
-      console.error(error);
-
-      list.innerHTML = `
-        <div class="error">
-          حدث خطأ أثناء تحميل العروض
-        </div>
-      `;
-
-    }
-
-  }
-
-
-
-  async function changeProposalStatus(
-    proposalId,
-    status
-  ) {
-
-
-    const text =
-      status === "accepted"
-
-        ? "هل تريد قبول هذا العرض؟ سيتم رفض باقي العروض ونقل المشروع إلى قيد التنفيذ."
-
-        : "هل تريد رفض هذا العرض؟";
-
-
-    if (!confirm(text)) {
-
-      return;
-
-    }
-
-
-    try {
-
-      const response =
-        await fetch(
-          `/api/proposals/${proposalId}/status`,
-          {
-
-            method: "POST",
-
-            credentials: "include",
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-
-            body: JSON.stringify({
-              status
-            })
-
-          }
-        );
-
-
-      const data =
-        await response.json();
-
-
-      if (
-        !response.ok ||
-        !data.success
-      ) {
-
-        alert(
-          data.error ||
-          "تعذر تحديث العرض"
-        );
-
-        return;
-
-      }
-
-
-      alert(
-        data.message ||
-        "تم تحديث العرض"
+      console.error(
+        "Projects loading error:",
+        error
       );
 
-
-      location.reload();
-
-
-    } catch (error) {
-
-      console.error(error);
-
-      alert(
-        "حدث خطأ أثناء تحديث العرض"
+      showError(
+        "تعذر الاتصال بالخادم. حاول مرة أخرى."
       );
 
     }
@@ -1096,167 +560,13 @@
   }
 
 
+  retryBtn.addEventListener(
+    "click",
+    loadProjects
+  );
 
-  document
-    .getElementById("proposalForm")
-    .addEventListener(
-      "submit",
-      async function(event) {
 
-        event.preventDefault();
-
-
-        const formMessage =
-          document.getElementById(
-            "formMessage"
-          );
-
-
-        formMessage.className =
-          "message";
-
-
-        formMessage.textContent =
-          "جاري إرسال العرض...";
-
-
-        const price =
-          Number(
-            document.getElementById(
-              "price"
-            ).value
-          );
-
-
-        const deliveryDays =
-          Number(
-            document.getElementById(
-              "deliveryDays"
-            ).value
-          );
-
-
-        const message =
-          document.getElementById(
-            "message"
-          ).value.trim();
-
-
-        try {
-
-          const response =
-            await fetch(
-              "/api/proposals",
-              {
-
-                method: "POST",
-
-                credentials: "include",
-
-                headers: {
-                  "Content-Type":
-                    "application/json"
-                },
-
-                body: JSON.stringify({
-
-                  project_id:
-                    projectId,
-
-                  price,
-
-                  delivery_days:
-                    deliveryDays,
-
-                  message
-
-                })
-
-              }
-            );
-
-
-          const data =
-            await response.json();
-
-
-          if (
-            !response.ok ||
-            !data.success
-          ) {
-
-            formMessage.className =
-              "message error-message";
-
-
-            formMessage.textContent =
-              data.error ||
-              "تعذر إرسال العرض";
-
-
-            return;
-
-          }
-
-
-          formMessage.className =
-            "message success";
-
-
-          formMessage.textContent =
-            "تم إرسال عرضك بنجاح";
-
-
-          document
-            .getElementById(
-              "proposalForm"
-            )
-            .reset();
-
-
-        } catch (error) {
-
-          console.error(error);
-
-
-          formMessage.className =
-            "message error-message";
-
-
-          formMessage.textContent =
-            "حدث خطأ أثناء إرسال العرض";
-
-        }
-
-      }
-    );
-
-
-
-  function showError(message) {
-
-    loading.classList.add(
-      "hidden"
-    );
-
-    content.classList.add(
-      "hidden"
-    );
-
-
-    errorBox.textContent =
-      message;
-
-
-    errorBox.classList.remove(
-      "hidden"
-    );
-
-  }
-
-
-
-  load();
+  loadProjects();
 
 </script>
 
