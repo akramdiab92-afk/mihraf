@@ -681,8 +681,19 @@
       const data =
         await response.json();
 
+      /*
+       * Worker الحالي يرجع:
+       * authenticated: true
+       *
+       * وندعم logged_in أيضا
+       * للتوافق مع أي نسخة قديمة.
+       */
+      const isAuthenticated =
+        data.authenticated === true ||
+        data.logged_in === true;
+
       if (
-        data.logged_in &&
+        isAuthenticated &&
         data.user
       ) {
         currentUser = data.user;
@@ -1470,10 +1481,6 @@
         "success"
       );
 
-      /*
-       * نعيد جلب المشروع والعروض من D1
-       * حتى تظهر الحالة الحقيقية مباشرة.
-       */
       await refreshProjectAndProposals();
 
     } catch (error) {
