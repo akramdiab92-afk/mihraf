@@ -2897,4 +2897,319 @@
                   notification.project_id
                     ? `project-details.html?id=${encodeURIComponent(notification.project_id)}`
                     : "index.html"
-               
+                )
+              );
+
+            }
+          );
+
+
+          notificationList.appendChild(
+            item
+          );
+
+        }
+      );
+
+    }
+
+
+    async function loadNotifications() {
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/notifications",
+            {
+              method: "GET",
+              credentials: "include",
+              cache: "no-store"
+            }
+          );
+
+
+        if (
+          !response.ok
+        ) {
+
+          return;
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        notificationsData =
+          Array.isArray(
+            data.notifications
+          )
+            ? data.notifications
+            : [];
+
+
+        updateNotificationBadge(
+          data.unread_count || 0
+        );
+
+
+        renderNotifications();
+
+
+      } catch (error) {
+
+        console.error(
+          "Notifications load error:",
+          error
+        );
+
+      }
+
+    }
+
+
+    async function openNotification(
+      notificationId,
+      actionUrl
+    ) {
+
+      try {
+
+        await fetch(
+          `/api/notifications/${notificationId}/read`,
+          {
+            method: "POST",
+            credentials: "include"
+          }
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Notification read error:",
+          error
+        );
+
+      }
+
+
+      if (actionUrl) {
+
+        window.location.href =
+          actionUrl;
+
+      } else {
+
+        await loadNotifications();
+
+      }
+
+    }
+
+
+    async function markAllNotificationsRead() {
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/notifications/read-all",
+            {
+              method: "POST",
+              credentials: "include"
+            }
+          );
+
+
+        if (
+          !response.ok
+        ) {
+
+          return;
+
+        }
+
+
+        notificationsData =
+          notificationsData.map(
+            notification => ({
+              ...notification,
+              is_read: 1
+            })
+          );
+
+
+        updateNotificationBadge(
+          0
+        );
+
+
+        renderNotifications();
+
+
+      } catch (error) {
+
+        console.error(
+          "Mark notifications read error:",
+          error
+        );
+
+      }
+
+    }
+
+
+    function toggleNotifications() {
+
+      if (
+        !notificationPanel ||
+        !notificationButton
+      ) {
+
+        return;
+
+      }
+
+
+      const isOpen =
+        notificationPanel.classList.contains(
+          "active"
+        );
+
+
+      if (isOpen) {
+
+        closeNotifications();
+
+      } else {
+
+        notificationPanel.classList.add(
+          "active"
+        );
+
+        notificationPanel.setAttribute(
+          "aria-hidden",
+          "false"
+        );
+
+        notificationButton.setAttribute(
+          "aria-expanded",
+          "true"
+        );
+
+        loadNotifications();
+
+      }
+
+    }
+
+
+    function closeNotifications() {
+
+      if (
+        !notificationPanel
+      ) {
+
+        return;
+
+      }
+
+
+      notificationPanel.classList.remove(
+        "active"
+      );
+
+      notificationPanel.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+
+      if (
+        notificationButton
+      ) {
+
+        notificationButton.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+
+      }
+
+    }
+
+
+    function startNotificationPolling() {
+
+      stopNotificationPolling();
+
+      notificationPollTimer =
+        setInterval(
+          () => {
+
+            loadNotifications();
+
+          },
+          30000
+        );
+
+    }
+
+
+    function stopNotificationPolling() {
+
+      if (
+        notificationPollTimer
+      ) {
+
+        clearInterval(
+          notificationPollTimer
+        );
+
+        notificationPollTimer =
+          null;
+
+      }
+
+    }
+
+
+    /* =========================
+       إغلاق الإشعارات عند الضغط خارجها
+    ========================== */
+
+    document.addEventListener(
+      "click",
+      function(event) {
+
+        if (
+          notificationPanel &&
+          notificationButton &&
+          !notificationPanel.contains(
+            event.target
+          ) &&
+          !notificationButton.contains(
+            event.target
+          )
+        ) {
+
+          closeNotifications();
+
+        }
+
+      }
+    );
+
+
+    /* =========================
+       بدء التحقق
+    ========================== */
+
+    checkLogin();
+
+  </script>
+
+</body>
+</html>
