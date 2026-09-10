@@ -1012,6 +1012,7 @@ async function getProject(
     can_apply: canApply
   });
 }
+
   const project =
     await env.DB
       .prepare(`
