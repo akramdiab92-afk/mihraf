@@ -681,7 +681,7 @@ async function getDashboardStats(
 }
 
 
-// GET MY PROJECTS
+// GET PROJECTS
 async function getProjects(
   request,
   env
@@ -699,28 +699,70 @@ async function getProjects(
     }, 401);
   }
 
-  const result =
-    await env.DB
-      .prepare(`
-        SELECT
-          p.id,
-          p.user_id,
-          p.title,
-          p.description,
-          p.budget,
-          p.category,
-          p.status,
-          p.created_at,
-          p.updated_at,
-          u.full_name AS owner_name
-        FROM projects p
-        LEFT JOIN users u
-          ON u.id = p.user_id
-        WHERE p.user_id = ?
-        ORDER BY p.id DESC
-      `)
-      .bind(user.id)
-      .all();
+  let result;
+
+  // CLIENT:
+  // صاحب المشروع يرى مشاريعه فقط
+  if (user.role === "client") {
+    result =
+      await env.DB
+        .prepare(`
+          SELECT
+            p.id,
+            p.user_id,
+            p.title,
+            p.description,
+            p.budget,
+            p.category,
+            p.status,
+            p.created_at,
+            p.updated_at,
+            u.full_name AS owner_name
+          FROM projects p
+          LEFT JOIN users u
+            ON u.id = p.user_id
+          WHERE p.user_id = ?
+          ORDER BY p.id DESC
+        `)
+        .bind(user.id)
+        .all();
+  }
+
+  // FREELANCER:
+  // المستقل يرى جميع المشاريع المفتوحة
+  // ولا يرى مشروعه نفسه
+  else if (user.role === "freelancer") {
+    result =
+      await env.DB
+        .prepare(`
+          SELECT
+            p.id,
+            p.user_id,
+            p.title,
+            p.description,
+            p.budget,
+            p.category,
+            p.status,
+            p.created_at,
+            p.updated_at,
+            u.full_name AS owner_name
+          FROM projects p
+          LEFT JOIN users u
+            ON u.id = p.user_id
+          WHERE p.status = 'open'
+            AND p.user_id != ?
+          ORDER BY p.id DESC
+        `)
+        .bind(user.id)
+        .all();
+  }
+
+  else {
+    return json({
+      success: false,
+      error: "نوع الحساب غير معروف"
+    }, 400);
+  }
 
   return json({
     success: true,
