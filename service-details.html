@@ -1,7 +1,12 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>تفاصيل الخدمة | مِهراف</title>  <style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>تفاصيل الخدمة | مِهراف</title>
+
+  <style>
     * {
       box-sizing: border-box;
       margin: 0;
@@ -168,6 +173,11 @@
       background: #1d4ed8;
     }
 
+    .request-btn:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
     .loading,
     .error,
     .not-found {
@@ -201,6 +211,17 @@
       color: #be123c;
     }
 
+    .success {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 18px;
+      line-height: 1.8;
+      text-align: center;
+    }
+
     .not-found h2 {
       color: #374151;
       margin-bottom: 10px;
@@ -213,6 +234,65 @@
       padding: 22px;
       color: #6b7280;
       font-size: 13px;
+    }
+
+    .order-form {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .order-form label {
+      display: block;
+      color: #374151;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .order-form textarea {
+      width: 100%;
+      min-height: 100px;
+      resize: vertical;
+      border: 1px solid #d1d5db;
+      border-radius: 9px;
+      padding: 11px;
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .order-form textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px #dbeafe;
+    }
+
+    .confirm-btn {
+      width: 100%;
+      margin-top: 10px;
+      border: none;
+      background: #16a34a;
+      color: #fff;
+      padding: 12px;
+      border-radius: 9px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .confirm-btn:hover {
+      background: #15803d;
+    }
+
+    .cancel-btn {
+      width: 100%;
+      margin-top: 8px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #4b5563;
+      padding: 11px;
+      border-radius: 9px;
+      font-size: 14px;
+      cursor: pointer;
     }
 
     @media (max-width: 750px) {
@@ -231,43 +311,70 @@
         font-size: 24px;
       }
     }
-  </style></head><body><header class="header">
-  <div class="header-inner"><a href="index.html" class="logo">
-  مِهراف
-</a>
+  </style>
+</head>
 
-<nav class="nav">
-  <a href="index.html">الرئيسية</a>
-  <a href="services.html">الخدمات</a>
-  <a href="projects.html">المشاريع</a>
-  <a href="login.html">تسجيل الدخول</a>
-</nav>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+
+    <a href="index.html" class="logo">
+      مِهراف
+    </a>
+
+    <nav class="nav">
+      <a href="index.html">الرئيسية</a>
+      <a href="services.html">الخدمات</a>
+      <a href="projects.html">المشاريع</a>
+      <a href="login.html">تسجيل الدخول</a>
+    </nav>
 
   </div>
-</header><main class="container">  <a href="services.html" class="back-link">
-    ← العودة إلى الخدمات
-  </a>  <div id="content"><div class="loading">
-  <div class="loader"></div>
-  جاري تحميل تفاصيل الخدمة...
-</div>
+</header>
 
-  </div></main><footer class="footer">
+<main class="container">
+
+  <a href="services.html" class="back-link">
+    ← العودة إلى الخدمات
+  </a>
+
+  <div id="content">
+
+    <div class="loading">
+      <div class="loader"></div>
+      جاري تحميل تفاصيل الخدمة...
+    </div>
+
+  </div>
+
+</main>
+
+<footer class="footer">
   © 2026 مِهراف | MIHRAF - منصة الخدمات والمشاريع
-</footer><script>
+</footer>
+
+<script>
+
   const API_URL = "/api/services";
 
   const content = document.getElementById("content");
 
+  let currentService = null;
+
   function escapeHtml(value) {
+
     return String(value)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
+
   }
 
   function formatPrice(price) {
+
     const number = Number(price);
 
     if (!Number.isFinite(number)) {
@@ -277,11 +384,16 @@
     return new Intl.NumberFormat("en-US", {
       maximumFractionDigits: 2
     }).format(number);
+
   }
 
   function getServiceId() {
-    const params = new URLSearchParams(window.location.search);
+
+    const params =
+      new URLSearchParams(window.location.search);
+
     return params.get("id");
+
   }
 
   async function loadService() {
@@ -289,48 +401,65 @@
     const serviceId = getServiceId();
 
     if (!serviceId || !/^\d+$/.test(serviceId)) {
+
       showNotFound();
+
       return;
     }
 
     try {
 
-      /*
-        نستخدم الـ API الموجود حاليا والذي يجلب الخدمات
-        الفعلية من قاعدة D1، ثم نبحث عن الخدمة المطلوبة.
-      */
-
-      const response = await fetch(API_URL, {
-        method: "GET",
-        headers: {
-          "Accept": "application/json"
-        }
-      });
+      const response =
+        await fetch(API_URL, {
+          method: "GET",
+          headers: {
+            "Accept": "application/json"
+          }
+        });
 
       if (!response.ok) {
         throw new Error("HTTP " + response.status);
       }
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
-      if (!data || data.success !== true || !Array.isArray(data.services)) {
-        throw new Error("استجابة غير صحيحة من الخادم");
+      if (
+        !data ||
+        data.success !== true ||
+        !Array.isArray(data.services)
+      ) {
+
+        throw new Error(
+          "استجابة غير صحيحة من الخادم"
+        );
+
       }
 
-      const service = data.services.find(
-        item => String(item.id) === String(serviceId)
-      );
+      const service =
+        data.services.find(
+          item =>
+            String(item.id) ===
+            String(serviceId)
+        );
 
       if (!service) {
+
         showNotFound();
+
         return;
       }
+
+      currentService = service;
 
       renderService(service);
 
     } catch (error) {
 
-      console.error("Service details error:", error);
+      console.error(
+        "Service details error:",
+        error
+      );
 
       content.innerHTML = `
         <div class="error">
@@ -339,37 +468,51 @@
           يرجى المحاولة مرة أخرى.
         </div>
       `;
+
     }
+
   }
 
   function renderService(service) {
 
-    const title = escapeHtml(
-      service.title || "خدمة بدون عنوان"
-    );
+    const title =
+      escapeHtml(
+        service.title ||
+        "خدمة بدون عنوان"
+      );
 
-    const description = escapeHtml(
-      service.description || "لا يوجد وصف للخدمة."
-    );
+    const description =
+      escapeHtml(
+        service.description ||
+        "لا يوجد وصف للخدمة."
+      );
 
-    const category = escapeHtml(
-      service.category || "عام"
-    );
+    const category =
+      escapeHtml(
+        service.category ||
+        "عام"
+      );
 
-    const freelancerName = escapeHtml(
-      service.freelancer_name || "مستقل"
-    );
+    const freelancerName =
+      escapeHtml(
+        service.freelancer_name ||
+        "مستقل"
+      );
 
-    const price = formatPrice(service.price);
+    const price =
+      formatPrice(service.price);
 
     let dateText = "";
 
     if (service.created_at) {
+
       dateText = `
         <div class="service-date">
-          تاريخ نشر الخدمة: ${escapeHtml(service.created_at)}
+          تاريخ نشر الخدمة:
+          ${escapeHtml(service.created_at)}
         </div>
       `;
+
     }
 
     content.innerHTML = `
@@ -417,45 +560,288 @@
           ${dateText}
 
           <button
+            id="requestButton"
             class="request-btn"
             type="button"
-            onclick="requestService(${Number(service.id)})"
+            onclick="showOrderForm()"
           >
             طلب الخدمة
           </button>
 
+          <div id="orderArea"></div>
+
         </aside>
 
       </div>
+
     `;
+
+  }
+
+  function showOrderForm() {
+
+    const orderArea =
+      document.getElementById("orderArea");
+
+    const requestButton =
+      document.getElementById("requestButton");
+
+    if (!orderArea || !requestButton) {
+      return;
+    }
+
+    requestButton.style.display = "none";
+
+    orderArea.innerHTML = `
+
+      <div class="order-form">
+
+        <label for="clientMessage">
+          رسالة للمنفذ (اختياري)
+        </label>
+
+        <textarea
+          id="clientMessage"
+          maxlength="2000"
+          placeholder="اكتب أي تفاصيل أو متطلبات تريد توضيحها للمنفذ..."
+        ></textarea>
+
+        <button
+          id="confirmOrderButton"
+          class="confirm-btn"
+          type="button"
+          onclick="submitServiceOrder()"
+        >
+          تأكيد طلب الخدمة
+        </button>
+
+        <button
+          class="cancel-btn"
+          type="button"
+          onclick="cancelOrderForm()"
+        >
+          إلغاء
+        </button>
+
+      </div>
+
+    `;
+
+  }
+
+  function cancelOrderForm() {
+
+    const orderArea =
+      document.getElementById("orderArea");
+
+    const requestButton =
+      document.getElementById("requestButton");
+
+    if (orderArea) {
+      orderArea.innerHTML = "";
+    }
+
+    if (requestButton) {
+      requestButton.style.display = "block";
+    }
+
+  }
+
+  async function submitServiceOrder() {
+
+    if (!currentService) {
+
+      alert("تعذر تحديد الخدمة.");
+
+      return;
+    }
+
+    const messageElement =
+      document.getElementById("clientMessage");
+
+    const confirmButton =
+      document.getElementById(
+        "confirmOrderButton"
+      );
+
+    const clientMessage =
+      messageElement
+        ? messageElement.value.trim()
+        : "";
+
+    if (clientMessage.length > 2000) {
+
+      alert(
+        "الرسالة طويلة جدا. الحد الأقصى 2000 حرف."
+      );
+
+      return;
+    }
+
+    if (confirmButton) {
+
+      confirmButton.disabled = true;
+
+      confirmButton.textContent =
+        "جاري إرسال الطلب...";
+
+    }
+
+    try {
+
+      const response =
+        await fetch(
+          "/api/service-orders",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+
+              "Accept":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+              service_id:
+                Number(currentService.id),
+
+              client_message:
+                clientMessage
+            })
+          }
+        );
+
+      let data = null;
+
+      try {
+
+        data =
+          await response.json();
+
+      } catch {
+
+        data = null;
+
+      }
+
+      if (response.status === 401) {
+
+        alert(
+          "يجب تسجيل الدخول كعميل أولا لطلب الخدمة."
+        );
+
+        window.location.href =
+          "login.html";
+
+        return;
+      }
+
+      if (!response.ok || !data || data.success !== true) {
+
+        const errorMessage =
+          data && data.error
+            ? data.error
+            : "تعذر إرسال طلب الخدمة.";
+
+        throw new Error(errorMessage);
+
+      }
+
+      showOrderSuccess(
+        data.order
+          ? data.order.id
+          : null
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Create service order error:",
+        error
+      );
+
+      alert(
+        error.message ||
+        "حدث خطأ أثناء إرسال الطلب."
+      );
+
+      if (confirmButton) {
+
+        confirmButton.disabled = false;
+
+        confirmButton.textContent =
+          "تأكيد طلب الخدمة";
+
+      }
+
+    }
+
+  }
+
+  function showOrderSuccess(orderId) {
+
+    const orderArea =
+      document.getElementById("orderArea");
+
+    const requestButton =
+      document.getElementById("requestButton");
+
+    if (requestButton) {
+      requestButton.style.display = "none";
+    }
+
+    if (!orderArea) {
+      return;
+    }
+
+    orderArea.innerHTML = `
+
+      <div class="success">
+
+        <strong>
+          تم إرسال طلب الخدمة بنجاح
+        </strong>
+
+        <br>
+
+        ${orderId
+          ? `رقم الطلب: #${escapeHtml(orderId)}<br>`
+          : ""
+        }
+
+        بانتظار رد مقدم الخدمة.
+
+      </div>
+
+    `;
+
   }
 
   function showNotFound() {
 
     content.innerHTML = `
+
       <div class="not-found">
-        <h2>الخدمة غير موجودة</h2>
+
+        <h2>
+          الخدمة غير موجودة
+        </h2>
+
         <p>
           قد تكون الخدمة غير متاحة حاليا أو تم حذفها.
         </p>
+
       </div>
+
     `;
-  }
 
-  function requestService(serviceId) {
-
-    /*
-      نظام طلب الخدمة سيتم ربطه لاحقا
-      بعد إنشاء نظام الطلبات.
-    */
-
-    alert(
-      "الخدمة رقم " +
-      serviceId +
-      " جاهزة للطلب. سيتم ربط زر الطلب بنظام الطلبات في الخطوة القادمة."
-    );
   }
 
   loadService();
-</script></body>
+
+</script>
+
+</body>
 </html>
