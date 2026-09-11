@@ -1,8 +1,11 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تصفح الأعمال | مِهراف</title>  <style>
+  <title>تصفح الأعمال | مِهراف</title>
+
+  <style>
     * {
       box-sizing: border-box;
       margin: 0;
@@ -222,40 +225,71 @@
         height: 190px;
       }
     }
-  </style></head><body><header>
+  </style>
+</head>
+
+<body>
+
+<header>
   <div class="header-inner">
     <a href="index.html" class="logo">مِهراف</a>
     <a href="index.html" class="back-btn">العودة للرئيسية</a>
   </div>
-</header><section class="hero">
+</header>
+
+<section class="hero">
   <h1>تصفح الأعمال</h1>
   <p>اكتشف نماذج وأعمال المنفذين المميزين على منصة مِهراف</p>
-</section><div class="filters" id="filters">
-  <button class="filter active" data-category="all">كل الأعمال</button>
-</div><main class="container">
-  <div id="status" class="status">جاري تحميل الأعمال...</div>
+</section>
+
+<div class="filters" id="filters">
+  <button class="filter active" data-category="all">
+    كل الأعمال
+  </button>
+</div>
+
+<main class="container">
+  <div id="status" class="status">
+    جاري تحميل الأعمال...
+  </div>
+
   <div id="portfolioGrid" class="portfolio-grid"></div>
-</main><script>
-  const statusBox = document.getElementById("status");
-  const portfolioGrid = document.getElementById("portfolioGrid");
-  const filtersBox = document.getElementById("filters");
+</main>
+
+<script>
+  const statusBox =
+    document.getElementById("status");
+
+  const portfolioGrid =
+    document.getElementById("portfolioGrid");
+
+  const filtersBox =
+    document.getElementById("filters");
 
   let allItems = [];
 
   async function loadPortfolio() {
+    statusBox.className = "status";
     statusBox.style.display = "block";
     statusBox.textContent = "جاري تحميل الأعمال...";
+
     portfolioGrid.innerHTML = "";
 
     try {
-      const response = await fetch("/api/portfolio", {
-        method: "GET",
-        credentials: "include"
-      });
+      const response =
+        await fetch("/api/portfolio", {
+          method: "GET",
+          credentials: "include"
+        });
 
-      const data = await response.json().catch(() => null);
+      const data =
+        await response.json().catch(() => null);
 
-      if (!response.ok || !data || data.success !== true) {
+      if (
+        !response.ok ||
+        !data ||
+        data.success !== true
+      ) {
         throw new Error(
           data?.error ||
           data?.details ||
@@ -263,26 +297,42 @@
         );
       }
 
-      allItems = Array.isArray(data.items) ? data.items : [];
+      /*
+       * Worker يرجع البيانات داخل portfolio
+       */
+      allItems =
+        Array.isArray(data.portfolio)
+          ? data.portfolio
+          : [];
 
       buildFilters();
 
       if (allItems.length === 0) {
         statusBox.style.display = "block";
-        statusBox.textContent = "لا توجد أعمال منشورة حاليا.";
+        statusBox.textContent =
+          "لا توجد أعمال منشورة حاليا.";
         return;
       }
 
       statusBox.style.display = "none";
+
       renderItems(allItems);
 
     } catch (error) {
-      console.error("Portfolio error:", error);
+      console.error(
+        "Portfolio error:",
+        error
+      );
 
-      statusBox.className = "status error";
-      statusBox.style.display = "block";
+      statusBox.className =
+        "status error";
+
+      statusBox.style.display =
+        "block";
+
       statusBox.textContent =
-        error.message || "حدث خطأ أثناء تحميل الأعمال.";
+        error.message ||
+        "حدث خطأ أثناء تحميل الأعمال.";
     }
   }
 
@@ -297,123 +347,208 @@
 
     filtersBox.innerHTML = "";
 
-    const allButton = document.createElement("button");
-    allButton.className = "filter active";
-    allButton.dataset.category = "all";
-    allButton.textContent = "كل الأعمال";
+    const allButton =
+      document.createElement("button");
+
+    allButton.className =
+      "filter active";
+
+    allButton.dataset.category =
+      "all";
+
+    allButton.textContent =
+      "كل الأعمال";
 
     allButton.onclick = () => {
       setActiveFilter(allButton);
       renderItems(allItems);
     };
 
-    filtersBox.appendChild(allButton);
+    filtersBox.appendChild(
+      allButton
+    );
 
     categories.forEach(category => {
-      const button = document.createElement("button");
+      const button =
+        document.createElement("button");
 
-      button.className = "filter";
-      button.dataset.category = category;
-      button.textContent = category;
+      button.className =
+        "filter";
+
+      button.dataset.category =
+        category;
+
+      button.textContent =
+        category;
 
       button.onclick = () => {
         setActiveFilter(button);
 
-        const filtered = allItems.filter(
-          item => item.category === category
-        );
+        const filtered =
+          allItems.filter(
+            item =>
+              item.category === category
+          );
 
         renderItems(filtered);
       };
 
-      filtersBox.appendChild(button);
+      filtersBox.appendChild(
+        button
+      );
     });
   }
 
-  function setActiveFilter(activeButton) {
-    document.querySelectorAll(".filter").forEach(button => {
-      button.classList.remove("active");
-    });
+  function setActiveFilter(
+    activeButton
+  ) {
+    document
+      .querySelectorAll(".filter")
+      .forEach(button => {
+        button.classList.remove(
+          "active"
+        );
+      });
 
-    activeButton.classList.add("active");
+    activeButton.classList.add(
+      "active"
+    );
   }
 
   function renderItems(items) {
     portfolioGrid.innerHTML = "";
 
     if (!items.length) {
-      statusBox.style.display = "block";
-      statusBox.className = "status";
-      statusBox.textContent = "لا توجد أعمال ضمن هذا التصنيف.";
+      statusBox.style.display =
+        "block";
+
+      statusBox.className =
+        "status";
+
+      statusBox.textContent =
+        "لا توجد أعمال ضمن هذا التصنيف.";
+
       return;
     }
 
-    statusBox.style.display = "none";
+    statusBox.style.display =
+      "none";
 
     items.forEach(item => {
-      const card = document.createElement("article");
+      const card =
+        document.createElement("article");
+
       card.className = "card";
 
-      const imagePart = item.image_url
-        ? `
-          <img
-            class="image"
-            src="${escapeAttribute(item.image_url)}"
-            alt="${escapeAttribute(item.title || "عمل")}
-            loading="lazy"
-            onerror="this.outerHTML='<div class=&quot;no-image&quot;>🎨</div>'"
-          >
-        `
-        : `<div class="no-image">🎨</div>`;
+      const imagePart =
+        item.image_url
+          ? `
+            <img
+              class="image"
+              src="${escapeAttribute(item.image_url)}"
+              alt="${escapeAttribute(
+                item.title || "عمل"
+              )}"
+              loading="lazy"
+              onerror="this.outerHTML='<div class=&quot;no-image&quot;>🎨</div>'"
+            >
+          `
+          : `
+            <div class="no-image">
+              🎨
+            </div>
+          `;
 
-      const visitButton = item.project_url
-        ? `
-          <a
-            class="visit"
-            href="${escapeAttribute(item.project_url)}"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            مشاهدة العمل
-          </a>
-        `
-        : "";
+      const visitButton =
+        item.project_url
+          ? `
+            <a
+              class="visit"
+              href="${escapeAttribute(
+                item.project_url
+              )}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              مشاهدة العمل
+            </a>
+          `
+          : "";
 
       card.innerHTML = `
         ${imagePart}
 
         <div class="card-body">
+
           ${
             item.category
-              ? `<span class="category">${escapeHtml(item.category)}</span>`
+              ? `
+                <span class="category">
+                  ${escapeHtml(
+                    item.category
+                  )}
+                </span>
+              `
               : ""
           }
 
-          <h2>${escapeHtml(item.title || "عمل بدون عنوان")}</h2>
+          <h2>
+            ${escapeHtml(
+              item.title ||
+              "عمل بدون عنوان"
+            )}
+          </h2>
 
           <div class="description">
-            ${escapeHtml(item.description || "لا يوجد وصف للعمل.")}
+            ${escapeHtml(
+              item.description ||
+              "لا يوجد وصف للعمل."
+            )}
           </div>
 
           <div class="owner">
-            المنفذ: <strong>${escapeHtml(item.user_name || "منفذ على مِهراف")}</strong>
+            المنفذ:
+            <strong>
+              ${escapeHtml(
+                item.freelancer_name ||
+                "منفذ على مِهراف"
+              )}
+            </strong>
           </div>
 
           ${visitButton}
+
         </div>
       `;
 
-      portfolioGrid.appendChild(card);
+      portfolioGrid.appendChild(
+        card
+      );
     });
   }
 
   function escapeHtml(value) {
     return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
   }
 
   function escapeAttribute(value) {
@@ -421,5 +556,7 @@
   }
 
   loadPortfolio();
-</script></body>
+</script>
+
+</body>
 </html>
