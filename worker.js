@@ -162,6 +162,14 @@ export default {
 
       // SERVICES
 
+      // عرض الخدمات العامة
+      if (
+        url.pathname === "/api/services" &&
+        request.method === "GET"
+      ) {
+        return await getServices(request, env);
+      }
+
       // إضافة خدمة جديدة
       if (
         url.pathname === "/api/services" &&
@@ -800,6 +808,88 @@ async function createService(request, env) {
       success: false,
       error: "حدث خطأ أثناء نشر الخدمة",
       details: error?.message || String(error)
+    }, 500);
+  }
+}
+
+
+// ================================
+// GET PUBLIC SERVICES
+// ================================
+
+async function getServices(request, env) {
+  try {
+    const url = new URL(request.url);
+
+    const category =
+      String(
+        url.searchParams.get("category") || ""
+      ).trim();
+
+    let result;
+
+    if (category) {
+      result = await env.DB
+        .prepare(`
+          SELECT
+            services.id,
+            services.title,
+            services.description,
+            services.price,
+            services.category,
+            services.status,
+            services.created_at,
+            users.id AS user_id,
+            users.full_name AS freelancer_name
+          FROM services
+          INNER JOIN users
+            ON users.id = services.user_id
+          WHERE
+            services.status = 'active'
+            AND services.category = ?
+          ORDER BY services.id DESC
+        `)
+        .bind(category)
+        .all();
+    } else {
+      result = await env.DB
+        .prepare(`
+          SELECT
+            services.id,
+            services.title,
+            services.description,
+            services.price,
+            services.category,
+            services.status,
+            services.created_at,
+            users.id AS user_id,
+            users.full_name AS freelancer_name
+          FROM services
+          INNER JOIN users
+            ON users.id = services.user_id
+          WHERE services.status = 'active'
+          ORDER BY services.id DESC
+        `)
+        .all();
+    }
+
+    return json({
+      success: true,
+      services: result.results || []
+    });
+
+  } catch (error) {
+    console.error(
+      "Get services error:",
+      error
+    );
+
+    return json({
+      success: false,
+      error: "حدث خطأ أثناء جلب الخدمات",
+      details:
+        error?.message ||
+        String(error)
     }, 500);
   }
 }
@@ -1503,6 +1593,7 @@ async function getProject(
     can_apply: canApply
   });
 }
+
 
 // ================================
 // PROPOSALS
