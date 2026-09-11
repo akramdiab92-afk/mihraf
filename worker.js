@@ -542,6 +542,332 @@ async function login(request, env) {
 
 
 // ================================
+// FORGOT PASSWORD
+// ================================
+
+async function forgotPassword(request, env) {
+  try {
+    const body = await request.json();
+
+    const email = cleanEmail(body.email);
+
+    // نفس الرسالة سواء كان الحساب موجودا أو لا
+    // حتى لا نكشف إذا كان البريد مسجلا في الموقع
+    const genericResponse = {
+      success: true,
+      message:
+        "إذا كان البريد الإلكتروني مسجلا لدينا، ستصلك رسالة لإعادة تعيين كلمة المرور."
+    };
+
+    if (!email) {
+      return json(genericResponse);
+    }
+
+    const user = await env.DB
+      .prepare(`
+        SELECT id, full_name, email
+        FROM users
+        WHERE LOWER(email) = LOWER(?)
+        LIMIT 1
+      `)
+      .bind(email)
+      .first();
+
+    if (!user) {
+      return json(genericResponse);
+    }
+
+    // إلغاء أي رموز إعادة تعيين قديمة لهذا المستخدم
+    await env.DB
+      .prepare(`
+        DELETE FROM password_reset_tokens
+        WHERE user_id = ?
+      `)
+      .bind(user.id)
+      .run();
+
+    // إنشاء رمز عشوائي آمن
+    const tokenBytes =
+      crypto.getRandomValues(new Uint8Array(32));
+
+    const token = Array.from(tokenBytes)
+      .map(byte => byte.toString(16).padStart(2, "0"))
+      .join("");
+
+    const tokenHash = await sha256(token);
+
+    // صلاحية الرمز: ساعة واحدة
+    const expiresAt =
+      new Date(Date.now() + 60 * 60 * 1000)
+        .toISOString();
+
+    await env.DB
+      .prepare(`
+        INSERT INTO password_reset_tokens
+        (
+          user_id,
+          token_hash,
+          expires_at
+        )
+        VALUES (?, ?, ?)
+      `)
+      .bind(
+        user.id,
+        tokenHash,
+        expiresAt
+      )
+      .run();
+
+    // رابط إعادة تعيين كلمة المرور
+    const resetUrl =
+      `${new URL(request.url).origin}/reset-password.html?token=${encodeURIComponent(token)}`;
+
+    // إرسال البريد عبر Resend
+    const resendResponse =
+      await fetch("https://api.resend.com/emails", {
+        method: "POST",
+
+        headers: {
+          "Authorization":
+            `Bearer ${env.RESEND_API_KEY}`,
+
+          "Content-Type":
+            "application/json"
+        },
+
+        body: JSON.stringify({
+          from: "onboarding@resend.dev",
+
+          to: [user.email],
+
+          subject:
+            "إعادة تعيين كلمة المرور - مِهراف",
+
+          html: `
+            <div dir="rtl" style="font-family:Arial,sans-serif;line-height:1.8;color:#222">
+
+              <h2 style="color:#2563eb">
+                إعادة تعيين كلمة المرور
+              </h2>
+
+              <p>
+                مرحبا ${escapeHtml(user.full_name || "")}،
+              </p>
+
+              <p>
+                تلقينا طلبا لإعادة تعيين كلمة المرور الخاصة بحسابك في مِهراف.
+              </p>
+
+              <p>
+                اضغط على الزر التالي لإنشاء كلمة مرور جديدة:
+              </p>
+
+              <p>
+                <a
+                  href="${resetUrl}"
+                  style="
+                    display:inline-block;
+                    background:#2563eb;
+                    color:#ffffff;
+                    padding:12px 22px;
+                    border-radius:8px;
+                    text-decoration:none;
+                  "
+                >
+                  إعادة تعيين كلمة المرور
+                </a>
+              </p>
+
+              <p>
+                صلاحية هذا الرابط ساعة واحدة فقط.
+              </p>
+
+              <p>
+                إذا لم تطلب إعادة تعيين كلمة المرور، يمكنك تجاهل هذه الرسالة.
+              </p>
+
+              <hr>
+
+              <p style="color:#777;font-size:13px">
+                مِهراف | منصة الخدمات والمشاريع
+              </p>
+
+            </div>
+          `
+        })
+      });
+
+    if (!resendResponse.ok) {
+
+      const resendError =
+        await resendResponse.text();
+
+      console.error(
+        "Resend error:",
+        resendError
+      );
+
+      // حذف الرمز إذا فشل إرسال البريد
+      await env.DB
+        .prepare(`
+          DELETE FROM password_reset_tokens
+          WHERE token_hash = ?
+        `)
+        .bind(tokenHash)
+        .run();
+
+      throw new Error(
+        "تعذر إرسال رسالة إعادة تعيين كلمة المرور."
+      );
+    }
+
+    return json(genericResponse);
+
+  } catch (error) {
+
+    console.error(
+      "Forgot password error:",
+      error
+    );
+
+    return json({
+      success: false,
+      error:
+        "حدث خطأ أثناء معالجة طلب إعادة تعيين كلمة المرور."
+    }, 500);
+  }
+}
+
+
+// ================================
+// RESET PASSWORD
+// ================================
+
+async function resetPassword(request, env) {
+  try {
+    const body = await request.json();
+
+    const token = String(body.token || "").trim();
+    const newPassword = String(body.password || "");
+
+    if (!token) {
+      return json({
+        success: false,
+        error: "رمز إعادة التعيين غير موجود."
+      }, 400);
+    }
+
+    if (newPassword.length < 8) {
+      return json({
+        success: false,
+        error: "كلمة المرور يجب أن تكون 8 أحرف أو أرقام على الأقل."
+      }, 400);
+    }
+
+    const tokenHash = await sha256(token);
+
+    const resetToken = await env.DB
+      .prepare(`
+        SELECT
+          id,
+          user_id,
+          expires_at,
+          used_at
+        FROM password_reset_tokens
+        WHERE token_hash = ?
+        LIMIT 1
+      `)
+      .bind(tokenHash)
+      .first();
+
+    if (!resetToken) {
+      return json({
+        success: false,
+        error: "رابط إعادة تعيين كلمة المرور غير صالح."
+      }, 400);
+    }
+
+    if (resetToken.used_at) {
+      return json({
+        success: false,
+        error: "تم استخدام رابط إعادة تعيين كلمة المرور من قبل."
+      }, 400);
+    }
+
+    const expiresAt =
+      new Date(resetToken.expires_at).getTime();
+
+    if (
+      !Number.isFinite(expiresAt) ||
+      expiresAt <= Date.now()
+    ) {
+      return json({
+        success: false,
+        error: "انتهت صلاحية رابط إعادة تعيين كلمة المرور."
+      }, 400);
+    }
+
+    // إنشاء كلمة المرور بنفس نظام التشفير المستخدم في تسجيل الدخول
+    const passwordData =
+      await createPasswordHash(newPassword);
+
+    await env.DB
+      .prepare(`
+        UPDATE users
+        SET
+          password_hash = ?,
+          password_salt = ?
+        WHERE id = ?
+      `)
+      .bind(
+        passwordData.hash,
+        passwordData.salt,
+        resetToken.user_id
+      )
+      .run();
+
+    // جعل الرابط مستخدما مرة واحدة فقط
+    await env.DB
+      .prepare(`
+        UPDATE password_reset_tokens
+        SET used_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `)
+      .bind(resetToken.id)
+      .run();
+
+    // تسجيل خروج الحساب من جميع الأجهزة
+    await env.DB
+      .prepare(`
+        DELETE FROM sessions
+        WHERE user_id = ?
+      `)
+      .bind(resetToken.user_id)
+      .run();
+
+    return json({
+      success: true,
+      message:
+        "تم تغيير كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة."
+    });
+
+  } catch (error) {
+
+    console.error(
+      "Reset password error:",
+      error
+    );
+
+    return json({
+      success: false,
+      error:
+        "حدث خطأ أثناء إعادة تعيين كلمة المرور."
+    }, 500);
+  }
+}
+
+
+// ================================
 // LOGOUT
 // ================================
 
