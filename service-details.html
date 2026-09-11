@@ -1,0 +1,461 @@
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>تفاصيل الخدمة | مِهراف</title>  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .header {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: auto;
+      min-height: 70px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: bold;
+      color: #2563eb;
+    }
+
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      padding: 9px 14px;
+      border-radius: 8px;
+      color: #4b5563;
+      font-size: 14px;
+    }
+
+    .nav a:hover {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 35px 20px 60px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #2563eb;
+      font-size: 14px;
+    }
+
+    .service-box {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 35px;
+    }
+
+    .category {
+      display: inline-block;
+      background: #eff6ff;
+      color: #2563eb;
+      padding: 7px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    .title {
+      font-size: 30px;
+      color: #111827;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .description-title {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #111827;
+    }
+
+    .description {
+      color: #4b5563;
+      line-height: 2;
+      font-size: 15px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .side-box {
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 22px;
+      height: fit-content;
+    }
+
+    .price-label {
+      color: #6b7280;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .price {
+      color: #16a34a;
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 25px;
+    }
+
+    .freelancer-title {
+      color: #6b7280;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .freelancer {
+      color: #111827;
+      font-size: 17px;
+      font-weight: bold;
+      margin-bottom: 22px;
+    }
+
+    .service-date {
+      color: #6b7280;
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+
+    .request-btn {
+      width: 100%;
+      border: none;
+      background: #2563eb;
+      color: #fff;
+      padding: 13px;
+      border-radius: 9px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .request-btn:hover {
+      background: #1d4ed8;
+    }
+
+    .loading,
+    .error,
+    .not-found {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 15px;
+      padding: 50px 20px;
+      text-align: center;
+      color: #6b7280;
+    }
+
+    .loader {
+      width: 38px;
+      height: 38px;
+      border: 4px solid #e5e7eb;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .error {
+      background: #fff1f2;
+      border-color: #fecdd3;
+      color: #be123c;
+    }
+
+    .not-found h2 {
+      color: #374151;
+      margin-bottom: 10px;
+    }
+
+    .footer {
+      border-top: 1px solid #e5e7eb;
+      background: #fff;
+      text-align: center;
+      padding: 22px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    @media (max-width: 750px) {
+      .header-inner {
+        flex-direction: column;
+        justify-content: center;
+        padding: 12px 20px;
+      }
+
+      .service-box {
+        grid-template-columns: 1fr;
+        padding: 20px;
+      }
+
+      .title {
+        font-size: 24px;
+      }
+    }
+  </style></head><body><header class="header">
+  <div class="header-inner"><a href="index.html" class="logo">
+  مِهراف
+</a>
+
+<nav class="nav">
+  <a href="index.html">الرئيسية</a>
+  <a href="services.html">الخدمات</a>
+  <a href="projects.html">المشاريع</a>
+  <a href="login.html">تسجيل الدخول</a>
+</nav>
+
+  </div>
+</header><main class="container">  <a href="services.html" class="back-link">
+    ← العودة إلى الخدمات
+  </a>  <div id="content"><div class="loading">
+  <div class="loader"></div>
+  جاري تحميل تفاصيل الخدمة...
+</div>
+
+  </div></main><footer class="footer">
+  © 2026 مِهراف | MIHRAF - منصة الخدمات والمشاريع
+</footer><script>
+  const API_URL = "/api/services";
+
+  const content = document.getElementById("content");
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function formatPrice(price) {
+    const number = Number(price);
+
+    if (!Number.isFinite(number)) {
+      return "غير محدد";
+    }
+
+    return new Intl.NumberFormat("en-US", {
+      maximumFractionDigits: 2
+    }).format(number);
+  }
+
+  function getServiceId() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("id");
+  }
+
+  async function loadService() {
+
+    const serviceId = getServiceId();
+
+    if (!serviceId || !/^\d+$/.test(serviceId)) {
+      showNotFound();
+      return;
+    }
+
+    try {
+
+      /*
+        نستخدم الـ API الموجود حاليا والذي يجلب الخدمات
+        الفعلية من قاعدة D1، ثم نبحث عن الخدمة المطلوبة.
+      */
+
+      const response = await fetch(API_URL, {
+        method: "GET",
+        headers: {
+          "Accept": "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("HTTP " + response.status);
+      }
+
+      const data = await response.json();
+
+      if (!data || data.success !== true || !Array.isArray(data.services)) {
+        throw new Error("استجابة غير صحيحة من الخادم");
+      }
+
+      const service = data.services.find(
+        item => String(item.id) === String(serviceId)
+      );
+
+      if (!service) {
+        showNotFound();
+        return;
+      }
+
+      renderService(service);
+
+    } catch (error) {
+
+      console.error("Service details error:", error);
+
+      content.innerHTML = `
+        <div class="error">
+          حدث خطأ أثناء تحميل تفاصيل الخدمة.
+          <br>
+          يرجى المحاولة مرة أخرى.
+        </div>
+      `;
+    }
+  }
+
+  function renderService(service) {
+
+    const title = escapeHtml(
+      service.title || "خدمة بدون عنوان"
+    );
+
+    const description = escapeHtml(
+      service.description || "لا يوجد وصف للخدمة."
+    );
+
+    const category = escapeHtml(
+      service.category || "عام"
+    );
+
+    const freelancerName = escapeHtml(
+      service.freelancer_name || "مستقل"
+    );
+
+    const price = formatPrice(service.price);
+
+    let dateText = "";
+
+    if (service.created_at) {
+      dateText = `
+        <div class="service-date">
+          تاريخ نشر الخدمة: ${escapeHtml(service.created_at)}
+        </div>
+      `;
+    }
+
+    content.innerHTML = `
+
+      <div class="service-box">
+
+        <section>
+
+          <div class="category">
+            ${category}
+          </div>
+
+          <h1 class="title">
+            ${title}
+          </h1>
+
+          <h2 class="description-title">
+            وصف الخدمة
+          </h2>
+
+          <p class="description">
+            ${description}
+          </p>
+
+        </section>
+
+        <aside class="side-box">
+
+          <div class="price-label">
+            سعر الخدمة
+          </div>
+
+          <div class="price">
+            ${price} USD
+          </div>
+
+          <div class="freelancer-title">
+            مقدم الخدمة
+          </div>
+
+          <div class="freelancer">
+            ${freelancerName}
+          </div>
+
+          ${dateText}
+
+          <button
+            class="request-btn"
+            type="button"
+            onclick="requestService(${Number(service.id)})"
+          >
+            طلب الخدمة
+          </button>
+
+        </aside>
+
+      </div>
+    `;
+  }
+
+  function showNotFound() {
+
+    content.innerHTML = `
+      <div class="not-found">
+        <h2>الخدمة غير موجودة</h2>
+        <p>
+          قد تكون الخدمة غير متاحة حاليا أو تم حذفها.
+        </p>
+      </div>
+    `;
+  }
+
+  function requestService(serviceId) {
+
+    /*
+      نظام طلب الخدمة سيتم ربطه لاحقا
+      بعد إنشاء نظام الطلبات.
+    */
+
+    alert(
+      "الخدمة رقم " +
+      serviceId +
+      " جاهزة للطلب. سيتم ربط زر الطلب بنظام الطلبات في الخطوة القادمة."
+    );
+  }
+
+  loadService();
+</script></body>
+</html>
