@@ -161,7 +161,6 @@ export default {
       }
 
       // SERVICES
-
       if (
         url.pathname === "/api/services" &&
         request.method === "GET"
@@ -184,15 +183,14 @@ export default {
       }
 
       // PORTFOLIO
-     if (
-       url.pathname === "/api/portfolio" &&
-       request.method === "GET"
-     ) {
-       return await getPortfolio(request, env);
-     }
-      
-      // SERVICE ORDERS
+      if (
+        url.pathname === "/api/portfolio" &&
+        request.method === "GET"
+      ) {
+        return await getPortfolio(request, env);
+      }
 
+      // SERVICE ORDERS
       if (
         url.pathname === "/api/service-orders" &&
         request.method === "POST"
@@ -314,10 +312,8 @@ async function register(request, env) {
   const email = cleanEmail(body.email);
   const password = String(body.password || "");
 
-  const role =
-    body.role === "freelancer"
-      ? "freelancer"
-      : "client";
+  // الحسابات الجديدة موحدة
+  const role = "user";
 
   if (!fullName) {
     return json({
@@ -347,16 +343,15 @@ async function register(request, env) {
     }, 400);
   }
 
-  const existing =
-    await env.DB
-      .prepare(`
-        SELECT id
-        FROM users
-        WHERE LOWER(email) = LOWER(?)
-        LIMIT 1
-      `)
-      .bind(email)
-      .first();
+  const existing = await env.DB
+    .prepare(`
+      SELECT id
+      FROM users
+      WHERE LOWER(email) = LOWER(?)
+      LIMIT 1
+    `)
+    .bind(email)
+    .first();
 
   if (existing) {
     return json({
@@ -365,30 +360,28 @@ async function register(request, env) {
     }, 409);
   }
 
-  const passwordData =
-    await createPasswordHash(password);
+  const passwordData = await createPasswordHash(password);
 
-  const result =
-    await env.DB
-      .prepare(`
-        INSERT INTO users
-        (
-          full_name,
-          email,
-          password_hash,
-          password_salt,
-          role
-        )
-        VALUES (?, ?, ?, ?, ?)
-      `)
-      .bind(
-        fullName,
+  const result = await env.DB
+    .prepare(`
+      INSERT INTO users
+      (
+        full_name,
         email,
-        passwordData.hash,
-        passwordData.salt,
+        password_hash,
+        password_salt,
         role
       )
-      .run();
+      VALUES (?, ?, ?, ?, ?)
+    `)
+    .bind(
+      fullName,
+      email,
+      passwordData.hash,
+      passwordData.salt,
+      role
+    )
+    .run();
 
   if (!result.success) {
     throw new Error("تعذر إنشاء الحساب");
@@ -433,23 +426,22 @@ async function login(request, env) {
     }, 400);
   }
 
-  const user =
-    await env.DB
-      .prepare(`
-        SELECT
-          id,
-          full_name,
-          email,
-          password_hash,
-          password_salt,
-          role,
-          created_at
-        FROM users
-        WHERE LOWER(email) = LOWER(?)
-        LIMIT 1
-      `)
-      .bind(email)
-      .first();
+  const user = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        full_name,
+        email,
+        password_hash,
+        password_salt,
+        role,
+        created_at
+      FROM users
+      WHERE LOWER(email) = LOWER(?)
+      LIMIT 1
+    `)
+    .bind(email)
+    .first();
 
   if (!user) {
     return json({
@@ -458,12 +450,11 @@ async function login(request, env) {
     }, 401);
   }
 
-  const validPassword =
-    await verifyPassword(
-      password,
-      user.password_hash,
-      user.password_salt
-    );
+  const validPassword = await verifyPassword(
+    password,
+    user.password_hash,
+    user.password_salt
+  );
 
   if (!validPassword) {
     return json({
@@ -475,15 +466,10 @@ async function login(request, env) {
   const rawToken = generateToken();
   const tokenHash = await sha256(rawToken);
 
-  const expiresAt =
-    new Date(
-      Date.now() +
-      SESSION_DAYS *
-      24 *
-      60 *
-      60 *
-      1000
-    ).toISOString();
+  const expiresAt = new Date(
+    Date.now() +
+    SESSION_DAYS * 24 * 60 * 60 * 1000
+  ).toISOString();
 
   await env.DB
     .prepare(`
@@ -601,11 +587,10 @@ async function logout(request, env) {
 // ================================
 
 async function me(request, env) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -633,10 +618,7 @@ async function me(request, env) {
 // AUTHENTICATED USER
 // ================================
 
-async function getAuthenticatedUser(
-  request,
-  env
-) {
+async function getAuthenticatedUser(request, env) {
   const token = getSessionToken(request);
 
   if (!token) {
@@ -645,33 +627,33 @@ async function getAuthenticatedUser(
 
   const tokenHash = await sha256(token);
 
-  const session =
-    await env.DB
-      .prepare(`
-        SELECT
-          s.id AS session_id,
-          s.user_id,
-          s.expires_at,
-          u.id,
-          u.full_name,
-          u.email,
-          u.role,
-          u.created_at
-        FROM sessions s
-        INNER JOIN users u
-          ON u.id = s.user_id
-        WHERE s.token_hash = ?
-        LIMIT 1
-      `)
-      .bind(tokenHash)
-      .first();
+  const session = await env.DB
+    .prepare(`
+      SELECT
+        s.id AS session_id,
+        s.user_id,
+        s.expires_at,
+        u.id,
+        u.full_name,
+        u.email,
+        u.role,
+        u.created_at
+      FROM sessions s
+      INNER JOIN users u
+      ON u.id = s.user_id
+      WHERE s.token_hash = ?
+      LIMIT 1
+    `)
+    .bind(tokenHash)
+    .first();
 
   if (!session) {
     return null;
   }
 
-  const expiresTime =
-    Date.parse(session.expires_at);
+  const expiresTime = Date.parse(
+    session.expires_at
+  );
 
   if (
     Number.isFinite(expiresTime) &&
@@ -704,24 +686,16 @@ async function getAuthenticatedUser(
 
 async function createService(request, env) {
   try {
-    const user =
-      await getAuthenticatedUser(
-        request,
-        env
-      );
+    const user = await getAuthenticatedUser(
+      request,
+      env
+    );
 
     if (!user) {
       return json({
         success: false,
         error: "يجب تسجيل الدخول أولا"
       }, 401);
-    }
-
-    if (user.role !== "freelancer") {
-      return json({
-        success: false,
-        error: "إضافة الخدمات متاحة للمستقلين فقط"
-      }, 403);
     }
 
     let body;
@@ -785,27 +759,26 @@ async function createService(request, env) {
       }, 400);
     }
 
-    const result =
-      await env.DB
-        .prepare(`
-          INSERT INTO services
-          (
-            user_id,
-            title,
-            description,
-            price,
-            category
-          )
-          VALUES (?, ?, ?, ?, ?)
-        `)
-        .bind(
-          Number(user.id),
+    const result = await env.DB
+      .prepare(`
+        INSERT INTO services
+        (
+          user_id,
           title,
           description,
           price,
           category
         )
-        .run();
+        VALUES (?, ?, ?, ?, ?)
+      `)
+      .bind(
+        Number(user.id),
+        title,
+        description,
+        price,
+        category
+      )
+      .run();
 
     if (!result.success) {
       throw new Error("تعذر نشر الخدمة");
@@ -814,25 +787,24 @@ async function createService(request, env) {
     const serviceId =
       result.meta?.last_row_id ?? null;
 
-    const service =
-      await env.DB
-        .prepare(`
-          SELECT
-            id,
-            user_id,
-            title,
-            description,
-            price,
-            category,
-            status,
-            created_at,
-            updated_at
-          FROM services
-          WHERE id = ?
-          LIMIT 1
-        `)
-        .bind(serviceId)
-        .first();
+    const service = await env.DB
+      .prepare(`
+        SELECT
+          id,
+          user_id,
+          title,
+          description,
+          price,
+          category,
+          status,
+          created_at,
+          updated_at
+        FROM services
+        WHERE id = ?
+        LIMIT 1
+      `)
+      .bind(serviceId)
+      .first();
 
     return json({
       success: true,
@@ -849,7 +821,9 @@ async function createService(request, env) {
     return json({
       success: false,
       error: "حدث خطأ أثناء نشر الخدمة",
-      details: error?.message || String(error)
+      details:
+        error?.message ||
+        String(error)
     }, 500);
   }
 }
@@ -863,10 +837,9 @@ async function getServices(request, env) {
   try {
     const url = new URL(request.url);
 
-    const category =
-      String(
-        url.searchParams.get("category") || ""
-      ).trim();
+    const category = String(
+      url.searchParams.get("category") || ""
+    ).trim();
 
     let result;
 
@@ -885,7 +858,7 @@ async function getServices(request, env) {
             users.full_name AS freelancer_name
           FROM services
           INNER JOIN users
-            ON users.id = services.user_id
+          ON users.id = services.user_id
           WHERE
             services.status = 'active'
             AND services.category = ?
@@ -893,6 +866,7 @@ async function getServices(request, env) {
         `)
         .bind(category)
         .all();
+
     } else {
       result = await env.DB
         .prepare(`
@@ -908,7 +882,7 @@ async function getServices(request, env) {
             users.full_name AS freelancer_name
           FROM services
           INNER JOIN users
-            ON users.id = services.user_id
+          ON users.id = services.user_id
           WHERE services.status = 'active'
           ORDER BY services.id DESC
         `)
@@ -942,21 +916,16 @@ async function getServices(request, env) {
 // ================================
 
 async function createServiceOrder(request, env) {
-  const user =
-    await getAuthenticatedUser(request, env);
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
       success: false,
       error: "يجب تسجيل الدخول أولا"
     }, 401);
-  }
-
-  if (user.role !== "client") {
-    return json({
-      success: false,
-      error: "طلب الخدمات متاح للعملاء فقط"
-    }, 403);
   }
 
   let body;
@@ -970,8 +939,13 @@ async function createServiceOrder(request, env) {
     }, 400);
   }
 
-  const serviceId = Number(body.service_id);
-  const clientMessage = cleanText(body.client_message);
+  const serviceId = Number(
+    body.service_id
+  );
+
+  const clientMessage = cleanText(
+    body.client_message
+  );
 
   if (
     !Number.isInteger(serviceId) ||
@@ -993,26 +967,25 @@ async function createServiceOrder(request, env) {
     }, 400);
   }
 
-  const service =
-    await env.DB
-      .prepare(`
-        SELECT
-          s.id,
-          s.user_id,
-          s.title,
-          s.description,
-          s.price,
-          s.category,
-          s.status,
-          u.full_name AS freelancer_name
-        FROM services s
-        INNER JOIN users u
-          ON u.id = s.user_id
-        WHERE s.id = ?
-        LIMIT 1
-      `)
-      .bind(serviceId)
-      .first();
+  const service = await env.DB
+    .prepare(`
+      SELECT
+        s.id,
+        s.user_id,
+        s.title,
+        s.description,
+        s.price,
+        s.category,
+        s.status,
+        u.full_name AS freelancer_name
+      FROM services s
+      INNER JOIN users u
+      ON u.id = s.user_id
+      WHERE s.id = ?
+      LIMIT 1
+    `)
+    .bind(serviceId)
+    .first();
 
   if (!service) {
     return json({
@@ -1038,28 +1011,27 @@ async function createServiceOrder(request, env) {
     }, 403);
   }
 
-  const existing =
-    await env.DB
-      .prepare(`
-        SELECT
-          id,
-          status
-        FROM service_orders
-        WHERE service_id = ?
-          AND client_id = ?
-          AND status IN (
-            'pending',
-            'accepted',
-            'in_progress',
-            'delivered'
-          )
-        LIMIT 1
-      `)
-      .bind(
-        serviceId,
-        user.id
+  const existing = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        status
+      FROM service_orders
+      WHERE service_id = ?
+      AND client_id = ?
+      AND status IN (
+        'pending',
+        'accepted',
+        'in_progress',
+        'delivered'
       )
-      .first();
+      LIMIT 1
+    `)
+    .bind(
+      serviceId,
+      user.id
+    )
+    .first();
 
   if (existing) {
     return json({
@@ -1070,33 +1042,34 @@ async function createServiceOrder(request, env) {
     }, 409);
   }
 
-  const result =
-    await env.DB
-      .prepare(`
-        INSERT INTO service_orders
-        (
-          service_id,
-          client_id,
-          freelancer_id,
-          title,
-          price,
-          client_message,
-          status
-        )
-        VALUES (?, ?, ?, ?, ?, ?, 'pending')
-      `)
-      .bind(
-        service.id,
-        user.id,
-        service.user_id,
-        service.title,
-        Number(service.price),
-        clientMessage || null
+  const result = await env.DB
+    .prepare(`
+      INSERT INTO service_orders
+      (
+        service_id,
+        client_id,
+        freelancer_id,
+        title,
+        price,
+        client_message,
+        status
       )
-      .run();
+      VALUES (?, ?, ?, ?, ?, ?, 'pending')
+    `)
+    .bind(
+      service.id,
+      user.id,
+      service.user_id,
+      service.title,
+      Number(service.price),
+      clientMessage || null
+    )
+    .run();
 
   if (!result.success) {
-    throw new Error("تعذر إنشاء طلب الخدمة");
+    throw new Error(
+      "تعذر إنشاء طلب الخدمة"
+    );
   }
 
   const orderId =
@@ -1110,32 +1083,31 @@ async function createServiceOrder(request, env) {
       `وصل طلب جديد على خدمتك "${service.title}" من العميل ${user.full_name} بقيمة $${service.price}`
   });
 
-  const order =
-    await env.DB
-      .prepare(`
-        SELECT
-          id,
-          service_id,
-          client_id,
-          freelancer_id,
-          title,
-          price,
-          client_message,
-          freelancer_message,
-          status,
-          created_at,
-          updated_at,
-          accepted_at,
-          started_at,
-          delivered_at,
-          completed_at,
-          cancelled_at
-        FROM service_orders
-        WHERE id = ?
-        LIMIT 1
-      `)
-      .bind(orderId)
-      .first();
+  const order = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        service_id,
+        client_id,
+        freelancer_id,
+        title,
+        price,
+        client_message,
+        freelancer_message,
+        status,
+        created_at,
+        updated_at,
+        accepted_at,
+        started_at,
+        delivered_at,
+        completed_at,
+        cancelled_at
+      FROM service_orders
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(orderId)
+    .first();
 
   return json({
     success: true,
@@ -1144,14 +1116,15 @@ async function createServiceOrder(request, env) {
   }, 201);
 }
 
-
 // ================================
-// MY SERVICE ORDERS - CLIENT
+// MY SERVICE ORDERS
 // ================================
 
 async function getMyServiceOrders(request, env) {
-  const user =
-    await getAuthenticatedUser(request, env);
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -1160,42 +1133,34 @@ async function getMyServiceOrders(request, env) {
     }, 401);
   }
 
-  if (user.role !== "client") {
-    return json({
-      success: false,
-      error: "هذه الصفحة مخصصة للعملاء فقط"
-    }, 403);
-  }
-
-  const result =
-    await env.DB
-      .prepare(`
-        SELECT
-          o.id,
-          o.service_id,
-          o.client_id,
-          o.freelancer_id,
-          o.title,
-          o.price,
-          o.client_message,
-          o.freelancer_message,
-          o.status,
-          o.created_at,
-          o.updated_at,
-          o.accepted_at,
-          o.started_at,
-          o.delivered_at,
-          o.completed_at,
-          o.cancelled_at,
-          u.full_name AS freelancer_name
-        FROM service_orders o
-        INNER JOIN users u
-          ON u.id = o.freelancer_id
-        WHERE o.client_id = ?
-        ORDER BY o.id DESC
-      `)
-      .bind(user.id)
-      .all();
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        o.id,
+        o.service_id,
+        o.client_id,
+        o.freelancer_id,
+        o.title,
+        o.price,
+        o.client_message,
+        o.freelancer_message,
+        o.status,
+        o.created_at,
+        o.updated_at,
+        o.accepted_at,
+        o.started_at,
+        o.delivered_at,
+        o.completed_at,
+        o.cancelled_at,
+        u.full_name AS freelancer_name
+      FROM service_orders o
+      INNER JOIN users u
+      ON u.id = o.freelancer_id
+      WHERE o.client_id = ?
+      ORDER BY o.id DESC
+    `)
+    .bind(user.id)
+    .all();
 
   return json({
     success: true,
@@ -1206,12 +1171,14 @@ async function getMyServiceOrders(request, env) {
 
 
 // ================================
-// MY SERVICE REQUESTS - FREELANCER
+// MY SERVICE REQUESTS
 // ================================
 
 async function getMyServiceRequests(request, env) {
-  const user =
-    await getAuthenticatedUser(request, env);
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -1220,43 +1187,35 @@ async function getMyServiceRequests(request, env) {
     }, 401);
   }
 
-  if (user.role !== "freelancer") {
-    return json({
-      success: false,
-      error: "هذه الصفحة مخصصة للمستقلين فقط"
-    }, 403);
-  }
-
-  const result =
-    await env.DB
-      .prepare(`
-        SELECT
-          o.id,
-          o.service_id,
-          o.client_id,
-          o.freelancer_id,
-          o.title,
-          o.price,
-          o.client_message,
-          o.freelancer_message,
-          o.status,
-          o.created_at,
-          o.updated_at,
-          o.accepted_at,
-          o.started_at,
-          o.delivered_at,
-          o.completed_at,
-          o.cancelled_at,
-          u.full_name AS client_name,
-          u.email AS client_email
-        FROM service_orders o
-        INNER JOIN users u
-          ON u.id = o.client_id
-        WHERE o.freelancer_id = ?
-        ORDER BY o.id DESC
-      `)
-      .bind(user.id)
-      .all();
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        o.id,
+        o.service_id,
+        o.client_id,
+        o.freelancer_id,
+        o.title,
+        o.price,
+        o.client_message,
+        o.freelancer_message,
+        o.status,
+        o.created_at,
+        o.updated_at,
+        o.accepted_at,
+        o.started_at,
+        o.delivered_at,
+        o.completed_at,
+        o.cancelled_at,
+        u.full_name AS client_name,
+        u.email AS client_email
+      FROM service_orders o
+      INNER JOIN users u
+      ON u.id = o.client_id
+      WHERE o.freelancer_id = ?
+      ORDER BY o.id DESC
+    `)
+    .bind(user.id)
+    .all();
 
   return json({
     success: true,
@@ -1275,8 +1234,10 @@ async function getServiceOrder(
   env,
   orderId
 ) {
-  const user =
-    await getAuthenticatedUser(request, env);
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -1295,40 +1256,39 @@ async function getServiceOrder(
     }, 400);
   }
 
-  const order =
-    await env.DB
-      .prepare(`
-        SELECT
-          o.id,
-          o.service_id,
-          o.client_id,
-          o.freelancer_id,
-          o.title,
-          o.price,
-          o.client_message,
-          o.freelancer_message,
-          o.status,
-          o.created_at,
-          o.updated_at,
-          o.accepted_at,
-          o.started_at,
-          o.delivered_at,
-          o.completed_at,
-          o.cancelled_at,
-          c.full_name AS client_name,
-          c.email AS client_email,
-          f.full_name AS freelancer_name,
-          f.email AS freelancer_email
-        FROM service_orders o
-        INNER JOIN users c
-          ON c.id = o.client_id
-        INNER JOIN users f
-          ON f.id = o.freelancer_id
-        WHERE o.id = ?
-        LIMIT 1
-      `)
-      .bind(orderId)
-      .first();
+  const order = await env.DB
+    .prepare(`
+      SELECT
+        o.id,
+        o.service_id,
+        o.client_id,
+        o.freelancer_id,
+        o.title,
+        o.price,
+        o.client_message,
+        o.freelancer_message,
+        o.status,
+        o.created_at,
+        o.updated_at,
+        o.accepted_at,
+        o.started_at,
+        o.delivered_at,
+        o.completed_at,
+        o.cancelled_at,
+        c.full_name AS client_name,
+        c.email AS client_email,
+        f.full_name AS freelancer_name,
+        f.email AS freelancer_email
+      FROM service_orders o
+      INNER JOIN users c
+      ON c.id = o.client_id
+      INNER JOIN users f
+      ON f.id = o.freelancer_id
+      WHERE o.id = ?
+      LIMIT 1
+    `)
+    .bind(orderId)
+    .first();
 
   if (!order) {
     return json({
@@ -1338,10 +1298,12 @@ async function getServiceOrder(
   }
 
   const isClient =
-    Number(order.client_id) === Number(user.id);
+    Number(order.client_id) ===
+    Number(user.id);
 
   const isFreelancer =
-    Number(order.freelancer_id) === Number(user.id);
+    Number(order.freelancer_id) ===
+    Number(user.id);
 
   if (!isClient && !isFreelancer) {
     return json({
@@ -1386,35 +1348,36 @@ async function createNotification(
       return null;
     }
 
-    const result =
-      await env.DB
-        .prepare(`
-          INSERT INTO notifications
-          (
-            user_id,
-            type,
-            title,
-            message,
-            project_id,
-            delivery_id,
-            proposal_id,
-            is_read
-          )
-          VALUES (?, ?, ?, ?, ?, ?, ?, 0)
-        `)
-        .bind(
-          Number(userId),
-          cleanText(type),
-          cleanText(title),
-          cleanText(message),
-          projectId ? Number(projectId) : null,
-          deliveryId ? Number(deliveryId) : null,
-          proposalId ? Number(proposalId) : null
+    const result = await env.DB
+      .prepare(`
+        INSERT INTO notifications
+        (
+          user_id,
+          type,
+          title,
+          message,
+          project_id,
+          delivery_id,
+          proposal_id,
+          is_read
         )
-        .run();
+        VALUES (?, ?, ?, ?, ?, ?, ?, 0)
+      `)
+      .bind(
+        Number(userId),
+        cleanText(type),
+        cleanText(title),
+        cleanText(message),
+        projectId ? Number(projectId) : null,
+        deliveryId ? Number(deliveryId) : null,
+        proposalId ? Number(proposalId) : null
+      )
+      .run();
 
     if (!result.success) {
-      console.error("Notification insert failed");
+      console.error(
+        "Notification insert failed"
+      );
       return null;
     }
 
@@ -1435,11 +1398,10 @@ async function getNotifications(
   request,
   env
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -1448,27 +1410,26 @@ async function getNotifications(
     }, 401);
   }
 
-  const result =
-    await env.DB
-      .prepare(`
-        SELECT
-          id,
-          user_id,
-          type,
-          title,
-          message,
-          project_id,
-          delivery_id,
-          proposal_id,
-          is_read,
-          created_at
-        FROM notifications
-        WHERE user_id = ?
-        ORDER BY id DESC
-        LIMIT 50
-      `)
-      .bind(user.id)
-      .all();
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        user_id,
+        type,
+        title,
+        message,
+        project_id,
+        delivery_id,
+        proposal_id,
+        is_read,
+        created_at
+      FROM notifications
+      WHERE user_id = ?
+      ORDER BY id DESC
+      LIMIT 50
+    `)
+    .bind(user.id)
+    .all();
 
   const notifications =
     (result.results || []).map(
@@ -1485,16 +1446,15 @@ async function getNotifications(
       })
     );
 
-  const unreadResult =
-    await env.DB
-      .prepare(`
-        SELECT COUNT(*) AS count
-        FROM notifications
-        WHERE user_id = ?
-          AND is_read = 0
-      `)
-      .bind(user.id)
-      .first();
+  const unreadResult = await env.DB
+    .prepare(`
+      SELECT COUNT(*) AS count
+      FROM notifications
+      WHERE user_id = ?
+      AND is_read = 0
+    `)
+    .bind(user.id)
+    .first();
 
   return json({
     success: true,
@@ -1510,11 +1470,10 @@ async function markNotificationRead(
   env,
   notificationId
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -1533,22 +1492,23 @@ async function markNotificationRead(
     }, 400);
   }
 
-  const result =
-    await env.DB
-      .prepare(`
-        UPDATE notifications
-        SET is_read = 1
-        WHERE id = ?
-          AND user_id = ?
-      `)
-      .bind(
-        notificationId,
-        user.id
-      )
-      .run();
+  const result = await env.DB
+    .prepare(`
+      UPDATE notifications
+      SET is_read = 1
+      WHERE id = ?
+      AND user_id = ?
+    `)
+    .bind(
+      notificationId,
+      user.id
+    )
+    .run();
 
   if (!result.success) {
-    throw new Error("تعذر تحديث الإشعار");
+    throw new Error(
+      "تعذر تحديث الإشعار"
+    );
   }
 
   return json({
@@ -1562,11 +1522,10 @@ async function markAllNotificationsRead(
   request,
   env
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -1575,19 +1534,20 @@ async function markAllNotificationsRead(
     }, 401);
   }
 
-  const result =
-    await env.DB
-      .prepare(`
-        UPDATE notifications
-        SET is_read = 1
-        WHERE user_id = ?
-          AND is_read = 0
-      `)
-      .bind(user.id)
-      .run();
+  const result = await env.DB
+    .prepare(`
+      UPDATE notifications
+      SET is_read = 1
+      WHERE user_id = ?
+      AND is_read = 0
+    `)
+    .bind(user.id)
+    .run();
 
   if (!result.success) {
-    throw new Error("تعذر تحديث الإشعارات");
+    throw new Error(
+      "تعذر تحديث الإشعارات"
+    );
   }
 
   return json({
@@ -1605,11 +1565,10 @@ async function getDashboardStats(
   request,
   env
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -1618,130 +1577,158 @@ async function getDashboardStats(
     }, 401);
   }
 
-  if (user.role === "client") {
-    const results =
-      await env.DB.batch([
+  const results = await env.DB.batch([
 
-        env.DB.prepare(`
-          SELECT COUNT(*) AS count
-          FROM projects
-          WHERE user_id = ?
-        `).bind(user.id),
+    // المشاريع التي أنشأها المستخدم
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM projects
+      WHERE user_id = ?
+    `).bind(user.id),
 
-        env.DB.prepare(`
-          SELECT COUNT(*) AS count
-          FROM projects
-          WHERE user_id = ?
-            AND status = 'open'
-        `).bind(user.id),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM projects
+      WHERE user_id = ?
+      AND status = 'open'
+    `).bind(user.id),
 
-        env.DB.prepare(`
-          SELECT COUNT(*) AS count
-          FROM projects
-          WHERE user_id = ?
-            AND status = 'in_progress'
-        `).bind(user.id),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM projects
+      WHERE user_id = ?
+      AND status = 'in_progress'
+    `).bind(user.id),
 
-        env.DB.prepare(`
-          SELECT COUNT(*) AS count
-          FROM projects
-          WHERE user_id = ?
-            AND status = 'completed'
-        `).bind(user.id)
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM projects
+      WHERE user_id = ?
+      AND status = 'completed'
+    `).bind(user.id),
 
-      ]);
+    // العروض التي قدمها المستخدم
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM proposals
+      WHERE freelancer_id = ?
+    `).bind(user.id),
 
-    return json({
-      success: true,
-      role: "client",
-      stats: {
-        total_projects:
-          Number(
-            results[0]?.results?.[0]?.count || 0
-          ),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM proposals
+      WHERE freelancer_id = ?
+      AND status = 'pending'
+    `).bind(user.id),
 
-        open_projects:
-          Number(
-            results[1]?.results?.[0]?.count || 0
-          ),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM proposals
+      WHERE freelancer_id = ?
+      AND status = 'accepted'
+    `).bind(user.id),
 
-        in_progress_projects:
-          Number(
-            results[2]?.results?.[0]?.count || 0
-          ),
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM proposals
+      WHERE freelancer_id = ?
+      AND status = 'rejected'
+    `).bind(user.id),
 
-        completed_projects:
-          Number(
-            results[3]?.results?.[0]?.count || 0
-          )
-      }
-    });
-  }
+    // الخدمات
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM services
+      WHERE user_id = ?
+    `).bind(user.id),
 
-  if (user.role === "freelancer") {
-    const results =
-      await env.DB.batch([
+    // طلبات الخدمات التي قام بها المستخدم
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM service_orders
+      WHERE client_id = ?
+    `).bind(user.id),
 
-        env.DB.prepare(`
-          SELECT COUNT(*) AS count
-          FROM proposals
-          WHERE freelancer_id = ?
-        `).bind(user.id),
+    // الطلبات الواردة على خدماته
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM service_orders
+      WHERE freelancer_id = ?
+    `).bind(user.id),
 
-        env.DB.prepare(`
-          SELECT COUNT(*) AS count
-          FROM proposals
-          WHERE freelancer_id = ?
-            AND status = 'pending'
-        `).bind(user.id),
-
-        env.DB.prepare(`
-          SELECT COUNT(*) AS count
-          FROM proposals
-          WHERE freelancer_id = ?
-            AND status = 'accepted'
-        `).bind(user.id),
-
-        env.DB.prepare(`
-          SELECT COUNT(*) AS count
-          FROM proposals
-          WHERE freelancer_id = ?
-            AND status = 'rejected'
-        `).bind(user.id)
-
-      ]);
-
-    return json({
-      success: true,
-      role: "freelancer",
-      stats: {
-        total_proposals:
-          Number(
-            results[0]?.results?.[0]?.count || 0
-          ),
-
-        pending_proposals:
-          Number(
-            results[1]?.results?.[0]?.count || 0
-          ),
-
-        accepted_proposals:
-          Number(
-            results[2]?.results?.[0]?.count || 0
-          ),
-
-        rejected_proposals:
-          Number(
-            results[3]?.results?.[0]?.count || 0
-          )
-      }
-    });
-  }
+    // الأعمال المنشورة
+    env.DB.prepare(`
+      SELECT COUNT(*) AS count
+      FROM portfolio
+      WHERE user_id = ?
+    `).bind(user.id)
+  ]);
 
   return json({
-    success: false,
-    error: "نوع الحساب غير معروف"
-  }, 400);
+    success: true,
+    role: "user",
+    stats: {
+      total_projects:
+        Number(
+          results[0]?.results?.[0]?.count || 0
+        ),
+
+      open_projects:
+        Number(
+          results[1]?.results?.[0]?.count || 0
+        ),
+
+      in_progress_projects:
+        Number(
+          results[2]?.results?.[0]?.count || 0
+        ),
+
+      completed_projects:
+        Number(
+          results[3]?.results?.[0]?.count || 0
+        ),
+
+      total_proposals:
+        Number(
+          results[4]?.results?.[0]?.count || 0
+        ),
+
+      pending_proposals:
+        Number(
+          results[5]?.results?.[0]?.count || 0
+        ),
+
+      accepted_proposals:
+        Number(
+          results[6]?.results?.[0]?.count || 0
+        ),
+
+      rejected_proposals:
+        Number(
+          results[7]?.results?.[0]?.count || 0
+        ),
+
+      total_services:
+        Number(
+          results[8]?.results?.[0]?.count || 0
+        ),
+
+      total_service_orders:
+        Number(
+          results[9]?.results?.[0]?.count || 0
+        ),
+
+      total_service_requests:
+        Number(
+          results[10]?.results?.[0]?.count || 0
+        ),
+
+      total_portfolio:
+        Number(
+          results[11]?.results?.[0]?.count || 0
+        )
+    }
+  });
 }
 
 
@@ -1753,11 +1740,10 @@ async function getProjects(
   request,
   env
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -1766,94 +1752,102 @@ async function getProjects(
     }, 401);
   }
 
-  let result;
+  const ownResult = await env.DB
+    .prepare(`
+      SELECT
+        p.id,
+        p.user_id,
+        p.title,
+        p.description,
+        p.budget,
+        p.category,
+        p.status,
+        p.created_at,
+        p.updated_at,
+        u.full_name AS owner_name
+      FROM projects p
+      LEFT JOIN users u
+      ON u.id = p.user_id
+      WHERE p.user_id = ?
+      ORDER BY p.id DESC
+    `)
+    .bind(user.id)
+    .all();
 
-  if (user.role === "client") {
-    result =
-      await env.DB
-        .prepare(`
-          SELECT
-            p.id,
-            p.user_id,
-            p.title,
-            p.description,
-            p.budget,
-            p.category,
-            p.status,
-            p.created_at,
-            p.updated_at,
-            u.full_name AS owner_name
-          FROM projects p
-          LEFT JOIN users u
-            ON u.id = p.user_id
-          WHERE p.user_id = ?
-          ORDER BY p.id DESC
-        `)
-        .bind(user.id)
-        .all();
+  const openResult = await env.DB
+    .prepare(`
+      SELECT
+        p.id,
+        p.user_id,
+        p.title,
+        p.description,
+        p.budget,
+        p.category,
+        p.status,
+        p.created_at,
+        p.updated_at,
+        u.full_name AS owner_name
+      FROM projects p
+      LEFT JOIN users u
+      ON u.id = p.user_id
+      WHERE p.status = 'open'
+      AND p.user_id != ?
+      ORDER BY p.id DESC
+    `)
+    .bind(user.id)
+    .all();
 
-  } else if (user.role === "freelancer") {
-    result =
-      await env.DB
-        .prepare(`
-          SELECT
-            p.id,
-            p.user_id,
-            p.title,
-            p.description,
-            p.budget,
-            p.category,
-            p.status,
-            p.created_at,
-            p.updated_at,
-            u.full_name AS owner_name
-          FROM projects p
-          LEFT JOIN users u
-            ON u.id = p.user_id
-          WHERE p.status = 'open'
-            AND p.user_id != ?
-          ORDER BY p.id DESC
-        `)
-        .bind(user.id)
-        .all();
+  const myProjects =
+    (ownResult.results || []).map(
+      project => ({
+        ...project,
+        is_owner: true
+      })
+    );
 
-  } else {
-    return json({
-      success: false,
-      error: "نوع الحساب غير معروف"
-    }, 400);
-  }
+  const openProjects =
+    (openResult.results || []).map(
+      project => ({
+        ...project,
+        is_owner: false
+      })
+    );
+
+  const projects = [
+    ...myProjects,
+    ...openProjects
+  ];
 
   return json({
     success: true,
-    projects: result.results || [],
-    count: result.results?.length || 0
+    projects,
+    my_projects: myProjects,
+    open_projects: openProjects,
+    count: projects.length,
+    my_projects_count: myProjects.length,
+    open_projects_count: openProjects.length
   });
 }
 
+
+// ================================
+// CREATE PROJECT
+// ================================
 
 async function createProject(
   request,
   env
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
       success: false,
       error: "يجب تسجيل الدخول أولا"
     }, 401);
-  }
-
-  if (user.role !== "client") {
-    return json({
-      success: false,
-      error: "إنشاء المشاريع متاح لأصحاب المشاريع فقط"
-    }, 403);
   }
 
   let body;
@@ -1917,55 +1911,55 @@ async function createProject(
     }, 400);
   }
 
-  const result =
-    await env.DB
-      .prepare(`
-        INSERT INTO projects
-        (
-          user_id,
-          title,
-          description,
-          budget,
-          category,
-          status
-        )
-        VALUES (?, ?, ?, ?, ?, 'open')
-      `)
-      .bind(
-        user.id,
+  const result = await env.DB
+    .prepare(`
+      INSERT INTO projects
+      (
+        user_id,
         title,
         description,
         budget,
-        category
+        category,
+        status
       )
-      .run();
+      VALUES (?, ?, ?, ?, ?, 'open')
+    `)
+    .bind(
+      user.id,
+      title,
+      description,
+      budget,
+      category
+    )
+    .run();
 
   if (!result.success) {
-    throw new Error("تعذر إنشاء المشروع");
+    throw new Error(
+      "تعذر إنشاء المشروع"
+    );
   }
 
   const projectId =
     result.meta?.last_row_id;
 
-  const project =
-    await env.DB
-      .prepare(`
-        SELECT
-          id,
-          user_id,
-          title,
-          description,
-          budget,
-          category,
-          status,
-          created_at,
-          updated_at
-        FROM projects
-        WHERE id = ?
-        LIMIT 1
-      `)
-      .bind(projectId)
-      .first();
+  const project = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        user_id,
+        title,
+        description,
+        budget,
+        category,
+        status,
+        created_at,
+        updated_at
+      FROM projects
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
 
   return json({
     success: true,
@@ -1975,16 +1969,19 @@ async function createProject(
 }
 
 
+// ================================
+// GET PROJECT
+// ================================
+
 async function getProject(
   request,
   env,
   projectId
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -2003,28 +2000,27 @@ async function getProject(
     }, 400);
   }
 
-  const project =
-    await env.DB
-      .prepare(`
-        SELECT
-          p.id,
-          p.user_id,
-          p.title,
-          p.description,
-          p.budget,
-          p.category,
-          p.status,
-          p.created_at,
-          p.updated_at,
-          u.full_name AS owner_name
-        FROM projects p
-        LEFT JOIN users u
-          ON u.id = p.user_id
-        WHERE p.id = ?
-        LIMIT 1
-      `)
-      .bind(projectId)
-      .first();
+  const project = await env.DB
+    .prepare(`
+      SELECT
+        p.id,
+        p.user_id,
+        p.title,
+        p.description,
+        p.budget,
+        p.category,
+        p.status,
+        p.created_at,
+        p.updated_at,
+        u.full_name AS owner_name
+      FROM projects p
+      LEFT JOIN users u
+      ON u.id = p.user_id
+      WHERE p.id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
 
   if (!project) {
     return json({
@@ -2043,7 +2039,6 @@ async function getProject(
     projectOwnerId === currentUserId;
 
   const canApply =
-    user.role === "freelancer" &&
     !isOwner &&
     project.status === "open";
 
@@ -2058,7 +2053,6 @@ async function getProject(
   });
 }
 
-
 // ================================
 // PROPOSALS
 // ================================
@@ -2067,24 +2061,16 @@ async function createProposal(
   request,
   env
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
       success: false,
       error: "يجب تسجيل الدخول أولا"
     }, 401);
-  }
-
-  if (user.role !== "freelancer") {
-    return json({
-      success: false,
-      error: "تقديم العروض متاح للمستقلين فقط"
-    }, 403);
   }
 
   let body;
@@ -2098,10 +2084,21 @@ async function createProposal(
     }, 400);
   }
 
-  const projectId = Number(body.project_id);
-  const price = Number(body.price);
-  const deliveryDays = Number(body.delivery_days);
-  const message = cleanText(body.message);
+  const projectId = Number(
+    body.project_id
+  );
+
+  const price = Number(
+    body.price
+  );
+
+  const deliveryDays = Number(
+    body.delivery_days
+  );
+
+  const message = cleanText(
+    body.message
+  );
 
   if (
     !Number.isInteger(projectId) ||
@@ -2147,20 +2144,19 @@ async function createProposal(
     }, 400);
   }
 
-  const project =
-    await env.DB
-      .prepare(`
-        SELECT
-          id,
-          user_id,
-          title,
-          status
-        FROM projects
-        WHERE id = ?
-        LIMIT 1
-      `)
-      .bind(projectId)
-      .first();
+  const project = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        user_id,
+        title,
+        status
+      FROM projects
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
 
   if (!project) {
     return json({
@@ -2186,20 +2182,19 @@ async function createProposal(
     }, 400);
   }
 
-  const existing =
-    await env.DB
-      .prepare(`
-        SELECT id
-        FROM proposals
-        WHERE project_id = ?
-          AND freelancer_id = ?
-        LIMIT 1
-      `)
-      .bind(
-        projectId,
-        user.id
-      )
-      .first();
+  const existing = await env.DB
+    .prepare(`
+      SELECT id
+      FROM proposals
+      WHERE project_id = ?
+      AND freelancer_id = ?
+      LIMIT 1
+    `)
+    .bind(
+      projectId,
+      user.id
+    )
+    .first();
 
   if (existing) {
     return json({
@@ -2208,58 +2203,58 @@ async function createProposal(
     }, 409);
   }
 
-  const result =
-    await env.DB
-      .prepare(`
-        INSERT INTO proposals
-        (
-          project_id,
-          freelancer_id,
-          price,
-          delivery_days,
-          message,
-          status
-        )
-        VALUES (?, ?, ?, ?, ?, 'pending')
-      `)
-      .bind(
-        projectId,
-        user.id,
+  const result = await env.DB
+    .prepare(`
+      INSERT INTO proposals
+      (
+        project_id,
+        freelancer_id,
         price,
-        deliveryDays,
-        message
+        delivery_days,
+        message,
+        status
       )
-      .run();
+      VALUES (?, ?, ?, ?, ?, 'pending')
+    `)
+    .bind(
+      projectId,
+      user.id,
+      price,
+      deliveryDays,
+      message
+    )
+    .run();
 
   if (!result.success) {
-    throw new Error("تعذر إنشاء العرض");
+    throw new Error(
+      "تعذر إنشاء العرض"
+    );
   }
 
   const proposalId =
     result.meta?.last_row_id;
 
-  const proposal =
-    await env.DB
-      .prepare(`
-        SELECT
-          p.id,
-          p.project_id,
-          p.freelancer_id,
-          p.price,
-          p.delivery_days,
-          p.message,
-          p.status,
-          p.created_at,
-          p.updated_at,
-          u.full_name AS freelancer_name
-        FROM proposals p
-        LEFT JOIN users u
-          ON u.id = p.freelancer_id
-        WHERE p.id = ?
-        LIMIT 1
-      `)
-      .bind(proposalId)
-      .first();
+  const proposal = await env.DB
+    .prepare(`
+      SELECT
+        p.id,
+        p.project_id,
+        p.freelancer_id,
+        p.price,
+        p.delivery_days,
+        p.message,
+        p.status,
+        p.created_at,
+        p.updated_at,
+        u.full_name AS freelancer_name
+      FROM proposals p
+      LEFT JOIN users u
+      ON u.id = p.freelancer_id
+      WHERE p.id = ?
+      LIMIT 1
+    `)
+    .bind(proposalId)
+    .first();
 
   await createNotification(env, {
     userId: project.user_id,
@@ -2283,11 +2278,10 @@ async function getMyProposals(
   request,
   env
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -2296,30 +2290,29 @@ async function getMyProposals(
     }, 401);
   }
 
-  const result =
-    await env.DB
-      .prepare(`
-        SELECT
-          p.id,
-          p.project_id,
-          p.freelancer_id,
-          p.price,
-          p.delivery_days,
-          p.message,
-          p.status,
-          p.created_at,
-          p.updated_at,
-          pr.title AS project_title,
-          pr.budget AS project_budget,
-          pr.category AS project_category
-        FROM proposals p
-        INNER JOIN projects pr
-          ON pr.id = p.project_id
-        WHERE p.freelancer_id = ?
-        ORDER BY p.id DESC
-      `)
-      .bind(user.id)
-      .all();
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        p.id,
+        p.project_id,
+        p.freelancer_id,
+        p.price,
+        p.delivery_days,
+        p.message,
+        p.status,
+        p.created_at,
+        p.updated_at,
+        pr.title AS project_title,
+        pr.budget AS project_budget,
+        pr.category AS project_category
+      FROM proposals p
+      INNER JOIN projects pr
+      ON pr.id = p.project_id
+      WHERE p.freelancer_id = ?
+      ORDER BY p.id DESC
+    `)
+    .bind(user.id)
+    .all();
 
   return json({
     success: true,
@@ -2334,11 +2327,10 @@ async function getProjectProposals(
   env,
   projectId
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -2357,20 +2349,19 @@ async function getProjectProposals(
     }, 400);
   }
 
-  const project =
-    await env.DB
-      .prepare(`
-        SELECT
-          id,
-          user_id,
-          title,
-          status
-        FROM projects
-        WHERE id = ?
-        LIMIT 1
-      `)
-      .bind(projectId)
-      .first();
+  const project = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        user_id,
+        title,
+        status
+      FROM projects
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
 
   if (!project) {
     return json({
@@ -2389,29 +2380,28 @@ async function getProjectProposals(
     }, 403);
   }
 
-  const result =
-    await env.DB
-      .prepare(`
-        SELECT
-          p.id,
-          p.project_id,
-          p.freelancer_id,
-          p.price,
-          p.delivery_days,
-          p.message,
-          p.status,
-          p.created_at,
-          p.updated_at,
-          u.full_name AS freelancer_name,
-          u.email AS freelancer_email
-        FROM proposals p
-        INNER JOIN users u
-          ON u.id = p.freelancer_id
-        WHERE p.project_id = ?
-        ORDER BY p.id DESC
-      `)
-      .bind(projectId)
-      .all();
+  const result = await env.DB
+    .prepare(`
+      SELECT
+        p.id,
+        p.project_id,
+        p.freelancer_id,
+        p.price,
+        p.delivery_days,
+        p.message,
+        p.status,
+        p.created_at,
+        p.updated_at,
+        u.full_name AS freelancer_name,
+        u.email AS freelancer_email
+      FROM proposals p
+      INNER JOIN users u
+      ON u.id = p.freelancer_id
+      WHERE p.project_id = ?
+      ORDER BY p.id DESC
+    `)
+    .bind(projectId)
+    .all();
 
   return json({
     success: true,
@@ -2427,11 +2417,10 @@ async function updateProposalStatus(
   env,
   proposalId
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -2461,7 +2450,9 @@ async function updateProposalStatus(
     }, 400);
   }
 
-  const status = cleanText(body.status);
+  const status = cleanText(
+    body.status
+  );
 
   const allowedStatuses = [
     "pending",
@@ -2469,34 +2460,35 @@ async function updateProposalStatus(
     "rejected"
   ];
 
-  if (!allowedStatuses.includes(status)) {
+  if (
+    !allowedStatuses.includes(status)
+  ) {
     return json({
       success: false,
       error: "حالة العرض غير صحيحة"
     }, 400);
   }
 
-  const proposal =
-    await env.DB
-      .prepare(`
-        SELECT
-          p.id,
-          p.project_id,
-          p.freelancer_id,
-          p.price,
-          p.delivery_days,
-          p.status,
-          pr.title AS project_title,
-          pr.user_id AS project_owner_id,
-          pr.status AS project_status
-        FROM proposals p
-        INNER JOIN projects pr
-          ON pr.id = p.project_id
-        WHERE p.id = ?
-        LIMIT 1
-      `)
-      .bind(proposalId)
-      .first();
+  const proposal = await env.DB
+    .prepare(`
+      SELECT
+        p.id,
+        p.project_id,
+        p.freelancer_id,
+        p.price,
+        p.delivery_days,
+        p.status,
+        pr.title AS project_title,
+        pr.user_id AS project_owner_id,
+        pr.status AS project_status
+      FROM proposals p
+      INNER JOIN projects pr
+      ON pr.id = p.project_id
+      WHERE p.id = ?
+      LIMIT 1
+    `)
+    .bind(proposalId)
+    .first();
 
   if (!proposal) {
     return json({
@@ -2515,7 +2507,9 @@ async function updateProposalStatus(
     }, 403);
   }
 
-  if (proposal.project_status !== "open") {
+  if (
+    proposal.project_status !== "open"
+  ) {
     return json({
       success: false,
       error: "المشروع لم يعد مفتوحا لتغيير العروض"
@@ -2523,6 +2517,7 @@ async function updateProposalStatus(
   }
 
   if (status === "accepted") {
+
     const existingExecution =
       await env.DB
         .prepare(`
@@ -2541,91 +2536,87 @@ async function updateProposalStatus(
       }, 409);
     }
 
-    const dueAt =
-      new Date(
-        Date.now() +
-        Number(proposal.delivery_days) *
-        24 *
-        60 *
-        60 *
-        1000
-      ).toISOString();
+    const dueAt = new Date(
+      Date.now() +
+      Number(proposal.delivery_days) *
+      24 *
+      60 *
+      60 *
+      1000
+    ).toISOString();
 
-    const results =
-      await env.DB.batch([
+    const results = await env.DB.batch([
+      env.DB.prepare(`
+        UPDATE proposals
+        SET
+          status = 'rejected',
+          updated_at = CURRENT_TIMESTAMP
+        WHERE project_id = ?
+        AND id != ?
+        AND status = 'pending'
+      `).bind(
+        proposal.project_id,
+        proposalId
+      ),
 
-        env.DB.prepare(`
-          UPDATE proposals
-          SET
-            status = 'rejected',
-            updated_at = CURRENT_TIMESTAMP
-          WHERE project_id = ?
-            AND id != ?
-            AND status = 'pending'
-        `).bind(
-          proposal.project_id,
-          proposalId
-        ),
+      env.DB.prepare(`
+        UPDATE proposals
+        SET
+          status = 'accepted',
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `).bind(proposalId),
 
-        env.DB.prepare(`
-          UPDATE proposals
-          SET
-            status = 'accepted',
-            updated_at = CURRENT_TIMESTAMP
-          WHERE id = ?
-        `).bind(proposalId),
+      env.DB.prepare(`
+        UPDATE projects
+        SET
+          status = 'in_progress',
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+        AND status = 'open'
+      `).bind(proposal.project_id),
 
-        env.DB.prepare(`
-          UPDATE projects
-          SET
-            status = 'in_progress',
-            updated_at = CURRENT_TIMESTAMP
-          WHERE id = ?
-            AND status = 'open'
-        `).bind(proposal.project_id),
-
-        env.DB.prepare(`
-          INSERT INTO project_executions
-          (
-            project_id,
-            proposal_id,
-            freelancer_id,
-            due_at,
-            status
-          )
-          VALUES (?, ?, ?, ?, 'in_progress')
-        `).bind(
-          proposal.project_id,
-          proposalId,
-          proposal.freelancer_id,
-          dueAt
-        ),
-
-        env.DB.prepare(`
-          INSERT INTO project_events
-          (
-            project_id,
-            execution_id,
-            user_id,
-            event_type,
-            message
-          )
-          SELECT
-            ?,
-            id,
-            ?,
-            'execution_started',
-            'تم قبول العرض وبدء تنفيذ المشروع'
-          FROM project_executions
-          WHERE project_id = ?
-          LIMIT 1
-        `).bind(
-          proposal.project_id,
-          user.id,
-          proposal.project_id
+      env.DB.prepare(`
+        INSERT INTO project_executions
+        (
+          project_id,
+          proposal_id,
+          freelancer_id,
+          due_at,
+          status
         )
+        VALUES (?, ?, ?, ?, 'in_progress')
+      `).bind(
+        proposal.project_id,
+        proposalId,
+        proposal.freelancer_id,
+        dueAt
+      ),
 
-      ]);
+      env.DB.prepare(`
+        INSERT INTO project_events
+        (
+          project_id,
+          execution_id,
+          user_id,
+          event_type,
+          message
+        )
+        SELECT
+          ?,
+          id,
+          ?,
+          'execution_started',
+          'تم قبول العرض وبدء تنفيذ المشروع'
+        FROM project_executions
+        WHERE project_id = ?
+        LIMIT 1
+      `).bind(
+        proposal.project_id,
+        user.id,
+        proposal.project_id
+      )
+    ]);
 
     for (const result of results) {
       if (
@@ -2649,20 +2640,20 @@ async function updateProposalStatus(
     });
 
   } else {
-    const result =
-      await env.DB
-        .prepare(`
-          UPDATE proposals
-          SET
-            status = ?,
-            updated_at = CURRENT_TIMESTAMP
-          WHERE id = ?
-        `)
-        .bind(
-          status,
-          proposalId
-        )
-        .run();
+
+    const result = await env.DB
+      .prepare(`
+        UPDATE proposals
+        SET
+          status = ?,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `)
+      .bind(
+        status,
+        proposalId
+      )
+      .run();
 
     if (!result.success) {
       throw new Error(
@@ -2683,25 +2674,24 @@ async function updateProposalStatus(
     }
   }
 
-  const updated =
-    await env.DB
-      .prepare(`
-        SELECT
-          id,
-          project_id,
-          freelancer_id,
-          price,
-          delivery_days,
-          message,
-          status,
-          created_at,
-          updated_at
-        FROM proposals
-        WHERE id = ?
-        LIMIT 1
-      `)
-      .bind(proposalId)
-      .first();
+  const updated = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        project_id,
+        freelancer_id,
+        price,
+        delivery_days,
+        message,
+        status,
+        created_at,
+        updated_at
+      FROM proposals
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(proposalId)
+    .first();
 
   return json({
     success: true,
@@ -2724,44 +2714,42 @@ async function ensureProjectExecution(
   env,
   projectId
 ) {
-  const existing =
-    await env.DB
-      .prepare(`
-        SELECT
-          e.id,
-          e.project_id,
-          e.proposal_id,
-          e.freelancer_id,
-          e.start_at,
-          e.due_at,
-          e.status,
-          e.completed_at,
-          e.created_at,
-          e.updated_at
-        FROM project_executions e
-        WHERE e.project_id = ?
-        LIMIT 1
-      `)
-      .bind(projectId)
-      .first();
+  const existing = await env.DB
+    .prepare(`
+      SELECT
+        e.id,
+        e.project_id,
+        e.proposal_id,
+        e.freelancer_id,
+        e.start_at,
+        e.due_at,
+        e.status,
+        e.completed_at,
+        e.created_at,
+        e.updated_at
+      FROM project_executions e
+      WHERE e.project_id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
 
   if (existing) {
     return existing;
   }
 
-  const project =
-    await env.DB
-      .prepare(`
-        SELECT
-          id,
-          user_id,
-          status
-        FROM projects
-        WHERE id = ?
-        LIMIT 1
-      `)
-      .bind(projectId)
-      .first();
+  const project = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        user_id,
+        status
+      FROM projects
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
 
   if (!project) {
     return null;
@@ -2771,37 +2759,35 @@ async function ensureProjectExecution(
     return null;
   }
 
-  const acceptedProposal =
-    await env.DB
-      .prepare(`
-        SELECT
-          id,
-          project_id,
-          freelancer_id,
-          delivery_days,
-          status
-        FROM proposals
-        WHERE project_id = ?
-          AND status = 'accepted'
-        ORDER BY id DESC
-        LIMIT 1
-      `)
-      .bind(projectId)
-      .first();
+  const acceptedProposal = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        project_id,
+        freelancer_id,
+        delivery_days,
+        status
+      FROM proposals
+      WHERE project_id = ?
+      AND status = 'accepted'
+      ORDER BY id DESC
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
 
   if (!acceptedProposal) {
     return null;
   }
 
-  const dueAt =
-    new Date(
-      Date.now() +
-      Number(acceptedProposal.delivery_days) *
-      24 *
-      60 *
-      60 *
-      1000
-    ).toISOString();
+  const dueAt = new Date(
+    Date.now() +
+    Number(acceptedProposal.delivery_days) *
+    24 *
+    60 *
+    60 *
+    1000
+  ).toISOString();
 
   const existingByProposal =
     await env.DB
@@ -2828,60 +2814,28 @@ async function ensureProjectExecution(
     return existingByProposal;
   }
 
-  const result =
-    await env.DB
-      .prepare(`
-        INSERT INTO project_executions
-        (
-          project_id,
-          proposal_id,
-          freelancer_id,
-          due_at,
-          status
-        )
-        VALUES (?, ?, ?, ?, 'in_progress')
-      `)
-      .bind(
-        projectId,
-        acceptedProposal.id,
-        acceptedProposal.freelancer_id,
-        dueAt
+  const result = await env.DB
+    .prepare(`
+      INSERT INTO project_executions
+      (
+        project_id,
+        proposal_id,
+        freelancer_id,
+        due_at,
+        status
       )
-      .run();
+      VALUES (?, ?, ?, ?, 'in_progress')
+    `)
+    .bind(
+      projectId,
+      acceptedProposal.id,
+      acceptedProposal.freancer_id,
+      dueAt
+    )
+    .run();
 
   if (!result.success) {
-    const retry =
-      await env.DB
-        .prepare(`
-          SELECT
-            id,
-            project_id,
-            proposal_id,
-            freelancer_id,
-            start_at,
-            due_at,
-            status,
-            completed_at,
-            created_at,
-            updated_at
-          FROM project_executions
-          WHERE project_id = ?
-          LIMIT 1
-        `)
-        .bind(projectId)
-        .first();
-
-    if (retry) {
-      return retry;
-    }
-
-    throw new Error(
-      "تعذر إنشاء تنفيذ المشروع"
-    );
-  }
-
-  const execution =
-    await env.DB
+    const retry = await env.DB
       .prepare(`
         SELECT
           id,
@@ -2900,6 +2854,35 @@ async function ensureProjectExecution(
       `)
       .bind(projectId)
       .first();
+
+    if (retry) {
+      return retry;
+    }
+
+    throw new Error(
+      "تعذر إنشاء تنفيذ المشروع"
+    );
+  }
+
+  const execution = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        project_id,
+        proposal_id,
+        freelancer_id,
+        start_at,
+        due_at,
+        status,
+        completed_at,
+        created_at,
+        updated_at
+      FROM project_executions
+      WHERE project_id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
 
   if (execution) {
     await env.DB
@@ -2932,11 +2915,10 @@ async function getProjectExecution(
   env,
   projectId
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
@@ -2955,20 +2937,19 @@ async function getProjectExecution(
     }, 400);
   }
 
-  const project =
-    await env.DB
-      .prepare(`
-        SELECT
-          id,
-          user_id,
-          title,
-          status
-        FROM projects
-        WHERE id = ?
-        LIMIT 1
-      `)
-      .bind(projectId)
-      .first();
+  const project = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        user_id,
+        title,
+        status
+      FROM projects
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
 
   if (!project) {
     return json({
@@ -3008,90 +2989,86 @@ async function getProjectExecution(
     }, 403);
   }
 
-  const proposal =
-    await env.DB
-      .prepare(`
-        SELECT
-          p.id,
-          p.project_id,
-          p.freelancer_id,
-          p.price,
-          p.delivery_days,
-          p.message,
-          p.status,
-          p.created_at,
-          p.updated_at,
-          u.full_name AS freelancer_name
-        FROM proposals p
-        LEFT JOIN users u
-          ON u.id = p.freelancer_id
-        WHERE p.id = ?
-        LIMIT 1
-      `)
-      .bind(execution.proposal_id)
-      .first();
+  const proposal = await env.DB
+    .prepare(`
+      SELECT
+        p.id,
+        p.project_id,
+        p.freelancer_id,
+        p.price,
+        p.delivery_days,
+        p.message,
+        p.status,
+        p.created_at,
+        p.updated_at,
+        u.full_name AS freelancer_name
+      FROM proposals p
+      LEFT JOIN users u
+      ON u.id = p.freelancer_id
+      WHERE p.id = ?
+      LIMIT 1
+    `)
+    .bind(execution.proposal_id)
+    .first();
 
-  const latestDelivery =
-    await env.DB
-      .prepare(`
-        SELECT
-          d.id,
-          d.execution_id,
-          d.freelancer_id,
-          d.version,
-          d.message,
-          d.file_url,
-          d.status,
-          d.created_at
-        FROM project_deliveries d
-        WHERE d.execution_id = ?
-        ORDER BY d.version DESC
-        LIMIT 1
-      `)
-      .bind(execution.id)
-      .first();
+  const latestDelivery = await env.DB
+    .prepare(`
+      SELECT
+        d.id,
+        d.execution_id,
+        d.freelancer_id,
+        d.version,
+        d.message,
+        d.file_url,
+        d.status,
+        d.created_at
+      FROM project_deliveries d
+      WHERE d.execution_id = ?
+      ORDER BY d.version DESC
+      LIMIT 1
+    `)
+    .bind(execution.id)
+    .first();
 
-  const revision =
-    await env.DB
-      .prepare(`
-        SELECT
-          r.id,
-          r.execution_id,
-          r.delivery_id,
-          r.client_id,
-          r.message,
-          r.status,
-          r.created_at,
-          r.resolved_at
-        FROM project_revision_requests r
-        WHERE r.execution_id = ?
-        ORDER BY r.id DESC
-        LIMIT 1
-      `)
-      .bind(execution.id)
-      .first();
+  const revision = await env.DB
+    .prepare(`
+      SELECT
+        r.id,
+        r.execution_id,
+        r.delivery_id,
+        r.client_id,
+        r.message,
+        r.status,
+        r.created_at,
+        r.resolved_at
+      FROM project_revision_requests r
+      WHERE r.execution_id = ?
+      ORDER BY r.id DESC
+      LIMIT 1
+    `)
+    .bind(execution.id)
+    .first();
 
-  const events =
-    await env.DB
-      .prepare(`
-        SELECT
-          e.id,
-          e.project_id,
-          e.execution_id,
-          e.user_id,
-          e.event_type,
-          e.message,
-          e.created_at,
-          u.full_name AS user_name
-        FROM project_events e
-        LEFT JOIN users u
-          ON u.id = e.user_id
-        WHERE e.project_id = ?
-        ORDER BY e.id DESC
-        LIMIT 50
-      `)
-      .bind(projectId)
-      .all();
+  const events = await env.DB
+    .prepare(`
+      SELECT
+        e.id,
+        e.project_id,
+        e.execution_id,
+        e.user_id,
+        e.event_type,
+        e.message,
+        e.created_at,
+        u.full_name AS user_name
+      FROM project_events e
+      LEFT JOIN users u
+      ON u.id = e.user_id
+      WHERE e.project_id = ?
+      ORDER BY e.id DESC
+      LIMIT 50
+    `)
+    .bind(projectId)
+    .all();
 
   return json({
     success: true,
@@ -3121,24 +3098,16 @@ async function createDelivery(
   env,
   projectId
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
       success: false,
       error: "يجب تسجيل الدخول أولا"
     }, 401);
-  }
-
-  if (user.role !== "freelancer") {
-    return json({
-      success: false,
-      error: "إرسال التسليم متاح للمستقل فقط"
-    }, 403);
   }
 
   if (
@@ -3162,8 +3131,13 @@ async function createDelivery(
     }, 400);
   }
 
-  const message = cleanText(body.message);
-  const fileUrl = cleanText(body.file_url);
+  const message = cleanText(
+    body.message
+  );
+
+  const fileUrl = cleanText(
+    body.file_url
+  );
 
   if (!message) {
     return json({
@@ -3219,51 +3193,50 @@ async function createDelivery(
     }, 400);
   }
 
-  const maxVersion =
-    await env.DB
-      .prepare(`
-        SELECT MAX(version) AS max_version
-        FROM project_deliveries
-        WHERE execution_id = ?
-      `)
-      .bind(execution.id)
-      .first();
+  const maxVersion = await env.DB
+    .prepare(`
+      SELECT MAX(version) AS max_version
+      FROM project_deliveries
+      WHERE execution_id = ?
+    `)
+    .bind(execution.id)
+    .first();
 
   const version =
     Number(maxVersion?.max_version || 0) + 1;
 
-  const result =
-    await env.DB
-      .prepare(`
-        INSERT INTO project_deliveries
-        (
-          execution_id,
-          freelancer_id,
-          version,
-          message,
-          file_url,
-          status
-        )
-        VALUES (?, ?, ?, ?, ?, 'submitted')
-      `)
-      .bind(
-        execution.id,
-        user.id,
+  const result = await env.DB
+    .prepare(`
+      INSERT INTO project_deliveries
+      (
+        execution_id,
+        freelancer_id,
         version,
         message,
-        fileUrl || null
+        file_url,
+        status
       )
-      .run();
+      VALUES (?, ?, ?, ?, ?, 'submitted')
+    `)
+    .bind(
+      execution.id,
+      user.id,
+      version,
+      message,
+      fileUrl || null
+    )
+    .run();
 
   if (!result.success) {
-    throw new Error("تعذر إنشاء التسليم");
+    throw new Error(
+      "تعذر إنشاء التسليم"
+    );
   }
 
   const deliveryId =
     result.meta?.last_row_id;
 
   await env.DB.batch([
-
     env.DB.prepare(`
       UPDATE project_executions
       SET
@@ -3278,7 +3251,7 @@ async function createDelivery(
         status = 'resolved',
         resolved_at = CURRENT_TIMESTAMP
       WHERE execution_id = ?
-        AND status = 'open'
+      AND status = 'open'
     `).bind(execution.id),
 
     env.DB.prepare(`
@@ -3297,21 +3270,19 @@ async function createDelivery(
       user.id,
       `تم إرسال التسليم رقم ${version}`
     )
-
   ]);
 
-  const projectOwner =
-    await env.DB
-      .prepare(`
-        SELECT
-          p.user_id,
-          p.title
-        FROM projects p
-        WHERE p.id = ?
-        LIMIT 1
-      `)
-      .bind(projectId)
-      .first();
+  const projectOwner = await env.DB
+    .prepare(`
+      SELECT
+        p.user_id,
+        p.title
+      FROM projects p
+      WHERE p.id = ?
+      LIMIT 1
+    `)
+    .bind(projectId)
+    .first();
 
   if (projectOwner) {
     await createNotification(env, {
@@ -3333,24 +3304,23 @@ async function createDelivery(
     });
   }
 
-  const delivery =
-    await env.DB
-      .prepare(`
-        SELECT
-          id,
-          execution_id,
-          freelancer_id,
-          version,
-          message,
-          file_url,
-          status,
-          created_at
-        FROM project_deliveries
-        WHERE id = ?
-        LIMIT 1
-      `)
-      .bind(deliveryId)
-      .first();
+  const delivery = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        execution_id,
+        freelancer_id,
+        version,
+        message,
+        file_url,
+        status,
+        created_at
+      FROM project_deliveries
+      WHERE id = ?
+      LIMIT 1
+    `)
+    .bind(deliveryId)
+    .first();
 
   return json({
     success: true,
@@ -3362,7 +3332,6 @@ async function createDelivery(
   }, 201);
 }
 
-
 // ================================
 // ACCEPT DELIVERY
 // ================================
@@ -3372,24 +3341,16 @@ async function acceptDelivery(
   env,
   deliveryId
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
       success: false,
       error: "يجب تسجيل الدخول أولا"
     }, 401);
-  }
-
-  if (user.role !== "client") {
-    return json({
-      success: false,
-      error: "قبول التسليم متاح لصاحب المشروع فقط"
-    }, 403);
   }
 
   if (
@@ -3402,30 +3363,29 @@ async function acceptDelivery(
     }, 400);
   }
 
-  const delivery =
-    await env.DB
-      .prepare(`
-        SELECT
-          d.id,
-          d.execution_id,
-          d.freelancer_id,
-          d.version,
-          d.status AS delivery_status,
-          e.project_id,
-          e.status AS execution_status,
-          p.user_id AS project_owner_id,
-          p.title AS project_title,
-          p.status AS project_status
-        FROM project_deliveries d
-        INNER JOIN project_executions e
-          ON e.id = d.execution_id
-        INNER JOIN projects p
-          ON p.id = e.project_id
-        WHERE d.id = ?
-        LIMIT 1
-      `)
-      .bind(deliveryId)
-      .first();
+  const delivery = await env.DB
+    .prepare(`
+      SELECT
+        d.id,
+        d.execution_id,
+        d.freelancer_id,
+        d.version,
+        d.status AS delivery_status,
+        e.project_id,
+        e.status AS execution_status,
+        p.user_id AS project_owner_id,
+        p.title AS project_title,
+        p.status AS project_status
+      FROM project_deliveries d
+      INNER JOIN project_executions e
+      ON e.id = d.execution_id
+      INNER JOIN projects p
+      ON p.id = e.project_id
+      WHERE d.id = ?
+      LIMIT 1
+    `)
+    .bind(deliveryId)
+    .first();
 
   if (!delivery) {
     return json({
@@ -3444,97 +3404,100 @@ async function acceptDelivery(
     }, 403);
   }
 
-  if (delivery.execution_status === "completed") {
+  if (
+    delivery.execution_status === "completed"
+  ) {
     return json({
       success: false,
       error: "المشروع مكتمل بالفعل"
     }, 400);
   }
 
-  if (delivery.delivery_status !== "submitted") {
+  if (
+    delivery.delivery_status !== "submitted"
+  ) {
     return json({
       success: false,
       error: "هذا التسليم لا يمكن قبوله حاليا"
     }, 400);
   }
 
-  const results =
-    await env.DB.batch([
+  const results = await env.DB.batch([
+    env.DB.prepare(`
+      UPDATE project_deliveries
+      SET status = 'accepted'
+      WHERE id = ?
+      AND status = 'submitted'
+    `).bind(deliveryId),
 
-      env.DB.prepare(`
-        UPDATE project_deliveries
-        SET status = 'accepted'
-        WHERE id = ?
-          AND status = 'submitted'
-      `).bind(deliveryId),
+    env.DB.prepare(`
+      UPDATE project_executions
+      SET
+        status = 'completed',
+        completed_at = CURRENT_TIMESTAMP,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(delivery.execution_id),
 
-      env.DB.prepare(`
-        UPDATE project_executions
-        SET
-          status = 'completed',
-          completed_at = CURRENT_TIMESTAMP,
-          updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
-      `).bind(delivery.execution_id),
+    env.DB.prepare(`
+      UPDATE projects
+      SET
+        status = 'completed',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(delivery.project_id),
 
-      env.DB.prepare(`
-        UPDATE projects
-        SET
-          status = 'completed',
-          updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
-      `).bind(delivery.project_id),
+    env.DB.prepare(`
+      UPDATE project_revision_requests
+      SET
+        status = 'resolved',
+        resolved_at = CURRENT_TIMESTAMP
+      WHERE execution_id = ?
+      AND status = 'open'
+    `).bind(delivery.execution_id),
 
-      env.DB.prepare(`
-        UPDATE project_revision_requests
-        SET
-          status = 'resolved',
-          resolved_at = CURRENT_TIMESTAMP
-        WHERE execution_id = ?
-          AND status = 'open'
-      `).bind(delivery.execution_id),
-
-      env.DB.prepare(`
-        INSERT INTO project_events
-        (
-          project_id,
-          execution_id,
-          user_id,
-          event_type,
-          message
-        )
-        VALUES (?, ?, ?, 'delivery_accepted', ?)
-      `).bind(
-        delivery.project_id,
-        delivery.execution_id,
-        user.id,
-        `تم قبول التسليم رقم ${delivery.version}`
-      ),
-
-      env.DB.prepare(`
-        INSERT INTO project_events
-        (
-          project_id,
-          execution_id,
-          user_id,
-          event_type,
-          message
-        )
-        VALUES (?, ?, ?, 'project_completed', 'تم إكمال المشروع بنجاح')
-      `).bind(
-        delivery.project_id,
-        delivery.execution_id,
-        user.id
+    env.DB.prepare(`
+      INSERT INTO project_events
+      (
+        project_id,
+        execution_id,
+        user_id,
+        event_type,
+        message
       )
+      VALUES (?, ?, ?, 'delivery_accepted', ?)
+    `).bind(
+      delivery.project_id,
+      delivery.execution_id,
+      user.id,
+      `تم قبول التسليم رقم ${delivery.version}`
+    ),
 
-    ]);
+    env.DB.prepare(`
+      INSERT INTO project_events
+      (
+        project_id,
+        execution_id,
+        user_id,
+        event_type,
+        message
+      )
+      VALUES (?, ?, ?, 'project_completed', 'تم إكمال المشروع بنجاح')
+    `).bind(
+      delivery.project_id,
+      delivery.execution_id,
+      user.id
+    )
+  ]);
 
   for (const result of results) {
     if (
       result &&
       result.success === false
     ) {
-      throw new Error("تعذر إكمال المشروع");
+      throw new Error(
+        "تعذر إكمال المشروع"
+      );
     }
   }
 
@@ -3577,24 +3540,16 @@ async function requestRevision(
   env,
   deliveryId
 ) {
-  const user =
-    await getAuthenticatedUser(
-      request,
-      env
-    );
+  const user = await getAuthenticatedUser(
+    request,
+    env
+  );
 
   if (!user) {
     return json({
       success: false,
       error: "يجب تسجيل الدخول أولا"
     }, 401);
-  }
-
-  if (user.role !== "client") {
-    return json({
-      success: false,
-      error: "طلب التعديل متاح لصاحب المشروع فقط"
-    }, 403);
   }
 
   if (
@@ -3618,7 +3573,9 @@ async function requestRevision(
     }, 400);
   }
 
-  const message = cleanText(body.message);
+  const message = cleanText(
+    body.message
+  );
 
   if (!message) {
     return json({
@@ -3634,30 +3591,29 @@ async function requestRevision(
     }, 400);
   }
 
-  const delivery =
-    await env.DB
-      .prepare(`
-        SELECT
-          d.id,
-          d.execution_id,
-          d.freelancer_id,
-          d.version,
-          d.status AS delivery_status,
-          e.project_id,
-          e.status AS execution_status,
-          p.user_id AS project_owner_id,
-          p.title AS project_title,
-          p.status AS project_status
-        FROM project_deliveries d
-        INNER JOIN project_executions e
-          ON e.id = d.execution_id
-        INNER JOIN projects p
-          ON p.id = e.project_id
-        WHERE d.id = ?
-        LIMIT 1
-      `)
-      .bind(deliveryId)
-      .first();
+  const delivery = await env.DB
+    .prepare(`
+      SELECT
+        d.id,
+        d.execution_id,
+        d.freelancer_id,
+        d.version,
+        d.status AS delivery_status,
+        e.project_id,
+        e.status AS execution_status,
+        p.user_id AS project_owner_id,
+        p.title AS project_title,
+        p.status AS project_status
+      FROM project_deliveries d
+      INNER JOIN project_executions e
+      ON e.id = d.execution_id
+      INNER JOIN projects p
+      ON p.id = e.project_id
+      WHERE d.id = ?
+      LIMIT 1
+    `)
+    .bind(deliveryId)
+    .first();
 
   if (!delivery) {
     return json({
@@ -3676,31 +3632,34 @@ async function requestRevision(
     }, 403);
   }
 
-  if (delivery.execution_status === "completed") {
+  if (
+    delivery.execution_status === "completed"
+  ) {
     return json({
       success: false,
       error: "المشروع مكتمل ولا يمكن طلب تعديل"
     }, 400);
   }
 
-  if (delivery.delivery_status !== "submitted") {
+  if (
+    delivery.delivery_status !== "submitted"
+  ) {
     return json({
       success: false,
       error: "لا يمكن طلب تعديل على هذا التسليم حاليا"
     }, 400);
   }
 
-  const openRevision =
-    await env.DB
-      .prepare(`
-        SELECT id
-        FROM project_revision_requests
-        WHERE execution_id = ?
-          AND status = 'open'
-        LIMIT 1
-      `)
-      .bind(delivery.execution_id)
-      .first();
+  const openRevision = await env.DB
+    .prepare(`
+      SELECT id
+      FROM project_revision_requests
+      WHERE execution_id = ?
+      AND status = 'open'
+      LIMIT 1
+    `)
+    .bind(delivery.execution_id)
+    .first();
 
   if (openRevision) {
     return json({
@@ -3709,65 +3668,64 @@ async function requestRevision(
     }, 409);
   }
 
-  const results =
-    await env.DB.batch([
+  const results = await env.DB.batch([
+    env.DB.prepare(`
+      UPDATE project_deliveries
+      SET status = 'revision_requested'
+      WHERE id = ?
+    `).bind(deliveryId),
 
-      env.DB.prepare(`
-        UPDATE project_deliveries
-        SET status = 'revision_requested'
-        WHERE id = ?
-      `).bind(deliveryId),
+    env.DB.prepare(`
+      UPDATE project_executions
+      SET
+        status = 'revision_requested',
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `).bind(delivery.execution_id),
 
-      env.DB.prepare(`
-        UPDATE project_executions
-        SET
-          status = 'revision_requested',
-          updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
-      `).bind(delivery.execution_id),
-
-      env.DB.prepare(`
-        INSERT INTO project_revision_requests
-        (
-          execution_id,
-          delivery_id,
-          client_id,
-          message,
-          status
-        )
-        VALUES (?, ?, ?, ?, 'open')
-      `).bind(
-        delivery.execution_id,
-        deliveryId,
-        user.id,
-        message
-      ),
-
-      env.DB.prepare(`
-        INSERT INTO project_events
-        (
-          project_id,
-          execution_id,
-          user_id,
-          event_type,
-          message
-        )
-        VALUES (?, ?, ?, 'revision_requested', ?)
-      `).bind(
-        delivery.project_id,
-        delivery.execution_id,
-        user.id,
-        `تم طلب تعديل على التسليم رقم ${delivery.version}: ${message}`
+    env.DB.prepare(`
+      INSERT INTO project_revision_requests
+      (
+        execution_id,
+        delivery_id,
+        client_id,
+        message,
+        status
       )
+      VALUES (?, ?, ?, ?, 'open')
+    `).bind(
+      delivery.execution_id,
+      deliveryId,
+      user.id,
+      message
+    ),
 
-    ]);
+    env.DB.prepare(`
+      INSERT INTO project_events
+      (
+        project_id,
+        execution_id,
+        user_id,
+        event_type,
+        message
+      )
+      VALUES (?, ?, ?, 'revision_requested', ?)
+    `).bind(
+      delivery.project_id,
+      delivery.execution_id,
+      user.id,
+      `تم طلب تعديل على التسليم رقم ${delivery.version}: ${message}`
+    )
+  ]);
 
   for (const result of results) {
     if (
       result &&
       result.success === false
     ) {
-      throw new Error("تعذر تسجيل طلب التعديل");
+      throw new Error(
+        "تعذر تسجيل طلب التعديل"
+      );
     }
   }
 
@@ -3781,25 +3739,24 @@ async function requestRevision(
     deliveryId
   });
 
-  const revision =
-    await env.DB
-      .prepare(`
-        SELECT
-          id,
-          execution_id,
-          delivery_id,
-          client_id,
-          message,
-          status,
-          created_at,
-          resolved_at
-        FROM project_revision_requests
-        WHERE execution_id = ?
-        ORDER BY id DESC
-        LIMIT 1
-      `)
-      .bind(delivery.execution_id)
-      .first();
+  const revision = await env.DB
+    .prepare(`
+      SELECT
+        id,
+        execution_id,
+        delivery_id,
+        client_id,
+        message,
+        status,
+        created_at,
+        resolved_at
+      FROM project_revision_requests
+      WHERE execution_id = ?
+      ORDER BY id DESC
+      LIMIT 1
+    `)
+    .bind(delivery.execution_id)
+    .first();
 
   return json({
     success: true,
@@ -3812,7 +3769,7 @@ async function requestRevision(
 // ================================
 // MY SERVICES
 // ================================
-  
+
 async function getMyServices(
   request,
   env
@@ -3829,13 +3786,6 @@ async function getMyServices(
         success: false,
         error: "يجب تسجيل الدخول أولا"
       }, 401);
-    }
-
-    if (user.role !== "freelancer") {
-      return json({
-        success: false,
-        error: "هذه الصفحة مخصصة للمنفذين فقط"
-      }, 403);
     }
 
     const result =
@@ -3860,7 +3810,8 @@ async function getMyServices(
 
     return json({
       success: true,
-      services: result.results || []
+      services:
+        result.results || []
     });
 
   } catch (error) {
@@ -3872,11 +3823,17 @@ async function getMyServices(
     return json({
       success: false,
       error: "حدث خطأ أثناء تحميل الخدمات",
-      details: error?.message || String(error)
+      details:
+        error?.message ||
+        String(error)
     }, 500);
   }
 }
 
+
+// ================================
+// PORTFOLIO
+// ================================
 
 async function getPortfolio(
   request,
@@ -3888,7 +3845,9 @@ async function getPortfolio(
 
     const category =
       cleanText(
-        url.searchParams.get("category") || "",
+        url.searchParams.get(
+          "category"
+        ) || "",
         100
       );
 
@@ -3905,7 +3864,7 @@ async function getPortfolio(
         u.full_name AS freelancer_name
       FROM portfolio p
       INNER JOIN users u
-        ON u.id = p.user_id
+      ON u.id = p.user_id
       WHERE p.status = 'published'
     `;
 
@@ -3931,7 +3890,8 @@ async function getPortfolio(
 
     return json({
       success: true,
-      portfolio: result.results || []
+      portfolio:
+        result.results || []
     });
 
   } catch (error) {
@@ -3943,7 +3903,9 @@ async function getPortfolio(
     return json({
       success: false,
       error: "حدث خطأ أثناء تحميل الأعمال",
-      details: error?.message || String(error)
+      details:
+        error?.message ||
+        String(error)
     }, 500);
   }
 }
@@ -4006,7 +3968,9 @@ async function verifyPassword(
 
 async function sha256(value) {
   const data =
-    new TextEncoder().encode(value);
+    new TextEncoder().encode(
+      value
+    );
 
   const hashBuffer =
     await crypto.subtle.digest(
@@ -4121,7 +4085,8 @@ function clearSessionCookie() {
 
 function getSessionToken(request) {
   const cookieHeader =
-    request.headers.get("Cookie") || "";
+    request.headers.get("Cookie") ||
+    "";
 
   const cookies =
     cookieHeader.split(";");
@@ -4183,7 +4148,6 @@ function json(
       headers: {
         "Content-Type":
           "application/json; charset=UTF-8",
-
         "Cache-Control":
           "no-store"
       }
