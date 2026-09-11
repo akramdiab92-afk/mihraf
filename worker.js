@@ -655,7 +655,7 @@ async function forgotPassword(request, env) {
               </p>
 
               <p>
-                تلقينا طلبا لإعادة تعيين كلمة المرور الخاصة بحسابك في مِهراف.
+               مرحبا،
               </p>
 
               <p>
