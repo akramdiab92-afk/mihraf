@@ -30,7 +30,6 @@
       margin: auto;
     }
 
-    /* Header */
     header {
       background: #111827;
       border-bottom: 1px solid #1f2937;
@@ -85,7 +84,6 @@
       background: #571b1b;
     }
 
-    /* Main */
     main {
       padding: 35px 0 50px;
     }
@@ -119,7 +117,7 @@
       font-size: 14px;
     }
 
-    .role-badge {
+    .account-badge {
       display: inline-block;
       margin-right: 7px;
       padding: 5px 10px;
@@ -129,7 +127,6 @@
       font-size: 12px;
     }
 
-    /* Stats */
     .section-title {
       font-size: 20px;
       margin-bottom: 15px;
@@ -176,23 +173,22 @@
       color: #f8fafc;
     }
 
-    .stat-card.green .stat-number {
+    .green .stat-number {
       color: #22c55e;
     }
 
-    .stat-card.orange .stat-number {
+    .orange .stat-number {
       color: #f59e0b;
     }
 
-    .stat-card.blue .stat-number {
+    .blue .stat-number {
       color: #60a5fa;
     }
 
-    .stat-card.red .stat-number {
+    .red .stat-number {
       color: #f87171;
     }
 
-    /* Dashboard sections */
     .dashboard-section {
       background: #111827;
       border: 1px solid #263244;
@@ -240,18 +236,6 @@
       line-height: 1.6;
     }
 
-    .coming {
-      opacity: .6;
-      cursor: default;
-    }
-
-    .coming:hover {
-      transform: none;
-      border-color: #2b374a;
-      background: #172033;
-    }
-
-    /* Loading / error */
     .loading {
       color: #94a3b8;
       text-align: center;
@@ -274,12 +258,6 @@
       font-size: 14px;
     }
 
-    /* Hidden role sections */
-    .role-section {
-      display: none;
-    }
-
-    /* Footer */
     footer {
       text-align: center;
       color: #64748b;
@@ -287,7 +265,6 @@
       padding: 20px 0 35px;
     }
 
-    /* Mobile */
     @media (max-width: 850px) {
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -370,67 +347,37 @@
 
       <div class="error" id="errorBox"></div>
 
-      <!-- Welcome -->
       <section class="welcome">
+
         <h1>
           أهلا بك <span id="userName">...</span>
         </h1>
 
         <p>
           هذه لوحة التحكم الخاصة بك في منصة مِهراف.
+          يمكنك من هنا إدارة مشاريعك وخدماتك وعروضك وطلباتك.
         </p>
 
         <div class="account-info">
           البريد الإلكتروني:
           <strong id="userEmail">...</strong>
 
-          <span class="role-badge" id="userRole">...</span>
+          <span class="account-badge">
+            حساب موحد
+          </span>
         </div>
+
       </section>
 
 
-      <!-- Loading -->
       <div class="loading" id="loadingBox">
         جار تحميل الإحصائيات...
       </div>
 
 
-      <!-- Freelancer Stats -->
-      <section class="role-section" id="freelancerStats">
+      <section>
 
-        <h2 class="section-title">إحصائياتك</h2>
-
-        <div class="stats-grid">
-
-          <div class="stat-card green">
-            <div class="stat-label">إجمالي العروض</div>
-            <div class="stat-number" id="totalProposals">0</div>
-          </div>
-
-          <div class="stat-card orange">
-            <div class="stat-label">العروض قيد الانتظار</div>
-            <div class="stat-number" id="pendingProposals">0</div>
-          </div>
-
-          <div class="stat-card blue">
-            <div class="stat-label">العروض المقبولة</div>
-            <div class="stat-number" id="acceptedProposals">0</div>
-          </div>
-
-          <div class="stat-card red">
-            <div class="stat-label">العروض المرفوضة</div>
-            <div class="stat-number" id="rejectedProposals">0</div>
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- Client Stats -->
-      <section class="role-section" id="clientStats">
-
-        <h2 class="section-title">إحصائيات مشاريعك</h2>
+        <h2 class="section-title">ملخص حسابك</h2>
 
         <div class="stats-grid">
 
@@ -445,7 +392,7 @@
           </div>
 
           <div class="stat-card blue">
-            <div class="stat-label">قيد التنفيذ</div>
+            <div class="stat-label">المشاريع قيد التنفيذ</div>
             <div class="stat-number" id="inProgressProjects">0</div>
           </div>
 
@@ -459,63 +406,116 @@
       </section>
 
 
-      <!-- Freelancer Dashboard -->
-      <section class="dashboard-section role-section" id="freelancerSection">
+      <section class="dashboard-section">
 
-        <h2>قسم المستقل</h2>
+        <h2>المشاريع</h2>
 
         <div class="links-grid">
 
-          <a href="my-services.html" class="dashboard-link">
-            <strong>خدماتي</strong>
-            <span>عرض وإدارة الخدمات التي تقدمها.</span>
-          </a>
-
-          <a href="add-service.html" class="dashboard-link">
-            <strong>إضافة خدمة</strong>
-            <span>أضف خدمة جديدة وابدأ بعرضها للعملاء.</span>
-          </a>
-
           <a href="projects.html" class="dashboard-link">
             <strong>تصفح المشاريع</strong>
-            <span>ابحث عن مشاريع مناسبة وقدم عروضك.</span>
+            <span>
+              شاهد المشاريع المفتوحة وقدم عروضك عليها.
+            </span>
           </a>
 
-          <div class="dashboard-link coming">
-            <strong>طلبات العمل</strong>
-            <span>ستتوفر هذه الميزة قريبا.</span>
-          </div>
+          <a href="my-projects.html" class="dashboard-link">
+            <strong>مشاريعي</strong>
+            <span>
+              عرض وإدارة المشاريع التي نشرتها.
+            </span>
+          </a>
+
+          <a href="add-project.html" class="dashboard-link">
+            <strong>نشر مشروع</strong>
+            <span>
+              أنشئ مشروعا جديدا واستقبل عروض المنفذين.
+            </span>
+          </a>
+
+          <a href="my-proposals.html" class="dashboard-link">
+            <strong>عروضي</strong>
+            <span>
+              تابع العروض التي قدمتها على المشاريع.
+            </span>
+          </a>
 
         </div>
 
       </section>
 
 
-      <!-- Client Dashboard -->
-      <section class="dashboard-section role-section" id="clientSection">
+      <section class="dashboard-section">
 
-        <h2>قسم العميل</h2>
+        <h2>الخدمات</h2>
 
         <div class="links-grid">
 
-          <a href="projects.html" class="dashboard-link">
-            <strong>مشاريعي</strong>
-            <span>عرض وإدارة المشاريع التي قمت بنشرها.</span>
+          <a href="services.html" class="dashboard-link">
+            <strong>تصفح الخدمات</strong>
+            <span>
+              استعرض الخدمات المتوفرة واختر ما يناسبك.
+            </span>
           </a>
 
-          <a href="add-project.html" class="dashboard-link">
-            <strong>نشر مشروع</strong>
-            <span>أنشئ مشروعا جديدا واستقبل عروض المستقلين.</span>
+          <a href="my-services.html" class="dashboard-link">
+            <strong>خدماتي</strong>
+            <span>
+              إدارة الخدمات التي تقدمها على مِهراف.
+            </span>
           </a>
 
-          <div class="dashboard-link coming">
+          <a href="add-service.html" class="dashboard-link">
+            <strong>إضافة خدمة</strong>
+            <span>
+              أضف خدمة جديدة واعرضها للعملاء.
+            </span>
+          </a>
+
+          <a href="portfolio.html" class="dashboard-link">
+            <strong>أعمالي</strong>
+            <span>
+              عرض وإدارة معرض أعمالك.
+            </span>
+          </a>
+
+        </div>
+
+      </section>
+
+
+      <section class="dashboard-section">
+
+        <h2>الطلبات</h2>
+
+        <div class="links-grid">
+
+          <a href="my-service-orders.html" class="dashboard-link">
             <strong>طلباتي</strong>
-            <span>ستتوفر هذه الميزة قريبا.</span>
+            <span>
+              تابع الخدمات التي طلبتها من الآخرين.
+            </span>
+          </a>
+
+          <a href="my-service-requests.html" class="dashboard-link">
+            <strong>طلبات خدماتي</strong>
+            <span>
+              تابع الطلبات الواردة على خدماتك.
+            </span>
+          </a>
+
+          <div class="dashboard-link">
+            <strong>الإشعارات</strong>
+            <span>
+              ستتم إضافة مركز الإشعارات المتكامل قريبا.
+            </span>
           </div>
 
-          <div class="dashboard-link coming">
-            <strong>إدارة المشاريع</strong>
-            <span>ستتوفر أدوات إدارة متقدمة قريبا.</span>
+          <div class="dashboard-link">
+            <strong>المحادثات</strong>
+            <span>
+              نظام المحادثات قيد التطوير.
+            </span>
           </div>
 
         </div>
@@ -545,11 +545,24 @@
       loadingBox.style.display = "none";
     }
 
+
+    function setStat(id, value) {
+      const element = document.getElementById(id);
+
+      if (element) {
+        element.textContent = Number(value || 0);
+      }
+    }
+
+
     async function loadDashboard() {
 
       try {
 
-        // الحصول على بيانات المستخدم
+        /* =========================
+           بيانات المستخدم
+        ========================= */
+
         const meResponse = await fetch("/api/me", {
           method: "GET",
           credentials: "include"
@@ -570,30 +583,11 @@
         document.getElementById("userEmail").textContent =
           user.email || "";
 
-        const role = user.role || "";
 
-        if (role === "freelancer") {
+        /* =========================
+           إحصائيات الحساب الموحد
+        ========================= */
 
-          document.getElementById("userRole").textContent = "مستقل";
-
-          document.getElementById("freelancerStats").style.display = "block";
-          document.getElementById("freelancerSection").style.display = "block";
-
-        } else if (role === "client") {
-
-          document.getElementById("userRole").textContent = "عميل";
-
-          document.getElementById("clientStats").style.display = "block";
-          document.getElementById("clientSection").style.display = "block";
-
-        } else {
-
-          document.getElementById("userRole").textContent = role || "حساب";
-
-        }
-
-
-        // جلب الإحصائيات الحقيقية من Worker + D1
         const statsResponse = await fetch("/api/dashboard-stats", {
           method: "GET",
           credentials: "include"
@@ -607,43 +601,30 @@
           );
         }
 
-
-        if (statsData.role === "freelancer") {
-
-          const stats = statsData.stats || {};
-
-          document.getElementById("totalProposals").textContent =
-            Number(stats.total_proposals || 0);
-
-          document.getElementById("pendingProposals").textContent =
-            Number(stats.pending_proposals || 0);
-
-          document.getElementById("acceptedProposals").textContent =
-            Number(stats.accepted_proposals || 0);
-
-          document.getElementById("rejectedProposals").textContent =
-            Number(stats.rejected_proposals || 0);
-
-        }
+        const stats = statsData.stats || {};
 
 
-        if (statsData.role === "client") {
+        /* المشاريع */
 
-          const stats = statsData.stats || {};
+        setStat(
+          "totalProjects",
+          stats.total_projects
+        );
 
-          document.getElementById("totalProjects").textContent =
-            Number(stats.total_projects || 0);
+        setStat(
+          "openProjects",
+          stats.open_projects
+        );
 
-          document.getElementById("openProjects").textContent =
-            Number(stats.open_projects || 0);
+        setStat(
+          "inProgressProjects",
+          stats.in_progress_projects
+        );
 
-          document.getElementById("inProgressProjects").textContent =
-            Number(stats.in_progress_projects || 0);
-
-          document.getElementById("completedProjects").textContent =
-            Number(stats.completed_projects || 0);
-
-        }
+        setStat(
+          "completedProjects",
+          stats.completed_projects
+        );
 
 
         hideLoading();
@@ -663,30 +644,36 @@
     }
 
 
-    // تسجيل الخروج
-    document.getElementById("logoutBtn").addEventListener("click", async function () {
+    /* =========================
+       تسجيل الخروج
+    ========================= */
 
-      const button = this;
+    document.getElementById("logoutBtn").addEventListener(
+      "click",
+      async function () {
 
-      button.disabled = true;
-      button.textContent = "جار تسجيل الخروج...";
+        const button = this;
 
-      try {
+        button.disabled = true;
+        button.textContent = "جار تسجيل الخروج...";
 
-        await fetch("/api/logout", {
-          method: "POST",
-          credentials: "include"
-        });
+        try {
 
-      } catch (error) {
+          await fetch("/api/logout", {
+            method: "POST",
+            credentials: "include"
+          });
 
-        console.error(error);
+        } catch (error) {
+
+          console.error(error);
+
+        }
+
+        window.location.href = "login.html";
 
       }
-
-      window.location.href = "login.html";
-
-    });
+    );
 
 
     loadDashboard();
