@@ -713,7 +713,7 @@ async function forgotPassword(request, env) {
         .run();
 
       throw new Error(
-        "تعذر إرسال رسالة إعادة تعيين كلمة المرور."
+  "Resend: " + resendError
       );
     }
 
