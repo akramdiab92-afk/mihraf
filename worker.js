@@ -162,7 +162,6 @@ export default {
 
       // SERVICES
 
-      // عرض الخدمات العامة
       if (
         url.pathname === "/api/services" &&
         request.method === "GET"
@@ -170,7 +169,6 @@ export default {
         return await getServices(request, env);
       }
 
-      // إضافة خدمة جديدة
       if (
         url.pathname === "/api/services" &&
         request.method === "POST"
@@ -178,12 +176,48 @@ export default {
         return await createService(request, env);
       }
 
-      // خدماتي
       if (
         url.pathname === "/api/my-services" &&
         request.method === "GET"
       ) {
         return await getMyServices(request, env);
+      }
+
+      // SERVICE ORDERS
+
+      if (
+        url.pathname === "/api/service-orders" &&
+        request.method === "POST"
+      ) {
+        return await createServiceOrder(request, env);
+      }
+
+      if (
+        url.pathname === "/api/my-service-orders" &&
+        request.method === "GET"
+      ) {
+        return await getMyServiceOrders(request, env);
+      }
+
+      if (
+        url.pathname === "/api/my-service-requests" &&
+        request.method === "GET"
+      ) {
+        return await getMyServiceRequests(request, env);
+      }
+
+      const serviceOrderMatch =
+        url.pathname.match(/^\/api\/service-orders\/(\d+)$/);
+
+      if (
+        serviceOrderMatch &&
+        request.method === "GET"
+      ) {
+        return await getServiceOrder(
+          request,
+          env,
+          Number(serviceOrderMatch[1])
+        );
       }
 
       // DELIVERIES
@@ -892,6 +926,428 @@ async function getServices(request, env) {
         String(error)
     }, 500);
   }
+}
+
+
+// ================================
+// SERVICE ORDERS
+// ================================
+
+async function createServiceOrder(request, env) {
+  const user =
+    await getAuthenticatedUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  if (user.role !== "client") {
+    return json({
+      success: false,
+      error: "طلب الخدمات متاح للعملاء فقط"
+    }, 403);
+  }
+
+  let body;
+
+  try {
+    body = await request.json();
+  } catch {
+    return json({
+      success: false,
+      error: "بيانات الطلب غير صحيحة"
+    }, 400);
+  }
+
+  const serviceId = Number(body.service_id);
+  const clientMessage = cleanText(body.client_message);
+
+  if (
+    !Number.isInteger(serviceId) ||
+    serviceId <= 0
+  ) {
+    return json({
+      success: false,
+      error: "معرف الخدمة غير صحيح"
+    }, 400);
+  }
+
+  if (
+    clientMessage &&
+    clientMessage.length < 3
+  ) {
+    return json({
+      success: false,
+      error: "رسالة الطلب قصيرة جدا"
+    }, 400);
+  }
+
+  const service =
+    await env.DB
+      .prepare(`
+        SELECT
+          s.id,
+          s.user_id,
+          s.title,
+          s.description,
+          s.price,
+          s.category,
+          s.status,
+          u.full_name AS freelancer_name
+        FROM services s
+        INNER JOIN users u
+          ON u.id = s.user_id
+        WHERE s.id = ?
+        LIMIT 1
+      `)
+      .bind(serviceId)
+      .first();
+
+  if (!service) {
+    return json({
+      success: false,
+      error: "الخدمة غير موجودة"
+    }, 404);
+  }
+
+  if (service.status !== "active") {
+    return json({
+      success: false,
+      error: "هذه الخدمة غير متاحة حاليا"
+    }, 400);
+  }
+
+  if (
+    Number(service.user_id) ===
+    Number(user.id)
+  ) {
+    return json({
+      success: false,
+      error: "لا يمكنك طلب خدمتك الخاصة"
+    }, 403);
+  }
+
+  const existing =
+    await env.DB
+      .prepare(`
+        SELECT
+          id,
+          status
+        FROM service_orders
+        WHERE service_id = ?
+          AND client_id = ?
+          AND status IN (
+            'pending',
+            'accepted',
+            'in_progress',
+            'delivered'
+          )
+        LIMIT 1
+      `)
+      .bind(
+        serviceId,
+        user.id
+      )
+      .first();
+
+  if (existing) {
+    return json({
+      success: false,
+      error: "لديك طلب قائم بالفعل على هذه الخدمة",
+      order_id: existing.id,
+      status: existing.status
+    }, 409);
+  }
+
+  const result =
+    await env.DB
+      .prepare(`
+        INSERT INTO service_orders
+        (
+          service_id,
+          client_id,
+          freelancer_id,
+          title,
+          price,
+          client_message,
+          status
+        )
+        VALUES (?, ?, ?, ?, ?, ?, 'pending')
+      `)
+      .bind(
+        service.id,
+        user.id,
+        service.user_id,
+        service.title,
+        Number(service.price),
+        clientMessage || null
+      )
+      .run();
+
+  if (!result.success) {
+    throw new Error("تعذر إنشاء طلب الخدمة");
+  }
+
+  const orderId =
+    result.meta?.last_row_id ?? null;
+
+  await createNotification(env, {
+    userId: service.user_id,
+    type: "service_order",
+    title: "طلب خدمة جديد",
+    message:
+      `وصل طلب جديد على خدمتك "${service.title}" من العميل ${user.full_name} بقيمة $${service.price}`
+  });
+
+  const order =
+    await env.DB
+      .prepare(`
+        SELECT
+          id,
+          service_id,
+          client_id,
+          freelancer_id,
+          title,
+          price,
+          client_message,
+          freelancer_message,
+          status,
+          created_at,
+          updated_at,
+          accepted_at,
+          started_at,
+          delivered_at,
+          completed_at,
+          cancelled_at
+        FROM service_orders
+        WHERE id = ?
+        LIMIT 1
+      `)
+      .bind(orderId)
+      .first();
+
+  return json({
+    success: true,
+    message: "تم إرسال طلب الخدمة بنجاح",
+    order
+  }, 201);
+}
+
+
+// ================================
+// MY SERVICE ORDERS - CLIENT
+// ================================
+
+async function getMyServiceOrders(request, env) {
+  const user =
+    await getAuthenticatedUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  if (user.role !== "client") {
+    return json({
+      success: false,
+      error: "هذه الصفحة مخصصة للعملاء فقط"
+    }, 403);
+  }
+
+  const result =
+    await env.DB
+      .prepare(`
+        SELECT
+          o.id,
+          o.service_id,
+          o.client_id,
+          o.freelancer_id,
+          o.title,
+          o.price,
+          o.client_message,
+          o.freelancer_message,
+          o.status,
+          o.created_at,
+          o.updated_at,
+          o.accepted_at,
+          o.started_at,
+          o.delivered_at,
+          o.completed_at,
+          o.cancelled_at,
+          u.full_name AS freelancer_name
+        FROM service_orders o
+        INNER JOIN users u
+          ON u.id = o.freelancer_id
+        WHERE o.client_id = ?
+        ORDER BY o.id DESC
+      `)
+      .bind(user.id)
+      .all();
+
+  return json({
+    success: true,
+    orders: result.results || [],
+    count: result.results?.length || 0
+  });
+}
+
+
+// ================================
+// MY SERVICE REQUESTS - FREELANCER
+// ================================
+
+async function getMyServiceRequests(request, env) {
+  const user =
+    await getAuthenticatedUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  if (user.role !== "freelancer") {
+    return json({
+      success: false,
+      error: "هذه الصفحة مخصصة للمستقلين فقط"
+    }, 403);
+  }
+
+  const result =
+    await env.DB
+      .prepare(`
+        SELECT
+          o.id,
+          o.service_id,
+          o.client_id,
+          o.freelancer_id,
+          o.title,
+          o.price,
+          o.client_message,
+          o.freelancer_message,
+          o.status,
+          o.created_at,
+          o.updated_at,
+          o.accepted_at,
+          o.started_at,
+          o.delivered_at,
+          o.completed_at,
+          o.cancelled_at,
+          u.full_name AS client_name,
+          u.email AS client_email
+        FROM service_orders o
+        INNER JOIN users u
+          ON u.id = o.client_id
+        WHERE o.freelancer_id = ?
+        ORDER BY o.id DESC
+      `)
+      .bind(user.id)
+      .all();
+
+  return json({
+    success: true,
+    orders: result.results || [],
+    count: result.results?.length || 0
+  });
+}
+
+
+// ================================
+// GET SERVICE ORDER
+// ================================
+
+async function getServiceOrder(
+  request,
+  env,
+  orderId
+) {
+  const user =
+    await getAuthenticatedUser(request, env);
+
+  if (!user) {
+    return json({
+      success: false,
+      error: "يجب تسجيل الدخول أولا"
+    }, 401);
+  }
+
+  if (
+    !Number.isInteger(orderId) ||
+    orderId <= 0
+  ) {
+    return json({
+      success: false,
+      error: "معرف الطلب غير صحيح"
+    }, 400);
+  }
+
+  const order =
+    await env.DB
+      .prepare(`
+        SELECT
+          o.id,
+          o.service_id,
+          o.client_id,
+          o.freelancer_id,
+          o.title,
+          o.price,
+          o.client_message,
+          o.freelancer_message,
+          o.status,
+          o.created_at,
+          o.updated_at,
+          o.accepted_at,
+          o.started_at,
+          o.delivered_at,
+          o.completed_at,
+          o.cancelled_at,
+          c.full_name AS client_name,
+          c.email AS client_email,
+          f.full_name AS freelancer_name,
+          f.email AS freelancer_email
+        FROM service_orders o
+        INNER JOIN users c
+          ON c.id = o.client_id
+        INNER JOIN users f
+          ON f.id = o.freelancer_id
+        WHERE o.id = ?
+        LIMIT 1
+      `)
+      .bind(orderId)
+      .first();
+
+  if (!order) {
+    return json({
+      success: false,
+      error: "طلب الخدمة غير موجود"
+    }, 404);
+  }
+
+  const isClient =
+    Number(order.client_id) === Number(user.id);
+
+  const isFreelancer =
+    Number(order.freelancer_id) === Number(user.id);
+
+  if (!isClient && !isFreelancer) {
+    return json({
+      success: false,
+      error: "غير مسموح لك بمشاهدة هذا الطلب"
+    }, 403);
+  }
+
+  return json({
+    success: true,
+    order,
+    is_client: isClient,
+    is_freelancer: isFreelancer
+  });
 }
 
 
