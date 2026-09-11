@@ -651,10 +651,6 @@ async function forgotPassword(request, env) {
               </h2>
 
               <p>
-                مرحبا ${escapeHtml(user.full_name || "")}،
-              </p>
-
-              <p>
                مرحبا،
               </p>
 
