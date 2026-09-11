@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عروضي | مِهراف</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      background: #0b1120;
+      color: #f8fafc;
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1100px, 94%);
+      margin: auto;
+    }
+
+    header {
+      background: #111827;
+      border-bottom: 1px solid #1f2937;
+    }
+
+    .header-inner {
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      color: #22c55e;
+      font-size: 27px;
+      font-weight: bold;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      border: 1px solid #374151;
+      background: #172033;
+      color: #e5e7eb;
+      padding: 10px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn:hover {
+      background: #1f2937;
+    }
+
+    main {
+      padding: 35px 0 50px;
+    }
+
+    .page-header {
+      background: linear-gradient(135deg, #111827, #172033);
+      border: 1px solid #263244;
+      border-radius: 18px;
+      padding: 25px;
+      margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+      font-size: 25px;
+      margin-bottom: 10px;
+    }
+
+    .page-header p {
+      color: #94a3b8;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .loading,
+    .empty,
+    .error {
+      background: #111827;
+      border: 1px solid #263244;
+      border-radius: 16px;
+      padding: 25px;
+      text-align: center;
+      color: #94a3b8;
+      margin-bottom: 20px;
+    }
+
+    .error {
+      display: none;
+      background: #3f1515;
+      border-color: #7f1d1d;
+      color: #fecaca;
+    }
+
+    .empty {
+      display: none;
+    }
+
+    .proposals {
+      display: grid;
+      gap: 15px;
+    }
+
+    .proposal {
+      background: #111827;
+      border: 1px solid #263244;
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .proposal:hover {
+      border-color: #374151;
+    }
+
+    .proposal-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .proposal-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .status {
+      padding: 6px 11px;
+      border-radius: 20px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .status.pending {
+      background: #78350f;
+      color: #fde68a;
+    }
+
+    .status.accepted {
+      background: #14532d;
+      color: #bbf7d0;
+    }
+
+    .status.rejected {
+      background: #7f1d1d;
+      color: #fecaca;
+    }
+
+    .status.other {
+      background: #1e3a8a;
+      color: #bfdbfe;
+    }
+
+    .proposal-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .info-box {
+      background: #172033;
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .info-label {
+      display: block;
+      color: #94a3b8;
+      font-size: 11px;
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      font-size: 14px;
+    }
+
+    .proposal-message {
+      background: #0b1120;
+      border-radius: 10px;
+      padding: 14px;
+      color: #cbd5e1;
+      line-height: 1.8;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    .proposal-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .project-btn {
+      display: inline-block;
+      background: #14532d;
+      color: #bbf7d0;
+      padding: 9px 14px;
+      border-radius: 9px;
+      font-size: 13px;
+    }
+
+    .project-btn:hover {
+      background: #166534;
+    }
+
+    footer {
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+      padding: 20px 0 35px;
+    }
+
+    @media (max-width: 650px) {
+      .header-inner {
+        min-height: 62px;
+      }
+
+      .logo {
+        font-size: 23px;
+      }
+
+      .btn {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      main {
+        padding-top: 22px;
+      }
+
+      .page-header {
+        padding: 20px;
+      }
+
+      .proposal-top {
+        flex-direction: column;
+      }
+
+      .proposal-info {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="container header-inner">
+    <a href="index.html" class="logo">مِهراف</a>
+
+    <div class="header-actions">
+      <a href="dashboard.html" class="btn">لوحة التحكم</a>
+      <a href="projects.html" class="btn">المشاريع</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <section class="page-header">
+      <h1>عروضي</h1>
+      <p>
+        هنا تجد جميع العروض التي قدمتها على المشاريع في منصة مِهراف.
+      </p>
+    </section>
+
+    <div class="error" id="errorBox"></div>
+
+    <div class="loading" id="loadingBox">
+      جار تحميل عروضك...
+    </div>
+
+    <div class="empty" id="emptyBox">
+      لا توجد عروض قدمتها حتى الآن.
+      <br><br>
+      <a href="projects.html" class="project-btn">تصفح المشاريع</a>
+    </div>
+
+    <div class="proposals" id="proposalsBox"></div>
+
+  </div>
+</main>
+
+<footer>
+  مِهراف | منصة الخدمات والمشاريع
+</footer>
+
+<script>
+
+  const loadingBox = document.getElementById("loadingBox");
+  const errorBox = document.getElementById("errorBox");
+  const emptyBox = document.getElementById("emptyBox");
+  const proposalsBox = document.getElementById("proposalsBox");
+
+  function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = value == null ? "" : String(value);
+    return div.innerHTML;
+  }
+
+  function formatDate(value) {
+    if (!value) return "غير محدد";
+
+    try {
+      return new Date(value).toLocaleDateString("ar-SY", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+    } catch {
+      return value;
+    }
+  }
+
+  function statusText(status) {
+    const map = {
+      pending: "قيد الانتظار",
+      accepted: "مقبول",
+      rejected: "مرفوض",
+      cancelled: "ملغي",
+      completed: "مكتمل"
+    };
+
+    return map[status] || status || "غير محدد";
+  }
+
+  function statusClass(status) {
+    if (status === "pending") return "pending";
+    if (status === "accepted") return "accepted";
+    if (status === "rejected") return "rejected";
+    return "other";
+  }
+
+  async function loadProposals() {
+
+    try {
+
+      const meResponse = await fetch("/api/me", {
+        credentials: "include"
+      });
+
+      const meData = await meResponse.json();
+
+      if (!meResponse.ok || !meData.success || !meData.user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const response = await fetch("/api/my-proposals", {
+        method: "GET",
+        credentials: "include"
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || "تعذر تحميل العروض");
+      }
+
+      const proposals =
+        Array.isArray(data.proposals)
+          ? data.proposals
+          : [];
+
+      loadingBox.style.display = "none";
+
+      if (!proposals.length) {
+        emptyBox.style.display = "block";
+        return;
+      }
+
+      proposalsBox.innerHTML = proposals.map(proposal => {
+
+        const title =
+          proposal.project_title ||
+          proposal.title ||
+          "مشروع بدون عنوان";
+
+        const message =
+          proposal.message ||
+          proposal.cover_letter ||
+          proposal.description ||
+          "لا توجد رسالة مرفقة.";
+
+        const price =
+          proposal.price ??
+          proposal.amount ??
+          proposal.budget ??
+          0;
+
+        const status =
+          proposal.status || "pending";
+
+        const projectId =
+          proposal.project_id ||
+          proposal.id_project ||
+          "";
+
+        return `
+          <article class="proposal">
+
+            <div class="proposal-top">
+
+              <div class="proposal-title">
+                ${escapeHtml(title)}
+              </div>
+
+              <span class="status ${statusClass(status)}">
+                ${escapeHtml(statusText(status))}
+              </span>
+
+            </div>
+
+            <div class="proposal-info">
+
+              <div class="info-box">
+                <span class="info-label">قيمة العرض</span>
+                <span class="info-value">
+                  ${escapeHtml(price)} $
+                </span>
+              </div>
+
+              <div class="info-box">
+                <span class="info-label">تاريخ التقديم</span>
+                <span class="info-value">
+                  ${escapeHtml(formatDate(
+                    proposal.created_at ||
+                    proposal.date ||
+                    proposal.createdAt
+                  ))}
+                </span>
+              </div>
+
+              <div class="info-box">
+                <span class="info-label">حالة العرض</span>
+                <span class="info-value">
+                  ${escapeHtml(statusText(status))}
+                </span>
+              </div>
+
+            </div>
+
+            <div class="proposal-message">
+              ${escapeHtml(message)}
+            </div>
+
+            <div class="proposal-actions">
+
+              ${
+                projectId
+                ? `
+                  <a
+                    href="project-details.html?id=${encodeURIComponent(projectId)}"
+                    class="project-btn"
+                  >
+                    مشاهدة المشروع
+                  </a>
+                `
+                : ""
+              }
+
+            </div>
+
+          </article>
+        `;
+
+      }).join("");
+
+    } catch (error) {
+
+      console.error(error);
+
+      loadingBox.style.display = "none";
+
+      errorBox.textContent =
+        error.message || "حدث خطأ أثناء تحميل العروض";
+
+      errorBox.style.display = "block";
+    }
+  }
+
+  loadProposals();
+
+</script>
+
+</body>
+</html>
