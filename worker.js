@@ -161,6 +161,16 @@ export default {
       }
 
       // SERVICES
+
+      // إضافة خدمة جديدة
+      if (
+        url.pathname === "/api/services" &&
+        request.method === "POST"
+      ) {
+        return await createService(request, env);
+      }
+
+      // خدماتي
       if (
         url.pathname === "/api/my-services" &&
         request.method === "GET"
@@ -635,6 +645,163 @@ async function getAuthenticatedUser(
     role: session.role,
     created_at: session.created_at
   };
+}
+
+
+// ================================
+// CREATE SERVICE
+// ================================
+
+async function createService(request, env) {
+  try {
+    const user =
+      await getAuthenticatedUser(
+        request,
+        env
+      );
+
+    if (!user) {
+      return json({
+        success: false,
+        error: "يجب تسجيل الدخول أولا"
+      }, 401);
+    }
+
+    if (user.role !== "freelancer") {
+      return json({
+        success: false,
+        error: "إضافة الخدمات متاحة للمستقلين فقط"
+      }, 403);
+    }
+
+    let body;
+
+    try {
+      body = await request.json();
+    } catch {
+      return json({
+        success: false,
+        error: "بيانات الطلب غير صحيحة"
+      }, 400);
+    }
+
+    const title = cleanText(body.title);
+    const description = cleanText(body.description);
+    const category = cleanText(body.category);
+    const price = Number(body.price);
+
+    if (!title) {
+      return json({
+        success: false,
+        error: "يرجى إدخال عنوان الخدمة"
+      }, 400);
+    }
+
+    if (title.length < 3) {
+      return json({
+        success: false,
+        error: "عنوان الخدمة قصير جدا"
+      }, 400);
+    }
+
+    if (!description) {
+      return json({
+        success: false,
+        error: "يرجى كتابة وصف الخدمة"
+      }, 400);
+    }
+
+    if (description.length < 10) {
+      return json({
+        success: false,
+        error: "وصف الخدمة يجب أن يكون أوضح"
+      }, 400);
+    }
+
+    if (!category) {
+      return json({
+        success: false,
+        error: "يرجى اختيار تصنيف الخدمة"
+      }, 400);
+    }
+
+    if (
+      !Number.isFinite(price) ||
+      price <= 0
+    ) {
+      return json({
+        success: false,
+        error: "يرجى إدخال سعر صحيح"
+      }, 400);
+    }
+
+    const result =
+      await env.DB
+        .prepare(`
+          INSERT INTO services
+          (
+            user_id,
+            title,
+            description,
+            price,
+            category
+          )
+          VALUES (?, ?, ?, ?, ?)
+        `)
+        .bind(
+          Number(user.id),
+          title,
+          description,
+          price,
+          category
+        )
+        .run();
+
+    if (!result.success) {
+      throw new Error("تعذر نشر الخدمة");
+    }
+
+    const serviceId =
+      result.meta?.last_row_id ?? null;
+
+    const service =
+      await env.DB
+        .prepare(`
+          SELECT
+            id,
+            user_id,
+            title,
+            description,
+            price,
+            category,
+            status,
+            created_at,
+            updated_at
+          FROM services
+          WHERE id = ?
+          LIMIT 1
+        `)
+        .bind(serviceId)
+        .first();
+
+    return json({
+      success: true,
+      message: "تم نشر الخدمة بنجاح",
+      service
+    }, 201);
+
+  } catch (error) {
+    console.error(
+      "createService error:",
+      error
+    );
+
+    return json({
+      success: false,
+      error: "حدث خطأ أثناء نشر الخدمة",
+      details: error?.message || String(error)
+    }, 500);
+  }
 }
 
 
@@ -1336,7 +1503,6 @@ async function getProject(
     can_apply: canApply
   });
 }
-
 
 // ================================
 // PROPOSALS
@@ -2642,6 +2808,10 @@ async function createDelivery(
 }
 
 
+// ================================
+// ACCEPT DELIVERY
+// ================================
+
 async function acceptDelivery(
   request,
   env,
@@ -2842,6 +3012,10 @@ async function acceptDelivery(
   });
 }
 
+
+// ================================
+// REQUEST REVISION
+// ================================
 
 async function requestRevision(
   request,
