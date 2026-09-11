@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تفاصيل طلب الخدمة | مِهراف</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      color: #2563eb;
+      font-size: 22px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .back-btn {
+      text-decoration: none;
+      color: #374151;
+      background: #f3f4f6;
+      padding: 9px 15px;
+      border-radius: 9px;
+      font-size: 14px;
+    }
+
+    .back-btn:hover {
+      background: #e5e7eb;
+    }
+
+    .container {
+      width: min(900px, calc(100% - 30px));
+      margin: 30px auto;
+    }
+
+    .loading,
+    .error {
+      background: #fff;
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 4px 18px rgba(0,0,0,.05);
+    }
+
+    .error {
+      color: #b91c1c;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 18px rgba(0,0,0,.05);
+    }
+
+    .title {
+      font-size: 25px;
+      font-weight: bold;
+      margin-bottom: 18px;
+      color: #111827;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #111827;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 18px;
+    }
+
+    .status.pending {
+      background: #fff7ed;
+      color: #c2410c;
+    }
+
+    .status.accepted {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .status.in_progress {
+      background: #ecfeff;
+      color: #0e7490;
+    }
+
+    .status.delivered {
+      background: #f5f3ff;
+      color: #6d28d9;
+    }
+
+    .status.completed {
+      background: #ecfdf5;
+      color: #047857;
+    }
+
+    .status.cancelled {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .info-item {
+      background: #f9fafb;
+      border: 1px solid #eef0f3;
+      border-radius: 11px;
+      padding: 14px;
+    }
+
+    .label {
+      color: #6b7280;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .value {
+      color: #111827;
+      font-size: 15px;
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .message {
+      background: #f9fafb;
+      border: 1px solid #eef0f3;
+      border-radius: 11px;
+      padding: 16px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #374151;
+    }
+
+    .price {
+      font-size: 22px;
+      color: #059669;
+      font-weight: bold;
+    }
+
+    .service-link {
+      display: inline-block;
+      margin-top: 10px;
+      text-decoration: none;
+      color: #2563eb;
+      font-weight: bold;
+    }
+
+    .role-box {
+      border-radius: 12px;
+      padding: 14px;
+      background: #eff6ff;
+      color: #1e40af;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 650px) {
+      .container {
+        width: min(100% - 20px, 900px);
+        margin: 20px auto;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        font-size: 21px;
+      }
+
+      .header {
+        padding: 13px 12px;
+      }
+
+      .logo {
+        font-size: 19px;
+      }
+
+      .back-btn {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <a href="index.html" class="logo">مِهراف</a>
+    <a href="javascript:history.back()" class="back-btn">← رجوع</a>
+  </header>
+
+  <main class="container">
+
+    <div id="loading" class="loading">
+      جار تحميل تفاصيل الطلب...
+    </div>
+
+    <div id="error" class="error" style="display:none;"></div>
+
+    <div id="content" style="display:none;">
+
+      <div class="card">
+        <div id="orderTitle" class="title">طلب خدمة</div>
+        <div id="status"></div>
+
+        <div class="info-grid">
+
+          <div class="info-item">
+            <div class="label">رقم الطلب</div>
+            <div id="orderId" class="value">-</div>
+          </div>
+
+          <div class="info-item">
+            <div class="label">السعر</div>
+            <div id="price" class="price">-</div>
+          </div>
+
+          <div class="info-item">
+            <div class="label">تاريخ الطلب</div>
+            <div id="createdAt" class="value">-</div>
+          </div>
+
+          <div class="info-item">
+            <div class="label">آخر تحديث</div>
+            <div id="updatedAt" class="value">-</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">الخدمة</div>
+
+        <div class="info-grid">
+
+          <div class="info-item">
+            <div class="label">اسم الخدمة</div>
+            <div id="serviceTitle" class="value">-</div>
+          </div>
+
+          <div class="info-item">
+            <div class="label">رقم الخدمة</div>
+            <div id="serviceId" class="value">-</div>
+          </div>
+
+        </div>
+
+        <a id="serviceLink" class="service-link" href="#" style="display:none;">
+          عرض الخدمة
+        </a>
+      </div>
+
+      <div class="card">
+        <div class="section-title">أطراف الطلب</div>
+
+        <div class="info-grid">
+
+          <div class="info-item">
+            <div class="label">صاحب الخدمة / المنفذ</div>
+            <div id="freelancerName" class="value">-</div>
+          </div>
+
+          <div class="info-item">
+            <div class="label">العميل</div>
+            <div id="clientName" class="value">-</div>
+          </div>
+
+          <div class="info-item">
+            <div class="label">بريد العميل</div>
+            <div id="clientEmail" class="value">-</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">رسالة العميل</div>
+        <div id="clientMessage" class="message">لا توجد رسالة.</div>
+      </div>
+
+      <div class="card" id="freelancerMessageCard" style="display:none;">
+        <div class="section-title">رسالة المنفذ</div>
+        <div id="freelancerMessage" class="message"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">حالة الطلب</div>
+        <div id="statusDescription" class="role-box"></div>
+      </div>
+
+    </div>
+
+  </main>
+
+<script>
+  const API_BASE = "";
+
+  function getOrderId() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("id");
+  }
+
+  function escapeHtml(value) {
+    if (value === null || value === undefined) return "";
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function formatDate(value) {
+    if (!value) return "-";
+
+    try {
+      const date = new Date(value);
+
+      if (isNaN(date.getTime())) {
+        return value;
+      }
+
+      return date.toLocaleString("ar-SY", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    } catch {
+      return value;
+    }
+  }
+
+  function formatPrice(value) {
+    if (value === null || value === undefined || value === "") {
+      return "-";
+    }
+
+    const number = Number(value);
+
+    if (isNaN(number)) {
+      return escapeHtml(value);
+    }
+
+    return number.toLocaleString("en-US") + " $";
+  }
+
+  function getStatusText(status) {
+    const statuses = {
+      pending: "بانتظار قبول الطلب",
+      accepted: "تم قبول الطلب",
+      in_progress: "قيد التنفيذ",
+      delivered: "تم التسليم",
+      completed: "مكتمل",
+      cancelled: "ملغي"
+    };
+
+    return statuses[status] || status || "غير محدد";
+  }
+
+  function getStatusDescription(status) {
+    const descriptions = {
+      pending:
+        "تم إرسال الطلب، وهو حاليا بانتظار تعامل صاحب الخدمة معه.",
+
+      accepted:
+        "تم قبول طلب الخدمة ويمكن الانتقال إلى تنفيذ العمل.",
+
+      in_progress:
+        "الطلب حاليا قيد التنفيذ.",
+
+      delivered:
+        "تم تسليم العمل وينتظر الطلب إكمال العملية.",
+
+      completed:
+        "تم إكمال طلب الخدمة بنجاح.",
+
+      cancelled:
+        "تم إلغاء طلب الخدمة."
+    };
+
+    return descriptions[status] ||
+      "حالة الطلب الحالية: " + (status || "غير محددة");
+  }
+
+  function setText(id, value) {
+    const element = document.getElementById(id);
+
+    if (!element) return;
+
+    element.textContent =
+      value === null || value === undefined || value === ""
+        ? "-"
+        : value;
+  }
+
+  async function loadOrder() {
+    const orderId = getOrderId();
+
+    if (!orderId) {
+      showError("لم يتم تحديد رقم طلب الخدمة.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        API_BASE + "/api/service-orders/" + encodeURIComponent(orderId),
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Accept": "application/json"
+          }
+        }
+      );
+
+      let data = null;
+
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error("تعذر قراءة استجابة الخادم.");
+      }
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data?.error ||
+          data?.message ||
+          "تعذر تحميل تفاصيل طلب الخدمة."
+        );
+      }
+
+      const order = data.order || data.service_order || data;
+
+      if (!order || typeof order !== "object") {
+        throw new Error("لم يتم العثور على بيانات الطلب.");
+      }
+
+      renderOrder(order);
+
+    } catch (error) {
+      console.error("Service order error:", error);
+      showError(error.message || "حدث خطأ أثناء تحميل الطلب.");
+    }
+  }
+
+  function renderOrder(order) {
+
+    const title =
+      order.title ||
+      order.service_title ||
+      order.name ||
+      "طلب خدمة";
+
+    setText("orderTitle", title);
+
+    setText(
+      "orderId",
+      order.id || order.order_id || "-"
+    );
+
+    setText(
+      "price",
+      formatPrice(order.price)
+    );
+
+    setText(
+      "createdAt",
+      formatDate(order.created_at)
+    );
+
+    setText(
+      "updatedAt",
+      formatDate(order.updated_at)
+    );
+
+    setText(
+      "serviceTitle",
+      order.title ||
+      order.service_title ||
+      "الخدمة"
+    );
+
+    setText(
+      "serviceId",
+      order.service_id || "-"
+    );
+
+    setText(
+      "freelancerName",
+      order.freelancer_name ||
+      order.provider_name ||
+      order.seller_name ||
+      "-"
+    );
+
+    setText(
+      "clientName",
+      order.client_name ||
+      "-"
+    );
+
+    setText(
+      "clientEmail",
+      order.client_email ||
+      "-"
+    );
+
+    setText(
+      "clientMessage",
+      order.client_message ||
+      "لا توجد رسالة من العميل."
+    );
+
+    if (order.freelancer_message) {
+      document.getElementById("freelancerMessageCard").style.display = "block";
+
+      setText(
+        "freelancerMessage",
+        order.freelancer_message
+      );
+    }
+
+    const status = order.status || "pending";
+
+    const statusElement = document.getElementById("status");
+
+    statusElement.className = "status " + escapeHtml(status);
+    statusElement.textContent = getStatusText(status);
+
+    setText(
+      "statusDescription",
+      getStatusDescription(status)
+    );
+
+    const serviceId = order.service_id;
+
+    if (serviceId) {
+      const serviceLink = document.getElementById("serviceLink");
+
+      serviceLink.href =
+        "service-details.html?id=" +
+        encodeURIComponent(serviceId);
+
+      serviceLink.style.display = "inline-block";
+    }
+
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("content").style.display = "block";
+  }
+
+  function showError(message) {
+    document.getElementById("loading").style.display = "none";
+
+    const error = document.getElementById("error");
+
+    error.textContent = message;
+
+    error.style.display = "block";
+  }
+
+  loadOrder();
+</script>
+
+</body>
+</html>
