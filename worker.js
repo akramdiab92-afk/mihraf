@@ -183,6 +183,14 @@ export default {
         return await getMyServices(request, env);
       }
 
+      // PORTFOLIO
+     if (
+       url.pathname === "/api/portfolio" &&
+       request.method === "GET"
+     ) {
+       return await getPortfolio(request, env);
+     }
+      
       // SERVICE ORDERS
 
       if (
@@ -3804,7 +3812,7 @@ async function requestRevision(
 // ================================
 // MY SERVICES
 // ================================
-
+  
 async function getMyServices(
   request,
   env
@@ -3864,6 +3872,77 @@ async function getMyServices(
     return json({
       success: false,
       error: "حدث خطأ أثناء تحميل الخدمات",
+      details: error?.message || String(error)
+    }, 500);
+  }
+}
+
+
+async function getPortfolio(
+  request,
+  env
+) {
+  try {
+    const url =
+      new URL(request.url);
+
+    const category =
+      cleanText(
+        url.searchParams.get("category") || "",
+        100
+      );
+
+    let query = `
+      SELECT
+        p.id,
+        p.user_id,
+        p.title,
+        p.description,
+        p.image_url,
+        p.project_url,
+        p.category,
+        p.created_at,
+        u.full_name AS freelancer_name
+      FROM portfolio p
+      INNER JOIN users u
+        ON u.id = p.user_id
+      WHERE p.status = 'published'
+    `;
+
+    const params = [];
+
+    if (category) {
+      query += `
+        AND p.category = ?
+      `;
+
+      params.push(category);
+    }
+
+    query += `
+      ORDER BY p.created_at DESC
+    `;
+
+    const result =
+      await env.DB
+        .prepare(query)
+        .bind(...params)
+        .all();
+
+    return json({
+      success: true,
+      portfolio: result.results || []
+    });
+
+  } catch (error) {
+    console.error(
+      "getPortfolio error:",
+      error
+    );
+
+    return json({
+      success: false,
+      error: "حدث خطأ أثناء تحميل الأعمال",
       details: error?.message || String(error)
     }, 500);
   }
