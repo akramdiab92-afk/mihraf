@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>طلبات خدماتي | مِهراف</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      background: #0b1120;
+      color: #f8fafc;
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1100px, 94%);
+      margin: auto;
+    }
+
+    header {
+      background: #111827;
+      border-bottom: 1px solid #1f2937;
+    }
+
+    .header-inner {
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .logo {
+      color: #22c55e;
+      font-size: 27px;
+      font-weight: bold;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      border: 1px solid #374151;
+      background: #172033;
+      color: #e5e7eb;
+      padding: 10px 15px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .btn:hover {
+      background: #1f2937;
+    }
+
+    main {
+      padding: 35px 0 50px;
+    }
+
+    .page-header {
+      background: linear-gradient(135deg, #111827, #172033);
+      border: 1px solid #263244;
+      border-radius: 18px;
+      padding: 25px;
+      margin-bottom: 25px;
+    }
+
+    .page-header h1 {
+      font-size: 25px;
+      margin-bottom: 10px;
+    }
+
+    .page-header p {
+      color: #94a3b8;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .loading,
+    .empty,
+    .error {
+      background: #111827;
+      border: 1px solid #263244;
+      border-radius: 16px;
+      padding: 25px;
+      text-align: center;
+      color: #94a3b8;
+      margin-bottom: 20px;
+    }
+
+    .error {
+      display: none;
+      background: #3f1515;
+      border-color: #7f1d1d;
+      color: #fecaca;
+    }
+
+    .empty {
+      display: none;
+    }
+
+    .requests {
+      display: grid;
+      gap: 15px;
+    }
+
+    .request {
+      background: #111827;
+      border: 1px solid #263244;
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .request-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .request-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .status {
+      padding: 6px 11px;
+      border-radius: 20px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .pending {
+      background: #78350f;
+      color: #fde68a;
+    }
+
+    .accepted,
+    .completed {
+      background: #14532d;
+      color: #bbf7d0;
+    }
+
+    .in_progress {
+      background: #1e3a8a;
+      color: #bfdbfe;
+    }
+
+    .delivered {
+      background: #164e63;
+      color: #a5f3fc;
+    }
+
+    .cancelled {
+      background: #7f1d1d;
+      color: #fecaca;
+    }
+
+    .other {
+      background: #374151;
+      color: #e5e7eb;
+    }
+
+    .request-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .info-box {
+      background: #172033;
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .info-label {
+      display: block;
+      color: #94a3b8;
+      font-size: 11px;
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      font-size: 14px;
+    }
+
+    .message {
+      background: #0b1120;
+      border-radius: 10px;
+      padding: 14px;
+      color: #cbd5e1;
+      font-size: 13px;
+      line-height: 1.8;
+      margin-bottom: 15px;
+    }
+
+    .details-btn {
+      display: inline-block;
+      background: #14532d;
+      color: #bbf7d0;
+      padding: 9px 14px;
+      border-radius: 9px;
+      font-size: 13px;
+    }
+
+    footer {
+      text-align: center;
+      color: #64748b;
+      font-size: 12px;
+      padding: 20px 0 35px;
+    }
+
+    @media (max-width: 650px) {
+
+      .header-inner {
+        min-height: 62px;
+      }
+
+      .logo {
+        font-size: 23px;
+      }
+
+      .btn {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      main {
+        padding-top: 22px;
+      }
+
+      .page-header {
+        padding: 20px;
+      }
+
+      .request-top {
+        flex-direction: column;
+      }
+
+      .request-info {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="container header-inner">
+
+    <a href="index.html" class="logo">مِهراف</a>
+
+    <div class="header-actions">
+      <a href="dashboard.html" class="btn">لوحة التحكم</a>
+      <a href="my-services.html" class="btn">خدماتي</a>
+    </div>
+
+  </div>
+</header>
+
+<main>
+
+  <div class="container">
+
+    <section class="page-header">
+      <h1>طلبات خدماتي</h1>
+      <p>
+        هنا تجد جميع الطلبات التي وصلت إلى الخدمات التي تقدمها على مِهراف.
+      </p>
+    </section>
+
+    <div class="error" id="errorBox"></div>
+
+    <div class="loading" id="loadingBox">
+      جار تحميل الطلبات...
+    </div>
+
+    <div class="empty" id="emptyBox">
+      لا توجد طلبات واردة على خدماتك حتى الآن.
+      <br><br>
+      <a href="add-service.html" class="details-btn">
+        إضافة خدمة
+      </a>
+    </div>
+
+    <div class="requests" id="requestsBox"></div>
+
+  </div>
+
+</main>
+
+<footer>
+  مِهراف | منصة الخدمات والمشاريع
+</footer>
+
+<script>
+
+  const loadingBox = document.getElementById("loadingBox");
+  const errorBox = document.getElementById("errorBox");
+  const emptyBox = document.getElementById("emptyBox");
+  const requestsBox = document.getElementById("requestsBox");
+
+  function escapeHtml(value) {
+    const div = document.createElement("div");
+    div.textContent = value == null ? "" : String(value);
+    return div.innerHTML;
+  }
+
+  function formatDate(value) {
+
+    if (!value) return "غير محدد";
+
+    try {
+
+      return new Date(value).toLocaleDateString("ar-SY", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+
+    } catch {
+
+      return value;
+
+    }
+  }
+
+  function statusText(status) {
+
+    const map = {
+      pending: "قيد الانتظار",
+      accepted: "مقبول",
+      in_progress: "قيد التنفيذ",
+      delivered: "تم التسليم",
+      completed: "مكتمل",
+      cancelled: "ملغي"
+    };
+
+    return map[status] || status || "غير محدد";
+  }
+
+  function statusClass(status) {
+
+    const allowed = [
+      "pending",
+      "accepted",
+      "in_progress",
+      "delivered",
+      "completed",
+      "cancelled"
+    ];
+
+    return allowed.includes(status)
+      ? status
+      : "other";
+  }
+
+  async function loadRequests() {
+
+    try {
+
+      const meResponse = await fetch("/api/me", {
+        credentials: "include"
+      });
+
+      const meData = await meResponse.json();
+
+      if (!meResponse.ok || !meData.success || !meData.user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const response = await fetch("/api/my-service-requests", {
+        method: "GET",
+        credentials: "include"
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.error || "تعذر تحميل طلبات الخدمات"
+        );
+      }
+
+      const requests =
+        Array.isArray(data.orders)
+          ? data.orders
+          : Array.isArray(data.requests)
+            ? data.requests
+            : [];
+
+      loadingBox.style.display = "none";
+
+      if (!requests.length) {
+        emptyBox.style.display = "block";
+        return;
+      }
+
+      requestsBox.innerHTML = requests.map(order => {
+
+        const title =
+          order.title ||
+          order.service_title ||
+          "طلب خدمة";
+
+        const status =
+          order.status || "pending";
+
+        const price =
+          order.price ?? 0;
+
+        const client =
+          order.client_name ||
+          order.customer_name ||
+          "العميل";
+
+        const email =
+          order.client_email ||
+          "";
+
+        const message =
+          order.client_message ||
+          order.message ||
+          "لا توجد رسالة مرفقة.";
+
+        return `
+          <article class="request">
+
+            <div class="request-top">
+
+              <div class="request-title">
+                ${escapeHtml(title)}
+              </div>
+
+              <span class="status ${statusClass(status)}">
+                ${escapeHtml(statusText(status))}
+              </span>
+
+            </div>
+
+            <div class="request-info">
+
+              <div class="info-box">
+                <span class="info-label">العميل</span>
+                <span class="info-value">
+                  ${escapeHtml(client)}
+                </span>
+              </div>
+
+              <div class="info-box">
+                <span class="info-label">البريد الإلكتروني</span>
+                <span class="info-value">
+                  ${escapeHtml(email || "غير متوفر")}
+                </span>
+              </div>
+
+              <div class="info-box">
+                <span class="info-label">السعر</span>
+                <span class="info-value">
+                  ${escapeHtml(price)} $
+                </span>
+              </div>
+
+            </div>
+
+            <div class="request-info">
+
+              <div class="info-box">
+                <span class="info-label">تاريخ الطلب</span>
+                <span class="info-value">
+                  ${escapeHtml(
+                    formatDate(order.created_at)
+                  )}
+                </span>
+              </div>
+
+              <div class="info-box">
+                <span class="info-label">الحالة</span>
+                <span class="info-value">
+                  ${escapeHtml(statusText(status))}
+                </span>
+              </div>
+
+              <div class="info-box">
+                <span class="info-label">رقم الطلب</span>
+                <span class="info-value">
+                  #${escapeHtml(order.id || "")}
+                </span>
+              </div>
+
+            </div>
+
+            <div class="message">
+              ${escapeHtml(message)}
+            </div>
+
+            <a
+              href="service-order-details.html?id=${encodeURIComponent(
+                order.id || ""
+              )}"
+              class="details-btn"
+            >
+              مشاهدة الطلب
+            </a>
+
+          </article>
+        `;
+
+      }).join("");
+
+    } catch (error) {
+
+      console.error(error);
+
+      loadingBox.style.display = "none";
+
+      errorBox.textContent =
+        error.message ||
+        "حدث خطأ أثناء تحميل الطلبات";
+
+      errorBox.style.display = "block";
+    }
+  }
+
+  loadRequests();
+
+</script>
+
+</body>
+</html>
