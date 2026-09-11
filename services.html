@@ -1,0 +1,622 @@
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>الخدمات | مِهراف</title>  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Header */
+    .header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: auto;
+      min-height: 70px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: bold;
+      color: #2563eb;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      padding: 9px 14px;
+      border-radius: 8px;
+      color: #4b5563;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .nav a:hover {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .nav .login {
+      background: #2563eb;
+      color: #ffffff;
+    }
+
+    .nav .login:hover {
+      background: #1d4ed8;
+      color: #ffffff;
+    }
+
+    /* Main */
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 35px 20px 60px;
+    }
+
+    .page-title {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 30px;
+      color: #111827;
+    }
+
+    .page-description {
+      text-align: center;
+      color: #6b7280;
+      font-size: 15px;
+      margin-bottom: 30px;
+    }
+
+    /* Filters */
+    .filters {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filters label {
+      font-size: 14px;
+      font-weight: bold;
+      color: #374151;
+    }
+
+    .category-select {
+      min-width: 210px;
+      padding: 11px 13px;
+      border: 1px solid #d1d5db;
+      border-radius: 9px;
+      background: #ffffff;
+      color: #374151;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .category-select:focus {
+      border-color: #2563eb;
+    }
+
+    .refresh-btn {
+      border: none;
+      background: #2563eb;
+      color: #ffffff;
+      padding: 11px 18px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .refresh-btn:hover {
+      background: #1d4ed8;
+    }
+
+    /* Services Grid */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .service-card {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 15px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      min-height: 285px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .service-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+    }
+
+    .service-category {
+      display: inline-block;
+      width: fit-content;
+      background: #eff6ff;
+      color: #2563eb;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .service-title {
+      font-size: 19px;
+      font-weight: bold;
+      color: #111827;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .service-description {
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.8;
+      flex: 1;
+      margin-bottom: 15px;
+    }
+
+    .service-footer {
+      border-top: 1px solid #f0f0f0;
+      padding-top: 14px;
+    }
+
+    .freelancer {
+      color: #4b5563;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .freelancer strong {
+      color: #111827;
+    }
+
+    .bottom-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .price {
+      color: #16a34a;
+      font-size: 19px;
+      font-weight: bold;
+    }
+
+    .price-label {
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: normal;
+    }
+
+    .view-btn {
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 9px 15px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .view-btn:hover {
+      background: #1d4ed8;
+    }
+
+    /* Loading */
+    .loading {
+      grid-column: 1 / -1;
+      text-align: center;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 45px 20px;
+      color: #6b7280;
+    }
+
+    .loader {
+      width: 35px;
+      height: 35px;
+      border: 4px solid #e5e7eb;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Empty */
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 50px 20px;
+      color: #6b7280;
+    }
+
+    .empty-icon {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .empty h3 {
+      color: #374151;
+      margin-bottom: 8px;
+    }
+
+    /* Error */
+    .error {
+      grid-column: 1 / -1;
+      background: #fff1f2;
+      border: 1px solid #fecdd3;
+      color: #be123c;
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid #e5e7eb;
+      background: #ffffff;
+      text-align: center;
+      padding: 22px 15px;
+      color: #6b7280;
+      font-size: 13px;
+      margin-top: 30px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 650px) {
+      .header-inner {
+        flex-direction: column;
+        justify-content: center;
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+
+      .nav {
+        justify-content: center;
+      }
+
+      .page-title {
+        font-size: 25px;
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filters {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .category-select,
+      .refresh-btn {
+        width: 100%;
+      }
+
+      .bottom-row {
+        align-items: flex-start;
+      }
+    }
+  </style></head><body>  <header class="header">
+    <div class="header-inner">  <a href="index.html" class="logo">
+    مِهراف
+  </a>
+
+  <nav class="nav">
+    <a href="index.html">الرئيسية</a>
+    <a href="services.html">الخدمات</a>
+    <a href="projects.html">المشاريع</a>
+    <a href="login.html" class="login">تسجيل الدخول</a>
+  </nav>
+
+</div>
+
+  </header>  <main class="container"><h1 class="page-title">الخدمات</h1>
+
+<p class="page-description">
+  تصفح الخدمات التي يقدمها المستقلون على منصة مِهراف
+</p>
+
+<section class="filters">
+
+  <label for="category">
+    التصنيف:
+  </label>
+
+  <select id="category" class="category-select">
+    <option value="">جميع التصنيفات</option>
+  </select>
+
+  <button class="refresh-btn" id="refreshBtn">
+    تحديث الخدمات
+  </button>
+
+</section>
+
+<section id="servicesGrid" class="services-grid">
+
+  <div class="loading">
+    <div class="loader"></div>
+    جاري تحميل الخدمات...
+  </div>
+
+</section>
+
+  </main>  <footer class="footer">
+    © 2026 مِهراف | MIHRAF - منصة الخدمات والمشاريع
+  </footer>  <script>
+    const API_URL = "/api/services";
+
+    const servicesGrid = document.getElementById("servicesGrid");
+    const categorySelect = document.getElementById("category");
+    const refreshBtn = document.getElementById("refreshBtn");
+
+    let allServices = [];
+
+    async function loadServices(category = "") {
+      servicesGrid.innerHTML = `
+        <div class="loading">
+          <div class="loader"></div>
+          جاري تحميل الخدمات...
+        </div>
+      `;
+
+      try {
+        let url = API_URL;
+
+        if (category) {
+          url += "?category=" + encodeURIComponent(category);
+        }
+
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Accept": "application/json"
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status);
+        }
+
+        const data = await response.json();
+
+        if (!data || data.success !== true) {
+          throw new Error("استجابة غير صحيحة من الخادم");
+        }
+
+        allServices = Array.isArray(data.services)
+          ? data.services
+          : [];
+
+        if (!category) {
+          buildCategories(allServices);
+        }
+
+        renderServices(allServices);
+
+      } catch (error) {
+        console.error("Services error:", error);
+
+        servicesGrid.innerHTML = `
+          <div class="error">
+            حدث خطأ أثناء تحميل الخدمات.<br>
+            يرجى المحاولة مرة أخرى.
+          </div>
+        `;
+      }
+    }
+
+    function buildCategories(services) {
+      const currentValue = categorySelect.value;
+
+      const categories = [
+        ...new Set(
+          services
+            .map(service => service.category)
+            .filter(category => category)
+        )
+      ];
+
+      categories.sort((a, b) => a.localeCompare(b, "ar"));
+
+      categorySelect.innerHTML = `
+        <option value="">جميع التصنيفات</option>
+      `;
+
+      categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        categorySelect.appendChild(option);
+      });
+
+      if (categories.includes(currentValue)) {
+        categorySelect.value = currentValue;
+      }
+    }
+
+    function renderServices(services) {
+
+      if (!services.length) {
+        servicesGrid.innerHTML = `
+          <div class="empty">
+            <div class="empty-icon">📭</div>
+            <h3>لا توجد خدمات حاليا</h3>
+            <p>
+              لم يتم العثور على خدمات منشورة في هذا التصنيف.
+            </p>
+          </div>
+        `;
+
+        return;
+      }
+
+      servicesGrid.innerHTML = "";
+
+      services.forEach(service => {
+
+        const card = document.createElement("article");
+        card.className = "service-card";
+
+        const title = escapeHtml(service.title || "خدمة بدون عنوان");
+        const description = escapeHtml(
+          service.description || "لا يوجد وصف للخدمة."
+        );
+        const category = escapeHtml(
+          service.category || "عام"
+        );
+        const freelancerName = escapeHtml(
+          service.freelancer_name || "مستقل"
+        );
+
+        const price = Number(service.price);
+
+        let formattedPrice = "غير محدد";
+
+        if (Number.isFinite(price)) {
+          formattedPrice = formatPrice(price);
+        }
+
+        card.innerHTML = `
+          <div class="service-category">
+            ${category}
+          </div>
+
+          <h2 class="service-title">
+            ${title}
+          </h2>
+
+          <p class="service-description">
+            ${description}
+          </p>
+
+          <div class="service-footer">
+
+            <div class="freelancer">
+              المستقل:
+              <strong>${freelancerName}</strong>
+            </div>
+
+            <div class="bottom-row">
+
+              <div class="price">
+                ${formattedPrice}
+                <span class="price-label">USD</span>
+              </div>
+
+              <button
+                class="view-btn"
+                type="button"
+                onclick="viewService(${Number(service.id)})"
+              >
+                عرض الخدمة
+              </button>
+
+            </div>
+
+          </div>
+        `;
+
+        servicesGrid.appendChild(card);
+      });
+    }
+
+    function formatPrice(price) {
+      return new Intl.NumberFormat("en-US", {
+        maximumFractionDigits: 2
+      }).format(price);
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function viewService(serviceId) {
+      /*
+        صفحة تفاصيل الخدمة سيتم ربطها لاحقا
+        بعد إنشاء service-details.html.
+      */
+
+      alert(
+        "تم اختيار الخدمة رقم " +
+        serviceId +
+        ". سيتم إضافة صفحة تفاصيل الخدمة في الخطوة القادمة."
+      );
+    }
+
+    categorySelect.addEventListener("change", function () {
+      loadServices(this.value);
+    });
+
+    refreshBtn.addEventListener("click", function () {
+      loadServices(categorySelect.value);
+    });
+
+    loadServices();
+  </script></body>
+</html>
