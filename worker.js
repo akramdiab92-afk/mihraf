@@ -733,12 +733,18 @@ async function forgotPassword(request, env) {
     error
   );
 
+  } catch (error) {
+
+  console.error(
+    "Forgot password error:",
+    error
+  );
+
   return json({
     success: false,
     error: "حدث خطأ أثناء معالجة طلب إعادة تعيين كلمة المرور",
     details: error?.message || String(error)
   }, 500);
- }
 }
 
 
