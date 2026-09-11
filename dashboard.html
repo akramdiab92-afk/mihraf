@@ -189,6 +189,14 @@
       color: #f87171;
     }
 
+    .purple .stat-number {
+      color: #c084fc;
+    }
+
+    .cyan .stat-number {
+      color: #22d3ee;
+    }
+
     .dashboard-section {
       background: #111827;
       border: 1px solid #263244;
@@ -342,10 +350,12 @@
     </div>
   </header>
 
+
   <main>
     <div class="container">
 
       <div class="error" id="errorBox"></div>
+
 
       <section class="welcome">
 
@@ -355,7 +365,7 @@
 
         <p>
           هذه لوحة التحكم الخاصة بك في منصة مِهراف.
-          يمكنك من هنا إدارة مشاريعك وخدماتك وعروضك وطلباتك.
+          من هنا يمكنك إدارة مشاريعك وخدماتك وعروضك وطلباتك وأعمالك.
         </p>
 
         <div class="account-info">
@@ -392,13 +402,53 @@
           </div>
 
           <div class="stat-card blue">
-            <div class="stat-label">المشاريع قيد التنفيذ</div>
+            <div class="stat-label">قيد التنفيذ</div>
             <div class="stat-number" id="inProgressProjects">0</div>
           </div>
 
           <div class="stat-card red">
             <div class="stat-label">المشاريع المكتملة</div>
             <div class="stat-number" id="completedProjects">0</div>
+          </div>
+
+          <div class="stat-card purple">
+            <div class="stat-label">إجمالي العروض</div>
+            <div class="stat-number" id="totalProposals">0</div>
+          </div>
+
+          <div class="stat-card orange">
+            <div class="stat-label">العروض المعلقة</div>
+            <div class="stat-number" id="pendingProposals">0</div>
+          </div>
+
+          <div class="stat-card green">
+            <div class="stat-label">العروض المقبولة</div>
+            <div class="stat-number" id="acceptedProposals">0</div>
+          </div>
+
+          <div class="stat-card red">
+            <div class="stat-label">العروض المرفوضة</div>
+            <div class="stat-number" id="rejectedProposals">0</div>
+          </div>
+
+          <div class="stat-card cyan">
+            <div class="stat-label">خدماتي</div>
+            <div class="stat-number" id="totalServices">0</div>
+          </div>
+
+          <div class="stat-card blue">
+            <div class="stat-label">طلباتي</div>
+            <div class="stat-number" id="totalServiceOrders">0</div>
+          </div>
+
+          <div class="stat-card orange">
+            <div class="stat-label">طلبات خدماتي</div>
+            <div class="stat-number" id="totalServiceRequests">0</div>
+          </div>
+
+          <div class="stat-card purple">
+            <div class="stat-label">معرض أعمالي</div>
+            <div class="stat-number" id="totalPortfolio">0</div>
           </div>
 
         </div>
@@ -486,7 +536,7 @@
 
       <section class="dashboard-section">
 
-        <h2>الطلبات</h2>
+        <h2>الطلبات والتواصل</h2>
 
         <div class="links-grid">
 
@@ -507,7 +557,7 @@
           <div class="dashboard-link">
             <strong>الإشعارات</strong>
             <span>
-              ستتم إضافة مركز الإشعارات المتكامل قريبا.
+              مركز الإشعارات المتكامل قيد التطوير.
             </span>
           </div>
 
@@ -536,10 +586,12 @@
     const loadingBox = document.getElementById("loadingBox");
     const errorBox = document.getElementById("errorBox");
 
+
     function showError(message) {
       errorBox.textContent = message;
       errorBox.style.display = "block";
     }
+
 
     function hideLoading() {
       loadingBox.style.display = "none";
@@ -547,11 +599,13 @@
 
 
     function setStat(id, value) {
+
       const element = document.getElementById(id);
 
       if (element) {
         element.textContent = Number(value || 0);
       }
+
     }
 
 
@@ -571,14 +625,19 @@
         const meData = await meResponse.json();
 
         if (!meResponse.ok || !meData.success || !meData.user) {
+
           window.location.href = "login.html";
+
           return;
         }
 
+
         const user = meData.user;
+
 
         document.getElementById("userName").textContent =
           user.full_name || user.name || "مستخدم مِهراف";
+
 
         document.getElementById("userEmail").textContent =
           user.email || "";
@@ -593,33 +652,43 @@
           credentials: "include"
         });
 
+
         const statsData = await statsResponse.json();
 
+
         if (!statsResponse.ok || !statsData.success) {
+
           throw new Error(
             statsData.error || "تعذر تحميل الإحصائيات"
           );
+
         }
+
 
         const stats = statsData.stats || {};
 
 
-        /* المشاريع */
+        /* =========================
+           المشاريع
+        ========================= */
 
         setStat(
           "totalProjects",
           stats.total_projects
         );
 
+
         setStat(
           "openProjects",
           stats.open_projects
         );
 
+
         setStat(
           "inProgressProjects",
           stats.in_progress_projects
         );
+
 
         setStat(
           "completedProjects",
@@ -627,7 +696,72 @@
         );
 
 
+        /* =========================
+           العروض
+        ========================= */
+
+        setStat(
+          "totalProposals",
+          stats.total_proposals
+        );
+
+
+        setStat(
+          "pendingProposals",
+          stats.pending_proposals
+        );
+
+
+        setStat(
+          "acceptedProposals",
+          stats.accepted_proposals
+        );
+
+
+        setStat(
+          "rejectedProposals",
+          stats.rejected_proposals
+        );
+
+
+        /* =========================
+           الخدمات
+        ========================= */
+
+        setStat(
+          "totalServices",
+          stats.total_services
+        );
+
+
+        /* =========================
+           طلبات الخدمات
+        ========================= */
+
+        setStat(
+          "totalServiceOrders",
+          stats.total_service_orders
+        );
+
+
+        setStat(
+          "totalServiceRequests",
+          stats.total_service_requests
+        );
+
+
+        /* =========================
+           معرض الأعمال
+        ========================= */
+
+        setStat(
+          "totalPortfolio",
+          stats.total_portfolio
+        );
+
+
         hideLoading();
+
 
       } catch (error) {
 
@@ -657,6 +791,7 @@
         button.disabled = true;
         button.textContent = "جار تسجيل الخروج...";
 
+
         try {
 
           await fetch("/api/logout", {
@@ -669,6 +804,7 @@
           console.error(error);
 
         }
+
 
         window.location.href = "login.html";
 
