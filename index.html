@@ -15,14 +15,29 @@
     :root {
       --bg: #181b20;
       --bg-soft: #20242a;
+      --bg-soft-2: #22272e;
+      --bg-deep: #15181c;
+
       --card: #242930;
-      --card-hover: #2a3038;
+      --card-hover: #2b3139;
+      --card-light: #292f37;
+
       --border: #30363f;
+      --border-light: #39414b;
+
       --text: #e7eaf0;
+      --text-strong: #f0f2f5;
       --muted: #9da4af;
+      --muted-dark: #737b87;
+
       --blue: #4f8cff;
       --blue-dark: #3978e8;
+      --blue-soft: rgba(79, 140, 255, 0.10);
+
+      --danger: #ef6f79;
       --white: #ffffff;
+
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
     }
 
     html {
@@ -31,11 +46,19 @@
 
     body {
       font-family: Arial, Tahoma, sans-serif;
-      background: var(--bg);
+      background:
+        linear-gradient(
+          180deg,
+          #181b20 0%,
+          #1a1e23 32%,
+          #1d2127 68%,
+          #191c21 100%
+        );
       color: var(--text);
       line-height: 1.7;
       font-size: 14px;
       overflow-x: hidden;
+      min-height: 100vh;
     }
 
     body.menu-open {
@@ -50,6 +73,10 @@
     button,
     input {
       font-family: inherit;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
     }
 
     .container {
@@ -71,21 +98,30 @@
       background:
         radial-gradient(
           circle at 50% 0%,
-          rgba(79, 140, 255, 0.16),
+          rgba(79, 140, 255, 0.13),
           transparent 45%
         ),
-        var(--bg);
+        linear-gradient(
+          145deg,
+          #181b20,
+          #20242a
+        );
     }
 
     .auth-gate-card {
       width: 100%;
       max-width: 460px;
-      background: #20242a;
-      border: 1px solid var(--border);
+      background:
+        linear-gradient(
+          145deg,
+          #242930,
+          #1f2329
+        );
+      border: 1px solid var(--border-light);
       border-radius: 18px;
       padding: 42px 30px;
       text-align: center;
-      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.42);
     }
 
     .auth-gate-logo {
@@ -97,7 +133,7 @@
     }
 
     .auth-gate-card h1 {
-      color: #f0f2f5;
+      color: var(--text-strong);
       font-size: 25px;
       margin-bottom: 10px;
     }
@@ -130,6 +166,7 @@
     .auth-gate-login {
       background: var(--blue);
       color: white;
+      box-shadow: 0 8px 20px rgba(79, 140, 255, 0.14);
     }
 
     .auth-gate-login:hover {
@@ -138,8 +175,13 @@
     }
 
     .auth-gate-register {
-      background: #292f37;
-      border: 1px solid var(--border);
+      background:
+        linear-gradient(
+          145deg,
+          #2b3038,
+          #252a31
+        );
+      border: 1px solid var(--border-light);
       color: #dfe4ea;
     }
 
@@ -164,7 +206,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--bg);
+      background:
+        linear-gradient(
+          145deg,
+          #181b20,
+          #20242a
+        );
       color: var(--muted);
     }
 
@@ -196,7 +243,12 @@
     ========================== */
 
     header {
-      background: rgba(24, 27, 32, 0.92);
+      background:
+        linear-gradient(
+          180deg,
+          rgba(28, 32, 37, 0.97),
+          rgba(24, 27, 32, 0.94)
+        );
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
@@ -256,7 +308,12 @@
       width: 42px;
       height: 42px;
       border: 1px solid var(--border);
-      background: var(--bg-soft);
+      background:
+        linear-gradient(
+          145deg,
+          #252a31,
+          #20242a
+        );
       color: var(--text);
       border-radius: 10px;
       display: flex;
@@ -269,7 +326,7 @@
 
     .notification-button:hover {
       background: var(--card);
-      border-color: #3d4652;
+      border-color: var(--border-light);
       transform: translateY(-1px);
     }
 
@@ -289,6 +346,8 @@
       text-align: center;
       border: 2px solid var(--bg);
       box-shadow: 0 2px 7px rgba(0,0,0,.25);
+      align-items: center;
+      justify-content: center;
     }
 
     .notification-panel {
@@ -298,10 +357,15 @@
       width: min(380px, calc(100vw - 24px));
       max-height: 70vh;
       overflow-y: auto;
-      background: #20242a;
-      border: 1px solid var(--border);
+      background:
+        linear-gradient(
+          145deg,
+          #252a31,
+          #20242a
+        );
+      border: 1px solid var(--border-light);
       border-radius: 14px;
-      box-shadow: 0 18px 50px rgba(0,0,0,.42);
+      box-shadow: var(--shadow);
       z-index: 300;
       display: none;
     }
@@ -319,7 +383,7 @@
       justify-content: space-between;
       gap: 10px;
       padding: 13px 14px;
-      background: #20242a;
+      background: #252a31;
       border-bottom: 1px solid var(--border);
     }
 
@@ -361,7 +425,7 @@
     }
 
     .notification-item:hover {
-      background: #292f37;
+      background: #2b3139;
     }
 
     .notification-item.unread {
@@ -377,7 +441,7 @@
       height: 34px;
       flex-shrink: 0;
       border-radius: 9px;
-      background: #292f37;
+      background: #2b3038;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -431,7 +495,12 @@
       width: 42px;
       height: 42px;
       border: 1px solid var(--border);
-      background: var(--bg-soft);
+      background:
+        linear-gradient(
+          145deg,
+          #252a31,
+          #20242a
+        );
       color: var(--text);
       border-radius: 10px;
       display: flex;
@@ -444,7 +513,7 @@
 
     .menu-button:hover {
       background: var(--card);
-      border-color: #3d4652;
+      border-color: var(--border-light);
       transform: translateY(-1px);
     }
 
@@ -474,7 +543,13 @@
       right: 0;
       width: min(350px, 88vw);
       height: 100vh;
-      background: #1d2127;
+      background:
+        linear-gradient(
+          180deg,
+          #20252b 0%,
+          #1c2026 45%,
+          #191d22 100%
+        );
       border-left: 1px solid var(--border);
       z-index: 501;
       transform: translateX(105%);
@@ -492,7 +567,12 @@
     .side-menu-header {
       padding: 14px 18px;
       border-bottom: 1px solid var(--border);
-      background: linear-gradient(145deg, #202731, #1b1f25);
+      background:
+        linear-gradient(
+          145deg,
+          #252b32,
+          #1d2228
+        );
       flex-shrink: 0;
     }
 
@@ -513,7 +593,7 @@
       width: 36px;
       height: 36px;
       border: 1px solid var(--border);
-      background: #252a31;
+      background: #292e35;
       color: var(--muted);
       border-radius: 9px;
       cursor: pointer;
@@ -523,7 +603,7 @@
 
     .close-menu:hover {
       color: white;
-      background: #2d333b;
+      background: #323840;
     }
 
     .user-info {
@@ -536,7 +616,12 @@
       width: 45px;
       height: 45px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #4f8cff, #356ed1);
+      background:
+        linear-gradient(
+          135deg,
+          #4f8cff,
+          #356ed1
+        );
       color: white;
       display: flex;
       align-items: center;
@@ -605,7 +690,7 @@
     }
 
     .menu-item:hover {
-      background: #272d35;
+      background: #292f36;
       color: white;
     }
 
@@ -613,7 +698,7 @@
       width: 28px;
       height: 28px;
       border-radius: 7px;
-      background: #262b32;
+      background: #282e35;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -623,7 +708,7 @@
     }
 
     .menu-item:hover .menu-icon {
-      background: #303844;
+      background: #333a43;
     }
 
     .menu-item-text {
@@ -713,7 +798,7 @@
       min-height: 36px;
       border: none;
       background: transparent;
-      color: #ef6f79;
+      color: var(--danger);
       border-radius: 8px;
       cursor: pointer;
       font-size: 13px;
@@ -728,7 +813,7 @@
 
     .logout-menu-btn .menu-icon {
       background: rgba(239, 111, 121, 0.08);
-      color: #ef6f79;
+      color: var(--danger);
     }
 
     .logout-menu-btn:disabled {
@@ -752,14 +837,19 @@
       background:
         radial-gradient(
           circle at 50% 0%,
-          rgba(79, 140, 255, 0.13),
+          rgba(79, 140, 255, 0.11),
           transparent 55%
+        ),
+        linear-gradient(
+          180deg,
+          rgba(32, 36, 42, 0.18),
+          transparent
         );
     }
 
     .hero-content h1 {
       font-size: 34px;
-      color: #f0f2f5;
+      color: var(--text-strong);
       margin-bottom: 15px;
     }
 
@@ -789,10 +879,16 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      background: var(--card);
-      border: 1px solid var(--border);
+      background:
+        linear-gradient(
+          145deg,
+          #282e35,
+          #22272e
+        );
+      border: 1px solid var(--border-light);
       border-radius: 13px;
       padding: 7px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.14);
     }
 
     .search-icon {
@@ -845,7 +941,7 @@
     }
 
     .section-title h2 {
-      color: #f0f2f5;
+      color: var(--text-strong);
       font-size: 24px;
       margin-bottom: 5px;
     }
@@ -866,7 +962,12 @@
     }
 
     .category {
-      background: var(--card);
+      background:
+        linear-gradient(
+          145deg,
+          #272d34,
+          #22272e
+        );
       border: 1px solid var(--border);
       border-radius: 13px;
       padding: 20px 15px;
@@ -875,8 +976,14 @@
     }
 
     .category:hover {
-      background: var(--card-hover);
+      background:
+        linear-gradient(
+          145deg,
+          #2d333b,
+          #272d34
+        );
       transform: translateY(-2px);
+      border-color: var(--border-light);
     }
 
     .category-icon {
@@ -906,7 +1013,12 @@
     }
 
     .card {
-      background: var(--card);
+      background:
+        linear-gradient(
+          145deg,
+          #272d34,
+          #22272e
+        );
       border: 1px solid var(--border);
       border-radius: 13px;
       overflow: hidden;
@@ -914,13 +1026,24 @@
     }
 
     .card:hover {
-      background: var(--card-hover);
+      background:
+        linear-gradient(
+          145deg,
+          #2d333b,
+          #272d34
+        );
       transform: translateY(-2px);
+      border-color: var(--border-light);
     }
 
     .card-image {
       height: 150px;
-      background: #292f37;
+      background:
+        linear-gradient(
+          145deg,
+          #30363e,
+          #282e35
+        );
       display: flex;
       align-items: center;
       justify-content: center;
@@ -951,6 +1074,78 @@
       margin-top: 12px;
     }
 
+    .service-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,.05);
+    }
+
+    .service-category {
+      color: #7f8894;
+      font-size: 10px;
+      background: rgba(255,255,255,.04);
+      padding: 4px 8px;
+      border-radius: 7px;
+    }
+
+    .service-provider {
+      color: #89929e;
+      font-size: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .services-loading,
+    .services-empty,
+    .services-error {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 35px 15px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background:
+        linear-gradient(
+          145deg,
+          #252b32,
+          #21262c
+        );
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .services-error {
+      color: #c7ccd3;
+    }
+
+    .services-error button {
+      margin-top: 12px;
+      border: none;
+      background: var(--blue);
+      color: white;
+      border-radius: 8px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .service-card {
+      cursor: pointer;
+    }
+
+    .service-card .card-image {
+      position: relative;
+    }
+
+    .service-image-icon {
+      font-size: 30px;
+      opacity: .8;
+    }
+
     /* =========================
        CTA
     ========================== */
@@ -961,12 +1156,12 @@
         linear-gradient(
           180deg,
           transparent,
-          rgba(79, 140, 255, 0.04)
+          rgba(79, 140, 255, 0.035)
         );
     }
 
     .cta h2 {
-      color: #f0f2f5;
+      color: var(--text-strong);
       font-size: 25px;
       margin-bottom: 8px;
     }
@@ -1001,6 +1196,12 @@
 
     footer {
       border-top: 1px solid var(--border);
+      background:
+        linear-gradient(
+          180deg,
+          #1b1f24,
+          #181b20
+        );
       text-align: center;
       padding: 30px 15px;
       color: var(--muted);
@@ -1086,6 +1287,11 @@
       .search-box button {
         padding: 0 15px;
       }
+
+      .service-meta {
+        align-items: flex-start;
+        flex-direction: column;
+      }
     }
   </style>
 </head>
@@ -1095,9 +1301,7 @@
   <!-- شاشة التحميل -->
 
   <div id="authLoading">
-
     <div class="loading-box">
-
       <div class="loading-logo">
         مِهراف
       </div>
@@ -1105,9 +1309,7 @@
       <div class="loading-text">
         جاري التحقق من الحساب...
       </div>
-
     </div>
-
   </div>
 
 
@@ -1423,7 +1625,7 @@
 
 
         <a
-          href="#services"
+          href="#featuredServices"
           class="menu-item"
           onclick="closeSideMenu()">
 
@@ -1688,7 +1890,8 @@
           <input
             type="text"
             id="searchInput"
-            placeholder="ابحث عن خدمة أو مشروع...">
+            placeholder="ابحث عن خدمة أو مشروع..."
+            onkeydown="handleSearchKey(event)">
 
           <button onclick="searchSite()">
             بحث
@@ -1701,7 +1904,7 @@
     </section>
 
 
-    <!-- SERVICES -->
+    <!-- SERVICE CATEGORIES -->
 
     <section id="services">
 
@@ -1723,138 +1926,58 @@
         <div class="categories">
 
           <div class="category">
-
-            <div class="category-icon">
-              🎨
-            </div>
-
-            <h3>
-              تصميم
-            </h3>
-
-            <p>
-              تصميمات إبداعية واحترافية
-            </p>
-
+            <div class="category-icon">🎨</div>
+            <h3>تصميم</h3>
+            <p>تصميمات إبداعية واحترافية</p>
           </div>
 
 
           <div class="category">
-
-            <div class="category-icon">
-              ✍️
-            </div>
-
-            <h3>
-              كتابة وترجمة
-            </h3>
-
-            <p>
-              محتوى وترجمة بمختلف اللغات
-            </p>
-
+            <div class="category-icon">✍️</div>
+            <h3>كتابة وترجمة</h3>
+            <p>محتوى وترجمة بمختلف اللغات</p>
           </div>
 
 
           <div class="category">
-
-            <div class="category-icon">
-              💻
-            </div>
-
-            <h3>
-              برمجة وتقنية
-            </h3>
-
-            <p>
-              مواقع وتطبيقات وحلول تقنية
-            </p>
-
+            <div class="category-icon">💻</div>
+            <h3>برمجة وتقنية</h3>
+            <p>مواقع وتطبيقات وحلول تقنية</p>
           </div>
 
 
           <div class="category">
-
-            <div class="category-icon">
-              📊
-            </div>
-
-            <h3>
-              تسويق وأعمال
-            </h3>
-
-            <p>
-              تسويق وإدارة وتطوير الأعمال
-            </p>
-
+            <div class="category-icon">📊</div>
+            <h3>تسويق وأعمال</h3>
+            <p>تسويق وإدارة وتطوير الأعمال</p>
           </div>
 
 
           <div class="category">
-
-            <div class="category-icon">
-              📁
-            </div>
-
-            <h3>
-              إدخال بيانات
-            </h3>
-
-            <p>
-              تنظيم وتنسيق البيانات
-            </p>
-
+            <div class="category-icon">📁</div>
+            <h3>إدخال بيانات</h3>
+            <p>تنظيم وتنسيق البيانات</p>
           </div>
 
 
           <div class="category">
-
-            <div class="category-icon">
-              🎬
-            </div>
-
-            <h3>
-              فيديو وصوت
-            </h3>
-
-            <p>
-              مونتاج وتحرير وإنتاج المحتوى
-            </p>
-
+            <div class="category-icon">🎬</div>
+            <h3>فيديو وصوت</h3>
+            <p>مونتاج وتحرير وإنتاج المحتوى</p>
           </div>
 
 
           <div class="category">
-
-            <div class="category-icon">
-              ⚖️
-            </div>
-
-            <h3>
-              استشارات
-            </h3>
-
-            <p>
-              خبرات واستشارات متخصصة
-            </p>
-
+            <div class="category-icon">⚖️</div>
+            <h3>استشارات</h3>
+            <p>خبرات واستشارات متخصصة</p>
           </div>
 
 
           <div class="category">
-
-            <div class="category-icon">
-              🛠️
-            </div>
-
-            <h3>
-              خدمات أخرى
-            </h3>
-
-            <p>
-              خدمات متنوعة حسب احتياجك
-            </p>
-
+            <div class="category-icon">🛠️</div>
+            <h3>خدمات أخرى</h3>
+            <p>خدمات متنوعة حسب احتياجك</p>
           </div>
 
         </div>
@@ -1864,9 +1987,9 @@
     </section>
 
 
-    <!-- FEATURED SERVICES -->
+    <!-- FEATURED REAL SERVICES -->
 
-    <section>
+    <section id="featuredServices">
 
       <div class="container">
 
@@ -1877,86 +2000,18 @@
           </h2>
 
           <p>
-            اكتشف خدمات يقدمها محترفون
+            اكتشف خدمات يقدمها محترفون على مِهراف
           </p>
 
         </div>
 
 
-        <div class="cards">
+        <div
+          class="cards"
+          id="featuredServicesGrid">
 
-          <div class="card">
-
-            <div class="card-image">
-              صورة الخدمة
-            </div>
-
-            <div class="card-content">
-
-              <h3>
-                تصميم إعلان احترافي
-              </h3>
-
-              <p>
-                تصميم إعلان جذاب مناسب لمواقع التواصل الاجتماعي.
-              </p>
-
-              <div class="price">
-                ابتداءً من $5
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <div class="card">
-
-            <div class="card-image">
-              صورة الخدمة
-            </div>
-
-            <div class="card-content">
-
-              <h3>
-                إدخال وتنسيق البيانات
-              </h3>
-
-              <p>
-                تنظيم البيانات وتحويل الملفات وتنسيقها بشكل احترافي.
-              </p>
-
-              <div class="price">
-                ابتداءً من $5
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <div class="card">
-
-            <div class="card-image">
-              صورة الخدمة
-            </div>
-
-            <div class="card-content">
-
-              <h3>
-                تحسين وتعديل الصور
-              </h3>
-
-              <p>
-                تحسين جودة الصور والألوان والخلفيات بشكل احترافي.
-              </p>
-
-              <div class="price">
-                ابتداءً من $5
-              </div>
-
-            </div>
-
+          <div class="services-loading">
+            جاري تحميل الخدمات...
           </div>
 
         </div>
@@ -2324,6 +2379,9 @@
       loadNotifications();
       startNotificationPolling();
 
+      /* تحميل الخدمات الحقيقية */
+      loadFeaturedServices();
+
     }
 
 
@@ -2553,10 +2611,413 @@
 
 
     /* =========================
+       الخدمات الحقيقية من D1
+    ========================== */
+
+    async function loadFeaturedServices() {
+
+      const grid =
+        document.getElementById(
+          "featuredServicesGrid"
+        );
+
+      if (!grid) {
+        return;
+      }
+
+
+      grid.innerHTML = `
+        <div class="services-loading">
+          جاري تحميل الخدمات...
+        </div>
+      `;
+
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/services",
+            {
+              method: "GET",
+              credentials: "include",
+              cache: "no-store"
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (
+          !response.ok ||
+          !data.success
+        ) {
+
+          throw new Error(
+            data.message ||
+            "تعذر تحميل الخدمات"
+          );
+
+        }
+
+
+        const services =
+          Array.isArray(data.services)
+            ? data.services
+            : [];
+
+
+        if (!services.length) {
+
+          grid.innerHTML = `
+            <div class="services-empty">
+              لا توجد خدمات منشورة حاليا.
+              <br>
+              ستظهر هنا الخدمات التي يضيفها المستقلون على مِهراف.
+            </div>
+          `;
+
+          return;
+
+        }
+
+
+        grid.innerHTML = "";
+
+
+        /*
+          نعرض أحدث الخدمات أولا
+          ونكتفي بأول 6 خدمات في الرئيسية
+        */
+
+        services
+          .slice(0, 6)
+          .forEach(service => {
+
+            const card =
+              document.createElement("div");
+
+            card.className =
+              "card service-card";
+
+
+            const image =
+              document.createElement("div");
+
+            image.className =
+              "card-image";
+
+
+            const imageIcon =
+              document.createElement("div");
+
+            imageIcon.className =
+              "service-image-icon";
+
+            imageIcon.textContent =
+              getServiceIcon(
+                service.category
+              );
+
+
+            image.appendChild(
+              imageIcon
+            );
+
+
+            const content =
+              document.createElement("div");
+
+            content.className =
+              "card-content";
+
+
+            const title =
+              document.createElement("h3");
+
+            title.textContent =
+              service.title ||
+              "خدمة بدون عنوان";
+
+
+            const description =
+              document.createElement("p");
+
+            description.textContent =
+              service.description ||
+              "لا يوجد وصف للخدمة.";
+
+
+            const price =
+              document.createElement("div");
+
+            price.className =
+              "price";
+
+            price.textContent =
+              "ابتداء من $" +
+              formatPrice(
+                service.price
+              );
+
+
+            const meta =
+              document.createElement("div");
+
+            meta.className =
+              "service-meta";
+
+
+            const category =
+              document.createElement("span");
+
+            category.className =
+              "service-category";
+
+            category.textContent =
+              service.category ||
+              "خدمات";
+
+
+            const provider =
+              document.createElement("span");
+
+            provider.className =
+              "service-provider";
+
+            provider.textContent =
+              service.freelancer_name
+                ? "بواسطة " +
+                  service.freelancer_name
+                : "مستقل على مِهراف";
+
+
+            meta.appendChild(
+              category
+            );
+
+            meta.appendChild(
+              provider
+            );
+
+
+            content.appendChild(
+              title
+            );
+
+            content.appendChild(
+              description
+            );
+
+            content.appendChild(
+              price
+            );
+
+            content.appendChild(
+              meta
+            );
+
+
+            card.appendChild(
+              image
+            );
+
+            card.appendChild(
+              content
+            );
+
+
+            /*
+              حاليا البطاقة تعرض الخدمة الحقيقية.
+              لاحقا نربطها بصفحة تفاصيل الخدمة.
+            */
+
+            card.addEventListener(
+              "click",
+              function() {
+
+                /*
+                  لا نرسل المستخدم إلى صفحة
+                  غير موجودة حاليا.
+                  يمكن ربطها لاحقا بصفحة
+                  service-details.html.
+                */
+
+                window.location.hash =
+                  "featuredServices";
+
+              }
+            );
+
+
+            grid.appendChild(
+              card
+            );
+
+          });
+
+
+      } catch (error) {
+
+        console.error(
+          "Featured services error:",
+          error
+        );
+
+
+        grid.innerHTML = `
+          <div class="services-error">
+            تعذر تحميل الخدمات حاليا.
+            <br>
+            حاول تحديث الصفحة مرة أخرى.
+            <br>
+            <button
+              type="button"
+              onclick="loadFeaturedServices()">
+              إعادة المحاولة
+            </button>
+          </div>
+        `;
+
+      }
+
+    }
+
+
+    function formatPrice(value) {
+
+      const number =
+        Number(value);
+
+
+      if (
+        !Number.isFinite(number)
+      ) {
+
+        return "0";
+
+      }
+
+
+      if (
+        Number.isInteger(number)
+      ) {
+
+        return String(number);
+
+      }
+
+
+      return number
+        .toFixed(2)
+        .replace(
+          /\.?0+$/,
+          ""
+        );
+
+    }
+
+
+    function getServiceIcon(category) {
+
+      const value =
+        String(
+          category || ""
+        ).toLowerCase();
+
+
+      if (
+        value.includes("تصميم")
+      ) {
+
+        return "🎨";
+
+      }
+
+
+      if (
+        value.includes("كتابة") ||
+        value.includes("ترجمة")
+      ) {
+
+        return "✍️";
+
+      }
+
+
+      if (
+        value.includes("برمجة") ||
+        value.includes("تقنية")
+      ) {
+
+        return "💻";
+
+      }
+
+
+      if (
+        value.includes("تسويق") ||
+        value.includes("أعمال")
+      ) {
+
+        return "📊";
+
+      }
+
+
+      if (
+        value.includes("بيانات")
+      ) {
+
+        return "📁";
+
+      }
+
+
+      if (
+        value.includes("فيديو") ||
+        value.includes("صوت")
+      ) {
+
+        return "🎬";
+
+      }
+
+
+      if (
+        value.includes("استشار")
+      ) {
+
+        return "⚖️";
+
+      }
+
+
+      return "🛠️";
+
+    }
+
+
+    /* =========================
        البحث
     ========================== */
 
-    function searchSite() {
+    function handleSearchKey(event) {
+
+      if (
+        event.key === "Enter"
+      ) {
+
+        searchSite();
+
+      }
+
+    }
+
+
+    async function searchSite() {
 
       const input =
         document.getElementById(
@@ -2577,9 +3038,319 @@
       }
 
 
-      alert(
-        "ميزة البحث سيتم ربطها بالخدمات والمشاريع الحقيقية في الخطوة القادمة."
-      );
+      /*
+        في المرحلة الحالية البحث يعمل
+        داخل الخدمات الحقيقية التي يتم
+        تحميلها من D1.
+      */
+
+      const grid =
+        document.getElementById(
+          "featuredServicesGrid"
+        );
+
+
+      if (!grid) {
+        return;
+      }
+
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/services",
+            {
+              method: "GET",
+              credentials: "include",
+              cache: "no-store"
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (
+          !response.ok ||
+          !data.success
+        ) {
+
+          throw new Error(
+            data.message ||
+            "تعذر البحث"
+          );
+
+        }
+
+
+        const services =
+          Array.isArray(data.services)
+            ? data.services
+            : [];
+
+
+        const searchValue =
+          value.toLowerCase();
+
+
+        const results =
+          services.filter(
+            service => {
+
+              const title =
+                String(
+                  service.title || ""
+                ).toLowerCase();
+
+              const description =
+                String(
+                  service.description || ""
+                ).toLowerCase();
+
+              const category =
+                String(
+                  service.category || ""
+                ).toLowerCase();
+
+              const provider =
+                String(
+                  service.freelancer_name || ""
+                ).toLowerCase();
+
+
+              return (
+                title.includes(searchValue) ||
+                description.includes(searchValue) ||
+                category.includes(searchValue) ||
+                provider.includes(searchValue)
+              );
+
+            }
+          );
+
+
+        document
+          .getElementById(
+            "featuredServices"
+          )
+          .scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+
+
+        renderServiceResults(
+          results,
+          value
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Search error:",
+          error
+        );
+
+        alert(
+          "تعذر تنفيذ البحث حاليا"
+        );
+
+      }
+
+    }
+
+
+    function renderServiceResults(
+      services,
+      searchValue
+    ) {
+
+      const grid =
+        document.getElementById(
+          "featuredServicesGrid"
+        );
+
+
+      if (!grid) {
+        return;
+      }
+
+
+      grid.innerHTML = "";
+
+
+      if (!services.length) {
+
+        grid.innerHTML = `
+          <div class="services-empty">
+            لم نجد خدمات مطابقة لـ
+            <strong>${escapeHtml(searchValue)}</strong>
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      services
+        .slice(0, 6)
+        .forEach(service => {
+
+          const card =
+            document.createElement("div");
+
+          card.className =
+            "card service-card";
+
+
+          const image =
+            document.createElement("div");
+
+          image.className =
+            "card-image";
+
+
+          const icon =
+            document.createElement("div");
+
+          icon.className =
+            "service-image-icon";
+
+          icon.textContent =
+            getServiceIcon(
+              service.category
+            );
+
+
+          image.appendChild(
+            icon
+          );
+
+
+          const content =
+            document.createElement("div");
+
+          content.className =
+            "card-content";
+
+
+          const title =
+            document.createElement("h3");
+
+          title.textContent =
+            service.title ||
+            "خدمة";
+
+
+          const description =
+            document.createElement("p");
+
+          description.textContent =
+            service.description ||
+            "";
+
+
+          const price =
+            document.createElement("div");
+
+          price.className =
+            "price";
+
+          price.textContent =
+            "ابتداء من $" +
+            formatPrice(
+              service.price
+            );
+
+
+          const meta =
+            document.createElement("div");
+
+          meta.className =
+            "service-meta";
+
+
+          const category =
+            document.createElement("span");
+
+          category.className =
+            "service-category";
+
+          category.textContent =
+            service.category ||
+            "خدمات";
+
+
+          const provider =
+            document.createElement("span");
+
+          provider.className =
+            "service-provider";
+
+          provider.textContent =
+            service.freelancer_name
+              ? "بواسطة " +
+                service.freelancer_name
+              : "مستقل على مِهراف";
+
+
+          meta.appendChild(
+            category
+          );
+
+          meta.appendChild(
+            provider
+          );
+
+
+          content.appendChild(
+            title
+          );
+
+          content.appendChild(
+            description
+          );
+
+          content.appendChild(
+            price
+          );
+
+          content.appendChild(
+            meta
+          );
+
+
+          card.appendChild(
+            image
+          );
+
+          card.appendChild(
+            content
+          );
+
+
+          grid.appendChild(
+            card
+          );
+
+        });
+
+    }
+
+
+    function escapeHtml(value) {
+
+      const div =
+        document.createElement("div");
+
+      div.textContent =
+        String(value || "");
+
+      return div.innerHTML;
 
     }
 
