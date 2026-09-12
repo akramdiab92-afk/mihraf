@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>الأسئلة الشائعة | مِهراف</title>
+  <meta name="description" content="الأسئلة الشائعة حول منصة مِهراف للخدمات والمشاريع">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #07111f;
+      --bg-soft: #0b1728;
+      --card: #101f33;
+      --card-hover: #14263e;
+      --border: rgba(255,255,255,0.09);
+      --text: #f4f7fb;
+      --muted: #9eacbd;
+      --primary: #5b8cff;
+      --primary-dark: #3f6fe0;
+      --success: #35d39a;
+      --danger: #ff6b7a;
+      --shadow: 0 20px 50px rgba(0,0,0,0.25);
+    }
+
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(91,140,255,0.12), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(53,211,154,0.07), transparent 30%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.8;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7,17,31,0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1150px;
+      margin: auto;
+      min-height: 76px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    nav a {
+      color: var(--muted);
+      padding: 9px 14px;
+      border-radius: 10px;
+      transition: 0.2s;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+    }
+
+    .back-btn {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+      padding: 9px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* HERO */
+    .hero {
+      max-width: 950px;
+      margin: 0 auto;
+      padding: 75px 20px 45px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: rgba(91,140,255,0.12);
+      border: 1px solid rgba(91,140,255,0.25);
+      color: #8fb0ff;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 50px);
+      line-height: 1.25;
+      margin-bottom: 18px;
+      font-weight: 900;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    /* SEARCH */
+    .search-box {
+      max-width: 700px;
+      margin: 10px auto 55px;
+      padding: 0 20px;
+    }
+
+    .search-wrapper {
+      position: relative;
+    }
+
+    .search-wrapper input {
+      width: 100%;
+      height: 58px;
+      padding: 0 55px 0 20px;
+      border-radius: 15px;
+      border: 1px solid var(--border);
+      outline: none;
+      background: var(--card);
+      color: #fff;
+      font-size: 15px;
+      box-shadow: var(--shadow);
+      transition: 0.2s;
+    }
+
+    .search-wrapper input::placeholder {
+      color: #718096;
+    }
+
+    .search-wrapper input:focus {
+      border-color: rgba(91,140,255,0.6);
+      box-shadow: 0 0 0 4px rgba(91,140,255,0.08);
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 19px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 20px;
+      pointer-events: none;
+    }
+
+    /* CONTENT */
+    main {
+      max-width: 950px;
+      margin: auto;
+      padding: 0 20px 80px;
+    }
+
+    .section-title {
+      margin-bottom: 20px;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background: rgba(16,31,51,0.92);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      overflow: hidden;
+      transition: 0.25s;
+    }
+
+    .faq-item:hover {
+      border-color: rgba(91,140,255,0.25);
+    }
+
+    .faq-question {
+      width: 100%;
+      background: transparent;
+      border: 0;
+      color: #fff;
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      cursor: pointer;
+      text-align: right;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .question-text {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .question-icon {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(91,140,255,0.12);
+      color: #8fb0ff;
+      font-size: 15px;
+    }
+
+    .plus {
+      width: 30px;
+      height: 30px;
+      min-width: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      font-size: 22px;
+      transition: 0.25s;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .answer-content {
+      padding: 0 22px 22px;
+      color: var(--muted);
+      font-size: 14px;
+      border-top: 1px solid transparent;
+    }
+
+    .answer-content p {
+      margin-top: 15px;
+    }
+
+    .answer-content strong {
+      color: #dce5f2;
+    }
+
+    .faq-item.active {
+      border-color: rgba(91,140,255,0.32);
+      background: var(--card-hover);
+    }
+
+    .faq-item.active .plus {
+      transform: rotate(45deg);
+      color: #fff;
+      background: rgba(91,140,255,0.18);
+    }
+
+    .faq-item.active .answer-content {
+      border-top-color: rgba(255,255,255,0.05);
+    }
+
+    /* NO RESULTS */
+    .no-results {
+      display: none;
+      text-align: center;
+      padding: 45px 20px;
+      color: var(--muted);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+    }
+
+    .no-results-icon {
+      font-size: 38px;
+      margin-bottom: 10px;
+    }
+
+    /* CTA */
+    .support-box {
+      margin-top: 55px;
+      padding: 35px 30px;
+      border-radius: 20px;
+      border: 1px solid rgba(91,140,255,0.2);
+      background:
+        linear-gradient(
+          135deg,
+          rgba(91,140,255,0.12),
+          rgba(53,211,154,0.05)
+        );
+      text-align: center;
+    }
+
+    .support-box h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .support-box p {
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 22px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 45px;
+      padding: 0 20px;
+      border-radius: 11px;
+      transition: 0.2s;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      background: rgba(4,10,19,0.7);
+      padding: 35px 20px;
+    }
+
+    .footer-inner {
+      max-width: 1150px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-logo {
+      font-size: 21px;
+      font-weight: 900;
+    }
+
+    .footer-logo span {
+      color: var(--primary);
+    }
+
+    .footer-copy {
+      color: #718096;
+      font-size: 13px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #8492a5;
+      font-size: 13px;
+    }
+
+    .footer-links a:hover {
+      color: #fff;
+    }
+
+    /* MOBILE */
+    @media (max-width: 700px) {
+      .header-inner {
+        min-height: 68px;
+      }
+
+      nav {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 55px;
+      }
+
+      .hero p {
+        font-size: 15px;
+      }
+
+      .faq-question {
+        padding: 17px;
+        font-size: 14px;
+      }
+
+      .answer-content {
+        padding: 0 17px 18px;
+        font-size: 13px;
+      }
+
+      .question-icon {
+        width: 29px;
+        height: 29px;
+        min-width: 29px;
+      }
+
+      .support-box {
+        padding: 28px 20px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-links {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+
+      <a href="index.html" class="logo">
+        مِهراف<span>.</span>
+      </a>
+
+      <nav>
+        <a href="services.html">الخدمات</a>
+        <a href="projects.html">المشاريع</a>
+        <a href="guides.html">الدليل</a>
+        <a href="support.html">الدعم</a>
+      </nav>
+
+      <button class="back-btn" onclick="goBack()">
+        ← رجوع
+      </button>
+
+    </div>
+  </header>
+
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="hero-badge">
+      مركز المساعدة
+    </div>
+
+    <h1>
+      الأسئلة <span>الشائعة</span>
+    </h1>
+
+    <p>
+      ستجد هنا إجابات عن أكثر الأسئلة التي قد تواجهك أثناء استخدام
+      منصة مِهراف للخدمات والمشاريع.
+    </p>
+
+  </section>
+
+
+  <!-- SEARCH -->
+  <div class="search-box">
+
+    <div class="search-wrapper">
+
+      <span class="search-icon">⌕</span>
+
+      <input
+        type="search"
+        id="faqSearch"
+        placeholder="ابحث عن سؤال..."
+        autocomplete="off"
+      >
+
+    </div>
+
+  </div>
+
+
+  <!-- FAQ -->
+  <main>
+
+    <h2 class="section-title">
+      أكثر الأسئلة شيوعا
+    </h2>
+
+    <div class="faq-list" id="faqList">
+
+
+      <!-- 1 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">؟</span>
+            ما هي منصة مِهراف؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              مِهراف هي منصة تجمع أصحاب المشاريع والأشخاص الذين
+              يقدمون الخدمات والمهارات المختلفة في مكان واحد.
+            </p>
+
+            <p>
+              يمكنك من خلال المنصة نشر مشروع، تقديم عرض على مشروع،
+              نشر خدمة، أو الاستفادة من الخدمات التي يقدمها الآخرون.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 2 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">👤</span>
+            هل أستطيع استخدام الحساب لأكثر من شيء؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              نعم. حساب مِهراف يمكن استخدامه للتعامل مع أكثر من نوع
+              من النشاط داخل المنصة.
+            </p>
+
+            <p>
+              يمكنك مثلا نشر خدمة، إنشاء مشروع، التقديم على مشاريع،
+              وشراء أو طلب خدمات من مستخدمين آخرين حسب احتياجك.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 3 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">🔐</span>
+            هل إنشاء الحساب مجاني؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              إنشاء الحساب في مِهراف مجاني.
+            </p>
+
+            <p>
+              بعض العمليات أو الخدمات المستقبلية قد تخضع لرسوم أو
+              عمولات وفقا لنظام المنصة وشروطها المعلنة.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 4 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">🛠</span>
+            كيف يمكنني نشر خدمة؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              بعد تسجيل الدخول، يمكنك الانتقال إلى قسم الخدمات
+              واستخدام خيار نشر خدمة عندما يكون متاحا في حسابك.
+            </p>
+
+            <p>
+              احرص على كتابة عنوان واضح، ووصف دقيق للخدمة، وتحديد
+              التفاصيل التي يحتاجها العميل قبل الطلب.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 5 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">📋</span>
+            كيف يمكنني نشر مشروع؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              يمكنك إنشاء مشروع وكتابة تفاصيل العمل المطلوب والمدة
+              والميزانية والمعلومات التي تساعد المنفذين على فهم المشروع.
+            </p>
+
+            <p>
+              كلما كانت تفاصيل المشروع أوضح، كانت العروض التي تحصل
+              عليها أكثر دقة.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 6 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">💼</span>
+            كيف أقدم عرضا على مشروع؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              افتح المشروع الذي يناسب مهاراتك، ثم راجع تفاصيله جيدا
+              واكتب عرضا يوضح قدرتك على تنفيذ العمل.
+            </p>
+
+            <p>
+              يفضل أن يكون العرض واضحا ومختصرا، مع ذكر المدة المتوقعة
+              والتكلفة وما الذي ستقدمه للعميل.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 7 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">✅</span>
+            ماذا يحدث بعد قبول العرض؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              بعد قبول العرض تبدأ مرحلة تنفيذ المشروع وفقا للتفاصيل
+              المتفق عليها.
+            </p>
+
+            <p>
+              يجب الحفاظ على وضوح الاتفاق ومتابعة حالة التنفيذ حتى
+              يتم تسليم العمل بالشكل المطلوب.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 8 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">📦</span>
+            كيف يتم تسليم العمل؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              بعد الانتهاء من تنفيذ العمل، يتم استخدام آلية التسليم
+              المتاحة داخل المشروع لإرسال النتيجة إلى صاحب المشروع.
+            </p>
+
+            <p>
+              يستطيع صاحب المشروع مراجعة التسليم وقبوله أو طلب
+              التعديلات المناسبة وفقا لما تم الاتفاق عليه.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 9 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">⭐</span>
+            هل توجد تقييمات؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              نظام التقييمات يساعد المستخدمين على بناء سمعتهم داخل
+              المنصة من خلال تقييم التعامل وجودة تنفيذ الأعمال.
+            </p>
+
+            <p>
+              احرص دائما على تقديم عمل جيد والتواصل باحترام ووضوح
+              للحفاظ على تقييم إيجابي.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 10 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">🛡</span>
+            ماذا أفعل إذا حدث خلاف مع مستخدم؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              حاول أولا حل المشكلة من خلال التواصل الواضح مع الطرف
+              الآخر والرجوع إلى تفاصيل المشروع أو الخدمة المتفق عليها.
+            </p>
+
+            <p>
+              إذا لم تتمكن من حل المشكلة، يمكنك التواصل مع الدعم
+              وشرح المشكلة مع تقديم المعلومات المتعلقة بالعملية.
+            </p>
+
+            <p>
+              لمزيد من المعلومات يمكنك مراجعة صفحة
+              <strong>ضمان الحقوق</strong>.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 11 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">🚨</span>
+            ماذا أفعل إذا واجهت مشكلة في الحساب؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              تأكد أولا من البريد الإلكتروني وكلمة المرور واتصال
+              الإنترنت.
+            </p>
+
+            <p>
+              إذا استمرت المشكلة، توجه إلى صفحة الدعم وأرسل تفاصيل
+              المشكلة حتى يمكن متابعتها.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 12 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">🔒</span>
+            كيف أحافظ على أمان حسابي؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              استخدم كلمة مرور قوية ولا تشاركها مع أي شخص.
+            </p>
+
+            <p>
+              لا ترسل رموز الدخول أو رموز التحقق لأي شخص يدعي أنه
+              من الدعم دون التأكد من هويته عبر القنوات الرسمية.
+            </p>
+
+            <p>
+              كذلك تجنب الضغط على الروابط المشبوهة أو مشاركة بيانات
+              حسابك مع الآخرين.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 13 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">📞</span>
+            كيف أتواصل مع دعم مِهراف؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              يمكنك الانتقال إلى صفحة
+              <strong>الدعم</strong>
+              وإرسال طلب يوضح المشكلة التي تواجهها.
+            </p>
+
+            <p>
+              حاول إضافة أكبر قدر ممكن من التفاصيل حتى يكون من
+              السهل فهم المشكلة ومساعدتك.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 14 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">📜</span>
+            أين أجد شروط استخدام المنصة؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              يمكنك الاطلاع على
+              <strong>شروط الاستخدام</strong>
+              وسياسة الخصوصية من الروابط الموجودة في أسفل صفحات
+              مِهراف.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- 15 -->
+      <div class="faq-item">
+
+        <button class="faq-question">
+
+          <span class="question-text">
+            <span class="question-icon">💡</span>
+            ما النصيحة الأهم لاستخدام مِهراف؟
+          </span>
+
+          <span class="plus">+</span>
+
+        </button>
+
+        <div class="faq-answer">
+
+          <div class="answer-content">
+
+            <p>
+              الوضوح هو أهم شيء.
+            </p>
+
+            <p>
+              اكتب تفاصيل الخدمة أو المشروع بشكل واضح، اتفق على
+              المطلوب قبل البدء، حافظ على التواصل داخل المنصة قدر
+              الإمكان، ولا تقدم وعودا لا تستطيع تنفيذها.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+    <!-- NO RESULTS -->
+    <div class="no-results" id="noResults">
+
+      <div class="no-results-icon">🔎</div>
+
+      <h3>لم نجد نتائج</h3>
+
+      <p>
+        جرب البحث باستخدام كلمات مختلفة.
+      </p>
+
+    </div>
+
+
+    <!-- SUPPORT CTA -->
+    <div class="support-box">
+
+      <h2>
+        لم تجد إجابة سؤالك؟
+      </h2>
+
+      <p>
+        إذا لم تجد ما تبحث عنه، يمكنك الانتقال إلى صفحة الدعم
+        وإرسال استفسارك بشكل مباشر.
+      </p>
+
+      <div class="buttons">
+
+        <a href="support.html" class="btn btn-primary">
+          تواصل مع الدعم
+        </a>
+
+        <a href="guides.html" class="btn btn-secondary">
+          قراءة الدليل
+        </a>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer>
+
+    <div class="footer-inner">
+
+      <div>
+        <div class="footer-logo">
+          مِهراف<span>.</span>
+        </div>
+
+        <div class="footer-copy">
+          منصة تجمع أصحاب المشاريع وأصحاب المهارات.
+        </div>
+      </div>
+
+      <div class="footer-links">
+
+        <a href="guides.html">الدليل</a>
+        <a href="support.html">الدعم</a>
+        <a href="rights.html">ضمان الحقوق</a>
+        <a href="privacy.html">الخصوصية</a>
+        <a href="terms.html">الشروط</a>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script>
+
+    /* الرجوع */
+    function goBack() {
+      if (document.referrer) {
+        history.back();
+      } else {
+        window.location.href = "index.html";
+      }
+    }
+
+
+    /* فتح وإغلاق الأسئلة */
+    const faqItems = document.querySelectorAll(".faq-item");
+
+    faqItems.forEach(item => {
+
+      const question = item.querySelector(".faq-question");
+      const answer = item.querySelector(".faq-answer");
+
+      question.addEventListener("click", () => {
+
+        const isActive = item.classList.contains("active");
+
+        /* إغلاق جميع الأسئلة */
+        faqItems.forEach(otherItem => {
+
+          otherItem.classList.remove("active");
+
+          const otherAnswer =
+            otherItem.querySelector(".faq-answer");
+
+          otherAnswer.style.maxHeight = null;
+
+        });
+
+        /* فتح السؤال المحدد */
+        if (!isActive) {
+
+          item.classList.add("active");
+
+          answer.style.maxHeight =
+            answer.scrollHeight + "px";
+
+        }
+
+      });
+
+    });
+
+
+    /* البحث */
+    const searchInput =
+      document.getElementById("faqSearch");
+
+    const noResults =
+      document.getElementById("noResults");
+
+    searchInput.addEventListener("input", function () {
+
+      const searchValue =
+        this.value.trim().toLowerCase();
+
+      let visibleCount = 0;
+
+      faqItems.forEach(item => {
+
+        const text =
+          item.textContent.toLowerCase();
+
+        if (
+          searchValue === "" ||
+          text.includes(searchValue)
+        ) {
+
+          item.style.display = "";
+
+          visibleCount++;
+
+        } else {
+
+          item.style.display = "none";
+
+          item.classList.remove("active");
+
+          item.querySelector(".faq-answer").style.maxHeight = null;
+
+        }
+
+      });
+
+
+      if (visibleCount === 0) {
+
+        noResults.style.display = "block";
+
+      } else {
+
+        noResults.style.display = "none";
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>
