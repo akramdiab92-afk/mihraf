@@ -75,41 +75,6 @@
       box-shadow: 0 0 0 3px rgba(102,126,234,0.12);
     }
 
-    .roles {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 8px;
-    }
-
-    .role-option {
-      position: relative;
-    }
-
-    .role-option input {
-      position: absolute;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .role-label {
-      display: block;
-      text-align: center;
-      padding: 14px 8px;
-      border: 2px solid #e2e2e2;
-      border-radius: 10px;
-      cursor: pointer;
-      color: #555;
-      transition: 0.2s;
-      font-weight: bold;
-    }
-
-    .role-option input:checked + .role-label {
-      border-color: #667eea;
-      background: #f1f3ff;
-      color: #667eea;
-    }
-
     .terms {
       display: flex;
       align-items: flex-start;
@@ -274,38 +239,12 @@
         >
       </div>
 
-      <div class="form-group">
-        <label>نوع الحساب</label>
-
-        <div class="roles">
-
-          <div class="role-option">
-            <input
-              type="radio"
-              id="client"
-              name="role"
-              value="client"
-              checked
-            >
-            <label class="role-label" for="client">
-              طالب خدمة
-            </label>
-          </div>
-
-          <div class="role-option">
-            <input
-              type="radio"
-              id="freelancer"
-              name="role"
-              value="freelancer"
-            >
-            <label class="role-label" for="freelancer">
-              منفذ
-            </label>
-          </div>
-
-        </div>
-      </div>
+      <!-- نوع الحساب مخفي للتوافق مع النظام الحالي -->
+      <input
+        type="hidden"
+        name="role"
+        value="client"
+      >
 
       <div class="terms">
         <input type="checkbox" id="terms" required>
@@ -357,7 +296,9 @@
       const email = document.getElementById("email").value.trim().toLowerCase();
       const password = document.getElementById("password").value;
       const confirm_password = document.getElementById("confirm_password").value;
-      const role = document.querySelector('input[name="role"]:checked')?.value;
+
+      // حساب موحد: نرسل قيمة متوافقة مع قاعدة البيانات الحالية
+      const role = "client";
 
       if (!full_name) {
         showMessage("يرجى إدخال الاسم الكامل.");
@@ -376,11 +317,6 @@
 
       if (password !== confirm_password) {
         showMessage("كلمتا المرور غير متطابقتين.");
-        return;
-      }
-
-      if (!role) {
-        showMessage("يرجى اختيار نوع الحساب.");
         return;
       }
 
