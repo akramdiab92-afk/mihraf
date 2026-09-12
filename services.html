@@ -443,9 +443,14 @@
   let allServices = [];
   let currentCategory = "";
 
-  const searchInput = document.getElementById("searchInput");
-  const categoryFilter = document.getElementById("categoryFilter");
-  const sortFilter = document.getElementById("sortFilter");
+  const searchInput =
+    document.getElementById("searchInput");
+
+  const categoryFilter =
+    document.getElementById("categoryFilter");
+
+  const sortFilter =
+    document.getElementById("sortFilter");
 
   const categoryButtons =
     document.getElementById("categoryButtons");
@@ -466,9 +471,28 @@
     document.getElementById("servicesCount");
 
 
-  async function loadServices(category = "") {
+  /* =========================
+     قراءة التصنيف من الرابط
+  ========================== */
 
-    currentCategory = category;
+  function getCategoryFromUrl() {
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    return cleanValue(
+      params.get("category")
+    );
+  }
+
+
+  /* =========================
+     تحميل كل الخدمات
+  ========================== */
+
+  async function loadServices() {
 
     loading.style.display = "block";
     servicesGrid.style.display = "none";
@@ -477,19 +501,20 @@
 
     try {
 
-      let url = API_URL;
+      /*
+        مهم:
+        لا نرسل category إلى الـ API.
+        نجلب كل الخدمات ثم نعمل الفلترة
+        داخل الصفحة.
+      */
 
-      if (category) {
-        url += "?category=" +
-          encodeURIComponent(category);
-      }
-
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Accept": "application/json"
-        }
-      });
+      const response =
+        await fetch(API_URL, {
+          method: "GET",
+          headers: {
+            "Accept": "application/json"
+          }
+        });
 
       let data = null;
 
@@ -506,6 +531,7 @@
           data?.message ||
           "تعذر تحميل الخدمات"
         );
+
       }
 
       allServices =
@@ -513,17 +539,66 @@
           ? data.services
           : [];
 
-      if (!category) {
-        buildCategories(allServices);
+      /*
+        استخراج كل التصنيفات من كل الخدمات
+      */
+
+      buildCategories(allServices);
+
+      /*
+        قراءة التصنيف الموجود في الرابط
+      */
+
+      const urlCategory =
+        getCategoryFromUrl();
+
+      /*
+        إذا التصنيف الموجود بالرابط
+        موجود فعلا ضمن الخدمات، نفعله.
+      */
+
+      const categories =
+        [
+          ...new Set(
+            allServices
+              .map(service =>
+                cleanValue(service.category)
+              )
+              .filter(Boolean)
+          )
+        ];
+
+      if (
+        urlCategory &&
+        categories.includes(urlCategory)
+      ) {
+
+        currentCategory = urlCategory;
+
+        categoryFilter.value =
+          urlCategory;
+
+      } else {
+
+        currentCategory = "";
+
+        categoryFilter.value = "";
+
       }
+
+      renderCategoryButtons(categories);
 
       renderServices(allServices);
 
     } catch (error) {
 
-      console.error("Services error:", error);
+      console.error(
+        "Services error:",
+        error
+      );
 
       loading.style.display = "none";
+
       servicesGrid.style.display = "none";
 
       errorBox.innerHTML = `
@@ -539,54 +614,82 @@
         "تعذر تحميل الخدمات";
 
     }
+
   }
 
+
+  /* =========================
+     بناء قائمة التصنيفات
+  ========================== */
 
   function buildCategories(services) {
 
     const categories = [
       ...new Set(
         services
-          .map(service => cleanValue(service.category))
+          .map(service =>
+            cleanValue(service.category)
+          )
           .filter(Boolean)
       )
     ];
 
-    categories.sort((a, b) =>
-      a.localeCompare(b, "ar")
+    categories.sort(
+      (a, b) =>
+        a.localeCompare(b, "ar")
     );
 
     categoryFilter.innerHTML = `
-      <option value="">كل التصنيفات</option>
+      <option value="">
+        كل التصنيفات
+      </option>
     `;
 
     categories.forEach(category => {
 
       const option =
-        document.createElement("option");
+        document.createElement(
+          "option"
+        );
 
       option.value = category;
       option.textContent = category;
 
-      categoryFilter.appendChild(option);
+      categoryFilter.appendChild(
+        option
+      );
 
     });
 
-    renderCategoryButtons(categories);
   }
 
 
-  function renderCategoryButtons(categories) {
+  /* =========================
+     أزرار التصنيفات
+  ========================== */
+
+  function renderCategoryButtons(
+    categories
+  ) {
 
     categoryButtons.innerHTML = "";
+
+    /*
+      زر الكل
+    */
 
     const allButton =
       document.createElement("button");
 
     allButton.type = "button";
+
     allButton.className =
       "category-btn" +
-      (!currentCategory ? " active" : "");
+      (
+        !currentCategory
+          ? " active"
+          : ""
+      );
 
     allButton.textContent = "الكل";
 
@@ -596,21 +699,40 @@
 
       categoryFilter.value = "";
 
+      /*
+        تحديث الرابط
+      */
+
+      window.history.replaceState(
+        {},
+        "",
+        "services.html"
+      );
+
       updateCategoryButtons();
 
-      loadServices("");
+      renderServices(allServices);
 
     };
 
-    categoryButtons.appendChild(allButton);
+    categoryButtons.appendChild(
+      allButton
+    );
 
+
+    /*
+      أزرار التصنيفات
+    */
 
     categories.forEach(category => {
 
       const button =
-        document.createElement("button");
+        document.createElement(
+          "button"
+        );
 
       button.type = "button";
+
       button.className =
         "category-btn" +
         (
@@ -619,25 +741,49 @@
             : ""
         );
 
-      button.textContent = category;
+      button.textContent =
+        category;
 
       button.onclick = () => {
 
-        currentCategory = category;
+        currentCategory =
+          category;
 
-        categoryFilter.value = category;
+        categoryFilter.value =
+          category;
+
+        /*
+          تحديث الرابط
+        */
+
+        const newUrl =
+          "services.html?category=" +
+          encodeURIComponent(category);
+
+        window.history.replaceState(
+          {},
+          "",
+          newUrl
+        );
 
         updateCategoryButtons();
 
-        loadServices(category);
+        renderServices(allServices);
 
       };
 
-      categoryButtons.appendChild(button);
+      categoryButtons.appendChild(
+        button
+      );
 
     });
+
   }
 
+
+  /* =========================
+     تحديث حالة الأزرار
+  ========================== */
 
   function updateCategoryButtons() {
 
@@ -648,24 +794,44 @@
 
     buttons.forEach(button => {
 
-      const value = button.textContent;
+      const value =
+        button.textContent;
 
       if (
-        (value === "الكل" && !currentCategory) ||
+        (
+          value === "الكل" &&
+          !currentCategory
+        ) ||
         value === currentCategory
       ) {
-        button.classList.add("active");
+
+        button.classList.add(
+          "active"
+        );
+
       } else {
-        button.classList.remove("active");
+
+        button.classList.remove(
+          "active"
+        );
+
       }
 
     });
+
   }
 
 
-  function renderServices(services) {
+  /* =========================
+     عرض الخدمات
+  ========================== */
 
-    loading.style.display = "none";
+  function renderServices(
+    services
+  ) {
+
+    loading.style.display =
+      "none";
 
     let filtered =
       Array.isArray(services)
@@ -673,119 +839,169 @@
         : [];
 
 
+    /*
+      فلترة البحث
+    */
+
     const search =
       searchInput.value
         .trim()
         .toLowerCase();
 
-
     if (search) {
 
-      filtered = filtered.filter(service => {
+      filtered =
+        filtered.filter(service => {
 
-        const title =
-          cleanValue(service.title)
-            .toLowerCase();
+          const title =
+            cleanValue(
+              service.title
+            ).toLowerCase();
 
-        const description =
-          cleanValue(service.description)
-            .toLowerCase();
+          const description =
+            cleanValue(
+              service.description
+            ).toLowerCase();
 
-        const category =
-          cleanValue(service.category)
-            .toLowerCase();
+          const category =
+            cleanValue(
+              service.category
+            ).toLowerCase();
 
-        const owner =
-          getOwnerName(service)
-            .toLowerCase();
+          const owner =
+            getOwnerName(service)
+              .toLowerCase();
 
-        return (
-          title.includes(search) ||
-          description.includes(search) ||
-          category.includes(search) ||
-          owner.includes(search)
-        );
+          return (
+            title.includes(search) ||
+            description.includes(search) ||
+            category.includes(search) ||
+            owner.includes(search)
+          );
 
-      });
+        });
+
+    }
+
+
+    /*
+      فلترة التصنيف
+    */
+
+    if (currentCategory) {
+
+      filtered =
+        filtered.filter(service => {
+
+          return (
+            cleanValue(
+              service.category
+            ) === currentCategory
+          );
+
+        });
 
     }
 
 
-    const selectedCategory =
-      categoryFilter.value;
-
-    if (selectedCategory) {
-
-      filtered = filtered.filter(service =>
-        cleanValue(service.category) ===
-        selectedCategory
-      );
-
-    }
-
+    /*
+      الترتيب
+    */
 
     const sortValue =
       sortFilter.value;
 
+    if (
+      sortValue === "price-low"
+    ) {
 
-    if (sortValue === "price-low") {
-
-      filtered.sort((a, b) =>
-        getPrice(a) - getPrice(b)
+      filtered.sort(
+        (a, b) =>
+          getPrice(a) -
+          getPrice(b)
       );
 
-    } else if (sortValue === "price-high") {
+    } else if (
+      sortValue === "price-high"
+    ) {
 
-      filtered.sort((a, b) =>
-        getPrice(b) - getPrice(a)
+      filtered.sort(
+        (a, b) =>
+          getPrice(b) -
+          getPrice(a)
       );
 
     } else {
 
-      filtered.sort((a, b) => {
+      filtered.sort(
+        (a, b) => {
 
-        const dateA =
-          new Date(
-            a.created_at ||
-            a.createdAt ||
-            a.updated_at ||
-            0
-          ).getTime();
+          const dateA =
+            new Date(
+              a.created_at ||
+              a.createdAt ||
+              a.updated_at ||
+              0
+            ).getTime();
 
-        const dateB =
-          new Date(
-            b.created_at ||
-            b.createdAt ||
-            b.updated_at ||
-            0
-          ).getTime();
+          const dateB =
+            new Date(
+              b.created_at ||
+              b.createdAt ||
+              b.updated_at ||
+              0
+            ).getTime();
 
-        return dateB - dateA;
+          return dateB - dateA;
 
-      });
+        }
+      );
 
     }
 
+
+    /*
+      العدد
+    */
 
     servicesCount.textContent =
       `عدد الخدمات: ${filtered.length}`;
 
 
+    /*
+      تنظيف الشبكة
+    */
+
     servicesGrid.innerHTML = "";
 
 
+    /*
+      لا توجد نتائج
+    */
+
     if (!filtered.length) {
 
-      servicesGrid.style.display = "none";
-      emptyBox.style.display = "block";
+      servicesGrid.style.display =
+        "none";
+
+      emptyBox.style.display =
+        "block";
 
       return;
+
     }
 
 
-    emptyBox.style.display = "none";
-    servicesGrid.style.display = "grid";
+    emptyBox.style.display =
+      "none";
 
+    servicesGrid.style.display =
+      "grid";
+
+
+    /*
+      إنشاء البطاقات
+    */
 
     filtered.forEach(service => {
 
@@ -793,15 +1009,21 @@
         Number(service.id);
 
       const title =
-        cleanValue(service.title) ||
+        cleanValue(
+          service.title
+        ) ||
         "خدمة بدون عنوان";
 
       const description =
-        cleanValue(service.description) ||
+        cleanValue(
+          service.description
+        ) ||
         "لا يوجد وصف للخدمة.";
 
       const category =
-        cleanValue(service.category) ||
+        cleanValue(
+          service.category
+        ) ||
         "عام";
 
       const owner =
@@ -815,7 +1037,8 @@
       const card =
         document.createElement("div");
 
-      card.className = "service-card";
+      card.className =
+        "service-card";
 
 
       card.innerHTML = `
@@ -859,46 +1082,79 @@
           </div>
 
         </div>
+
       `;
 
-
-      servicesGrid.appendChild(card);
+      servicesGrid.appendChild(
+        card
+      );
 
     });
 
   }
 
 
-  function viewService(serviceId) {
+  /* =========================
+     عرض تفاصيل الخدمة
+  ========================== */
 
-    const id = Number(serviceId);
+  function viewService(
+    serviceId
+  ) {
 
-    if (!Number.isFinite(id) || id <= 0) {
+    const id =
+      Number(serviceId);
+
+    if (
+      !Number.isFinite(id) ||
+      id <= 0
+    ) {
       return;
     }
 
     window.location.href =
       "service-details.html?id=" +
       encodeURIComponent(id);
+
   }
 
 
-  function getOwnerName(service) {
+  /* =========================
+     اسم مقدم الخدمة
+  ========================== */
+
+  function getOwnerName(
+    service
+  ) {
 
     return cleanValue(
+
       service.user_name ||
+
       service.username ||
+
       service.owner_name ||
+
       service.ownerName ||
+
       service.freelancer_name ||
+
       service.freelancerName ||
+
       service.name
+
     );
 
   }
 
 
-  function getPrice(service) {
+  /* =========================
+     السعر
+  ========================== */
+
+  function getPrice(
+    service
+  ) {
 
     const value =
       Number(
@@ -914,29 +1170,50 @@
   }
 
 
-  function formatPrice(price) {
+  /* =========================
+     تنسيق السعر
+  ========================== */
+
+  function formatPrice(
+    price
+  ) {
 
     const number =
       Number(price);
 
-    if (!Number.isFinite(number)) {
+    if (
+      !Number.isFinite(number)
+    ) {
+
       return "0";
+
     }
 
-    return number.toLocaleString("en-US", {
-      maximumFractionDigits: 2
-    });
+    return number.toLocaleString(
+      "en-US",
+      {
+        maximumFractionDigits: 2
+      }
+    );
 
   }
 
 
-  function cleanValue(value) {
+  /* =========================
+     تنظيف النص
+  ========================== */
+
+  function cleanValue(
+    value
+  ) {
 
     if (
       value === null ||
       value === undefined
     ) {
+
       return "";
+
     }
 
     return String(value).trim();
@@ -944,25 +1221,63 @@
   }
 
 
-  function escapeHtml(value) {
+  /* =========================
+     حماية HTML
+  ========================== */
+
+  function escapeHtml(
+    value
+  ) {
 
     return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+
+      .replace(
+        /</g,
+        "&lt;"
+      )
+
+      .replace(
+        />/g,
+        "&gt;"
+      )
+
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+
+      .replace(
+        /'/g,
+        "&#039;"
+      );
 
   }
 
 
+  /* =========================
+     البحث
+  ========================== */
+
   searchInput.addEventListener(
     "input",
     () => {
-      renderServices(allServices);
+
+      renderServices(
+        allServices
+      );
+
     }
   );
 
+
+  /* =========================
+     تغيير التصنيف
+  ========================== */
 
   categoryFilter.addEventListener(
     "change",
@@ -971,21 +1286,62 @@
       currentCategory =
         categoryFilter.value;
 
+
+      /*
+        تحديث الرابط
+      */
+
+      if (currentCategory) {
+
+        window.history.replaceState(
+          {},
+          "",
+          "services.html?category=" +
+          encodeURIComponent(
+            currentCategory
+          )
+        );
+
+      } else {
+
+        window.history.replaceState(
+          {},
+          "",
+          "services.html"
+        );
+
+      }
+
+
       updateCategoryButtons();
 
-      renderServices(allServices);
+      renderServices(
+        allServices
+      );
 
     }
   );
 
+
+  /* =========================
+     تغيير الترتيب
+  ========================== */
 
   sortFilter.addEventListener(
     "change",
     () => {
-      renderServices(allServices);
+
+      renderServices(
+        allServices
+      );
+
     }
   );
 
+
+  /* =========================
+     تشغيل الصفحة
+  ========================== */
 
   loadServices();
 
