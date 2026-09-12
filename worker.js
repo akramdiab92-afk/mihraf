@@ -591,15 +591,19 @@ async function forgotPassword(request, env) {
       crypto.getRandomValues(new Uint8Array(32));
 
     const token = Array.from(tokenBytes)
-      .map(byte => byte.toString(16).padStart(2, "0"))
+      .map(byte =>
+        byte.toString(16).padStart(2, "0")
+      )
       .join("");
 
-    const tokenHash = await sha256(token);
+    const tokenHash =
+      await sha256(token);
 
     // صلاحية الرمز: ساعة واحدة
     const expiresAt =
-      new Date(Date.now() + 60 * 60 * 1000)
-        .toISOString();
+      new Date(
+        Date.now() + 60 * 60 * 1000
+      ).toISOString();
 
     await env.DB
       .prepare(`
@@ -624,74 +628,90 @@ async function forgotPassword(request, env) {
 
     // إرسال البريد عبر Resend
     const resendResponse =
-      await fetch("https://api.resend.com/emails", {
-        method: "POST",
+      await fetch(
+        "https://api.resend.com/emails",
+        {
+          method: "POST",
 
-        headers: {
-          "Authorization":
-            `Bearer ${env.RESEND_API_KEY}`,
+          headers: {
+            "Authorization":
+              `Bearer ${env.RESEND_API_KEY}`,
 
-          "Content-Type":
-            "application/json"
-        },
+            "Content-Type":
+              "application/json"
+          },
 
-        body: JSON.stringify({
-          from: "onboarding@resend.dev",
+          body: JSON.stringify({
+            from: "onboarding@resend.dev",
 
-          to: [user.email],
+            to: [user.email],
 
-          subject:
-            "إعادة تعيين كلمة المرور - مِهراف",
+            subject:
+              "إعادة تعيين كلمة المرور - مِهراف",
 
-          html: `
-            <div dir="rtl" style="font-family:Arial,sans-serif;line-height:1.8;color:#222">
+            html: `
+              <div
+                dir="rtl"
+                style="
+                  font-family:Arial,sans-serif;
+                  line-height:1.8;
+                  color:#222
+                "
+              >
 
-              <h2 style="color:#2563eb">
-                إعادة تعيين كلمة المرور
-              </h2>
+                <h2 style="color:#2563eb">
+                  إعادة تعيين كلمة المرور
+                </h2>
 
-              <p>
-               مرحبا،
-              </p>
+                <p>
+                  مرحبا،
+                </p>
 
-              <p>
-                اضغط على الزر التالي لإنشاء كلمة مرور جديدة:
-              </p>
+                <p>
+                  اضغط على الزر التالي لإنشاء كلمة مرور جديدة:
+                </p>
 
-              <p>
-                <a
-                  href="${resetUrl}"
+                <p>
+                  <a
+                    href="${resetUrl}"
+                    style="
+                      display:inline-block;
+                      background:#2563eb;
+                      color:#ffffff;
+                      padding:12px 22px;
+                      border-radius:8px;
+                      text-decoration:none;
+                    "
+                  >
+                    إعادة تعيين كلمة المرور
+                  </a>
+                </p>
+
+                <p>
+                  صلاحية هذا الرابط ساعة واحدة فقط.
+                </p>
+
+                <p>
+                  إذا لم تطلب إعادة تعيين كلمة المرور،
+                  يمكنك تجاهل هذه الرسالة.
+                </p>
+
+                <hr>
+
+                <p
                   style="
-                    display:inline-block;
-                    background:#2563eb;
-                    color:#ffffff;
-                    padding:12px 22px;
-                    border-radius:8px;
-                    text-decoration:none;
+                    color:#777;
+                    font-size:13px
                   "
                 >
-                  إعادة تعيين كلمة المرور
-                </a>
-              </p>
+                  مِهراف | منصة الخدمات والمشاريع
+                </p>
 
-              <p>
-                صلاحية هذا الرابط ساعة واحدة فقط.
-              </p>
-
-              <p>
-                إذا لم تطلب إعادة تعيين كلمة المرور، يمكنك تجاهل هذه الرسالة.
-              </p>
-
-              <hr>
-
-              <p style="color:#777;font-size:13px">
-                مِهراف | منصة الخدمات والمشاريع
-              </p>
-
-            </div>
-          `
-        })
-      });
+              </div>
+            `
+          })
+        }
+      );
 
     if (!resendResponse.ok) {
 
@@ -713,7 +733,7 @@ async function forgotPassword(request, env) {
         .run();
 
       throw new Error(
-  "Resend: " + resendError
+        "Resend: " + resendError
       );
     }
 
@@ -726,25 +746,14 @@ async function forgotPassword(request, env) {
       error
     );
 
-    } catch (error) {
-
-  console.error(
-    "Forgot password error:",
-    error
-  );
-
-  } catch (error) {
-
-  console.error(
-    "Forgot password error:",
-    error
-  );
-
-  return json({
-    success: false,
-    error: "حدث خطأ أثناء معالجة طلب إعادة تعيين كلمة المرور",
-    details: error?.message || String(error)
-  }, 500);
+    return json({
+      success: false,
+      error:
+        "حدث خطأ أثناء معالجة طلب إعادة تعيين كلمة المرور",
+      details:
+        error?.message || String(error)
+    }, 500);
+  }
 }
 
 
