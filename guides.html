@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>الدليل الإرشادي | مِهراف</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Tahoma, sans-serif;
+      background: #0b1020;
+      color: #f5f7ff;
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 32px));
+      margin: auto;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(11, 16, 32, 0.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .header-inner {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 24px;
+      font-weight: 900;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #6c63ff, #8d5cff);
+      box-shadow: 0 8px 25px rgba(108, 99, 255, 0.25);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    nav a {
+      padding: 9px 14px;
+      border-radius: 10px;
+      color: #b9c1d9;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: #ffffff;
+      background: rgba(108, 99, 255, 0.14);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 15px;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 10px;
+      color: #dce1f5;
+      background: rgba(255,255,255,0.04);
+      transition: 0.2s;
+      font-size: 14px;
+    }
+
+    .back-btn:hover {
+      background: rgba(108, 99, 255, 0.15);
+      border-color: rgba(108, 99, 255, 0.3);
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      padding: 75px 0 55px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      background: rgba(108, 99, 255, 0.10);
+      filter: blur(80px);
+      top: -180px;
+      right: -120px;
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      background: rgba(0, 200, 255, 0.06);
+      filter: blur(90px);
+      bottom: -170px;
+      left: -100px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: 30px;
+      background: rgba(108, 99, 255, 0.12);
+      border: 1px solid rgba(108, 99, 255, 0.22);
+      color: #bcb7ff;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 5vw, 50px);
+      line-height: 1.25;
+      margin-bottom: 18px;
+      font-weight: 900;
+    }
+
+    .hero h1 span {
+      color: #8178ff;
+    }
+
+    .hero p {
+      max-width: 720px;
+      margin: auto;
+      color: #aeb7d0;
+      font-size: 17px;
+    }
+
+    /* =========================
+       QUICK NAV
+    ========================= */
+
+    .quick-nav {
+      padding-bottom: 35px;
+    }
+
+    .quick-nav-box {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding: 18px;
+      border-radius: 18px;
+      background: #11182b;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .quick-nav a {
+      padding: 9px 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      color: #cbd2e7;
+      font-size: 13px;
+      transition: 0.2s;
+    }
+
+    .quick-nav a:hover {
+      background: rgba(108, 99, 255, 0.16);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* =========================
+       GUIDE SECTIONS
+    ========================= */
+
+    .guides {
+      padding: 10px 0 80px;
+    }
+
+    .guide-section {
+      background: #11182b;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 20px;
+      scroll-margin-top: 95px;
+      transition: 0.25s;
+    }
+
+    .guide-section:hover {
+      border-color: rgba(108, 99, 255, 0.18);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .section-icon {
+      flex: 0 0 50px;
+      width: 50px;
+      height: 50px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(108, 99, 255, 0.12);
+      border: 1px solid rgba(108, 99, 255, 0.18);
+      font-size: 24px;
+    }
+
+    .section-head h2 {
+      font-size: 22px;
+      margin-bottom: 3px;
+    }
+
+    .section-head p {
+      color: #8994b0;
+      font-size: 14px;
+    }
+
+    .guide-section > p {
+      color: #b7bfd4;
+      margin-bottom: 16px;
+    }
+
+    /* =========================
+       STEPS
+    ========================= */
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .step {
+      display: flex;
+      gap: 13px;
+      padding: 15px;
+      border-radius: 13px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .step-number {
+      flex: 0 0 34px;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: #6c63ff;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .step-content h3 {
+      font-size: 16px;
+      margin-bottom: 3px;
+    }
+
+    .step-content p {
+      color: #98a3bd;
+      font-size: 14px;
+    }
+
+    /* =========================
+       INFO GRID
+    ========================= */
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 13px;
+      margin-top: 18px;
+    }
+
+    .info-card {
+      padding: 18px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.055);
+    }
+
+    .info-card h3 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .info-card p {
+      color: #98a3bd;
+      font-size: 14px;
+    }
+
+    /* =========================
+       WARNING / TIP
+    ========================= */
+
+    .notice {
+      display: flex;
+      gap: 13px;
+      padding: 16px;
+      margin-top: 18px;
+      border-radius: 14px;
+      background: rgba(255, 193, 7, 0.06);
+      border: 1px solid rgba(255, 193, 7, 0.14);
+    }
+
+    .notice-icon {
+      font-size: 21px;
+      flex: 0 0 auto;
+    }
+
+    .notice p {
+      color: #c6c9d6;
+      font-size: 14px;
+    }
+
+    .success-notice {
+      background: rgba(46, 204, 113, 0.06);
+      border-color: rgba(46, 204, 113, 0.14);
+    }
+
+    /* =========================
+       CTA
+    ========================= */
+
+    .cta {
+      padding: 0 0 75px;
+    }
+
+    .cta-box {
+      position: relative;
+      overflow: hidden;
+      padding: 35px;
+      border-radius: 22px;
+      text-align: center;
+      background: linear-gradient(
+        135deg,
+        rgba(108, 99, 255, 0.18),
+        rgba(67, 56, 202, 0.08)
+      );
+      border: 1px solid rgba(108, 99, 255, 0.2);
+    }
+
+    .cta-box h2 {
+      font-size: 25px;
+      margin-bottom: 8px;
+    }
+
+    .cta-box p {
+      color: #aab3ca;
+      margin-bottom: 22px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 44px;
+      padding: 10px 20px;
+      border-radius: 11px;
+      font-size: 14px;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+
+    .btn-primary {
+      background: #6c63ff;
+      color: #fff;
+      box-shadow: 0 8px 25px rgba(108, 99, 255, 0.22);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      background: #756dff;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      color: #dce1f5;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding: 28px 0;
+      color: #737e99;
+      font-size: 13px;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .footer-links a:hover {
+      color: #b8b1ff;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 760px) {
+      .header-inner {
+        min-height: 64px;
+      }
+
+      nav {
+        display: none;
+      }
+
+      .logo {
+        font-size: 21px;
+      }
+
+      .logo-icon {
+        width: 38px;
+        height: 38px;
+      }
+
+      .back-btn {
+        padding: 8px 11px;
+        font-size: 13px;
+      }
+
+      .hero {
+        padding: 55px 0 40px;
+      }
+
+      .hero p {
+        font-size: 15px;
+      }
+
+      .guide-section {
+        padding: 21px 17px;
+        border-radius: 17px;
+      }
+
+      .section-head h2 {
+        font-size: 19px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-box {
+        padding: 28px 18px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================
+       HEADER
+  ========================= -->
+
+  <header>
+    <div class="container header-inner">
+
+      <a href="index.html" class="logo">
+        <span class="logo-icon">م</span>
+        <span>مِهراف</span>
+      </a>
+
+      <nav>
+        <a href="services.html">الخدمات</a>
+        <a href="projects.html">المشاريع</a>
+        <a href="index.html#professionals">المحترفون</a>
+      </nav>
+
+      <a href="index.html" class="back-btn">
+        ← الرئيسية
+      </a>
+
+    </div>
+  </header>
+
+
+  <!-- =========================
+       HERO
+  ========================= -->
+
+  <main>
+
+    <section class="hero">
+      <div class="container hero-content">
+
+        <div class="hero-badge">
+          📖 دليل مِهراف
+        </div>
+
+        <h1>
+          دليلك لاستخدام <span>مِهراف</span>
+        </h1>
+
+        <p>
+          كل ما تحتاج معرفته للبدء في مِهراف، سواء كنت تريد تقديم خدمة،
+          نشر مشروع، التقدم على مشروع أو تنفيذ أعمالك بطريقة منظمة وآمنة.
+        </p>
+
+      </div>
+    </section>
+
+
+    <!-- =========================
+         QUICK NAV
+    ========================= -->
+
+    <section class="quick-nav">
+      <div class="container">
+
+        <div class="quick-nav-box">
+
+          <a href="#start">🚀 البداية</a>
+          <a href="#account">👤 الحساب</a>
+          <a href="#services-guide">🛠️ الخدمات</a>
+          <a href="#projects-guide">📋 المشاريع</a>
+          <a href="#offers">💼 العروض</a>
+          <a href="#execution">⚙️ التنفيذ</a>
+          <a href="#delivery">📦 التسليم</a>
+          <a href="#ratings">⭐ التقييمات</a>
+          <a href="#safety">🛡️ الأمان</a>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- =========================
+         GUIDE CONTENT
+    ========================= -->
+
+    <section class="guides">
+
+      <div class="container">
+
+
+        <!-- البداية -->
+
+        <article class="guide-section" id="start">
+
+          <div class="section-head">
+            <div class="section-icon">🚀</div>
+
+            <div>
+              <h2>كيف تبدأ في مِهراف؟</h2>
+              <p>خطوات بسيطة للانطلاق.</p>
+            </div>
+          </div>
+
+          <p>
+            مِهراف يجمع أصحاب المهارات والخبرات مع الأشخاص وأصحاب المشاريع
+            الذين يحتاجون إلى خدمات أو تنفيذ أعمال.
+          </p>
+
+          <div class="steps">
+
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3>أنشئ حسابك</h3>
+                <p>
+                  سجّل حسابك في مِهراف وأدخل معلوماتك الأساسية بشكل صحيح.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3>تصفح ما يناسبك</h3>
+                <p>
+                  يمكنك تصفح الخدمات المتاحة أو الاطلاع على المشاريع المنشورة.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3>ابدأ التعامل</h3>
+                <p>
+                  قدم خدمتك، انشر مشروعك أو تقدم بعرض مناسب حسب ما تريد إنجازه.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- الحساب -->
+
+        <article class="guide-section" id="account">
+
+          <div class="section-head">
+            <div class="section-icon">👤</div>
+
+            <div>
+              <h2>حسابك في مِهراف</h2>
+              <p>حساب واحد للقيام بالمهام المختلفة.</p>
+            </div>
+          </div>
+
+          <p>
+            في مِهراف يمكنك استخدام حسابك للمشاركة في المنصة بأكثر من طريقة.
+            تستطيع تقديم خدمات، إنشاء مشاريع، التقدم على المشاريع أو شراء الخدمات
+            بحسب احتياجك.
+          </p>
+
+          <div class="info-grid">
+
+            <div class="info-card">
+              <h3>🛠️ تقديم الخدمات</h3>
+              <p>
+                إذا كانت لديك مهارة أو خبرة، يمكنك عرضها ليستفيد منها العملاء.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h3>📋 نشر المشاريع</h3>
+              <p>
+                إذا كنت بحاجة إلى تنفيذ عمل، يمكنك إنشاء مشروع وشرح المطلوب.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h3>💼 التقدم على المشاريع</h3>
+              <p>
+                يمكنك الاطلاع على المشاريع المناسبة لك وإرسال عرض لتنفيذها.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h3>🛒 طلب الخدمات</h3>
+              <p>
+                يمكنك اختيار الخدمة المناسبة والتواصل من خلال إجراءات الطلب
+                المتاحة في المنصة.
+              </p>
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- الخدمات -->
+
+        <article class="guide-section" id="services-guide">
+
+          <div class="section-head">
+            <div class="section-icon">🛠️</div>
+
+            <div>
+              <h2>كيف تقدم خدمة؟</h2>
+              <p>حوّل مهارتك إلى خدمة يمكن للعملاء طلبها.</p>
+            </div>
+          </div>
+
+          <p>
+            إذا كنت تجيد التصميم أو البرمجة أو الكتابة أو الترجمة أو التسويق
+            أو أي مجال آخر، يمكنك إنشاء خدمة واضحة ومحددة.
+          </p>
+
+          <div class="steps">
+
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3>حدد الخدمة</h3>
+                <p>
+                  اختر المجال المناسب وحدد بالضبط ماذا ستقدم للعميل.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3>اكتب وصفا واضحا</h3>
+                <p>
+                  وضح ما الذي سيحصل عليه العميل وما الذي يشمله تنفيذ الخدمة.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3>حدد السعر والمدة</h3>
+                <p>
+                  ضع سعرا ومدة تنفيذ مناسبة وواضحة قبل نشر الخدمة.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h3>انشر خدمتك</h3>
+                <p>
+                  بعد التأكد من المعلومات، انشر الخدمة لتظهر ضمن الخدمات المتاحة.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="notice success-notice">
+            <div class="notice-icon">💡</div>
+            <p>
+              كلما كان وصف الخدمة واضحا ومحددا، كان من الأسهل على العميل
+              فهم ما تقدمه واتخاذ قرار مناسب.
+            </p>
+          </div>
+
+        </article>
+
+
+        <!-- المشاريع -->
+
+        <article class="guide-section" id="projects-guide">
+
+          <div class="section-head">
+            <div class="section-icon">📋</div>
+
+            <div>
+              <h2>كيف تنشر مشروعا؟</h2>
+              <p>اعرض احتياجك ليصل إلى أصحاب المهارات المناسبة.</p>
+            </div>
+          </div>
+
+          <p>
+            إذا كان لديك عمل تريد تنفيذه، يمكنك نشر مشروع يحتوي على التفاصيل
+            التي يحتاجها المنفذ لفهم المطلوب وتقديم عرضه.
+          </p>
+
+          <div class="steps">
+
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3>اكتب عنوانا واضحا</h3>
+                <p>
+                  اجعل عنوان المشروع مختصرا ويشرح المطلوب مباشرة.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3>اشرح التفاصيل</h3>
+                <p>
+                  اذكر المطلوب والنتيجة التي تريد الوصول إليها وأي شروط مهمة.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3>حدد الميزانية والمدة</h3>
+                <p>
+                  حدد ميزانية مناسبة ومدة تقريبية لإنجاز المشروع.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h3>انشر المشروع</h3>
+                <p>
+                  بعد النشر يستطيع أصحاب المهارات الاطلاع على المشروع
+                  وإرسال عروضهم.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- العروض -->
+
+        <article class="guide-section" id="offers">
+
+          <div class="section-head">
+            <div class="section-icon">💼</div>
+
+            <div>
+              <h2>كيف تقدم عرضا على مشروع؟</h2>
+              <p>قدم عرضا واضحا ومقنعا.</p>
+            </div>
+          </div>
+
+          <p>
+            عند العثور على مشروع مناسب لمهاراتك، يمكنك إرسال عرض يوضح للعميل
+            قدرتك على تنفيذ المطلوب.
+          </p>
+
+          <div class="info-grid">
+
+            <div class="info-card">
+              <h3>🎯 افهم المطلوب</h3>
+              <p>
+                اقرأ تفاصيل المشروع جيدا قبل إرسال العرض.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h3>✍️ اكتب عرضا مخصصا</h3>
+              <p>
+                وضح كيف ستنفذ المشروع بدلا من استخدام كلام عام.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h3>💰 حدد السعر</h3>
+              <p>
+                قدم سعرا واقعيا يتناسب مع حجم العمل المطلوب.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h3>⏱️ حدد المدة</h3>
+              <p>
+                اذكر مدة تستطيع الالتزام بها فعليا.
+              </p>
+            </div>
+
+          </div>
+
+          <div class="notice">
+            <div class="notice-icon">⚠️</div>
+            <p>
+              لا تقدم وعودا لا تستطيع تنفيذها. الالتزام بالمواعيد وجودة العمل
+              يساعدانك على بناء سمعة جيدة داخل مِهراف.
+            </p>
+          </div>
+
+        </article>
+
+
+        <!-- التنفيذ -->
+
+        <article class="guide-section" id="execution">
+
+          <div class="section-head">
+            <div class="section-icon">⚙️</div>
+
+            <div>
+              <h2>بعد قبول العرض</h2>
+              <p>ابدأ التنفيذ بطريقة منظمة.</p>
+            </div>
+          </div>
+
+          <p>
+            بعد قبول عرضك على مشروع، تبدأ مرحلة التنفيذ. احرص على فهم الاتفاق
+            والمتطلبات قبل البدء بالعمل.
+          </p>
+
+          <div class="steps">
+
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3>راجع المطلوب</h3>
+                <p>
+                  تأكد من فهم جميع التفاصيل والمتطلبات قبل البدء.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3>ابدأ التنفيذ</h3>
+                <p>
+                  نفذ العمل وفق التفاصيل والمدة المتفق عليها.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3>حافظ على التواصل</h3>
+                <p>
+                  عند وجود نقطة غير واضحة، من الأفضل توضيحها قبل إكمال العمل.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- التسليم -->
+
+        <article class="guide-section" id="delivery">
+
+          <div class="section-head">
+            <div class="section-icon">📦</div>
+
+            <div>
+              <h2>تسليم العمل</h2>
+              <p>أنهِ العمل وأرسله بالطريقة الصحيحة.</p>
+            </div>
+          </div>
+
+          <p>
+            عند الانتهاء من تنفيذ المشروع، استخدم ميزة التسليم لإرسال العمل
+            للعميل حتى يتمكن من مراجعته.
+          </p>
+
+          <div class="steps">
+
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3>راجع عملك</h3>
+                <p>
+                  تأكد من أن الملفات والمخرجات مطابقة لما تم الاتفاق عليه.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3>أرسل التسليم</h3>
+                <p>
+                  أرسل العمل من خلال إجراء التسليم المتاح في المشروع.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3>انتظر المراجعة</h3>
+                <p>
+                  يستطيع صاحب المشروع مراجعة العمل وقبوله أو طلب التعديلات.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- التقييمات -->
+
+        <article class="guide-section" id="ratings">
+
+          <div class="section-head">
+            <div class="section-icon">⭐</div>
+
+            <div>
+              <h2>التقييمات والسمعة</h2>
+              <p>ابن سمعة قوية من خلال العمل الجيد.</p>
+            </div>
+          </div>
+
+          <p>
+            التقييمات تساعد المستخدمين على معرفة مستوى التعامل وجودة العمل.
+            لذلك حاول دائما تقديم تجربة احترافية والالتزام بما تم الاتفاق عليه.
+          </p>
+
+          <div class="info-grid">
+
+            <div class="info-card">
+              <h3>⭐ جودة العمل</h3>
+              <p>
+                اهتم بالتفاصيل ولا تسلم العمل قبل مراجعته.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h3>⏱️ الالتزام</h3>
+              <p>
+                احترم الموعد المتفق عليه وأبلغ الطرف الآخر عند حدوث أي مشكلة.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h3>🤝 التعامل</h3>
+              <p>
+                حافظ على أسلوب محترم وواضح أثناء التعامل.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h3>📈 الاستمرارية</h3>
+              <p>
+                بناء سمعة جيدة يحتاج إلى عدة تعاملات ناجحة والتزام مستمر.
+              </p>
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- الأمان -->
+
+        <article class="guide-section" id="safety">
+
+          <div class="section-head">
+            <div class="section-icon">🛡️</div>
+
+            <div>
+              <h2>حافظ على أمانك وحقوقك</h2>
+              <p>التعامل الواضح يحمي جميع الأطراف.</p>
+            </div>
+          </div>
+
+          <div class="info-grid">
+
+            <div class="info-card">
+              <h3>🔐 حماية الحساب</h3>
+              <p>
+                استخدم كلمة مرور قوية ولا تشارك بيانات الدخول مع أي شخص.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h3>📄 وضوح الاتفاق</h3>
+              <p>
+                اجعل تفاصيل العمل والسعر والمدة واضحة قبل البدء.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h3>⚠️ انتبه للروابط والطلبات</h3>
+              <p>
+                لا تشارك كلمات المرور أو رموز التحقق أو البيانات الحساسة.
+              </p>
+            </div>
+
+            <div class="info-card">
+              <h3>🆘 اطلب الدعم</h3>
+              <p>
+                إذا واجهت مشكلة داخل المنصة، استخدم صفحة الدعم الفني.
+              </p>
+            </div>
+
+          </div>
+
+          <div class="notice">
+            <div class="notice-icon">🛡️</div>
+            <p>
+              لا تشارك كلمة المرور أو رمز التحقق الخاص بحسابك مع أي شخص،
+              حتى لو ادعى أنه من فريق الدعم.
+            </p>
+          </div>
+
+        </article>
+
+
+        <!-- نصائح -->
+
+        <article class="guide-section">
+
+          <div class="section-head">
+            <div class="section-icon">💡</div>
+
+            <div>
+              <h2>نصائح مهمة لنجاحك في مِهراف</h2>
+              <p>أشياء بسيطة تصنع فرقا كبيرا.</p>
+            </div>
+          </div>
+
+          <div class="steps">
+
+            <div class="step">
+              <div class="step-number">✓</div>
+              <div class="step-content">
+                <h3>كن واضحا</h3>
+                <p>
+                  اكتب ما تريده أو ما تقدمه بطريقة سهلة ومباشرة.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">✓</div>
+              <div class="step-content">
+                <h3>لا تبالغ في الوعود</h3>
+                <p>
+                  قدم فقط ما تستطيع تنفيذه فعليا.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">✓</div>
+              <div class="step-content">
+                <h3>التزم بالموعد</h3>
+                <p>
+                  احترام الوقت من أهم عناصر التعامل الاحترافي.
+                </p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">✓</div>
+              <div class="step-content">
+                <h3>راجع عملك قبل التسليم</h3>
+                <p>
+                  المراجعة النهائية تقلل الأخطاء وتحسن جودة النتيجة.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </article>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         CTA
+    ========================= -->
+
+    <section class="cta">
+
+      <div class="container">
+
+        <div class="cta-box">
+
+          <h2>جاهز تبدأ في مِهراف؟</h2>
+
+          <p>
+            استكشف الخدمات والمشاريع وابدأ رحلتك على مِهراف.
+          </p>
+
+          <div class="cta-buttons">
+
+            <a href="services.html" class="btn btn-primary">
+              🛠️ تصفح الخدمات
+            </a>
+
+            <a href="projects.html" class="btn btn-secondary">
+              📋 تصفح المشاريع
+            </a>
+
+            <a href="support.html" class="btn btn-secondary">
+              🆘 الدعم الفني
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================= -->
+
+  <footer>
+
+    <div class="container footer-inner">
+
+      <div>
+        © 2026 مِهراف — جميع الحقوق محفوظة
+      </div>
+
+      <div class="footer-links">
+
+        <a href="guides.html">
+          الدليل الإرشادي
+        </a>
+
+        <a href="rights.html">
+          ضمان الحقوق
+        </a>
+
+        <a href="faq.html">
+          الأسئلة الشائعة
+        </a>
+
+        <a href="support.html">
+          الدعم الفني
+        </a>
+
+        <a href="privacy.html">
+          سياسة الخصوصية
+        </a>
+
+        <a href="terms.html">
+          شروط الاستخدام
+        </a>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+</body>
+</html>
