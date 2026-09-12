@@ -19,6 +19,10 @@ export default {
         return await forgotPassword(request, env);
       }
 
+      if (url.pathname === "/api/test-resend" && request.method === "GET") {
+        return await testResend(env);
+      }
+
       if (url.pathname === "/api/reset-password" && request.method === "POST") {
        return await resetPassword(request, env);
       }
