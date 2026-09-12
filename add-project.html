@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html><html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نشر مشروع | مِهراف</title>
-
-  <style>
+  <title>نشر مشروع | مِهراف</title>  <style>
     * {
       box-sizing: border-box;
       margin: 0;
@@ -211,134 +208,102 @@
         font-size: 24px;
       }
     }
-  </style>
-</head>
-
-<body>
-
-<header>
+  </style></head><body><header>
   <div class="header-inner">
     <a href="index.html" class="logo">مِهراف</a>
     <a href="dashboard.html" class="back">← العودة إلى لوحة التحكم</a>
   </div>
-</header>
-
-<div class="container">
-
-  <div id="loading" class="loading">
+</header><div class="container">  <div id="loading" class="loading">
     جارٍ التحقق من الحساب...
+  </div>  <div id="projectCard" class="card hidden"><h1>نشر مشروع جديد</h1>
+
+<p class="subtitle">
+  اشرح مشروعك بشكل واضح، وحدد الميزانية والتصنيف المناسب حتى يتمكن المستقلون من فهم احتياجك والتقدم للعمل عليه.
+</p>
+
+<div id="message" class="message"></div>
+
+<form id="projectForm">
+
+  <div class="field">
+    <label for="title">عنوان المشروع</label>
+
+    <input
+      id="title"
+      type="text"
+      maxlength="120"
+      placeholder="مثال: أحتاج تصميم شعار احترافي لشركتي"
+      required
+    >
+
+    <div class="hint">
+      اكتب عنوانًا واضحًا ومختصرًا للمشروع.
+    </div>
   </div>
 
-  <div id="notAllowed" class="card hidden">
-    <h1>غير مسموح</h1>
-    <p class="subtitle">
-      نشر المشاريع متاح للعملاء فقط.
-    </p>
+  <div class="field">
+    <label for="description">وصف المشروع</label>
 
-    <a href="dashboard.html"
-       style="display:inline-block;text-decoration:none;background:#111827;color:#fff;padding:12px 20px;border-radius:10px;">
-      العودة إلى لوحة التحكم
-    </a>
+    <textarea
+      id="description"
+      maxlength="3000"
+      placeholder="اشرح بالتفصيل ما الذي تحتاجه، وما المطلوب من المستقل، وأي شروط أو تفاصيل مهمة..."
+      required
+    ></textarea>
+
+    <div class="hint">
+      كلما كان الوصف واضحًا، زادت فرصة حصولك على عروض مناسبة.
+    </div>
   </div>
 
-  <div id="projectCard" class="card hidden">
+  <div class="row">
 
-    <h1>نشر مشروع جديد</h1>
+    <div class="field">
+      <label for="category">التصنيف</label>
 
-    <p class="subtitle">
-      اشرح مشروعك بشكل واضح، وحدد الميزانية والتصنيف المناسب حتى يتمكن المستقلون من فهم احتياجك والتقدم للعمل عليه.
-    </p>
+      <select id="category" required>
+        <option value="">اختر التصنيف</option>
+        <option value="التصميم">التصميم</option>
+        <option value="البرمجة">البرمجة</option>
+        <option value="الكتابة">الكتابة</option>
+        <option value="التسويق">التسويق</option>
+        <option value="الفيديو">الفيديو</option>
+        <option value="الصوت">الصوت</option>
+        <option value="الأعمال">الأعمال</option>
+        <option value="أخرى">أخرى</option>
+      </select>
+    </div>
 
-    <div id="message" class="message"></div>
+    <div class="field">
+      <label for="budget">الميزانية</label>
 
-    <form id="projectForm">
-
-      <div class="field">
-        <label for="title">عنوان المشروع</label>
-
+      <div class="budget-box">
         <input
-          id="title"
-          type="text"
-          maxlength="120"
-          placeholder="مثال: أحتاج تصميم شعار احترافي لشركتي"
+          id="budget"
+          type="number"
+          min="1"
+          step="0.01"
+          placeholder="100"
           required
         >
 
-        <div class="hint">
-          اكتب عنوانًا واضحًا ومختصرًا للمشروع.
-        </div>
+        <span class="currency">دولار</span>
       </div>
-
-      <div class="field">
-        <label for="description">وصف المشروع</label>
-
-        <textarea
-          id="description"
-          maxlength="3000"
-          placeholder="اشرح بالتفصيل ما الذي تحتاجه، وما المطلوب من المستقل، وأي شروط أو تفاصيل مهمة..."
-          required
-        ></textarea>
-
-        <div class="hint">
-          كلما كان الوصف واضحًا، زادت فرصة حصولك على عروض مناسبة.
-        </div>
-      </div>
-
-      <div class="row">
-
-        <div class="field">
-          <label for="category">التصنيف</label>
-
-          <select id="category" required>
-            <option value="">اختر التصنيف</option>
-            <option value="التصميم">التصميم</option>
-            <option value="البرمجة">البرمجة</option>
-            <option value="الكتابة">الكتابة</option>
-            <option value="التسويق">التسويق</option>
-            <option value="الفيديو">الفيديو</option>
-            <option value="الصوت">الصوت</option>
-            <option value="الأعمال">الأعمال</option>
-            <option value="أخرى">أخرى</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="budget">الميزانية</label>
-
-          <div class="budget-box">
-            <input
-              id="budget"
-              type="number"
-              min="1"
-              step="0.01"
-              placeholder="100"
-              required
-            >
-
-            <span class="currency">دولار</span>
-          </div>
-        </div>
-
-      </div>
-
-      <button id="submitBtn" type="submit">
-        نشر المشروع
-      </button>
-
-    </form>
+    </div>
 
   </div>
 
-</div>
+  <button id="submitBtn" type="submit">
+    نشر المشروع
+  </button>
 
-<footer>
+</form>
+
+  </div></div><footer>
   © 2026 مِهراف — جميع الحقوق محفوظة
-</footer>
-
-<script>
+</footer><script>
 
   const loading = document.getElementById("loading");
-  const notAllowed = document.getElementById("notAllowed");
   const projectCard = document.getElementById("projectCard");
   const message = document.getElementById("message");
   const form = document.getElementById("projectForm");
@@ -367,10 +332,11 @@
         return;
       }
 
-      if (data.user.role !== "client") {
-        notAllowed.classList.remove("hidden");
-        return;
-      }
+      /*
+       * الحساب موحد:
+       * أي مستخدم مسجل دخول يمكنه نشر مشروع.
+       * لا نعتمد على role هنا.
+       */
 
       projectCard.classList.remove("hidden");
 
@@ -475,7 +441,5 @@
 
   checkUser();
 
-</script>
-
-</body>
+</script></body>
 </html>
