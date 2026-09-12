@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>ضمان الحقوق | مِهراف</title>
+  <meta name="description" content="ضمان الحقوق والمبادئ الأساسية للتعامل الآمن داخل منصة مِهراف">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #07111f;
+      --bg-soft: #0b1728;
+      --card: #101f33;
+      --card-hover: #14263e;
+      --border: rgba(255,255,255,0.09);
+      --text: #f4f7fb;
+      --muted: #9eacbd;
+      --primary: #5b8cff;
+      --primary-dark: #3f6fe0;
+      --success: #35d39a;
+      --warning: #ffbd5c;
+      --danger: #ff6b7a;
+    }
+
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(91,140,255,0.12), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(53,211,154,0.07), transparent 30%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.8;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    /* HEADER */
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7,17,31,0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1150px;
+      min-height: 76px;
+      margin: auto;
+      padding: 0 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -1px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    nav a {
+      color: var(--muted);
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    nav a:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.06);
+    }
+
+    .back-btn {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+      padding: 9px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* HERO */
+
+    .hero {
+      max-width: 900px;
+      margin: auto;
+      padding: 75px 20px 45px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+
+      padding: 7px 15px;
+      border-radius: 999px;
+
+      background: rgba(53,211,154,0.10);
+      border: 1px solid rgba(53,211,154,0.22);
+
+      color: #63dfae;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 50px);
+      line-height: 1.25;
+      margin-bottom: 18px;
+      font-weight: 900;
+    }
+
+    .hero h1 span {
+      color: var(--success);
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    /* MAIN */
+
+    main {
+      max-width: 950px;
+      margin: auto;
+      padding: 0 20px 80px;
+    }
+
+    .intro-card {
+      padding: 28px;
+      margin-bottom: 30px;
+
+      border: 1px solid rgba(91,140,255,0.16);
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(91,140,255,0.09),
+          rgba(53,211,154,0.04)
+        );
+    }
+
+    .intro-card h2 {
+      font-size: 22px;
+      margin-bottom: 10px;
+    }
+
+    .intro-card p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* CARDS */
+
+    .rights-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .rights-card {
+      background: rgba(16,31,51,0.94);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 25px;
+      transition: 0.25s;
+    }
+
+    .rights-card:hover {
+      background: var(--card-hover);
+      border-color: rgba(91,140,255,0.25);
+      transform: translateY(-1px);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 13px;
+    }
+
+    .icon {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+
+      border-radius: 12px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: rgba(91,140,255,0.11);
+      color: #8fb0ff;
+
+      font-size: 21px;
+    }
+
+    .rights-card h3 {
+      font-size: 18px;
+    }
+
+    .rights-card p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 9px;
+    }
+
+    .rights-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .rights-card strong {
+      color: #e5ebf5;
+    }
+
+    .rights-card ul {
+      margin-top: 10px;
+      padding-right: 22px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .rights-card li {
+      margin-bottom: 7px;
+    }
+
+    /* HIGHLIGHT */
+
+    .highlight {
+      margin-top: 25px;
+      padding: 22px 24px;
+
+      border-radius: 15px;
+
+      background: rgba(53,211,154,0.07);
+      border: 1px solid rgba(53,211,154,0.18);
+    }
+
+    .highlight h3 {
+      color: #63dfae;
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .highlight p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* WARNING */
+
+    .warning {
+      margin-top: 25px;
+      padding: 22px 24px;
+
+      border-radius: 15px;
+
+      background: rgba(255,189,92,0.06);
+      border: 1px solid rgba(255,189,92,0.18);
+    }
+
+    .warning h3 {
+      color: var(--warning);
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .warning p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* CTA */
+
+    .cta {
+      margin-top: 50px;
+      padding: 35px 30px;
+
+      text-align: center;
+
+      border-radius: 20px;
+      border: 1px solid rgba(91,140,255,0.2);
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(91,140,255,0.12),
+          rgba(53,211,154,0.05)
+        );
+    }
+
+    .cta h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .cta p {
+      max-width: 650px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .buttons {
+      margin-top: 22px;
+
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn {
+      min-height: 45px;
+      padding: 0 20px;
+
+      border-radius: 11px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 14px;
+      font-weight: 700;
+
+      transition: 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* FOOTER */
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: rgba(4,10,19,0.7);
+      padding: 35px 20px;
+    }
+
+    .footer-inner {
+      max-width: 1150px;
+      margin: auto;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-logo {
+      font-size: 21px;
+      font-weight: 900;
+    }
+
+    .footer-logo span {
+      color: var(--primary);
+    }
+
+    .footer-copy {
+      color: #718096;
+      font-size: 13px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #8492a5;
+      font-size: 13px;
+    }
+
+    .footer-links a:hover {
+      color: #fff;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 700px) {
+
+      .header-inner {
+        min-height: 68px;
+      }
+
+      nav {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 55px;
+      }
+
+      .hero p {
+        font-size: 15px;
+      }
+
+      .rights-card {
+        padding: 20px;
+      }
+
+      .rights-card h3 {
+        font-size: 16px;
+      }
+
+      .rights-card p,
+      .rights-card ul {
+        font-size: 13px;
+      }
+
+      .intro-card {
+        padding: 22px;
+      }
+
+      .cta {
+        padding: 28px 20px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-links {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+
+  <header>
+
+    <div class="header-inner">
+
+      <a href="index.html" class="logo">
+        مِهراف<span>.</span>
+      </a>
+
+      <nav>
+        <a href="services.html">الخدمات</a>
+        <a href="projects.html">المشاريع</a>
+        <a href="guides.html">الدليل</a>
+        <a href="support.html">الدعم</a>
+      </nav>
+
+      <button class="back-btn" onclick="goBack()">
+        ← رجوع
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="hero-badge">
+      🛡️ حماية التعاملات
+    </div>
+
+    <h1>
+      ضمان <span>الحقوق</span>
+    </h1>
+
+    <p>
+      مبادئ تساعد أصحاب المشاريع ومقدمي الخدمات على التعامل
+      بوضوح وأمان واحترام داخل منصة مِهراف.
+    </p>
+
+  </section>
+
+
+  <!-- MAIN -->
+
+  <main>
+
+    <div class="intro-card">
+
+      <h2>
+        لماذا نهتم بضمان الحقوق؟
+      </h2>
+
+      <p>
+        نجاح أي تعامل يعتمد على وضوح الاتفاق والتزام كل طرف بما
+        تم الاتفاق عليه. لذلك تهدف مِهراف إلى توفير بيئة منظمة
+        تساعد الطرفين على معرفة مسؤولياتهما وحقوقهما أثناء تنفيذ
+        المشاريع والخدمات.
+      </p>
+
+    </div>
+
+
+    <div class="rights-list">
+
+
+      <!-- 1 -->
+
+      <section class="rights-card">
+
+        <div class="card-head">
+
+          <div class="icon">🤝</div>
+
+          <h3>
+            الاتفاق الواضح
+          </h3>
+
+        </div>
+
+        <p>
+          قبل بدء أي عمل، يجب أن تكون تفاصيل المطلوب واضحة بين
+          الطرفين.
+        </p>
+
+        <ul>
+          <li>تحديد المطلوب بشكل دقيق.</li>
+          <li>توضيح المدة المتوقعة للتنفيذ.</li>
+          <li>تحديد السعر أو الميزانية المتفق عليها.</li>
+          <li>توضيح الملفات أو المعلومات التي يحتاجها المنفذ.</li>
+        </ul>
+
+      </section>
+
+
+      <!-- 2 -->
+
+      <section class="rights-card">
+
+        <div class="card-head">
+
+          <div class="icon">📋</div>
+
+          <h3>
+            تفاصيل المشروع أو الخدمة
+          </h3>
+
+        </div>
+
+        <p>
+          كلما كانت تفاصيل العمل مكتوبة بشكل واضح، كان من السهل
+          الرجوع إليها عند حدوث أي اختلاف.
+        </p>
+
+        <p>
+          لذلك ننصح بعدم الاعتماد على الوعود العامة أو التفاصيل
+          غير المحددة.
+        </p>
+
+      </section>
+
+
+      <!-- 3 -->
+
+      <section class="rights-card">
+
+        <div class="card-head">
+
+          <div class="icon">⏱️</div>
+
+          <h3>
+            الالتزام بالمدة
+          </h3>
+
+        </div>
+
+        <p>
+          يجب على المنفذ الالتزام بالمدة المتفق عليها قدر الإمكان،
+          وعلى صاحب المشروع توفير المعلومات المطلوبة في الوقت
+          المناسب.
+        </p>
+
+        <p>
+          إذا طرأ تأخير أو تغيير في ظروف العمل، فمن الأفضل إبلاغ
+          الطرف الآخر في أقرب وقت.
+        </p>
+
+      </section>
+
+
+      <!-- 4 -->
+
+      <section class="rights-card">
+
+        <div class="card-head">
+
+          <div class="icon">📦</div>
+
+          <h3>
+            تسليم العمل والمراجعة
+          </h3>
+
+        </div>
+
+        <p>
+          بعد الانتهاء من العمل، يجب تسليمه بالطريقة المتاحة داخل
+          المنصة وبحسب ما تم الاتفاق عليه.
+        </p>
+
+        <p>
+          يحق لصاحب المشروع مراجعة التسليم والتأكد من مطابقته
+          للمطلوب، كما يجب أن تكون طلبات التعديل مرتبطة بما تم
+          الاتفاق عليه.
+        </p>
+
+      </section>
+
+
+      <!-- 5 -->
+
+      <section class="rights-card">
+
+        <div class="card-head">
+
+          <div class="icon">🔄</div>
+
+          <h3>
+            التعديلات
+          </h3>
+
+        </div>
+
+        <p>
+          التعديلات يجب أن تكون ضمن نطاق العمل المتفق عليه.
+        </p>
+
+        <p>
+          إذا كان الطلب الجديد مختلفا بشكل كبير عن الاتفاق الأصلي،
+          فمن الأفضل الاتفاق على التفاصيل الجديدة قبل تنفيذها.
+        </p>
+
+      </section>
+
+
+      <!-- 6 -->
+
+      <section class="rights-card">
+
+        <div class="card-head">
+
+          <div class="icon">💬</div>
+
+          <h3>
+            التواصل والاحترام
+          </h3>
+
+        </div>
+
+        <p>
+          التعامل المحترم والواضح يساعد على حل معظم المشاكل قبل
+          أن تتحول إلى نزاع.
+        </p>
+
+        <ul>
+          <li>تجنب الإساءة أو التهديد.</li>
+          <li>لا تقدم معلومات مضللة للطرف الآخر.</li>
+          <li>وضح أي مشكلة فور ظهورها.</li>
+          <li>احتفظ بتفاصيل الاتفاق والتسليم.</li>
+        </ul>
+
+      </section>
+
+
+      <!-- 7 -->
+
+      <section class="rights-card">
+
+        <div class="card-head">
+
+          <div class="icon">🔒</div>
+
+          <h3>
+            حماية الحساب والمعلومات
+          </h3>
+
+        </div>
+
+        <p>
+          كل مستخدم مسؤول عن حماية بيانات الدخول الخاصة بحسابه.
+        </p>
+
+        <p>
+          لا تشارك كلمة المرور أو رموز التحقق مع أي شخص، ولا تسمح
+          للآخرين باستخدام حسابك.
+        </p>
+
+      </section>
+
+
+      <!-- 8 -->
+
+      <section class="rights-card">
+
+        <div class="card-head">
+
+          <div class="icon">🚫</div>
+
+          <h3>
+            السلوكيات غير المقبولة
+          </h3>
+
+        </div>
+
+        <p>
+          يجب عدم استخدام المنصة للإضرار بالمستخدمين أو خداعهم أو
+          تقديم خدمات مخالفة للقوانين أو لشروط المنصة.
+        </p>
+
+        <ul>
+          <li>الاحتيال أو الخداع.</li>
+          <li>انتحال شخصية شخص آخر.</li>
+          <li>سرقة أعمال أو محتوى الآخرين.</li>
+          <li>إرسال روابط أو ملفات ضارة.</li>
+          <li>استخدام المنصة لأغراض غير مشروعة.</li>
+        </ul>
+
+      </section>
+
+
+      <!-- 9 -->
+
+      <section class="rights-card">
+
+        <div class="card-head">
+
+          <div class="icon">⚖️</div>
+
+          <h3>
+            عند حدوث خلاف
+          </h3>
+
+        </div>
+
+        <p>
+          إذا حدث خلاف بين الطرفين، يجب أولا محاولة الوصول إلى حل
+          ودي بالاعتماد على تفاصيل الاتفاق والعمل المطلوب.
+        </p>
+
+        <p>
+          إذا تعذر الحل، يمكن التواصل مع دعم مِهراف وتقديم تفاصيل
+          المشكلة والمعلومات المتعلقة بالعملية حتى يمكن مراجعتها
+          وفقا للإجراءات المتاحة في المنصة.
+        </p>
+
+      </section>
+
+
+      <!-- 10 -->
+
+      <section class="rights-card">
+
+        <div class="card-head">
+
+          <div class="icon">⭐</div>
+
+          <h3>
+            التقييمات والسمعة
+          </h3>
+
+        </div>
+
+        <p>
+          التقييمات تساعد المستخدمين على معرفة مستوى التعامل وجودة
+          التنفيذ.
+        </p>
+
+        <p>
+          يجب أن تكون التقييمات صادقة ومرتبطة بالتجربة الفعلية،
+          وألا تستخدم للابتزاز أو الإساءة المتعمدة.
+        </p>
+
+      </section>
+
+
+    </div>
+
+
+    <!-- IMPORTANT -->
+
+    <div class="highlight">
+
+      <h3>
+        💡 نصيحة مهمة
+      </h3>
+
+      <p>
+        قبل قبول أي مشروع أو بدء أي خدمة، اقرأ التفاصيل جيدا وتأكد
+        من فهمك للمطلوب والمدة والتكلفة وطريقة التسليم. الوضوح من
+        البداية يحمي الطرفين ويقلل فرص حدوث الخلاف.
+      </p>
+
+    </div>
+
+
+    <!-- WARNING -->
+
+    <div class="warning">
+
+      <h3>
+        ⚠️ تنبيه
+      </h3>
+
+      <p>
+        هذه الصفحة توضح مبادئ وإرشادات عامة للتعامل داخل مِهراف،
+        ولا تعني وجود ضمان مالي أو نظام دفع محجوز إلا إذا كان هذا
+        النظام متاحا ومعلنا بشكل واضح داخل المنصة. يرجى دائما
+        مراجعة شروط الاستخدام والسياسات الحالية للمنصة.
+      </p>
+
+    </div>
+
+
+    <!-- CTA -->
+
+    <div class="cta">
+
+      <h2>
+        هل لديك مشكلة أو استفسار؟
+      </h2>
+
+      <p>
+        إذا واجهت مشكلة أثناء استخدام مِهراف أو تحتاج إلى مساعدة،
+        يمكنك التواصل مع الدعم أو الاطلاع على الدليل والأسئلة
+        الشائعة.
+      </p>
+
+      <div class="buttons">
+
+        <a href="support.html" class="btn btn-primary">
+          تواصل مع الدعم
+        </a>
+
+        <a href="faq.html" class="btn btn-secondary">
+          الأسئلة الشائعة
+        </a>
+
+        <a href="guides.html" class="btn btn-secondary">
+          الدليل الإرشادي
+        </a>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <div class="footer-inner">
+
+      <div>
+
+        <div class="footer-logo">
+          مِهراف<span>.</span>
+        </div>
+
+        <div class="footer-copy">
+          منصة تجمع أصحاب المشاريع وأصحاب المهارات.
+        </div>
+
+      </div>
+
+      <div class="footer-links">
+
+        <a href="guides.html">الدليل</a>
+        <a href="support.html">الدعم</a>
+        <a href="faq.html">الأسئلة الشائعة</a>
+        <a href="privacy.html">الخصوصية</a>
+        <a href="terms.html">الشروط</a>
+
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script>
+
+    function goBack() {
+
+      if (document.referrer) {
+        history.back();
+      } else {
+        window.location.href = "index.html";
+      }
+
+    }
+
+  </script>
+
+</body>
+</html>
