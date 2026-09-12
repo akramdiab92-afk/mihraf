@@ -760,6 +760,50 @@ async function forgotPassword(request, env) {
   }
 }
 
+async function testResend(env) {
+  try {
+    if (!env.RESEND_API_KEY) {
+      return json({
+        success: false,
+        configured: false,
+        error: "RESEND_API_KEY غير موجود"
+      }, 500);
+    }
+
+    const response = await fetch(
+      "https://api.resend.com/domains",
+      {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${env.RESEND_API_KEY}`
+        }
+      }
+    );
+
+    if (!response.ok) {
+      return json({
+        success: false,
+        configured: true,
+        resend_ok: false,
+        status: response.status
+      }, 502);
+    }
+
+    return json({
+      success: true,
+      configured: true,
+      resend_ok: true,
+      message: "Resend API يعمل والمفتاح مقبول"
+    });
+
+  } catch (error) {
+    return json({
+      success: false,
+      configured: !!env.RESEND_API_KEY,
+      error: error?.message || String(error)
+    }, 500);
+  }
+}
 
 // ================================
 // RESET PASSWORD
