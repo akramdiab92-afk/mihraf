@@ -656,7 +656,6 @@
 
     </div>
 
-
     <div id="executionBox" class="execution-box hidden">
 
       <div class="execution-header">
@@ -705,7 +704,6 @@
 
       </div>
 
-
       <div id="revisionCard" class="revision-card hidden">
 
         <h3>طلب تعديل من صاحب المشروع</h3>
@@ -716,7 +714,6 @@
 
       </div>
 
-
       <div id="latestDeliveryContainer">
 
         <h3>آخر تسليم</h3>
@@ -726,7 +723,6 @@
         </div>
 
       </div>
-
 
       <div id="deliveryFormBox" class="hidden">
 
@@ -788,7 +784,6 @@
 
       </div>
 
-
       <div id="clientDeliveryActions" class="execution-actions hidden">
 
         <div class="execution-actions-grid">
@@ -812,7 +807,6 @@
         </div>
 
       </div>
-
 
       <div
         id="revisionFormBox"
@@ -856,7 +850,6 @@
 
       </div>
 
-
       <div class="timeline">
 
         <h3>سجل المشروع</h3>
@@ -872,7 +865,6 @@
       </div>
 
     </div>
-
 
     <div id="proposalFormBox" class="proposal-box hidden">
 
@@ -942,7 +934,6 @@
 
     </div>
 
-
     <div id="clientProposalsBox" class="proposals-box hidden">
 
       <h2>العروض المقدمة على مشروعك</h2>
@@ -955,7 +946,6 @@
 
   </section>
 </main>
-
 
 <script>
 
@@ -1344,11 +1334,15 @@
     return {
       ...data.project,
 
+      /* الإصلاح:
+         Worker يرسل can_apply و is_owner
+         داخل data.project وليس خارجها.
+      */
       can_apply:
-        data.can_apply === true,
+        data.project.can_apply === true,
 
       is_owner:
-        data.is_owner === true
+        data.project.is_owner === true
     };
   }
 
@@ -1634,21 +1628,6 @@
   }
 
 
-  /*
-   * ==========================================
-   * الحساب موحد
-   * ==========================================
-   *
-   * لا نعتمد على currentUser.role هنا.
-   *
-   * أي مستخدم مسجل الدخول يستطيع:
-   * - تقديم عرض على مشروع ليس له
-   * - إنشاء مشروع
-   * - استخدام الخدمات
-   *
-   * صاحب المشروع فقط يرى إدارة العروض.
-   */
-
   async function setupActions() {
 
     proposalFormBox.classList.add(
@@ -1698,9 +1677,6 @@
         Number(currentUser.id);
 
 
-    /*
-     * إذا كان المستخدم صاحب المشروع
-     */
     if (isOwner) {
 
       proposalButton.style.display =
@@ -1720,11 +1696,6 @@
       return;
     }
 
-
-    /*
-     * إذا لم يكن صاحب المشروع:
-     * الحساب الموحد يستطيع تقديم عرض.
-     */
 
     if (
       currentProject.status !==
@@ -1784,11 +1755,6 @@
         return;
       }
 
-
-      /*
-       * لا يوجد فحص role هنا.
-       * الحساب موحد.
-       */
 
       if (
         !currentProject ||
