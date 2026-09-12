@@ -131,6 +131,13 @@ export default {
         return await createProject(request, env);
       }
 
+      if (
+        url.pathname === "/api/my-projects" &&
+        request.method === "GET"
+      ) {
+        return await getMyProjects(request, env);
+      }
+
       const projectExecutionMatch =
         url.pathname.match(
           /^\/api\/projects\/(\d+)\/execution$/
@@ -3436,6 +3443,66 @@ async function getProjects(
           Number(user.id)
       })
     );
+
+  return json({
+    success: true,
+    projects,
+    count: projects.length
+  });
+}
+
+
+// ======================================================
+// GET MY PROJECTS
+// ======================================================
+
+async function getMyProjects(
+  request,
+  env
+) {
+  const user =
+    await getAuthenticatedUser(
+      request,
+      env
+    );
+
+  if (!user) {
+    return json(
+      {
+        success: false,
+        error:
+          "يجب تسجيل الدخول أولا"
+      },
+      401
+    );
+  }
+
+  const result =
+    await env.DB
+      .prepare(`
+        SELECT
+          p.id,
+          p.user_id,
+          p.title,
+          p.description,
+          p.budget,
+          p.category,
+          p.status,
+          p.created_at,
+          p.updated_at,
+          u.full_name
+            AS owner_name
+        FROM projects p
+        INNER JOIN users u
+          ON u.id = p.user_id
+        WHERE p.user_id = ?
+        ORDER BY p.id DESC
+      `)
+      .bind(user.id)
+      .all();
+
+  const projects =
+    result.results || [];
 
   return json({
     success: true,
