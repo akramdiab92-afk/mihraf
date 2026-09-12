@@ -18,7 +18,7 @@
     }
 
     header {
-      background: #ffffff;
+      background: #fff;
       border-bottom: 1px solid #e5e7eb;
       padding: 18px 20px;
     }
@@ -53,11 +53,11 @@
     .loading,
     .error,
     .not-found {
-      background: #ffffff;
+      background: #fff;
       padding: 30px;
       border-radius: 14px;
       text-align: center;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      box-shadow: 0 5px 20px rgba(0,0,0,.05);
     }
 
     .error {
@@ -72,10 +72,10 @@
     .proposal-box,
     .proposals-box,
     .execution-box {
-      background: #ffffff;
+      background: #fff;
       border-radius: 16px;
       padding: 30px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+      box-shadow: 0 5px 20px rgba(0,0,0,.06);
       margin-bottom: 20px;
     }
 
@@ -86,13 +86,13 @@
       font-size: 30px;
     }
 
-    h2 {
-      margin-top: 0;
+    h2,
+    h3 {
       color: #111827;
     }
 
-    h3 {
-      color: #111827;
+    h2 {
+      margin-top: 0;
     }
 
     .description {
@@ -115,7 +115,7 @@
       border: 1px solid #e5e7eb;
       border-radius: 12px;
       padding: 16px;
-      background: #ffffff;
+      background: #fff;
     }
 
     .detail-label {
@@ -175,7 +175,7 @@
       padding: 15px;
       border: none;
       border-radius: 10px;
-      color: #ffffff;
+      color: #fff;
       font-size: 17px;
       font-weight: bold;
       cursor: pointer;
@@ -211,7 +211,7 @@
     }
 
     button:disabled {
-      opacity: 0.6;
+      opacity: .6;
       cursor: not-allowed;
     }
 
@@ -344,7 +344,8 @@
       color: #374151;
     }
 
-    .empty-proposals {
+    .empty-proposals,
+    .execution-empty {
       background: #f9fafb;
       padding: 20px;
       border-radius: 10px;
@@ -471,7 +472,7 @@
     .delivery-message {
       white-space: pre-wrap;
       line-height: 1.8;
-      background: #ffffff;
+      background: #fff;
       padding: 13px;
       border-radius: 9px;
       margin: 12px 0;
@@ -527,14 +528,6 @@
     .timeline-date {
       color: #6b7280;
       font-size: 13px;
-    }
-
-    .execution-empty {
-      background: #f9fafb;
-      border-radius: 10px;
-      padding: 18px;
-      text-align: center;
-      color: #6b7280;
     }
 
     .hidden {
@@ -664,143 +657,86 @@
     </div>
 
 
-    <!-- =========================
-         نظام التنفيذ
-    ========================== -->
-
-    <div
-      id="executionBox"
-      class="execution-box hidden"
-    >
+    <div id="executionBox" class="execution-box hidden">
 
       <div class="execution-header">
 
         <h2>تنفيذ المشروع</h2>
 
-        <span
-          id="executionStatus"
-          class="execution-status"
-        >
+        <span id="executionStatus" class="execution-status">
           -
         </span>
 
       </div>
 
-      <div
-        id="executionMessage"
-        class="message"
-      ></div>
+      <div id="executionMessage" class="message"></div>
 
       <div class="execution-info">
 
         <div class="execution-info-item">
-
           <span class="execution-info-label">
             سعر الاتفاق
           </span>
 
-          <span
-            id="executionPrice"
-            class="execution-info-value"
-          >
+          <span id="executionPrice" class="execution-info-value">
             -
           </span>
-
         </div>
 
         <div class="execution-info-item">
-
           <span class="execution-info-label">
             بداية التنفيذ
           </span>
 
-          <span
-            id="executionStart"
-            class="execution-info-value"
-          >
+          <span id="executionStart" class="execution-info-value">
             -
           </span>
-
         </div>
 
         <div class="execution-info-item">
-
           <span class="execution-info-label">
             موعد التسليم
           </span>
 
-          <span
-            id="executionDue"
-            class="execution-info-value"
-          >
+          <span id="executionDue" class="execution-info-value">
             -
           </span>
-
         </div>
 
       </div>
 
 
-      <!-- طلب التعديل -->
+      <div id="revisionCard" class="revision-card hidden">
 
-      <div
-        id="revisionCard"
-        class="revision-card hidden"
-      >
+        <h3>طلب تعديل من صاحب المشروع</h3>
 
-        <h3>
-          طلب تعديل من صاحب المشروع
-        </h3>
+        <div id="revisionMessage" class="delivery-message"></div>
 
-        <div
-          id="revisionMessage"
-          class="delivery-message"
-        ></div>
-
-        <div
-          id="revisionDate"
-          class="timeline-date"
-        ></div>
+        <div id="revisionDate" class="timeline-date"></div>
 
       </div>
 
 
-      <!-- آخر تسليم -->
-
       <div id="latestDeliveryContainer">
 
-        <h3>
-          آخر تسليم
-        </h3>
+        <h3>آخر تسليم</h3>
 
-        <div
-          id="latestDelivery"
-          class="execution-empty"
-        >
+        <div id="latestDelivery" class="execution-empty">
           لا يوجد تسليم حتى الآن.
         </div>
 
       </div>
 
 
-      <!-- نموذج تسليم المستقل -->
+      <div id="deliveryFormBox" class="hidden">
 
-      <div
-        id="deliveryFormBox"
-        class="hidden"
-      >
+        <div style="
+          border-top:1px solid #e5e7eb;
+          margin-top:25px;
+          padding-top:25px;
+        ">
 
-        <div
-          style="
-            border-top:1px solid #e5e7eb;
-            margin-top:25px;
-            padding-top:25px;
-          "
-        >
-
-          <h3>
-            إرسال التسليم
-          </h3>
+          <h3>إرسال التسليم</h3>
 
           <form id="deliveryForm">
 
@@ -853,12 +789,7 @@
       </div>
 
 
-      <!-- أزرار العميل -->
-
-      <div
-        id="clientDeliveryActions"
-        class="execution-actions hidden"
-      >
+      <div id="clientDeliveryActions" class="execution-actions hidden">
 
         <div class="execution-actions-grid">
 
@@ -883,8 +814,6 @@
       </div>
 
 
-      <!-- نموذج طلب التعديل -->
-
       <div
         id="revisionFormBox"
         class="hidden"
@@ -895,9 +824,7 @@
         "
       >
 
-        <h3>
-          طلب تعديل
-        </h3>
+        <h3>طلب تعديل</h3>
 
         <form id="revisionForm">
 
@@ -930,18 +857,16 @@
       </div>
 
 
-      <!-- سجل المشروع -->
-
       <div class="timeline">
 
-        <h3>
-          سجل المشروع
-        </h3>
+        <h3>سجل المشروع</h3>
 
         <div id="eventsList">
+
           <div class="execution-empty">
             لا توجد أحداث مسجلة حتى الآن.
           </div>
+
         </div>
 
       </div>
@@ -949,21 +874,11 @@
     </div>
 
 
-    <!-- =========================
-         تقديم عرض
-    ========================== -->
-
-    <div
-      id="proposalFormBox"
-      class="proposal-box hidden"
-    >
+    <div id="proposalFormBox" class="proposal-box hidden">
 
       <h2>تقديم عرض</h2>
 
-      <div
-        id="proposalMessage"
-        class="message"
-      ></div>
+      <div id="proposalMessage" class="message"></div>
 
       <form id="proposalForm">
 
@@ -1028,23 +943,11 @@
     </div>
 
 
-    <!-- =========================
-         عروض العميل
-    ========================== -->
+    <div id="clientProposalsBox" class="proposals-box hidden">
 
-    <div
-      id="clientProposalsBox"
-      class="proposals-box hidden"
-    >
+      <h2>العروض المقدمة على مشروعك</h2>
 
-      <h2>
-        العروض المقدمة على مشروعك
-      </h2>
-
-      <div
-        id="clientProposalsMessage"
-        class="message"
-      ></div>
+      <div id="clientProposalsMessage" class="message"></div>
 
       <div id="clientProposalsList"></div>
 
@@ -1440,8 +1343,10 @@
 
     return {
       ...data.project,
+
       can_apply:
         data.can_apply === true,
+
       is_owner:
         data.is_owner === true
     };
@@ -1490,9 +1395,7 @@
         );
       }
 
-      if (
-        !data.execution
-      ) {
+      if (!data.execution) {
 
         currentExecutionData = null;
 
@@ -1731,6 +1634,21 @@
   }
 
 
+  /*
+   * ==========================================
+   * الحساب موحد
+   * ==========================================
+   *
+   * لا نعتمد على currentUser.role هنا.
+   *
+   * أي مستخدم مسجل الدخول يستطيع:
+   * - تقديم عرض على مشروع ليس له
+   * - إنشاء مشروع
+   * - استخدام الخدمات
+   *
+   * صاحب المشروع فقط يرى إدارة العروض.
+   */
+
   async function setupActions() {
 
     proposalFormBox.classList.add(
@@ -1749,8 +1667,7 @@
 
       if (
         currentProject &&
-        currentProject.status ===
-        "open"
+        currentProject.status === "open"
       ) {
 
         proposalButton.style.display =
@@ -1760,7 +1677,7 @@
           "تسجيل الدخول لتقديم عرض";
 
         actionNotice.textContent =
-          "يجب تسجيل الدخول بحساب مستقل لتقديم عرض.";
+          "يجب تسجيل الدخول لتقديم عرض على المشروع.";
 
       } else {
 
@@ -1776,96 +1693,78 @@
     const isOwner =
       currentProject.is_owner === true ||
       Number(currentProject.user_id) ===
-      Number(currentUser.id) ||
+        Number(currentUser.id) ||
       Number(currentProject.client_id) ===
-      Number(currentUser.id);
+        Number(currentUser.id);
 
 
-    if (
-      currentUser.role ===
-      "client"
-    ) {
-
-      if (isOwner) {
-
-        proposalButton.style.display =
-          "none";
-
-        actionNotice.textContent =
-          currentProject.status === "open"
-            ? "هذا مشروعك. يمكنك مشاهدة وإدارة العروض المقدمة عليه."
-            : "هذا مشروعك. يمكنك متابعة تنفيذ المشروع.";
-
-        clientProposalsBox.classList.remove(
-          "hidden"
-        );
-
-        await loadClientProposals();
-
-        return;
-      }
+    /*
+     * إذا كان المستخدم صاحب المشروع
+     */
+    if (isOwner) {
 
       proposalButton.style.display =
         "none";
 
       actionNotice.textContent =
-        "تقديم العروض متاح للمستقلين فقط.";
+        currentProject.status === "open"
+          ? "هذا مشروعك. يمكنك مشاهدة وإدارة العروض المقدمة عليه."
+          : "هذا مشروعك. يمكنك متابعة تنفيذ المشروع.";
+
+      clientProposalsBox.classList.remove(
+        "hidden"
+      );
+
+      await loadClientProposals();
 
       return;
     }
 
 
+    /*
+     * إذا لم يكن صاحب المشروع:
+     * الحساب الموحد يستطيع تقديم عرض.
+     */
+
     if (
-      currentUser.role ===
-      "freelancer"
+      currentProject.status !==
+      "open"
     ) {
 
-      const canApply =
-        currentProject.can_apply === true;
-
-      if (
-        currentProject.status !==
-        "open"
-      ) {
-
-        proposalButton.style.display =
-          "none";
-
-        actionNotice.textContent =
-          "يمكنك متابعة تنفيذ المشروع من قسم التنفيذ أدناه.";
-
-        return;
-      }
-
-      if (!canApply) {
-
-        proposalButton.style.display =
-          "none";
-
-        actionNotice.textContent =
-          "لا يمكنك تقديم عرض على هذا المشروع.";
-
-        return;
-      }
-
       proposalButton.style.display =
-        "block";
-
-      proposalButton.textContent =
-        "تقديم عرض على المشروع";
+        "none";
 
       actionNotice.textContent =
-        "أرسل عرضك إلى صاحب المشروع.";
+        "هذا المشروع لم يعد مفتوحا لاستقبال العروض.";
+
+      return;
+    }
+
+
+    const canApply =
+      currentProject.can_apply === true;
+
+
+    if (!canApply) {
+
+      proposalButton.style.display =
+        "none";
+
+      actionNotice.textContent =
+        "لا يمكنك تقديم عرض على هذا المشروع.";
 
       return;
     }
 
 
     proposalButton.style.display =
-      "none";
+      "block";
+
+    proposalButton.textContent =
+      "تقديم عرض على المشروع";
 
     actionNotice.textContent =
-      "لا يمكن تنفيذ هذا الإجراء بهذا الحساب.";
+      "أرسل عرضك إلى صاحب المشروع.";
   }
 
 
@@ -1885,27 +1784,29 @@
         return;
       }
 
-      if (
-        currentUser.role !==
-        "freelancer"
-      ) {
-        return;
-      }
+
+      /*
+       * لا يوجد فحص role هنا.
+       * الحساب موحد.
+       */
 
       if (
         !currentProject ||
         currentProject.status !==
-        "open" ||
+          "open" ||
         currentProject.can_apply !== true
       ) {
+
         return;
       }
+
 
       clearProposalMessage();
 
       proposalFormBox.classList.toggle(
         "hidden"
       );
+
 
       if (
         !proposalFormBox.classList.contains(
@@ -1930,10 +1831,11 @@
 
       clearProposalMessage();
 
+
       if (
         !currentProject ||
         currentProject.status !==
-        "open"
+          "open"
       ) {
 
         showProposalMessage(
@@ -1943,12 +1845,14 @@
         return;
       }
 
+
       const price =
         Number(
           document.getElementById(
             "proposalPrice"
           ).value
         );
+
 
       const deliveryDays =
         Number(
@@ -1957,10 +1861,12 @@
           ).value
         );
 
+
       const message =
         document.getElementById(
           "proposalText"
         ).value.trim();
+
 
       if (
         !Number.isFinite(price) ||
@@ -1973,6 +1879,7 @@
 
         return;
       }
+
 
       if (
         !Number.isInteger(
@@ -1988,6 +1895,7 @@
         return;
       }
 
+
       if (
         message.length < 10
       ) {
@@ -1999,11 +1907,13 @@
         return;
       }
 
+
       submitProposal.disabled =
         true;
 
       submitProposal.textContent =
         "جار إرسال العرض...";
+
 
       try {
 
@@ -2012,25 +1922,33 @@
             "/api/proposals",
             {
               method: "POST",
+
               headers: {
                 "Content-Type":
                   "application/json"
               },
+
               credentials: "include",
+
               body:
                 JSON.stringify({
                   project_id:
                     currentProjectId,
+
                   price,
+
                   delivery_days:
                     deliveryDays,
+
                   message
                 })
             }
           );
 
+
         const data =
           await response.json();
+
 
         if (!response.ok) {
 
@@ -2043,22 +1961,28 @@
           return;
         }
 
+
         showProposalMessage(
           "تم تقديم العرض بنجاح.",
           "success"
         );
 
+
         proposalForm.reset();
+
 
         proposalButton.style.display =
           "none";
+
 
         proposalFormBox.classList.add(
           "hidden"
         );
 
+
         actionNotice.textContent =
           "تم تقديم عرضك بنجاح على هذا المشروع.";
+
 
       } catch (error) {
 
@@ -2085,6 +2009,7 @@
 
     showClientMessage("");
 
+
     try {
 
       const response =
@@ -2098,8 +2023,10 @@
           }
         );
 
+
       const data =
         await response.json();
+
 
       if (!response.ok) {
 
@@ -2115,8 +2042,10 @@
         return;
       }
 
+
       const proposals =
         data.proposals || [];
+
 
       if (
         proposals.length === 0
@@ -2132,6 +2061,7 @@
         return;
       }
 
+
       clientProposalsList.innerHTML =
         proposals
           .map(
@@ -2141,6 +2071,7 @@
               )
           )
           .join("");
+
 
     } catch (error) {
 
@@ -2159,18 +2090,23 @@
   ) {
 
     const status =
-      proposal.status || "pending";
+      proposal.status ||
+      "pending";
+
 
     const canManage =
       status === "pending" &&
       currentProject &&
       currentProject.status === "open";
 
+
     const price =
       Number(proposal.price);
 
+
     const days =
       Number(proposal.delivery_days);
+
 
     return `
       <article class="proposal-card">
@@ -2178,7 +2114,7 @@
         <h3>
           ${escapeHTML(
             proposal.freelancer_name ||
-            "مستقل"
+            "مستخدم"
           )}
         </h3>
 
@@ -2186,6 +2122,7 @@
 
           <div>
             <span>السعر</span>
+
             <strong>
               ${
                 Number.isFinite(price)
@@ -2195,8 +2132,10 @@
             </strong>
           </div>
 
+
           <div>
             <span>مدة التسليم</span>
+
             <strong>
               ${
                 Number.isFinite(days)
@@ -2206,8 +2145,10 @@
             </strong>
           </div>
 
+
           <div>
             <span>الحالة</span>
+
             <span class="proposal-status ${escapeHTML(status)}">
               ${escapeHTML(
                 proposalStatusNames[status] ||
@@ -2216,8 +2157,10 @@
             </span>
           </div>
 
+
           <div>
             <span>تاريخ العرض</span>
+
             <span>
               ${formatDate(
                 proposal.created_at
@@ -2227,36 +2170,38 @@
 
         </div>
 
+
         <div class="proposal-message">
           ${escapeHTML(
             proposal.message
           )}
         </div>
 
+
         ${
           canManage
-          ? `
-            <div class="proposal-actions">
+            ? `
+              <div class="proposal-actions">
 
-              <button
-                type="button"
-                class="accept-btn"
-                onclick="acceptProposal(${Number(proposal.id)}, this)"
-              >
-                قبول العرض
-              </button>
+                <button
+                  type="button"
+                  class="accept-btn"
+                  onclick="acceptProposal(${Number(proposal.id)}, this)"
+                >
+                  قبول العرض
+                </button>
 
-              <button
-                type="button"
-                class="reject-btn"
-                onclick="rejectProposal(${Number(proposal.id)}, this)"
-              >
-                رفض العرض
-              </button>
+                <button
+                  type="button"
+                  class="reject-btn"
+                  onclick="rejectProposal(${Number(proposal.id)}, this)"
+                >
+                  رفض العرض
+                </button>
 
-            </div>
-          `
-          : ""
+              </div>
+            `
+            : ""
         }
 
       </article>
@@ -2273,7 +2218,7 @@
     if (
       !currentProject ||
       currentProject.status !==
-      "open"
+        "open"
     ) {
 
       showClientMessage(
@@ -2283,9 +2228,11 @@
       return;
     }
 
+
     if (button) {
       button.disabled = true;
     }
+
 
     try {
 
@@ -2296,20 +2243,26 @@
           "/status",
           {
             method: "POST",
+
             headers: {
               "Content-Type":
                 "application/json"
             },
+
             credentials: "include",
+
             body:
               JSON.stringify({
-                status: newStatus
+                status:
+                  newStatus
               })
           }
         );
 
+
       const data =
         await response.json();
+
 
       if (!response.ok) {
 
@@ -2323,12 +2276,14 @@
           )
         );
 
+
         if (button) {
           button.disabled = false;
         }
 
         return;
       }
+
 
       showClientMessage(
         newStatus === "accepted"
@@ -2337,7 +2292,9 @@
         "success"
       );
 
+
       await refreshProjectAndProposals();
+
 
     } catch (error) {
 
@@ -2346,6 +2303,7 @@
           ? "حدث خطأ أثناء قبول العرض."
           : "حدث خطأ أثناء رفض العرض."
       );
+
 
       if (button) {
         button.disabled = false;
@@ -2364,9 +2322,11 @@
         "هل أنت متأكد من قبول هذا العرض؟\n\nسيتم تحويل المشروع إلى «قيد التنفيذ» ورفض العروض المعلقة الأخرى."
       );
 
+
     if (!confirmed) {
       return;
     }
+
 
     await updateProposalStatus(
       proposalId,
@@ -2386,9 +2346,11 @@
         "هل أنت متأكد من رفض هذا العرض؟"
       );
 
+
     if (!confirmed) {
       return;
     }
+
 
     await updateProposalStatus(
       proposalId,
@@ -2419,44 +2381,57 @@
       return;
     }
 
+
     currentExecutionData =
       data;
+
 
     executionBox.classList.remove(
       "hidden"
     );
 
+
     showExecutionMessage("");
+
 
     const execution =
       data.execution;
 
+
     const proposal =
       data.proposal || {};
+
 
     const status =
       execution.status ||
       "in_progress";
 
+
     executionStatus.textContent =
       executionStatusNames[status] ||
       status;
 
+
     executionStatus.className =
-      "execution-status " + status;
+      "execution-status " +
+      status;
+
 
     const price =
       Number(proposal.price);
+
 
     executionPrice.textContent =
       Number.isFinite(price)
         ? "$" + price.toFixed(2)
         : "-";
 
+
     executionStart.textContent =
       formatDateTime(
         execution.start_at
       );
+
 
     executionDue.textContent =
       formatDateTime(
@@ -2482,6 +2457,7 @@
     const isFreelancer =
       data.is_freelancer === true;
 
+
     const isClientOwner =
       data.is_client_owner === true;
 
@@ -2490,9 +2466,11 @@
       "hidden"
     );
 
+
     clientDeliveryActions.classList.add(
       "hidden"
     );
+
 
     revisionFormBox.classList.add(
       "hidden"
@@ -2509,9 +2487,7 @@
         deliveryFormBox.classList.remove(
           "hidden"
         );
-
       }
-
     }
 
 
@@ -2520,15 +2496,13 @@
       if (
         data.latest_delivery &&
         data.latest_delivery.status ===
-        "submitted"
+          "submitted"
       ) {
 
         clientDeliveryActions.classList.remove(
           "hidden"
         );
-
       }
-
     }
 
 
@@ -2567,12 +2541,15 @@
       return;
     }
 
+
     const status =
       delivery.status ||
       "submitted";
 
+
     const version =
       Number(delivery.version);
+
 
     latestDelivery.innerHTML =
       `
@@ -2597,6 +2574,7 @@
 
           </div>
 
+
           <div class="timeline-date">
             تاريخ التسليم:
             ${formatDateTime(
@@ -2604,29 +2582,31 @@
             )}
           </div>
 
+
           <div class="delivery-message">
             ${escapeHTML(
               delivery.message
             )}
           </div>
 
+
           ${
             delivery.file_url
-            ? `
-              <a
-                class="file-link"
-                href="${escapeHTML(delivery.file_url)}"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                فتح ملف التسليم
-              </a>
-            `
-            : `
-              <div class="timeline-date">
-                لا يوجد ملف مرفق.
-              </div>
-            `
+              ? `
+                <a
+                  class="file-link"
+                  href="${escapeHTML(delivery.file_url)}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  فتح ملف التسليم
+                </a>
+              `
+              : `
+                <div class="timeline-date">
+                  لا يوجد ملف مرفق.
+                </div>
+              `
           }
 
         </div>
@@ -2647,13 +2627,16 @@
       return;
     }
 
+
     revisionCard.classList.remove(
       "hidden"
     );
 
+
     revisionMessage.textContent =
       revision.message ||
       "";
+
 
     revisionDate.textContent =
       "تاريخ الطلب: " +
@@ -2679,6 +2662,7 @@
 
       return;
     }
+
 
     eventsList.innerHTML =
       events
@@ -2717,6 +2701,7 @@
 
       showExecutionMessage("");
 
+
       if (
         !currentExecutionData ||
         !currentExecutionData.execution
@@ -2729,10 +2714,12 @@
         return;
       }
 
+
       const message =
         document.getElementById(
           "deliveryText"
         ).value.trim();
+
 
       const fileUrl =
         document.getElementById(
@@ -2755,6 +2742,7 @@
       submitDelivery.disabled =
         true;
 
+
       submitDelivery.textContent =
         "جار إرسال التسليم...";
 
@@ -2768,14 +2756,18 @@
             "/deliveries",
             {
               method: "POST",
+
               headers: {
                 "Content-Type":
                   "application/json"
               },
+
               credentials: "include",
+
               body:
                 JSON.stringify({
                   message,
+
                   file_url:
                     fileUrl || null
                 })
@@ -2837,6 +2829,7 @@
         confirm(
           "هل أنت متأكد من قبول التسليم؟\n\nسيتم إنهاء تنفيذ المشروع وتحويل حالته إلى «مكتمل»."
         );
+
 
       if (!confirmed) {
         return;
@@ -2930,6 +2923,7 @@
         "hidden"
       );
 
+
       if (
         !revisionFormBox.classList.contains(
           "hidden"
@@ -2952,6 +2946,7 @@
       event.preventDefault();
 
       showExecutionMessage("");
+
 
       const delivery =
         currentExecutionData &&
@@ -2989,6 +2984,7 @@
       submitRevision.disabled =
         true;
 
+
       submitRevision.textContent =
         "جار إرسال طلب التعديل...";
 
@@ -3002,11 +2998,14 @@
             "/revision",
             {
               method: "POST",
+
               headers: {
                 "Content-Type":
                   "application/json"
               },
+
               credentials: "include",
+
               body:
                 JSON.stringify({
                   message
@@ -3038,6 +3037,7 @@
 
 
         revisionForm.reset();
+
 
         revisionFormBox.classList.add(
           "hidden"
