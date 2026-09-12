@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="تصفح المشاريع المفتوحة في مِهراف وابحث عن فرصة مناسبة لمهاراتك.">
+  <meta name="description" content="تصفح المشاريع في مِهراف وابحث عن فرصة مناسبة لمهاراتك.">
   <title>تصفح المشاريع | مِهراف</title>
 
   <style>
@@ -26,6 +26,15 @@
       --white: #ffffff;
       --success: #35c759;
       --danger: #ff5c5c;
+
+      --reserved: #aeb4bd;
+      --reserved-bg: rgba(174, 180, 189, 0.12);
+
+      --progress: #7f9fca;
+      --progress-bg: rgba(127, 159, 202, 0.12);
+
+      --completed: #35c759;
+      --completed-bg: rgba(53, 199, 89, 0.12);
     }
 
     body {
@@ -187,6 +196,36 @@
       border-color: #3d4652;
     }
 
+    /* المشروع المحجوز */
+    .project-card.reserved {
+      opacity: 0.72;
+      background: #202329;
+      border-color: #343941;
+    }
+
+    .project-card.reserved:hover {
+      opacity: 0.82;
+      background: #24282e;
+    }
+
+    /* المشروع قيد التنفيذ */
+    .project-card.in-progress {
+      border-color: #394657;
+    }
+
+    /* المشروع المكتمل */
+    .project-card.completed {
+      border-color: #35453a;
+    }
+
+    .project-card.completed .details-btn {
+      background: #3d6948;
+    }
+
+    .project-card.completed .details-btn:hover {
+      background: #477b53;
+    }
+
     .project-card h2 {
       font-size: 20px;
       margin-bottom: 10px;
@@ -269,14 +308,42 @@
       background: var(--blue-dark);
     }
 
+    /* الحالات */
+
     .status {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
       font-size: 12px;
-      padding: 4px 9px;
+      padding: 4px 10px;
       border-radius: 20px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .status-open {
       background: rgba(53, 199, 89, 0.12);
       color: var(--success);
-      margin-bottom: 10px;
+    }
+
+    .status-reserved {
+      background: var(--reserved-bg);
+      color: var(--reserved);
+    }
+
+    .status-progress {
+      background: var(--progress-bg);
+      color: var(--progress);
+    }
+
+    .status-completed {
+      background: var(--completed-bg);
+      color: var(--completed);
+    }
+
+    .status-unknown {
+      background: rgba(157, 164, 175, 0.12);
+      color: var(--muted);
     }
 
     .loading,
@@ -373,20 +440,46 @@
 
     <section class="page-head">
       <h1>تصفح المشاريع</h1>
-      <p>اكتشف المشاريع المفتوحة وابحث عن فرصة مناسبة لمهاراتك.</p>
+      <p>اكتشف المشاريع وابحث عن فرصة مناسبة لمهاراتك.</p>
     </section>
 
     <section class="toolbar">
       <div class="filters">
-        <button class="filter-btn active" data-category="all">جميع التصنيفات</button>
-        <button class="filter-btn" data-category="التصميم">التصميم</button>
-        <button class="filter-btn" data-category="البرمجة">البرمجة</button>
-        <button class="filter-btn" data-category="الكتابة">الكتابة</button>
-        <button class="filter-btn" data-category="التسويق">التسويق</button>
-        <button class="filter-btn" data-category="الفيديو">الفيديو</button>
-        <button class="filter-btn" data-category="الصوت">الصوت</button>
-        <button class="filter-btn" data-category="الأعمال">الأعمال</button>
-        <button class="filter-btn" data-category="أخرى">أخرى</button>
+        <button class="filter-btn active" data-category="all">
+          جميع التصنيفات
+        </button>
+
+        <button class="filter-btn" data-category="التصميم">
+          التصميم
+        </button>
+
+        <button class="filter-btn" data-category="البرمجة">
+          البرمجة
+        </button>
+
+        <button class="filter-btn" data-category="الكتابة">
+          الكتابة
+        </button>
+
+        <button class="filter-btn" data-category="التسويق">
+          التسويق
+        </button>
+
+        <button class="filter-btn" data-category="الفيديو">
+          الفيديو
+        </button>
+
+        <button class="filter-btn" data-category="الصوت">
+          الصوت
+        </button>
+
+        <button class="filter-btn" data-category="الأعمال">
+          الأعمال
+        </button>
+
+        <button class="filter-btn" data-category="أخرى">
+          أخرى
+        </button>
       </div>
 
       <button id="refreshBtn" class="refresh-btn">
@@ -399,8 +492,13 @@
     </div>
 
     <div id="error" class="error hidden">
-      <div id="errorMessage">حدث خطأ أثناء تحميل المشاريع.</div>
-      <button id="retryBtn">إعادة المحاولة</button>
+      <div id="errorMessage">
+        حدث خطأ أثناء تحميل المشاريع.
+      </div>
+
+      <button id="retryBtn">
+        إعادة المحاولة
+      </button>
     </div>
 
     <div id="empty" class="empty hidden">
@@ -475,6 +573,118 @@
     );
   }
 
+  /*
+   * تحديد حالة المشروع
+   *
+   * نعتمد أولا على status القادمة من الـ Worker.
+   * ونضع عدة احتمالات احتياطية حتى لا يظهر المشروع
+   * على أنه مفتوح إذا كان هناك حجز أو تنفيذ.
+   */
+  function getProjectState(project) {
+    const rawStatus = String(
+      project.status ||
+      project.project_status ||
+      ""
+    ).toLowerCase().trim();
+
+    /*
+     * المشروع المنجز
+     */
+    if (
+      rawStatus === "completed" ||
+      rawStatus === "complete" ||
+      rawStatus === "done" ||
+      rawStatus === "finished"
+    ) {
+      return {
+        key: "completed",
+        text: "تم إنجازه وتسليمه",
+        className: "completed",
+        statusClass: "status-completed"
+      };
+    }
+
+    /*
+     * المشروع قيد التنفيذ
+     */
+    if (
+      rawStatus === "in_progress" ||
+      rawStatus === "in-progress" ||
+      rawStatus === "inprogress" ||
+      rawStatus === "working"
+    ) {
+      return {
+        key: "in_progress",
+        text: "قيد التنفيذ",
+        className: "in-progress",
+        statusClass: "status-progress"
+      };
+    }
+
+    /*
+     * المشروع المحجوز
+     */
+    if (
+      rawStatus === "reserved" ||
+      rawStatus === "booked" ||
+      rawStatus === "accepted"
+    ) {
+      return {
+        key: "reserved",
+        text: "محجوز",
+        className: "reserved",
+        statusClass: "status-reserved"
+      };
+    }
+
+    /*
+     * بعض الـ APIs قد ترجع معلومات الحجز
+     * بدون تغيير status.
+     */
+    const hasAcceptedProposal =
+      project.accepted_proposal_id ||
+      project.acceptedProposalId ||
+      project.accepted_proposal ||
+      project.acceptedProposal ||
+      project.execution_id ||
+      project.executionId;
+
+    if (hasAcceptedProposal) {
+      return {
+        key: "reserved",
+        text: "محجوز",
+        className: "reserved",
+        statusClass: "status-reserved"
+      };
+    }
+
+    /*
+     * المشروع المفتوح
+     */
+    if (
+      rawStatus === "open" ||
+      rawStatus === "opened" ||
+      rawStatus === ""
+    ) {
+      return {
+        key: "open",
+        text: "مفتوح",
+        className: "",
+        statusClass: "status-open"
+      };
+    }
+
+    /*
+     * أي حالة غير معروفة لا نظهرها كمفتوح
+     */
+    return {
+      key: rawStatus,
+      text: "غير متاح حاليا",
+      className: "reserved",
+      statusClass: "status-unknown"
+    };
+  }
+
   function showLoading() {
     loading.classList.remove("hidden");
     errorBox.classList.add("hidden");
@@ -487,7 +697,9 @@
     projectsGrid.classList.add("hidden");
     emptyBox.classList.add("hidden");
 
-    errorMessage.textContent = message || "حدث خطأ أثناء تحميل المشاريع.";
+    errorMessage.textContent =
+      message || "حدث خطأ أثناء تحميل المشاريع.";
+
     errorBox.classList.remove("hidden");
   }
 
@@ -520,24 +732,61 @@
         return;
       }
 
-      const title = escapeHTML(project.title || "مشروع بدون عنوان");
+      const state = getProjectState(project);
+
+      const title = escapeHTML(
+        project.title || "مشروع بدون عنوان"
+      );
+
       const description = escapeHTML(
         project.description || "لا يوجد وصف للمشروع."
       );
-      const category = escapeHTML(project.category || "أخرى");
-      const ownerName = escapeHTML(getOwnerName(project));
+
+      const category = escapeHTML(
+        project.category || "أخرى"
+      );
+
+      const ownerName = escapeHTML(
+        getOwnerName(project)
+      );
+
       const budget = formatBudget(project.budget);
       const createdAt = formatDate(project.created_at);
 
       const card = document.createElement("article");
-      card.className = "project-card";
+
+      card.className =
+        "project-card " +
+        state.className;
+
+      /*
+       * إذا كان المشروع محجوزا أو منجزا،
+       * لا نستخدم زر أزرق يوحي بأنه مشروع مفتوح.
+       */
+      let detailsButtonText = "عرض تفاصيل المشروع";
+
+      if (state.key === "reserved") {
+        detailsButtonText = "عرض تفاصيل المشروع";
+      }
+
+      if (state.key === "in_progress") {
+        detailsButtonText = "متابعة المشروع";
+      }
+
+      if (state.key === "completed") {
+        detailsButtonText = "عرض المشروع المنجز";
+      }
 
       card.innerHTML = `
-        <span class="status">مفتوح</span>
+        <span class="status ${state.statusClass}">
+          ${escapeHTML(state.text)}
+        </span>
 
         <h2>${title}</h2>
 
-        <div class="description">${description}</div>
+        <div class="description">
+          ${description}
+        </div>
 
         <div class="meta">
           <div class="meta-box">
@@ -552,22 +801,34 @@
         </div>
 
         <div class="project-footer">
+
           <div class="owner">
-            <span class="owner-label">صاحب المشروع</span>
-            <span class="owner-name">${ownerName}</span>
+            <span class="owner-label">
+              صاحب المشروع
+            </span>
+
+            <span class="owner-name">
+              ${ownerName}
+            </span>
           </div>
 
           <div class="owner">
-            <span class="owner-label">تاريخ النشر</span>
-            <span>${createdAt}</span>
+            <span class="owner-label">
+              تاريخ النشر
+            </span>
+
+            <span>
+              ${createdAt}
+            </span>
           </div>
 
           <a
             class="details-btn"
             href="project-details.html?id=${encodeURIComponent(id)}"
           >
-            عرض تفاصيل المشروع
+            ${detailsButtonText}
           </a>
+
         </div>
       `;
 
@@ -596,11 +857,21 @@
       try {
         data = JSON.parse(rawText);
       } catch (parseError) {
-        console.error("Projects API returned invalid JSON:", rawText);
-        throw new Error("استجابة الخادم غير صالحة.");
+        console.error(
+          "Projects API returned invalid JSON:",
+          rawText
+        );
+
+        throw new Error(
+          "استجابة الخادم غير صالحة."
+        );
       }
 
-      console.log("Projects API:", response.status, data);
+      console.log(
+        "Projects API:",
+        response.status,
+        data
+      );
 
       if (response.status === 401) {
         window.location.href = "login.html";
@@ -619,10 +890,27 @@
         ? data.projects
         : [];
 
+      console.log(
+        "Projects with statuses:",
+        allProjects.map(project => ({
+          id: project.id,
+          title: project.title,
+          status: project.status,
+          project_status: project.project_status,
+          accepted_proposal_id:
+            project.accepted_proposal_id,
+          execution_id:
+            project.execution_id
+        }))
+      );
+
       renderProjects();
 
     } catch (error) {
-      console.error("Error loading projects:", error);
+      console.error(
+        "Error loading projects:",
+        error
+      );
 
       showError(
         error.message ||
@@ -636,18 +924,29 @@
 
   filterButtons.forEach(button => {
     button.addEventListener("click", () => {
-      filterButtons.forEach(btn => btn.classList.remove("active"));
+
+      filterButtons.forEach(btn =>
+        btn.classList.remove("active")
+      );
 
       button.classList.add("active");
 
-      currentCategory = button.dataset.category || "all";
+      currentCategory =
+        button.dataset.category || "all";
 
       renderProjects();
     });
   });
 
-  refreshBtn.addEventListener("click", loadProjects);
-  retryBtn.addEventListener("click", loadProjects);
+  refreshBtn.addEventListener(
+    "click",
+    loadProjects
+  );
+
+  retryBtn.addEventListener(
+    "click",
+    loadProjects
+  );
 
   loadProjects();
 </script>
