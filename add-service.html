@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>إضافة خدمة | مِهراف</title>
 
   <style>
@@ -13,7 +14,7 @@
     }
 
     body {
-      font-family: Arial, Tahoma, sans-serif;
+      font-family: Tahoma, Arial, sans-serif;
       background: #f5f7fb;
       color: #1f2937;
       min-height: 100vh;
@@ -24,158 +25,157 @@
       color: inherit;
     }
 
-    .container {
-      width: 92%;
-      max-width: 850px;
-      margin: auto;
-    }
-
-    header {
-      background: white;
+    .header {
+      background: #fff;
       border-bottom: 1px solid #e5e7eb;
     }
 
-    .nav {
+    .header-inner {
+      max-width: 1100px;
+      margin: auto;
       min-height: 70px;
+      padding: 0 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 15px;
+      gap: 20px;
     }
 
     .logo {
+      font-size: 25px;
+      font-weight: bold;
       color: #2563eb;
-      font-size: 28px;
-      font-weight: 800;
     }
 
-    .back-btn {
-      background: #eff6ff;
-      color: #2563eb;
-      padding: 9px 15px;
-      border-radius: 8px;
+    .back-link {
+      color: #4b5563;
       font-size: 14px;
     }
 
-    main {
-      padding: 40px 0;
+    .back-link:hover {
+      color: #2563eb;
     }
 
-    .form-card {
-      background: white;
+    .container {
+      max-width: 850px;
+      margin: auto;
+      padding: 35px 20px 60px;
+    }
+
+    .page-title {
+      margin-bottom: 25px;
+    }
+
+    .page-title h1 {
+      font-size: 30px;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .page-title p {
+      color: #6b7280;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .card {
+      background: #fff;
       border: 1px solid #e5e7eb;
       border-radius: 16px;
       padding: 30px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
     }
 
-    .form-header {
-      margin-bottom: 28px;
-    }
-
-    .form-header h1 {
-      font-size: 27px;
-      color: #111827;
-      margin-bottom: 8px;
-    }
-
-    .form-header p {
-      color: #6b7280;
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    .form-group {
+    .field {
       margin-bottom: 20px;
     }
 
-    label {
+    .field label {
       display: block;
-      margin-bottom: 8px;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: bold;
       color: #374151;
+      margin-bottom: 8px;
     }
 
-    input,
-    textarea,
-    select {
+    .field input,
+    .field textarea,
+    .field select {
       width: 100%;
       border: 1px solid #d1d5db;
       border-radius: 9px;
-      padding: 12px 13px;
+      padding: 12px;
       font-family: inherit;
       font-size: 14px;
-      outline: none;
-      background: white;
       color: #111827;
+      background: #fff;
+      outline: none;
     }
 
-    input:focus,
-    textarea:focus,
-    select:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
-    }
-
-    textarea {
+    .field textarea {
       min-height: 150px;
       resize: vertical;
-      line-height: 1.7;
+      line-height: 1.8;
     }
 
-    .price-wrapper {
-      position: relative;
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px #dbeafe;
     }
 
-    .price-wrapper input {
-      padding-left: 65px;
-    }
-
-    .currency {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
+    .hint {
       color: #6b7280;
-      font-size: 13px;
-      pointer-events: none;
-    }
-
-    #message {
-      display: none;
-      padding: 12px 14px;
-      border-radius: 9px;
-      margin-bottom: 20px;
-      font-size: 14px;
+      font-size: 12px;
+      margin-top: 6px;
       line-height: 1.6;
     }
 
-    #message.success {
-      display: block;
-      background: #ecfdf5;
-      color: #047857;
-      border: 1px solid #a7f3d0;
+    .error {
+      display: none;
+      background: #fff1f2;
+      border: 1px solid #fecdd3;
+      color: #be123c;
+      border-radius: 10px;
+      padding: 13px;
+      margin-bottom: 20px;
+      line-height: 1.8;
+      font-size: 14px;
     }
 
-    #message.error {
-      display: block;
-      background: #fef2f2;
-      color: #b91c1c;
-      border: 1px solid #fecaca;
+    .success {
+      display: none;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      border-radius: 10px;
+      padding: 13px;
+      margin-bottom: 20px;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .submit-btn,
+    .cancel-btn {
+      border-radius: 9px;
+      padding: 13px 20px;
+      font-family: inherit;
+      font-size: 14px;
+      cursor: pointer;
     }
 
     .submit-btn {
-      width: 100%;
+      flex: 1;
       border: none;
       background: #2563eb;
-      color: white;
-      padding: 13px 20px;
-      border-radius: 9px;
-      font-family: inherit;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.2s;
+      color: #fff;
     }
 
     .submit-btn:hover {
@@ -183,42 +183,83 @@
     }
 
     .submit-btn:disabled {
-      background: #93c5fd;
+      background: #9ca3af;
       cursor: not-allowed;
     }
 
-    #loading {
+    .cancel-btn {
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #4b5563;
+    }
+
+    .cancel-btn:hover {
+      background: #f9fafb;
+    }
+
+    .loading {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 45px 20px;
       text-align: center;
-      padding: 80px 20px;
       color: #6b7280;
     }
 
-    #content {
-      display: none;
+    .loader {
+      width: 38px;
+      height: 38px;
+      border: 4px solid #e5e7eb;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 15px;
     }
 
-    footer {
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .footer {
+      border-top: 1px solid #e5e7eb;
+      background: #fff;
       text-align: center;
-      padding: 30px 15px;
-      color: #9ca3af;
+      padding: 22px;
+      color: #6b7280;
       font-size: 13px;
     }
 
     @media (max-width: 600px) {
-      .form-card {
-        padding: 22px;
+      .header-inner {
+        min-height: auto;
+        padding: 14px 20px;
       }
 
-      .form-header h1 {
-        font-size: 23px;
+      .container {
+        padding: 25px 15px 45px;
       }
 
-      .nav {
-        min-height: 62px;
+      .card {
+        padding: 20px;
       }
 
-      .logo {
-        font-size: 24px;
+      .page-title h1 {
+        font-size: 25px;
+      }
+
+      .buttons {
+        flex-direction: column;
+      }
+
+      .submit-btn,
+      .cancel-btn {
+        width: 100%;
       }
     }
   </style>
@@ -226,48 +267,46 @@
 
 <body>
 
-<header>
-  <div class="container nav">
+<header class="header">
+  <div class="header-inner">
 
     <a href="index.html" class="logo">
       مِهراف
     </a>
 
-    <a href="dashboard.html" class="back-btn">
-      لوحة التحكم
+    <a href="dashboard.html" class="back-link">
+      ← العودة إلى لوحة التحكم
     </a>
 
   </div>
 </header>
 
-<div id="loading">
-  جاري التحقق من الحساب...
-</div>
+<main class="container">
 
-<main id="content">
+  <div id="loading" class="loading">
+    <div class="loader"></div>
+    جاري التحقق من الحساب...
+  </div>
 
-  <div class="container">
+  <div id="content" class="hidden">
 
-    <div class="form-card">
+    <div class="page-title">
+      <h1>إضافة خدمة</h1>
 
-      <div class="form-header">
+      <p>
+        أضف خدمة جديدة إلى مِهراف ليتمكن العملاء من الاطلاع عليها وطلبها منك.
+      </p>
+    </div>
 
-        <h1>
-          أضف خدمتك 🚀
-        </h1>
+    <div class="card">
 
-        <p>
-          اعرض مهارتك أمام العملاء على منصة مِهراف.
-          اكتب وصفًا واضحًا للخدمة وحدد السعر المناسب.
-        </p>
+      <div id="errorMessage" class="error"></div>
 
-      </div>
-
-      <div id="message"></div>
+      <div id="successMessage" class="success"></div>
 
       <form id="serviceForm">
 
-        <div class="form-group">
+        <div class="field">
 
           <label for="title">
             عنوان الخدمة
@@ -277,14 +316,14 @@
             type="text"
             id="title"
             name="title"
-            placeholder="مثال: تصميم شعار احترافي"
-            maxlength="120"
+            maxlength="150"
             required
+            placeholder="مثال: تصميم شعار احترافي"
           >
 
         </div>
 
-        <div class="form-group">
+        <div class="field">
 
           <label for="description">
             وصف الخدمة
@@ -293,14 +332,18 @@
           <textarea
             id="description"
             name="description"
-            placeholder="اشرح للعميل بالتفصيل ماذا سيحصل عليه عند طلب خدمتك..."
-            maxlength="3000"
+            maxlength="5000"
             required
+            placeholder="اشرح للعميل بالتفصيل ماذا تقدم في هذه الخدمة..."
           ></textarea>
+
+          <div class="hint">
+            اكتب وصفا واضحا للخدمة وما الذي سيحصل عليه العميل.
+          </div>
 
         </div>
 
-        <div class="form-group">
+        <div class="field">
 
           <label for="category">
             التصنيف
@@ -316,75 +359,83 @@
               اختر تصنيف الخدمة
             </option>
 
-            <option value="التصميم">
-              🎨 التصميم
+            <option value="تصميم">
+              تصميم
             </option>
 
-            <option value="البرمجة">
-              💻 البرمجة والتطوير
+            <option value="برمجة">
+              برمجة
             </option>
 
-            <option value="الكتابة">
-              ✍️ الكتابة والترجمة
+            <option value="كتابة وترجمة">
+              كتابة وترجمة
             </option>
 
-            <option value="التسويق">
-              📢 التسويق الرقمي
+            <option value="تسويق">
+              تسويق
             </option>
 
-            <option value="الفيديو">
-              🎬 الفيديو والرسوم المتحركة
+            <option value="فيديو وصوتيات">
+              فيديو وصوتيات
             </option>
 
-            <option value="الصوت">
-              🎙️ الصوتيات
+            <option value="تعليم وتدريب">
+              تعليم وتدريب
             </option>
 
-            <option value="الأعمال">
-              📊 الأعمال والاستشارات
+            <option value="استشارات">
+              استشارات
+            </option>
+
+            <option value="أعمال وخدمات">
+              أعمال وخدمات
             </option>
 
             <option value="أخرى">
-              📦 أخرى
+              أخرى
             </option>
 
           </select>
 
         </div>
 
-        <div class="form-group">
+        <div class="field">
 
           <label for="price">
-            سعر الخدمة
+            سعر الخدمة بالدولار
           </label>
 
-          <div class="price-wrapper">
-
-            <input
-              type="number"
-              id="price"
-              name="price"
-              placeholder="مثال: 25"
-              min="1"
-              step="0.01"
-              required
-            >
-
-            <span class="currency">
-              دولار
-            </span>
-
-          </div>
+          <input
+            type="number"
+            id="price"
+            name="price"
+            min="0"
+            step="0.01"
+            required
+            placeholder="مثال: 25"
+          >
 
         </div>
 
-        <button
-          type="submit"
-          class="submit-btn"
-          id="submitBtn"
-        >
-          نشر الخدمة
-        </button>
+        <div class="buttons">
+
+          <button
+            type="submit"
+            id="submitButton"
+            class="submit-btn"
+          >
+            إضافة الخدمة
+          </button>
+
+          <button
+            type="button"
+            class="cancel-btn"
+            onclick="window.location.href='dashboard.html'"
+          >
+            إلغاء
+          </button>
+
+        </div>
 
       </form>
 
@@ -394,8 +445,8 @@
 
 </main>
 
-<footer>
-  © 2026 MIHRAF — مِهراف
+<footer class="footer">
+  © 2026 مِهراف | MIHRAF - منصة الخدمات والمشاريع
 </footer>
 
 <script>
@@ -406,26 +457,46 @@
   const content =
     document.getElementById("content");
 
-  const message =
-    document.getElementById("message");
-
-  const form =
+  const serviceForm =
     document.getElementById("serviceForm");
 
-  const submitBtn =
-    document.getElementById("submitBtn");
+  const errorMessage =
+    document.getElementById("errorMessage");
+
+  const successMessage =
+    document.getElementById("successMessage");
+
+  const submitButton =
+    document.getElementById("submitButton");
 
 
-  function showMessage(text, type) {
+  function showError(message) {
 
-    message.textContent = text;
-    message.className = type;
-    message.style.display = "block";
+    errorMessage.textContent =
+      message || "حدث خطأ.";
 
+    errorMessage.style.display =
+      "block";
+
+    successMessage.style.display =
+      "none";
   }
 
 
-  async function checkUser() {
+  function showSuccess(message) {
+
+    successMessage.textContent =
+      message || "تمت العملية بنجاح.";
+
+    successMessage.style.display =
+      "block";
+
+    errorMessage.style.display =
+      "none";
+  }
+
+
+  async function checkAuth() {
 
     try {
 
@@ -435,204 +506,153 @@
           {
             method: "GET",
             credentials: "include",
-            cache: "no-store"
+            headers: {
+              "Accept": "application/json"
+            }
           }
         );
 
-
-      const raw =
-        await response.text();
-
-      let data = {};
-
-      try {
-
-        data = JSON.parse(raw);
-
-      } catch (error) {
-
-        data = {
-          success: false,
-          message: raw || "استجابة غير صالحة من الخادم."
-        };
-
-      }
-
-
-      const isLoggedIn =
-        (
-          data.logged_in === true ||
-          data.authenticated === true
-        ) &&
-        !!data.user;
-
-
-      if (
-        !response.ok ||
-        !data.success ||
-        !isLoggedIn
-      ) {
+      if (!response.ok) {
 
         window.location.href =
           "login.html";
 
-        return;
-
+        return false;
       }
 
+      const data =
+        await response.json();
 
-      if (
-        data.user.role !== "freelancer"
-      ) {
+      /*
+       * الحساب في مِهراف موحد.
+       * لا يوجد أي شرط يعتمد على role.
+       */
 
-        loading.style.display =
-          "none";
+      if (!data || !data.user) {
 
-        content.style.display =
-          "block";
+        window.location.href =
+          "login.html";
 
-        showMessage(
-          "هذه الصفحة مخصصة للمستقلين فقط.",
-          "error"
-        );
-
-        form.style.display =
-          "none";
-
-        return;
-
+        return false;
       }
-
 
       loading.style.display =
         "none";
 
-      content.style.display =
-        "block";
+      content.classList.remove(
+        "hidden"
+      );
 
+      return true;
 
     } catch (error) {
 
       console.error(
-        "Check user error:",
+        "Auth error:",
         error
       );
 
       loading.style.display =
         "none";
 
-      content.style.display =
-        "block";
-
-      showMessage(
-        "تعذر الاتصال بالخادم. حاول مرة أخرى.",
-        "error"
+      content.classList.remove(
+        "hidden"
       );
 
+      showError(
+        "تعذر الاتصال بالخادم. حاول مرة أخرى."
+      );
+
+      return false;
     }
 
   }
 
 
-  form.addEventListener(
+  serviceForm.addEventListener(
     "submit",
     async function(event) {
 
       event.preventDefault();
 
+      errorMessage.style.display =
+        "none";
+
+      successMessage.style.display =
+        "none";
 
       const title =
-        document
-          .getElementById("title")
-          .value
-          .trim();
-
+        document.getElementById(
+          "title"
+        ).value.trim();
 
       const description =
-        document
-          .getElementById("description")
-          .value
-          .trim();
-
+        document.getElementById(
+          "description"
+        ).value.trim();
 
       const category =
-        document
-          .getElementById("category")
-          .value
-          .trim();
-
+        document.getElementById(
+          "category"
+        ).value.trim();
 
       const price =
-        Number(
-          document
-            .getElementById("price")
-            .value
-        );
+        document.getElementById(
+          "price"
+        ).value.trim();
 
 
-      if (
-        title.length < 3
-      ) {
+      if (!title) {
 
-        showMessage(
-          "عنوان الخدمة يجب أن يكون 3 أحرف على الأقل.",
-          "error"
+        showError(
+          "يرجى إدخال عنوان الخدمة."
         );
 
         return;
-
       }
 
 
-      if (
-        description.length < 10
-      ) {
+      if (!description) {
 
-        showMessage(
-          "وصف الخدمة يجب أن يكون 10 أحرف على الأقل.",
-          "error"
+        showError(
+          "يرجى إدخال وصف الخدمة."
         );
 
         return;
-
       }
 
 
       if (!category) {
 
-        showMessage(
-          "اختر تصنيف الخدمة.",
-          "error"
+        showError(
+          "يرجى اختيار تصنيف الخدمة."
         );
 
         return;
-
       }
 
 
       if (
-        !Number.isFinite(price) ||
-        price <= 0
+        price === "" ||
+        !Number.isFinite(
+          Number(price)
+        ) ||
+        Number(price) < 0
       ) {
 
-        showMessage(
-          "أدخل سعرًا صحيحًا أكبر من صفر.",
-          "error"
+        showError(
+          "يرجى إدخال سعر صحيح للخدمة."
         );
 
         return;
-
       }
 
 
-      submitBtn.disabled =
+      submitButton.disabled =
         true;
 
-      submitBtn.textContent =
-        "جاري نشر الخدمة...";
-
-      message.style.display =
-        "none";
+      submitButton.textContent =
+        "جاري إضافة الخدمة...";
 
 
       try {
@@ -643,88 +663,89 @@
             {
               method: "POST",
 
+              credentials: "include",
+
               headers: {
                 "Content-Type":
+                  "application/json",
+
+                "Accept":
                   "application/json"
               },
 
-              credentials:
-                "include",
+              body: JSON.stringify({
+                title:
+                  title,
 
-              body:
-                JSON.stringify({
-                  title:
-                    title,
+                description:
+                  description,
 
-                  description:
-                    description,
+                category:
+                  category,
 
-                  category:
-                    category,
-
-                  price:
-                    price
-                })
+                price:
+                  Number(price)
+              })
             }
           );
 
 
-        /*
-          نقرأ الرد كنص أولا.
-          هذا يمنع response.json()
-          من إخفاء الخطأ الحقيقي إذا
-          رجع الخادم HTML أو رد غير JSON.
-        */
-
-        const raw =
-          await response.text();
-
-
-        let data = {};
-
+        let data = null;
 
         try {
 
           data =
-            JSON.parse(raw);
+            await response.json();
 
-        } catch (error) {
+        } catch {
 
-          data = {
-            success: false,
-            message:
-              raw ||
-              `خطأ من الخادم (${response.status})`
-          };
+          data = null;
 
         }
 
 
         if (
-          !response.ok ||
-          !data.success
+          response.status === 401
         ) {
 
-          showMessage(
-            data.message ||
-            data.error ||
-            `حدث خطأ من الخادم (${response.status})`,
-            "error"
-          );
+          window.location.href =
+            "login.html";
 
           return;
-
         }
 
 
-        showMessage(
+        if (
+          !response.ok ||
+          !data ||
+          data.success !== true
+        ) {
+
+          const error =
+            data &&
+            (
+              data.error ||
+              data.message
+            )
+              ? (
+                  data.error ||
+                  data.message
+                )
+              : "تعذر إضافة الخدمة.";
+
+          throw new Error(
+            error
+          );
+        }
+
+
+        showSuccess(
           data.message ||
-          "تم نشر الخدمة بنجاح.",
-          "success"
+          "تمت إضافة الخدمة بنجاح."
         );
 
 
-        form.reset();
+        serviceForm.reset();
 
 
         setTimeout(
@@ -745,26 +766,23 @@
           error
         );
 
-        showMessage(
-          "تعذر الاتصال بالخادم. حاول مرة أخرى.",
-          "error"
+        showError(
+          error.message ||
+          "حدث خطأ أثناء إضافة الخدمة."
         );
 
-      } finally {
-
-        submitBtn.disabled =
+        submitButton.disabled =
           false;
 
-        submitBtn.textContent =
-          "نشر الخدمة";
-
+        submitButton.textContent =
+          "إضافة الخدمة";
       }
 
     }
   );
 
 
-  checkUser();
+  checkAuth();
 
 </script>
 
