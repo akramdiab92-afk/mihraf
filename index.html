@@ -1004,16 +1004,19 @@
     }
 
     /* =========================
-       CARDS
+       ACTION CARDS
     ========================== */
 
-    .cards {
+    .action-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
+      max-width: 850px;
+      margin: 0 auto;
     }
 
-    .card {
+    .action-card {
+      display: block;
       background:
         linear-gradient(
           145deg,
@@ -1022,11 +1025,11 @@
         );
       border: 1px solid var(--border);
       border-radius: 13px;
-      overflow: hidden;
+      padding: 24px 20px;
       transition: 0.2s;
     }
 
-    .card:hover {
+    .action-card:hover {
       background:
         linear-gradient(
           145deg,
@@ -1037,156 +1040,86 @@
       border-color: var(--border-light);
     }
 
-    .card-image {
-      height: 150px;
-      background:
-        linear-gradient(
-          145deg,
-          #30363e,
-          #282e35
-        );
+    .action-card-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 11px;
+      background: rgba(79, 140, 255, 0.10);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #737b87;
-      font-size: 12px;
+      font-size: 22px;
+      margin-bottom: 13px;
     }
 
-    .card-content {
-      padding: 17px;
-    }
-
-    .card-content h3 {
+    .action-card h3 {
       color: var(--text);
-      font-size: 15px;
-      margin-bottom: 7px;
+      font-size: 16px;
+      margin-bottom: 6px;
     }
 
-    .card-content p {
+    .action-card p {
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.7;
+      line-height: 1.8;
     }
 
-    .price {
+    .action-card-arrow {
+      display: block;
       color: var(--blue);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
-      margin-top: 12px;
+      margin-top: 13px;
     }
 
-    .service-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(255,255,255,.05);
-    }
+    /* =========================
+       PROFESSIONALS
+    ========================== */
 
-    .service-category {
-      color: #7f8894;
-      font-size: 10px;
-      background: rgba(255,255,255,.04);
-      padding: 4px 8px;
-      border-radius: 7px;
-    }
-
-    .service-provider {
-      color: #89929e;
-      font-size: 10px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .services-loading,
-    .services-empty,
-    .services-error {
-      grid-column: 1 / -1;
+    .professional-info {
+      max-width: 850px;
+      margin: auto;
       text-align: center;
-      padding: 35px 15px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
+      padding: 28px 20px;
       background:
         linear-gradient(
           145deg,
-          #252b32,
-          #21262c
+          #272d34,
+          #22272e
         );
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .services-error {
-      color: #c7ccd3;
-    }
-
-    .services-error button {
-      margin-top: 12px;
-      border: none;
-      background: var(--blue);
-      color: white;
-      border-radius: 8px;
-      padding: 8px 16px;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .service-card {
-      cursor: pointer;
-    }
-
-    .service-card .card-image {
-      position: relative;
-    }
-
-    .service-image-icon {
-      font-size: 30px;
-      opacity: .8;
-    }
-
-    .empty-state {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 30px 15px;
-      color: var(--muted);
       border: 1px solid var(--border);
       border-radius: 13px;
-      background: #22272e;
     }
 
-    .search-results {
-      width: 100%;
-      max-width: 760px;
-      margin: 15px auto 0;
-      display: grid;
-      gap: 10px;
+    .professional-info-icon {
+      font-size: 30px;
+      margin-bottom: 10px;
     }
 
-    .search-result-item {
-      padding: 14px;
-      background: #22272e;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-    }
-
-    .search-result-item h3 {
+    .professional-info h3 {
       color: var(--text);
-      font-size: 14px;
-      margin-bottom: 5px;
+      font-size: 17px;
+      margin-bottom: 7px;
     }
 
-    .search-result-item p {
+    .professional-info p {
       color: var(--muted);
       font-size: 12px;
-      margin-bottom: 5px;
+      line-height: 1.8;
+      margin-bottom: 15px;
     }
 
-    .search-result-item span {
-      color: var(--blue);
-      font-size: 10px;
+    .professional-info a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 18px;
+      border-radius: 9px;
+      background: var(--blue);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
     }
 
     /* =========================
@@ -1214,6 +1147,14 @@
       margin-bottom: 20px;
     }
 
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
     .cta a {
       display: inline-flex;
       align-items: center;
@@ -1231,6 +1172,21 @@
     .cta a:hover {
       background: var(--blue-dark);
       transform: translateY(-1px);
+    }
+
+    .cta a.secondary {
+      background:
+        linear-gradient(
+          145deg,
+          #2b3038,
+          #252a31
+        );
+      border: 1px solid var(--border-light);
+      color: var(--text);
+    }
+
+    .cta a.secondary:hover {
+      background: #323943;
     }
 
     /* =========================
@@ -1271,12 +1227,14 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .cards {
-        grid-template-columns: 1fr;
-      }
-
       .nav-links {
         display: none;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .action-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -1331,9 +1289,13 @@
         padding: 0 15px;
       }
 
-      .service-meta {
-        align-items: flex-start;
+      .cta-actions {
         flex-direction: column;
+      }
+
+      .cta-actions a {
+        width: 100%;
+        max-width: 300px;
       }
     }
   </style>
@@ -1393,11 +1355,11 @@
 
         <nav class="nav-links">
 
-          <a href="#services">
+          <a href="services.html">
             الخدمات
           </a>
 
-          <a href="#projects">
+          <a href="projects.html">
             المشاريع
           </a>
 
@@ -1612,7 +1574,7 @@
         </a>
 
         <a
-          href="#featuredServices"
+          href="services.html"
           class="menu-item">
 
           <div class="menu-icon">💼</div>
@@ -1824,15 +1786,12 @@
             id="searchInput"
             placeholder="ابحث عن خدمة أو مشروع...">
 
-          <button id="searchButton">
+          <button
+            type="button"
+            id="searchButton">
             بحث
           </button>
 
-        </div>
-
-        <div
-          class="search-results"
-          id="searchResults">
         </div>
 
       </div>
@@ -1974,94 +1933,69 @@
       </div>
 
     </section>
-
-    <section id="featuredServices">
-
-      <div class="container">
-
-        <div class="section-title">
-
-          <h2>
-            خدمات مميزة
-          </h2>
-
-          <p>
-            اكتشف خدمات يقدمها محترفون على مِهراف
-          </p>
-
-        </div>
-
-        <div
-          class="cards"
-          id="featuredServicesGrid">
-
-          <div class="services-loading">
-            جاري تحميل الخدمات...
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-    <section id="projects">
+        <section id="actions">
 
       <div class="container">
 
         <div class="section-title">
 
           <h2>
-            أحدث المشاريع
+            ماذا تريد أن تفعل؟
           </h2>
 
           <p>
-            مشاريع يبحث أصحابها عن محترفين لتنفيذها
+            اختر ما تريد إنجازه على مِهراف
           </p>
 
         </div>
 
-        <div class="cards">
+        <div class="action-grid">
 
-          <div class="card">
+          <a
+            href="services.html"
+            class="action-card">
 
-            <div class="card-content">
-
-              <h3>
-                كتابة محتوى لموقع
-              </h3>
-
-              <p>
-                مطلوب كاتب محتوى لكتابة صفحات موقع إلكتروني.
-              </p>
-
-              <div class="price">
-                $30 - $70
-              </div>
-
+            <div class="action-card-icon">
+              💼
             </div>
 
-          </div>
+            <h3>
+              تصفح الخدمات
+            </h3>
 
-          <div class="card">
+            <p>
+              اكتشف الخدمات المنشورة واختر الخدمة
+              المناسبة لاحتياجك.
+            </p>
 
-            <div class="card-content">
+            <span class="action-card-arrow">
+              استكشف الخدمات ←
+            </span>
 
-              <h3>
-                تنظيم بيانات
-              </h3>
+          </a>
 
-              <p>
-                تحويل وترتيب بيانات من ملفات متعددة.
-              </p>
+          <a
+            href="projects.html"
+            class="action-card">
 
-              <div class="price">
-                $20 - $50
-              </div>
-
+            <div class="action-card-icon">
+              📁
             </div>
 
-          </div>
+            <h3>
+              تصفح المشاريع
+            </h3>
+
+            <p>
+              شاهد المشاريع المنشورة واختر المشروع
+              الذي يناسب مهاراتك وخبرتك.
+            </p>
+
+            <span class="action-card-arrow">
+              استكشف المشاريع ←
+            </span>
+
+          </a>
 
         </div>
 
@@ -2085,55 +2019,24 @@
 
         </div>
 
-        <div class="cards">
+        <div class="professional-info">
 
-          <div class="card">
-
-            <div class="card-content">
-
-              <h3>
-                مصممون محترفون
-              </h3>
-
-              <p>
-                ابحث عن مصممين لتنفيذ أعمالك الإبداعية.
-              </p>
-
-            </div>
-
+          <div class="professional-info-icon">
+            👥
           </div>
 
-          <div class="card">
+          <h3>
+            ابحث عن أصحاب المهارات والخبرات
+          </h3>
 
-            <div class="card-content">
+          <p>
+            مِهراف يجمع أصحاب المهارات في مختلف المجالات،
+            ويمكنك اكتشاف أعمالهم وخدماتهم من خلال المنصة.
+          </p>
 
-              <h3>
-                مطورون ومبرمجون
-              </h3>
-
-              <p>
-                محترفون في البرمجة والتقنية وتطوير المواقع.
-              </p>
-
-            </div>
-
-          </div>
-
-          <div class="card">
-
-            <div class="card-content">
-
-              <h3>
-                كتاب ومترجمون
-              </h3>
-
-              <p>
-                أصحاب خبرة في الكتابة والترجمة وصناعة المحتوى.
-              </p>
-
-            </div>
-
-          </div>
+          <a href="portfolio.html">
+            تصفح الأعمال
+          </a>
 
         </div>
 
@@ -2143,21 +2046,46 @@
 
     <section class="cta">
 
-      <h2>
-        هل لديك مهارة؟
-      </h2>
+      <div class="container">
 
-      <p>
-        يمكنك عرض خدماتك والبدء بالعمل على مِهراف.
-      </p>
+        <h2>
+          هل لديك مهارة أو مشروع؟
+        </h2>
 
-      <a
-        href="dashboard.html"
-        id="ctaDashboard">
+        <p>
+          ابدأ من لوحة التحكم وأنشئ خدمتك أو مشروعك
+          وتابع أعمالك من مكان واحد.
+        </p>
 
-        الانتقال إلى لوحة التحكم
+        <div class="cta-actions">
 
-      </a>
+          <a
+            href="dashboard.html"
+            id="ctaDashboard">
+
+            الانتقال إلى لوحة التحكم
+
+          </a>
+
+          <a
+            href="services.html"
+            class="secondary">
+
+            تصفح الخدمات
+
+          </a>
+
+          <a
+            href="projects.html"
+            class="secondary">
+
+            تصفح المشاريع
+
+          </a>
+
+        </div>
+
+      </div>
 
     </section>
 
@@ -2180,7 +2108,7 @@
   </div>
 
   <!-- JAVASCRIPT -->
-    
+
   <script>
     let currentUser = null;
     let notificationTimer = null;
@@ -2309,9 +2237,7 @@
 
       roleElements.forEach((element) => {
         element.textContent =
-          user?.role === "freelancer"
-            ? "منفذ خدمات"
-            : "عضو في مهراف";
+          "حساب مِهراف";
       });
 
 
@@ -2325,14 +2251,29 @@
           getUserAvatar(user);
 
         if (avatar) {
-          element.src = avatar;
-          element.style.display = "block";
+
+          if (
+            element.tagName &&
+            element.tagName.toLowerCase() === "img"
+          ) {
+            element.src = avatar;
+            element.style.display = "block";
+          } else {
+            element.textContent =
+              getUserDisplayName(user)
+                .charAt(0)
+                .toUpperCase();
+          }
+
         } else {
+
           element.style.display = "flex";
+
           element.textContent =
             getUserDisplayName(user)
               .charAt(0)
               .toUpperCase();
+
         }
       });
 
@@ -2344,7 +2285,6 @@
 
       loadNotifications();
       startNotificationPolling();
-      loadFeaturedServices();
     }
 
 
@@ -2369,6 +2309,7 @@
 
     async function checkLogin() {
       try {
+
         const response =
           await fetch("/api/me", {
             method: "GET",
@@ -2385,19 +2326,28 @@
           data.success &&
           data.user
         ) {
-          showLoggedInState(data.user);
+
+          showLoggedInState(
+            data.user
+          );
+
         } else {
+
           showLoggedOutState();
+
         }
 
       } catch (error) {
+
         console.error(
           "Login check error:",
           error
         );
 
         showLoggedOutState();
+
       } finally {
+
         const loading =
           document.getElementById(
             "authLoading"
@@ -2406,28 +2356,39 @@
         if (loading) {
           loading.style.display = "none";
         }
+
       }
     }
 
 
     function openMenu() {
+
       if (sideMenu) {
-        sideMenu.classList.add("active");
+
+        sideMenu.classList.add(
+          "active"
+        );
+
         sideMenu.setAttribute(
           "aria-hidden",
           "false"
         );
+
       }
 
       if (menuOverlay) {
-        menuOverlay.classList.add("active");
+        menuOverlay.classList.add(
+          "active"
+        );
       }
 
       if (menuBtn) {
+
         menuBtn.setAttribute(
           "aria-expanded",
           "true"
         );
+
       }
 
       document.body.classList.add(
@@ -2437,77 +2398,105 @@
 
 
     function closeMenu() {
+
       if (sideMenu) {
-        sideMenu.classList.remove("active");
+
+        sideMenu.classList.remove(
+          "active"
+        );
+
         sideMenu.setAttribute(
           "aria-hidden",
           "true"
         );
+
       }
 
       if (menuOverlay) {
-        menuOverlay.classList.remove("active");
+
+        menuOverlay.classList.remove(
+          "active"
+        );
+
       }
 
       if (menuBtn) {
+
         menuBtn.setAttribute(
           "aria-expanded",
           "false"
         );
+
       }
 
       document.body.classList.remove(
         "menu-open"
       );
+
     }
 
 
     if (menuBtn) {
+
       menuBtn.addEventListener(
         "click",
         () => {
+
           if (
             sideMenu &&
             sideMenu.classList.contains(
               "active"
             )
           ) {
+
             closeMenu();
+
           } else {
+
             openMenu();
+
           }
+
         }
       );
+
     }
 
 
     if (closeMenuBtn) {
+
       closeMenuBtn.addEventListener(
         "click",
         () => {
           closeMenu();
         }
       );
+
     }
 
 
     if (menuOverlay) {
+
       menuOverlay.addEventListener(
         "click",
         () => {
           closeMenu();
         }
       );
+
     }
 
 
     if (moreMenuBtn) {
+
       moreMenuBtn.addEventListener(
         "click",
         (event) => {
+
           event.stopPropagation();
 
           if (moreMenu) {
+
             moreMenu.classList.toggle(
               "active"
             );
@@ -2515,27 +2504,35 @@
             moreMenuBtn.classList.toggle(
               "active"
             );
+
           }
+
         }
       );
+
     }
 
 
     if (moreMenu) {
+
       moreMenu
         .querySelectorAll("a")
         .forEach((link) => {
+
           link.addEventListener(
             "click",
             () => {
               closeMenu();
             }
           );
+
         });
+
     }
 
 
     if (logoutBtn) {
+
       logoutBtn.addEventListener(
         "click",
         async () => {
@@ -2543,6 +2540,7 @@
           logoutBtn.disabled = true;
 
           try {
+
             await fetch(
               "/api/logout",
               {
@@ -2552,376 +2550,50 @@
             );
 
           } catch (error) {
+
             console.error(
               "Logout error:",
               error
             );
+
           }
 
           closeMenu();
+
           showLoggedOutState();
 
           logoutBtn.disabled = false;
+
         }
       );
+
     }
 
 
-    async function loadFeaturedServices() {
-      const container =
-        document.getElementById(
-          "featuredServicesGrid"
-        );
+    function goToSearchResults() {
 
-      if (!container) {
-        return;
-      }
-
-      try {
-        const response =
-          await fetch(
-            "/api/services",
-            {
-              method: "GET",
-              credentials: "include",
-              cache: "no-store"
-            }
-          );
-
-        const data =
-          await response.json();
-
-        if (
-          !response.ok ||
-          !data.success
-        ) {
-          container.innerHTML = `
-            <div class="services-error">
-              تعذر تحميل الخدمات حاليا
-            </div>
-          `;
-          return;
-        }
-
-        const services =
-          Array.isArray(data.services)
-            ? data.services
-            : [];
-
-        const featured =
-          services.slice(0, 6);
-
-
-        if (!featured.length) {
-          container.innerHTML = `
-            <div class="services-empty">
-              لا توجد خدمات منشورة حاليا
-            </div>
-          `;
-
-          return;
-        }
-
-
-        container.innerHTML =
-          featured
-            .map((service) => {
-
-              const title =
-                escapeHtml(
-                  service.title ||
-                  "خدمة بدون عنوان"
-                );
-
-              const description =
-                escapeHtml(
-                  service.description ||
-                  "لا يوجد وصف للخدمة"
-                );
-
-              const category =
-                escapeHtml(
-                  service.category ||
-                  "خدمات أخرى"
-                );
-
-              const provider =
-                escapeHtml(
-                  service.provider_name ||
-                  service.full_name ||
-                  service.provider ||
-                  "منفذ مهراف"
-                );
-
-              const price =
-                service.price !== undefined &&
-                service.price !== null
-                  ? escapeHtml(
-                      service.price
-                    )
-                  : "";
-
-
-              return `
-                <div
-                  class="card service-card"
-                  data-service-id="${Number(
-                    service.id || 0
-                  )}">
-
-                  <div class="card-image">
-
-                    <span
-                      class="service-image-icon">
-                      💼
-                    </span>
-
-                  </div>
-
-                  <div class="card-content">
-
-                    <h3>
-                      ${title}
-                    </h3>
-
-                    <p>
-                      ${description}
-                    </p>
-
-                    <div class="service-meta">
-
-                      <span
-                        class="service-category">
-                        ${category}
-                      </span>
-
-                      <span
-                        class="service-provider">
-                        ${provider}
-                      </span>
-
-                    </div>
-
-                    ${
-                      price
-                        ? `
-                          <div class="price">
-                            ${price}
-                          </div>
-                        `
-                        : ""
-                    }
-
-                  </div>
-
-                </div>
-              `;
-            })
-            .join("");
-
-
-        container
-          .querySelectorAll(
-            ".service-card"
-          )
-          .forEach((card) => {
-
-            card.addEventListener(
-              "click",
-              () => {
-
-                const id =
-                  Number(
-                    card.dataset.serviceId
-                  );
-
-                if (
-                  Number.isFinite(id) &&
-                  id > 0
-                ) {
-                  window.location.href =
-                    "service-details.html?id=" +
-                    encodeURIComponent(id);
-                }
-
-              }
-            );
-
-          });
-
-      } catch (error) {
-
-        console.error(
-          "Load featured services error:",
-          error
-        );
-
-        container.innerHTML = `
-          <div class="services-error">
-            حدث خطأ أثناء تحميل الخدمات
-          </div>
-        `;
-      }
-    }
-
-
-    async function searchServices() {
-      const input =
+      const searchInput =
         document.getElementById(
           "searchInput"
         );
 
-      const results =
-        document.getElementById(
-          "searchResults"
-        );
-
-      if (!input || !results) {
-        return;
-      }
-
       const query =
-        input.value
-          .trim()
-          .toLowerCase();
-
+        searchInput
+          ? searchInput.value.trim()
+          : "";
 
       if (!query) {
-        results.innerHTML = "";
+
+        window.location.href =
+          "services.html";
+
         return;
       }
 
+      window.location.href =
+        "services.html?search=" +
+        encodeURIComponent(query);
 
-      try {
-        const response =
-          await fetch(
-            "/api/services",
-            {
-              method: "GET",
-              credentials: "include",
-              cache: "no-store"
-            }
-          );
-
-        const data =
-          await response.json();
-
-
-        if (
-          !response.ok ||
-          !data.success
-        ) {
-          results.innerHTML = "";
-          return;
-        }
-
-
-        const services =
-          Array.isArray(data.services)
-            ? data.services
-            : [];
-
-
-        const filtered =
-          services.filter(
-            (service) => {
-
-              const title =
-                String(
-                  service.title || ""
-                ).toLowerCase();
-
-              const description =
-                String(
-                  service.description || ""
-                ).toLowerCase();
-
-              const category =
-                String(
-                  service.category || ""
-                ).toLowerCase();
-
-              const provider =
-                String(
-                  service.provider_name ||
-                  service.full_name ||
-                  service.provider ||
-                  ""
-                ).toLowerCase();
-
-
-              return (
-                title.includes(query) ||
-                description.includes(query) ||
-                category.includes(query) ||
-                provider.includes(query)
-              );
-            }
-          );
-
-
-        const limited =
-          filtered.slice(0, 6);
-
-
-        if (!limited.length) {
-          results.innerHTML = `
-            <div class="empty-state">
-              لم يتم العثور على خدمات مطابقة
-            </div>
-          `;
-
-          return;
-        }
-
-
-        results.innerHTML =
-          limited
-            .map((service) => {
-
-              return `
-                <div
-                  class="search-result-item">
-
-                  <h3>
-                    ${escapeHtml(
-                      service.title ||
-                      "خدمة بدون عنوان"
-                    )}
-                  </h3>
-
-                  <p>
-                    ${escapeHtml(
-                      service.description ||
-                      ""
-                    )}
-                  </p>
-
-                  <span>
-                    ${escapeHtml(
-                      service.category ||
-                      "خدمات أخرى"
-                    )}
-                  </span>
-
-                </div>
-              `;
-            })
-            .join("");
-
-      } catch (error) {
-
-        console.error(
-          "Search services error:",
-          error
-        );
-
-        results.innerHTML = `
-          <div class="empty-state">
-            حدث خطأ أثناء البحث
-          </div>
-        `;
-      }
     }
 
 
@@ -2936,25 +2608,17 @@
       );
 
 
-    if (searchInput) {
+    if (searchButton) {
 
-      let searchTimeout = null;
-
-      searchInput.addEventListener(
-        "input",
-        () => {
-
-          clearTimeout(
-            searchTimeout
-          );
-
-          searchTimeout =
-            setTimeout(() => {
-              searchServices();
-            }, 300);
-
-        }
+      searchButton.addEventListener(
+        "click",
+        goToSearchResults
       );
+
+    }
+
+
+    if (searchInput) {
 
       searchInput.addEventListener(
         "keydown",
@@ -2963,30 +2627,24 @@
           if (
             event.key === "Enter"
           ) {
+
             event.preventDefault();
-            searchServices();
+
+            goToSearchResults();
+
           }
 
         }
       );
-    }
 
-
-    if (searchButton) {
-      searchButton.addEventListener(
-        "click",
-        () => {
-          searchServices();
-        }
-      );
     }
 
 
     async function loadNotifications() {
+
       if (!notificationList) {
         return;
       }
-
 
       try {
 
@@ -3047,26 +2705,33 @@
 
             notificationBadge.style.display =
               "none";
+
           }
+
         }
 
 
         if (!notifications.length) {
 
-          notificationList.innerHTML = "";
+          notificationList.innerHTML = `
+            <div
+              class="notification-empty">
+              لا توجد إشعارات
+            </div>
+          `;
 
-          if (notificationEmpty) {
-            notificationEmpty.style.display =
-              "block";
+          if (markAllReadBtn) {
+            markAllReadBtn.disabled = true;
           }
 
           return;
+
         }
 
 
-        if (notificationEmpty) {
-          notificationEmpty.style.display =
-            "none";
+        if (markAllReadBtn) {
+          markAllReadBtn.disabled =
+            unreadCount === 0;
         }
 
 
@@ -3161,6 +2826,7 @@
 
                 </div>
               `;
+
             })
             .join("");
 
@@ -3218,6 +2884,7 @@
                     "Mark notification read error:",
                     error
                   );
+
                 }
 
               }
@@ -3225,17 +2892,21 @@
 
           });
 
+
       } catch (error) {
 
         console.error(
           "Load notifications error:",
           error
         );
+
       }
+
     }
 
 
     function startNotificationPolling() {
+
       stopNotificationPolling();
 
       notificationTimer =
@@ -3246,17 +2917,22 @@
           }
 
         }, 30000);
+
     }
 
 
     function stopNotificationPolling() {
+
       if (notificationTimer) {
+
         clearInterval(
           notificationTimer
         );
 
         notificationTimer = null;
+
       }
+
     }
 
 
@@ -3279,12 +2955,14 @@
                 "active"
               );
 
+
             notificationBtn.setAttribute(
               "aria-expanded",
               isOpen
                 ? "true"
                 : "false"
             );
+
 
             notificationPanel.setAttribute(
               "aria-hidden",
@@ -3297,9 +2975,12 @@
             if (isOpen) {
               loadNotifications();
             }
+
           }
+
         }
       );
+
     }
 
 
@@ -3308,6 +2989,12 @@
       markAllReadBtn.addEventListener(
         "click",
         async () => {
+
+          if (markAllReadBtn.disabled) {
+            return;
+          }
+
+          markAllReadBtn.disabled = true;
 
           try {
 
@@ -3327,10 +3014,15 @@
               "Mark all notifications read error:",
               error
             );
+
+            markAllReadBtn.disabled =
+              false;
+
           }
 
         }
       );
+
     }
 
 
@@ -3362,6 +3054,7 @@
             "aria-hidden",
             "true"
           );
+
         }
 
 
@@ -3383,6 +3076,7 @@
           moreMenuBtn.classList.remove(
             "active"
           );
+
         }
 
       }
@@ -3399,12 +3093,18 @@
           "click",
           () => {
 
-            if (
+            const href =
               link.getAttribute(
                 "href"
-              ) !== "#"
+              );
+
+            if (
+              href &&
+              href !== "#"
             ) {
+
               closeMenu();
+
             }
 
           }
