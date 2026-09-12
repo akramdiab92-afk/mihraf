@@ -962,6 +962,7 @@
     }
 
     .category {
+      display: block;
       background:
         linear-gradient(
           145deg,
@@ -1663,8 +1664,6 @@
         </a>
 
 
-        <!-- تم تفعيل الدليل الإرشادي -->
-
         <a
           href="guides.html"
           class="menu-item">
@@ -1683,8 +1682,6 @@
 
         </a>
 
-
-        <!-- تم تفعيل الدعم الفني -->
 
         <a
           href="support.html"
@@ -1730,8 +1727,6 @@
           class="more-menu"
           id="moreMenu">
 
-          <!-- تم تفعيل ضمان الحقوق -->
-
           <a
             href="rights.html"
             class="menu-item">
@@ -1746,8 +1741,6 @@
 
           </a>
 
-
-          <!-- التسويق بالعمولة بقي كما هو -->
 
           <a
             href="#"
@@ -1765,8 +1758,6 @@
           </a>
 
 
-          <!-- تم تفعيل الأسئلة الشائعة -->
-
           <a
             href="faq.html"
             class="menu-item">
@@ -1781,8 +1772,6 @@
 
           </a>
 
-
-          <!-- تم تفعيل مدونة مهراف -->
 
           <a
             href="blog.html"
@@ -1799,8 +1788,6 @@
           </a>
 
 
-          <!-- تم تفعيل سياسة الخصوصية -->
-
           <a
             href="privacy.html"
             class="menu-item">
@@ -1815,8 +1802,6 @@
 
           </a>
 
-
-          <!-- تم تفعيل شروط الاستخدام -->
 
           <a
             href="terms.html"
@@ -1933,60 +1918,100 @@
 
         <div class="categories">
 
-          <div class="category">
+          <!-- تصميم -->
+          <a
+            href="services.html?category=تصميم"
+            class="category">
+
             <div class="category-icon">🎨</div>
             <h3>تصميم</h3>
             <p>تصميمات إبداعية واحترافية</p>
-          </div>
+
+          </a>
 
 
-          <div class="category">
+          <!-- كتابة وترجمة -->
+          <a
+            href="services.html?category=كتابة%20وترجمة"
+            class="category">
+
             <div class="category-icon">✍️</div>
             <h3>كتابة وترجمة</h3>
             <p>محتوى وترجمة بمختلف اللغات</p>
-          </div>
+
+          </a>
 
 
-          <div class="category">
+          <!-- برمجة وتقنية -->
+          <a
+            href="services.html?category=برمجة%20وتقنية"
+            class="category">
+
             <div class="category-icon">💻</div>
             <h3>برمجة وتقنية</h3>
             <p>مواقع وتطبيقات وحلول تقنية</p>
-          </div>
+
+          </a>
 
 
-          <div class="category">
+          <!-- تسويق وأعمال -->
+          <a
+            href="services.html?category=تسويق%20وأعمال"
+            class="category">
+
             <div class="category-icon">📊</div>
             <h3>تسويق وأعمال</h3>
             <p>تسويق وإدارة وتطوير الأعمال</p>
-          </div>
+
+          </a>
 
 
-          <div class="category">
+          <!-- إدخال بيانات -->
+          <a
+            href="services.html?category=إدخال%20بيانات"
+            class="category">
+
             <div class="category-icon">📁</div>
             <h3>إدخال بيانات</h3>
             <p>تنظيم وتنسيق البيانات</p>
-          </div>
+
+          </a>
 
 
-          <div class="category">
+          <!-- فيديو وصوت -->
+          <a
+            href="services.html?category=فيديو%20وصوت"
+            class="category">
+
             <div class="category-icon">🎬</div>
             <h3>فيديو وصوت</h3>
             <p>مونتاج وتحرير وإنتاج المحتوى</p>
-          </div>
+
+          </a>
 
 
-          <div class="category">
+          <!-- استشارات -->
+          <a
+            href="services.html?category=استشارات"
+            class="category">
+
             <div class="category-icon">⚖️</div>
             <h3>استشارات</h3>
             <p>خبرات واستشارات متخصصة</p>
-          </div>
+
+          </a>
 
 
-          <div class="category">
+          <!-- خدمات أخرى -->
+          <a
+            href="services.html?category=خدمات%20أخرى"
+            class="category">
+
             <div class="category-icon">🛠️</div>
             <h3>خدمات أخرى</h3>
             <p>خدمات متنوعة حسب احتياجك</p>
-          </div>
+
+          </a>
 
         </div>
 
@@ -2244,1555 +2269,707 @@
 
   <!-- JAVASCRIPT -->
 
-  <script>
+    <script>
+  let currentUser = null;
+  let notificationTimer = null;
 
-    const authLoading =
-      document.getElementById("authLoading");
+  const authGate = document.getElementById("authGate");
+  const appContent = document.getElementById("appContent");
+  const menuBtn = document.getElementById("menuBtn");
+  const sideMenu = document.getElementById("sideMenu");
+  const menuOverlay = document.getElementById("menuOverlay");
+  const closeMenuBtn = document.getElementById("closeMenuBtn");
+  const moreMenuBtn = document.getElementById("moreMenuBtn");
+  const moreMenu = document.getElementById("moreMenu");
+  const logoutBtn = document.getElementById("logoutBtn");
 
-    const authGate =
-      document.getElementById("authGate");
+  const notificationBtn =
+    document.getElementById("notificationBtn");
+  const notificationPanel =
+    document.getElementById("notificationPanel");
+  const notificationList =
+    document.getElementById("notificationList");
+  const notificationBadge =
+    document.getElementById("notificationBadge");
+  const notificationEmpty =
+    document.getElementById("notificationEmpty");
+  const markAllReadBtn =
+    document.getElementById("markAllReadBtn");
 
-    const appContent =
-      document.getElementById("appContent");
+  function escapeHtml(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 
-    const menuButton =
-      document.getElementById("menuButton");
-
-    const sideMenu =
-      document.getElementById("sideMenu");
-
-    const menuOverlay =
-      document.getElementById("menuOverlay");
-
-    const menuUserName =
-      document.getElementById("menuUserName");
-
-    const menuUserRole =
-      document.getElementById("menuUserRole");
-
-    const userAvatar =
-      document.getElementById("userAvatar");
-
-    const logoutMenuButton =
-      document.getElementById("logoutMenuButton");
-
-    const moreToggle =
-      document.getElementById("moreToggle");
-
-    const moreMenu =
-      document.getElementById("moreMenu");
-
-
-    /* =========================
-       التحقق من تسجيل الدخول
-    ========================== */
-
-    async function checkLogin() {
-
-      try {
-
-        const response =
-          await fetch(
-            "/api/me",
-            {
-              method: "GET",
-              credentials: "include",
-              cache: "no-store"
-            }
-          );
-
-        const data =
-          await response.json();
-
-
-        if (
-          response.ok &&
-          data.success &&
-          data.authenticated &&
-          data.user
-        ) {
-
-          showLoggedInState(data.user);
-
-        } else {
-
-          showLoggedOutState();
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Session check error:",
-          error
-        );
-
-        showLoggedOutState();
-
-      }
-
+  function formatDate(value) {
+    if (!value) {
+      return "";
     }
 
+    const date = new Date(value);
 
-    /* =========================
-       المستخدم مسجل دخول
-    ========================== */
-
-    function showLoggedInState(user) {
-
-      authLoading.style.display =
-        "none";
-
-      authGate.style.display =
-        "none";
-
-      appContent.style.display =
-        "block";
-
-
-      const fullName =
-        user.full_name || "المستخدم";
-
-
-      menuUserName.textContent =
-        fullName;
-
-
-      if (user.role === "client") {
-
-        menuUserRole.textContent =
-          "صاحب مشاريع";
-
-      } else if (user.role === "freelancer") {
-
-        menuUserRole.textContent =
-          "مستقل ومحترف";
-
-      } else {
-
-        menuUserRole.textContent =
-          "حساب مِهراف";
-
-      }
-
-
-      userAvatar.textContent =
-        fullName.trim().charAt(0) || "م";
-
-
-      menuButton.style.display =
-        "flex";
-
-
-      loadNotifications();
-      startNotificationPolling();
-
-      /* تحميل الخدمات الحقيقية */
-      loadFeaturedServices();
-
+    if (Number.isNaN(date.getTime())) {
+      return "";
     }
 
+    return date.toLocaleDateString("ar-SY", {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
+  }
 
-    /* =========================
-       المستخدم غير مسجل
-    ========================== */
-
-    function showLoggedOutState() {
-
-      authLoading.style.display =
-        "none";
-
-      appContent.style.display =
-        "none";
-
-      authGate.style.display =
-        "flex";
-
-
-      stopNotificationPolling();
-      closeNotifications();
-      updateNotificationBadge(0);
-
-    }
-
-
-    /* =========================
-       فتح القائمة
-    ========================== */
-
-    function openSideMenu() {
-
-      sideMenu.classList.add(
-        "active"
-      );
-
-      menuOverlay.classList.add(
-        "active"
-      );
-
-      sideMenu.setAttribute(
-        "aria-hidden",
-        "false"
-      );
-
-      menuButton.setAttribute(
-        "aria-expanded",
-        "true"
-      );
-
-      document.body.classList.add(
-        "menu-open"
-      );
-
-    }
-
-
-    /* =========================
-       إغلاق القائمة
-    ========================== */
-
-    function closeSideMenu() {
-
-      sideMenu.classList.remove(
-        "active"
-      );
-
-      menuOverlay.classList.remove(
-        "active"
-      );
-
-      sideMenu.setAttribute(
-        "aria-hidden",
-        "true"
-      );
-
-      menuButton.setAttribute(
-        "aria-expanded",
-        "false"
-      );
-
-      document.body.classList.remove(
-        "menu-open"
-      );
-
-    }
-
-
-    /* =========================
-       عرض المزيد
-    ========================== */
-
-    function toggleMoreMenu() {
-
-      const isOpen =
-        moreMenu.classList.toggle(
-          "active"
-        );
-
-      moreToggle.classList.toggle(
-        "active",
-        isOpen
-      );
-
-    }
-
-
-    /* =========================
-       زر ESC
-    ========================== */
-
-    document.addEventListener(
-      "keydown",
-      function(event) {
-
-        if (
-          event.key === "Escape"
-        ) {
-
-          closeSideMenu();
-          closeNotifications();
-
-        }
-
-      }
+  function getUserDisplayName(user) {
+    return (
+      user?.full_name ||
+      user?.name ||
+      user?.username ||
+      "مستخدم مهراف"
     );
+  }
 
+  function getUserAvatar(user) {
+    return (
+      user?.avatar ||
+      user?.avatar_url ||
+      user?.profile_image ||
+      ""
+    );
+  }
 
-    /* =========================
-       تسجيل الخروج
-    ========================== */
+  function showLoggedInState(user) {
+    currentUser = user;
 
-    async function logoutUser() {
-
-      if (logoutMenuButton) {
-
-        logoutMenuButton.disabled =
-          true;
-
-        const textElement =
-          logoutMenuButton.querySelector(
-            ".menu-item-text"
-          );
-
-        if (textElement) {
-
-          textElement.textContent =
-            "جاري تسجيل الخروج...";
-
-        }
-
-      }
-
-
-      try {
-
-        const response =
-          await fetch(
-            "/api/logout",
-            {
-              method: "POST",
-              credentials: "include"
-            }
-          );
-
-
-        const data =
-          await response.json();
-
-
-        if (
-          response.ok &&
-          data.success
-        ) {
-
-          stopNotificationPolling();
-          closeNotifications();
-          closeSideMenu();
-
-          window.location.href =
-            "index.html";
-
-          return;
-
-        }
-
-
-        throw new Error(
-          data.message ||
-          "تعذر تسجيل الخروج"
-        );
-
-
-      } catch (error) {
-
-        console.error(error);
-
-
-        if (logoutMenuButton) {
-
-          logoutMenuButton.disabled =
-            false;
-
-          const textElement =
-            logoutMenuButton.querySelector(
-              ".menu-item-text"
-            );
-
-          if (textElement) {
-
-            textElement.textContent =
-              "تسجيل الخروج";
-
-          }
-
-        }
-
-
-        alert(
-          error.message ||
-          "تعذر الاتصال بالخادم"
-        );
-
-      }
-
+    if (authGate) {
+      authGate.style.display = "none";
     }
 
-
-    /* =========================
-       الخدمات الحقيقية من D1
-    ========================== */
-
-    async function loadFeaturedServices() {
-
-      const grid =
-        document.getElementById(
-          "featuredServicesGrid"
-        );
-
-      if (!grid) {
-        return;
-      }
-
-
-      grid.innerHTML = `
-        <div class="services-loading">
-          جاري تحميل الخدمات...
-        </div>
-      `;
-
-
-      try {
-
-        const response =
-          await fetch(
-            "/api/services",
-            {
-              method: "GET",
-              credentials: "include",
-              cache: "no-store"
-            }
-          );
-
-
-        const data =
-          await response.json();
-
-
-        if (
-          !response.ok ||
-          !data.success
-        ) {
-
-          throw new Error(
-            data.message ||
-            "تعذر تحميل الخدمات"
-          );
-
-        }
-
-
-        const services =
-          Array.isArray(data.services)
-            ? data.services
-            : [];
-
-
-        if (!services.length) {
-
-          grid.innerHTML = `
-            <div class="services-empty">
-              لا توجد خدمات منشورة حاليا.
-              <br>
-              ستظهر هنا الخدمات التي يضيفها المستقلون على مِهراف.
-            </div>
-          `;
-
-          return;
-
-        }
-
-
-        grid.innerHTML = "";
-
-
-        /*
-          نعرض أحدث الخدمات أولا
-          ونكتفي بأول 6 خدمات في الرئيسية
-        */
-
-        services
-          .slice(0, 6)
-          .forEach(service => {
-
-            const card =
-              document.createElement("div");
-
-            card.className =
-              "card service-card";
-
-
-            const image =
-              document.createElement("div");
-
-            image.className =
-              "card-image";
-
-
-            const imageIcon =
-              document.createElement("div");
-
-            imageIcon.className =
-              "service-image-icon";
-
-            imageIcon.textContent =
-              getServiceIcon(
-                service.category
-              );
-
-
-            image.appendChild(
-              imageIcon
-            );
-
-
-            const content =
-              document.createElement("div");
-
-            content.className =
-              "card-content";
-
-
-            const title =
-              document.createElement("h3");
-
-            title.textContent =
-              service.title ||
-              "خدمة بدون عنوان";
-
-
-            const description =
-              document.createElement("p");
-
-            description.textContent =
-              service.description ||
-              "لا يوجد وصف للخدمة.";
-
-
-            const price =
-              document.createElement("div");
-
-            price.className =
-              "price";
-
-            price.textContent =
-              "ابتداء من $" +
-              formatPrice(
-                service.price
-              );
-
-
-            const meta =
-              document.createElement("div");
-
-            meta.className =
-              "service-meta";
-
-
-            const category =
-              document.createElement("span");
-
-            category.className =
-              "service-category";
-
-            category.textContent =
-              service.category ||
-              "خدمات";
-
-
-            const provider =
-              document.createElement("span");
-
-            provider.className =
-              "service-provider";
-
-            provider.textContent =
-              service.freelancer_name
-                ? "بواسطة " +
-                  service.freelancer_name
-                : "مستقل على مِهراف";
-
-
-            meta.appendChild(
-              category
-            );
-
-            meta.appendChild(
-              provider
-            );
-
-
-            content.appendChild(
-              title
-            );
-
-            content.appendChild(
-              description
-            );
-
-            content.appendChild(
-              price
-            );
-
-            content.appendChild(
-              meta
-            );
-
-
-            card.appendChild(
-              image
-            );
-
-            card.appendChild(
-              content
-            );
-
-
-            /*
-              حاليا البطاقة تعرض الخدمة الحقيقية.
-              لاحقا نربطها بصفحة تفاصيل الخدمة.
-            */
-
-            card.addEventListener(
-              "click",
-              function() {
-
-                /*
-                  لا نرسل المستخدم إلى صفحة
-                  غير موجودة حاليا.
-                  يمكن ربطها لاحقا بصفحة
-                  service-details.html.
-                */
-
-                window.location.hash =
-                  "featuredServices";
-
-              }
-            );
-
-
-            grid.appendChild(
-              card
-            );
-
-          });
-
-
-      } catch (error) {
-
-        console.error(
-          "Featured services error:",
-          error
-        );
-
-
-        grid.innerHTML = `
-          <div class="services-error">
-            تعذر تحميل الخدمات حاليا.
-            <br>
-            حاول تحديث الصفحة مرة أخرى.
-            <br>
-            <button
-              type="button"
-              onclick="loadFeaturedServices()">
-              إعادة المحاولة
-            </button>
-          </div>
-        `;
-
-      }
-
+    if (appContent) {
+      appContent.style.display = "block";
     }
 
+    const userNameElements =
+      document.querySelectorAll("[data-user-name]");
 
-    function formatPrice(value) {
+    userNameElements.forEach((element) => {
+      element.textContent = getUserDisplayName(user);
+    });
 
-      const number =
-        Number(value);
+    const roleElements =
+      document.querySelectorAll("[data-user-role]");
 
+    roleElements.forEach((element) => {
+      element.textContent =
+        user?.role === "freelancer"
+          ? "منفذ خدمات"
+          : "عضو في مهراف";
+    });
 
-      if (
-        !Number.isFinite(number)
-      ) {
+    const avatarElements =
+      document.querySelectorAll("[data-user-avatar]");
 
-        return "0";
+    avatarElements.forEach((element) => {
+      const avatar = getUserAvatar(user);
 
+      if (avatar) {
+        element.src = avatar;
+        element.style.display = "block";
+      } else {
+        element.style.display = "none";
       }
+    });
 
-
-      if (
-        Number.isInteger(number)
-      ) {
-
-        return String(number);
-
-      }
-
-
-      return number
-        .toFixed(2)
-        .replace(
-          /\.?0+$/,
-          ""
-        );
-
+    if (menuBtn) {
+      menuBtn.style.display = "flex";
     }
 
+    loadNotifications();
+    startNotificationPolling();
+    loadFeaturedServices();
+  }
 
-    function getServiceIcon(category) {
+  function showLoggedOutState() {
+    currentUser = null;
 
-      const value =
-        String(
-          category || ""
-        ).toLowerCase();
-
-
-      if (
-        value.includes("تصميم")
-      ) {
-
-        return "🎨";
-
-      }
-
-
-      if (
-        value.includes("كتابة") ||
-        value.includes("ترجمة")
-      ) {
-
-        return "✍️";
-
-      }
-
-
-      if (
-        value.includes("برمجة") ||
-        value.includes("تقنية")
-      ) {
-
-        return "💻";
-
-      }
-
-
-      if (
-        value.includes("تسويق") ||
-        value.includes("أعمال")
-      ) {
-
-        return "📊";
-
-      }
-
-
-      if (
-        value.includes("بيانات")
-      ) {
-
-        return "📁";
-
-      }
-
-
-      if (
-        value.includes("فيديو") ||
-        value.includes("صوت")
-      ) {
-
-        return "🎬";
-
-      }
-
-
-      if (
-        value.includes("استشار")
-      ) {
-
-        return "⚖️";
-
-      }
-
-
-      return "🛠️";
-
+    if (authGate) {
+      authGate.style.display = "flex";
     }
 
+    if (appContent) {
+      appContent.style.display = "none";
+    }
 
-    /* =========================
-       البحث
-    ========================== */
+    if (menuBtn) {
+      menuBtn.style.display = "none";
+    }
 
-    function handleSearchKey(event) {
+    stopNotificationPolling();
+  }
+
+  async function checkLogin() {
+    try {
+      const response = await fetch("/api/me", {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store"
+      });
+
+      const data = await response.json();
 
       if (
-        event.key === "Enter"
+        response.ok &&
+        data &&
+        data.success &&
+        data.user
       ) {
-
-        searchSite();
-
+        showLoggedInState(data.user);
+      } else {
+        showLoggedOutState();
       }
+    } catch (error) {
+      console.error("Login check error:", error);
+      showLoggedOutState();
+    }
+  }
 
+  function openMenu() {
+    if (sideMenu) {
+      sideMenu.classList.add("open");
     }
 
-
-    async function searchSite() {
-
-      const input =
-        document.getElementById(
-          "searchInput"
-        );
-
-
-      const value =
-        input.value.trim();
-
-
-      if (!value) {
-
-        input.focus();
-
-        return;
-
-      }
-
-
-      /*
-        في المرحلة الحالية البحث يعمل
-        داخل الخدمات الحقيقية التي يتم
-        تحميلها من D1.
-      */
-
-      const grid =
-        document.getElementById(
-          "featuredServicesGrid"
-        );
-
-
-      if (!grid) {
-        return;
-      }
-
-
-      try {
-
-        const response =
-          await fetch(
-            "/api/services",
-            {
-              method: "GET",
-              credentials: "include",
-              cache: "no-store"
-            }
-          );
-
-
-        const data =
-          await response.json();
-
-
-        if (
-          !response.ok ||
-          !data.success
-        ) {
-
-          throw new Error(
-            data.message ||
-            "تعذر البحث"
-          );
-
-        }
-
-
-        const services =
-          Array.isArray(data.services)
-            ? data.services
-            : [];
-
-
-        const searchValue =
-          value.toLowerCase();
-
-
-        const results =
-          services.filter(
-            service => {
-
-              const title =
-                String(
-                  service.title || ""
-                ).toLowerCase();
-
-              const description =
-                String(
-                  service.description || ""
-                ).toLowerCase();
-
-              const category =
-                String(
-                  service.category || ""
-                ).toLowerCase();
-
-              const provider =
-                String(
-                  service.freelancer_name || ""
-                ).toLowerCase();
-
-
-              return (
-                title.includes(searchValue) ||
-                description.includes(searchValue) ||
-                category.includes(searchValue) ||
-                provider.includes(searchValue)
-              );
-
-            }
-          );
-
-
-        document
-          .getElementById(
-            "featuredServices"
-          )
-          .scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-
-
-        renderServiceResults(
-          results,
-          value
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "Search error:",
-          error
-        );
-
-        alert(
-          "تعذر تنفيذ البحث حاليا"
-        );
-
-      }
-
+    if (menuOverlay) {
+      menuOverlay.classList.add("show");
     }
 
+    document.body.classList.add("menu-open");
+  }
 
-    function renderServiceResults(
-      services,
-      searchValue
+  function closeMenu() {
+    if (sideMenu) {
+      sideMenu.classList.remove("open");
+    }
+
+    if (menuOverlay) {
+      menuOverlay.classList.remove("show");
+    }
+
+    document.body.classList.remove("menu-open");
+  }
+
+  if (menuBtn) {
+    menuBtn.addEventListener("click", () => {
+      openMenu();
+    });
+  }
+
+  if (closeMenuBtn) {
+    closeMenuBtn.addEventListener("click", () => {
+      closeMenu();
+    });
+  }
+
+  if (menuOverlay) {
+    menuOverlay.addEventListener("click", () => {
+      closeMenu();
+    });
+  }
+
+  if (moreMenuBtn) {
+    moreMenuBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
+
+      if (moreMenu) {
+        moreMenu.classList.toggle("show");
+      }
+    });
+  }
+
+  document.addEventListener("click", (event) => {
+    if (
+      moreMenu &&
+      !moreMenu.contains(event.target) &&
+      event.target !== moreMenuBtn
     ) {
+      moreMenu.classList.remove("show");
+    }
+  });
 
-      const grid =
-        document.getElementById(
-          "featuredServicesGrid"
-        );
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        await fetch("/api/logout", {
+          method: "POST",
+          credentials: "include"
+        });
+      } catch (error) {
+        console.error("Logout error:", error);
+      }
 
+      closeMenu();
+      showLoggedOutState();
+    });
+  }
 
-      if (!grid) {
+  async function loadFeaturedServices() {
+    const container =
+      document.getElementById("featuredServices");
+
+    if (!container) {
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/services", {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store"
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
         return;
       }
 
+      const services = Array.isArray(data.services)
+        ? data.services
+        : [];
 
-      grid.innerHTML =
-        "";
+      const featured = services.slice(0, 6);
 
-
-      if (!services.length) {
-
-        grid.innerHTML = `
-          <div class="services-empty">
-            لم نجد خدمات مطابقة لـ
-            <strong>${escapeHtml(searchValue)}</strong>
+      if (!featured.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            لا توجد خدمات منشورة حاليا
           </div>
         `;
-
         return;
-
       }
 
-
-      services
-        .slice(0, 6)
-        .forEach(service => {
-
-          const card =
-            document.createElement("div");
-
-          card.className =
-            "card service-card";
-
-
-          const image =
-            document.createElement("div");
-
-          image.className =
-            "card-image";
-
-
-          const icon =
-            document.createElement("div");
-
-          icon.className =
-            "service-image-icon";
-
-          icon.textContent =
-            getServiceIcon(
-              service.category
-            );
-
-
-          image.appendChild(
-            icon
-          );
-
-
-          const content =
-            document.createElement("div");
-
-          content.className =
-            "card-content";
-
-
+      container.innerHTML = featured
+        .map((service) => {
           const title =
-            document.createElement("h3");
-
-          title.textContent =
-            service.title ||
-            "خدمة";
-
+            escapeHtml(service.title || "خدمة بدون عنوان");
 
           const description =
-            document.createElement("p");
-
-          description.textContent =
-            service.description ||
-            "";
-
-
-          const price =
-            document.createElement("div");
-
-          price.className =
-            "price";
-
-          price.textContent =
-            "ابتداء من $" +
-            formatPrice(
-              service.price
+            escapeHtml(
+              service.description || "لا يوجد وصف للخدمة"
             );
-
-
-          const meta =
-            document.createElement("div");
-
-          meta.className =
-            "service-meta";
-
 
           const category =
-            document.createElement("span");
-
-          category.className =
-            "service-category";
-
-          category.textContent =
-            service.category ||
-            "خدمات";
-
+            escapeHtml(service.category || "خدمات أخرى");
 
           const provider =
-            document.createElement("span");
+            escapeHtml(
+              service.provider_name ||
+              service.full_name ||
+              service.provider ||
+              "منفذ مهراف"
+            );
 
-          provider.className =
-            "service-provider";
+          const price =
+            service.price !== undefined &&
+            service.price !== null
+              ? escapeHtml(service.price)
+              : "";
 
-          provider.textContent =
-            service.freelancer_name
-              ? "بواسطة " +
-                service.freelancer_name
-              : "مستقل على مِهراف";
+          return `
+            <div class="service-card">
+              <div class="service-card-category">
+                ${category}
+              </div>
 
+              <h3>${title}</h3>
 
-          meta.appendChild(
-            category
-          );
+              <p>${description}</p>
 
-          meta.appendChild(
-            provider
-          );
+              <div class="service-card-footer">
+                <span>${provider}</span>
 
+                ${
+                  price
+                    ? `<strong>${price}</strong>`
+                    : ""
+                }
+              </div>
+            </div>
+          `;
+        })
+        .join("");
 
-          content.appendChild(
-            title
-          );
-
-          content.appendChild(
-            description
-          );
-
-          content.appendChild(
-            price
-          );
-
-          content.appendChild(
-            meta
-          );
-
-
-          card.appendChild(
-            image
-          );
-
-          card.appendChild(
-            content
-          );
-
-
-          grid.appendChild(
-            card
-          );
-
+      container
+        .querySelectorAll(".service-card")
+        .forEach((card) => {
+          card.addEventListener("click", () => {
+            window.location.hash = "featuredServices";
+          });
         });
+    } catch (error) {
+      console.error(
+        "Load featured services error:",
+        error
+      );
+    }
+  }
 
+  async function searchServices() {
+    const input =
+      document.getElementById("searchInput");
+
+    const results =
+      document.getElementById("searchResults");
+
+    if (!input || !results) {
+      return;
     }
 
+    const query =
+      input.value.trim().toLowerCase();
 
-    function escapeHtml(value) {
-
-      const div =
-        document.createElement("div");
-
-      div.textContent =
-        String(value || "");
-
-      return div.innerHTML;
-
+    if (!query) {
+      results.innerHTML = "";
+      return;
     }
 
+    try {
+      const response = await fetch("/api/services", {
+        method: "GET",
+        credentials: "include",
+        cache: "no-store"
+      });
 
-    /* =========================
-       NOTIFICATIONS
-    ========================== */
+      const data = await response.json();
 
-    let notificationsData = [];
-    let notificationPollTimer = null;
-
-
-    const notificationButton =
-      document.getElementById(
-        "notificationButton"
-      );
-
-    const notificationBadge =
-      document.getElementById(
-        "notificationBadge"
-      );
-
-    const notificationPanel =
-      document.getElementById(
-        "notificationPanel"
-      );
-
-    const notificationList =
-      document.getElementById(
-        "notificationList"
-      );
-
-    const markAllNotificationsButton =
-      document.getElementById(
-        "markAllNotificationsButton"
-      );
-
-
-    function getNotificationIcon(type) {
-
-      const icons = {
-
-        new_proposal: "💼",
-
-        proposal_accepted: "✅",
-
-        proposal_rejected: "❌",
-
-        execution_started: "🚀",
-
-        delivery_submitted: "📦",
-
-        revision_requested: "🔄",
-
-        delivery_accepted: "✅",
-
-        project_completed: "🎉"
-
-      };
-
-
-      return icons[type] || "🔔";
-
-    }
-
-
-    function formatNotificationTime(value) {
-
-      if (!value) return "";
-
-
-      const raw =
-        String(value);
-
-
-      const date =
-        new Date(
-          raw.includes("T")
-            ? raw
-            : raw.replace(" ", "T") + "Z"
-        );
-
-
-      if (
-        Number.isNaN(
-          date.getTime()
-        )
-      ) {
-
-        return raw;
-
-      }
-
-
-      return date.toLocaleString(
-        "ar",
-        {
-          day: "2-digit",
-          month: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit"
-        }
-      );
-
-    }
-
-
-    function updateNotificationBadge(count) {
-
-      const number =
-        Number(count) || 0;
-
-
-      if (number > 0) {
-
-        notificationBadge.textContent =
-          String(number);
-
-        notificationBadge.style.display =
-          "flex";
-
-      } else {
-
-        notificationBadge.style.display =
-          "none";
-
-      }
-
-
-      if (
-        markAllNotificationsButton
-      ) {
-
-        markAllNotificationsButton.disabled =
-          number === 0;
-
-      }
-
-    }
-
-
-    function renderNotifications() {
-
-      if (!notificationList) {
+      if (!response.ok || !data.success) {
+        results.innerHTML = "";
         return;
       }
 
+      const services = Array.isArray(data.services)
+        ? data.services
+        : [];
+
+      const filtered = services.filter((service) => {
+        const title =
+          String(service.title || "").toLowerCase();
+
+        const description =
+          String(
+            service.description || ""
+          ).toLowerCase();
+
+        const category =
+          String(
+            service.category || ""
+          ).toLowerCase();
+
+        const provider =
+          String(
+            service.provider_name ||
+            service.full_name ||
+            service.provider ||
+            ""
+          ).toLowerCase();
+
+        return (
+          title.includes(query) ||
+          description.includes(query) ||
+          category.includes(query) ||
+          provider.includes(query)
+        );
+      });
+
+      const limited = filtered.slice(0, 6);
+
+      if (!limited.length) {
+        results.innerHTML = `
+          <div class="empty-state">
+            لم يتم العثور على خدمات مطابقة
+          </div>
+        `;
+        return;
+      }
+
+      results.innerHTML = limited
+        .map((service) => {
+          return `
+            <div class="search-result-item">
+              <h3>
+                ${escapeHtml(
+                  service.title ||
+                  "خدمة بدون عنوان"
+                )}
+              </h3>
+
+              <p>
+                ${escapeHtml(
+                  service.description ||
+                  ""
+                )}
+              </p>
+
+              <span>
+                ${escapeHtml(
+                  service.category ||
+                  "خدمات أخرى"
+                )}
+              </span>
+            </div>
+          `;
+        })
+        .join("");
+    } catch (error) {
+      console.error(
+        "Search services error:",
+        error
+      );
+
+      results.innerHTML = `
+        <div class="empty-state">
+          حدث خطأ أثناء البحث
+        </div>
+      `;
+    }
+  }
+
+  const searchInput =
+    document.getElementById("searchInput");
+
+  if (searchInput) {
+    let searchTimeout = null;
+
+    searchInput.addEventListener(
+      "input",
+      () => {
+        clearTimeout(searchTimeout);
+
+        searchTimeout = setTimeout(() => {
+          searchServices();
+        }, 300);
+      }
+    );
+  }
+
+  async function loadNotifications() {
+    if (!notificationList) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "/api/notifications",
+        {
+          method: "GET",
+          credentials: "include",
+          cache: "no-store"
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        return;
+      }
+
+      const notifications =
+        Array.isArray(data.notifications)
+          ? data.notifications
+          : [];
+
+      const unreadCount =
+        notifications.filter(
+          (notification) =>
+            !notification.is_read &&
+            !notification.read
+        ).length;
+
+      if (notificationBadge) {
+        if (unreadCount > 0) {
+          notificationBadge.textContent =
+            unreadCount > 99
+              ? "99+"
+              : String(unreadCount);
+
+          notificationBadge.style.display =
+            "flex";
+        } else {
+          notificationBadge.style.display =
+            "none";
+        }
+      }
+
+      if (!notifications.length) {
+        notificationList.innerHTML = "";
+        if (notificationEmpty) {
+          notificationEmpty.style.display =
+            "block";
+        }
+        return;
+      }
+
+      if (notificationEmpty) {
+        notificationEmpty.style.display =
+          "none";
+      }
 
       notificationList.innerHTML =
-        "";
-
-
-      if (
-        !notificationsData.length
-      ) {
-
-        const empty =
-          document.createElement(
-            "div"
-          );
-
-        empty.className =
-          "notification-empty";
-
-        empty.textContent =
-          "لا توجد إشعارات";
-
-        notificationList.appendChild(
-          empty
-        );
-
-        return;
-
-      }
-
-
-      notificationsData.forEach(
-        notification => {
-
-          const item =
-            document.createElement(
-              "button"
-            );
-
-
-          item.type =
-            "button";
-
-
-          item.className =
-            "notification-item" +
-            (
-              Number(
-                notification.is_read
-              ) === 0
-                ? " unread"
-                : ""
-            );
-
-
-          const icon =
-            document.createElement(
-              "div"
-            );
-
-          icon.className =
-            "notification-item-icon";
-
-          icon.textContent =
-            getNotificationIcon(
-              notification.type
-            );
-
-
-          const content =
-            document.createElement(
-              "div"
-            );
-
-          content.className =
-            "notification-item-content";
-
-
-          const title =
-            document.createElement(
-              "span"
-            );
-
-          title.className =
-            "notification-item-title";
-
-          title.textContent =
-            notification.title ||
-            "إشعار";
-
-
-          const message =
-            document.createElement(
-              "span"
-            );
-
-          message.className =
-            "notification-item-message";
-
-          message.textContent =
-            notification.message ||
-            "";
-
-
-          const time =
-            document.createElement(
-              "span"
-            );
-
-          time.className =
-            "notification-item-time";
-
-          time.textContent =
-            formatNotificationTime(
-              notification.created_at
-            );
-
-
-          content.appendChild(
-            title
-          );
-
-          content.appendChild(
-            message
-          );
-
-          content.appendChild(
-            time
-          );
-
-
-          item.appendChild(
-            icon
-          );
-
-          item.appendChild(
-            content
-          );
-
-
-          if (
-            Number(
-              notification.is_read
-            ) === 0
-          ) {
-
-            const dot =
-              document.createElement(
-                "span"
+        notifications
+          .map((notification) => {
+            const isRead =
+              Boolean(
+                notification.is_read ||
+                notification.read
               );
 
-            dot.className =
-              "notification-unread-dot";
+            const notificationId =
+              Number(notification.id);
 
-            item.appendChild(
-              dot
-            );
+            const title =
+              escapeHtml(
+                notification.title ||
+                "إشعار جديد"
+              );
 
-          }
+            const message =
+              escapeHtml(
+                notification.message ||
+                notification.content ||
+                ""
+              );
 
+            const date =
+              formatDate(
+                notification.created_at ||
+                notification.createdAt
+              );
 
+            return `
+              <div
+                class="notification-item ${
+                  isRead ? "read" : "unread"
+                }"
+                data-notification-id="${notificationId}"
+              >
+                <div class="notification-content">
+                  <strong>${title}</strong>
+
+                  <p>${message}</p>
+
+                  ${
+                    date
+                      ? `<small>${date}</small>`
+                      : ""
+                  }
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+
+      notificationList
+        .querySelectorAll(
+          ".notification-item"
+        )
+        .forEach((item) => {
           item.addEventListener(
             "click",
-            () => {
+            async () => {
+              const id =
+                Number(
+                  item.dataset.notificationId
+                );
 
-              openNotification(
-                notification.id,
-                notification.action_url ||
-                (
-                  notification.project_id
-                    ? `project-details.html?id=${encodeURIComponent(notification.project_id)}`
-                    : "index.html"
-                )
-              );
+              if (
+                !Number.isFinite(id) ||
+                id <= 0
+              ) {
+                return;
+              }
 
+              try {
+                await fetch(
+                  `/api/notifications/${id}/read`,
+                  {
+                    method: "POST",
+                    credentials: "include"
+                  }
+                );
+
+                item.classList.remove(
+                  "unread"
+                );
+
+                item.classList.add("read");
+
+                loadNotifications();
+              } catch (error) {
+                console.error(
+                  "Mark notification read error:",
+                  error
+                );
+              }
             }
           );
-
-
-          notificationList.appendChild(
-            item
-          );
-
-        }
+        });
+    } catch (error) {
+      console.error(
+        "Load notifications error:",
+        error
       );
-
     }
+  }
 
+  function startNotificationPolling() {
+    stopNotificationPolling();
 
-    async function loadNotifications() {
+    notificationTimer =
+      setInterval(() => {
+        if (currentUser) {
+          loadNotifications();
+        }
+      }, 30000);
+  }
 
-      try {
+  function stopNotificationPolling() {
+    if (notificationTimer) {
+      clearInterval(notificationTimer);
+      notificationTimer = null;
+    }
+  }
 
-        const response =
-          await fetch(
-            "/api/notifications",
-            {
-              method: "GET",
-              credentials: "include",
-              cache: "no-store"
-            }
+  if (notificationBtn) {
+    notificationBtn.addEventListener(
+      "click",
+      (event) => {
+        event.stopPropagation();
+
+        if (notificationPanel) {
+          notificationPanel.classList.toggle(
+            "show"
           );
-
+        }
 
         if (
-          !response.ok
-        ) {
-
-          return;
-
-        }
-
-
-        const data =
-          await response.json();
-
-
-        notificationsData =
-          Array.isArray(
-            data.notifications
+          notificationPanel &&
+          notificationPanel.classList.contains(
+            "show"
           )
-            ? data.notifications
-            : [];
-
-
-        updateNotificationBadge(
-          data.unread_count || 0
-        );
-
-
-        renderNotifications();
-
-
-      } catch (error) {
-
-        console.error(
-          "Notifications load error:",
-          error
-        );
-
+        ) {
+          loadNotifications();
+        }
       }
+    );
+  }
 
-    }
-
-        async function openNotification(
-      notificationId,
-      actionUrl
-    ) {
-
-      try {
-
-        await fetch(
-          `/api/notifications/${notificationId}/read`,
-          {
-            method: "POST",
-            credentials: "include"
-          }
-        );
-
-      } catch (error) {
-
-        console.error(
-          "Notification read error:",
-          error
-        );
-
-      }
-
-
-      if (actionUrl) {
-
-        window.location.href =
-          actionUrl;
-
-      } else {
-
-        await loadNotifications();
-
-      }
-
-    }
-
-
-    async function markAllNotificationsRead() {
-
-      try {
-
-        const response =
+  if (markAllReadBtn) {
+    markAllReadBtn.addEventListener(
+      "click",
+      async () => {
+        try {
           await fetch(
             "/api/notifications/read-all",
             {
@@ -3801,194 +2978,39 @@
             }
           );
 
-
-        if (
-          !response.ok
-        ) {
-
-          return;
-
-        }
-
-
-        notificationsData =
-          notificationsData.map(
-            notification => ({
-              ...notification,
-              is_read: 1
-            })
+          loadNotifications();
+        } catch (error) {
+          console.error(
+            "Mark all notifications read error:",
+            error
           );
-
-
-        updateNotificationBadge(
-          0
-        );
-
-
-        renderNotifications();
-
-
-      } catch (error) {
-
-        console.error(
-          "Mark notifications read error:",
-          error
-        );
-
-      }
-
-    }
-
-
-    function toggleNotifications() {
-
-      if (
-        !notificationPanel ||
-        !notificationButton
-      ) {
-
-        return;
-
-      }
-
-
-      const isOpen =
-        notificationPanel.classList.contains(
-          "active"
-        );
-
-
-      if (isOpen) {
-
-        closeNotifications();
-
-      } else {
-
-        notificationPanel.classList.add(
-          "active"
-        );
-
-        notificationPanel.setAttribute(
-          "aria-hidden",
-          "false"
-        );
-
-        notificationButton.setAttribute(
-          "aria-expanded",
-          "true"
-        );
-
-        loadNotifications();
-
-      }
-
-    }
-
-
-    function closeNotifications() {
-
-      if (
-        !notificationPanel
-      ) {
-
-        return;
-
-      }
-
-
-      notificationPanel.classList.remove(
-        "active"
-      );
-
-      notificationPanel.setAttribute(
-        "aria-hidden",
-        "true"
-      );
-
-
-      if (
-        notificationButton
-      ) {
-
-        notificationButton.setAttribute(
-          "aria-expanded",
-          "false"
-        );
-
-      }
-
-    }
-
-
-    function startNotificationPolling() {
-
-      stopNotificationPolling();
-
-      notificationPollTimer =
-        setInterval(
-          () => {
-
-            loadNotifications();
-
-          },
-          30000
-        );
-
-    }
-
-
-    function stopNotificationPolling() {
-
-      if (
-        notificationPollTimer
-      ) {
-
-        clearInterval(
-          notificationPollTimer
-        );
-
-        notificationPollTimer =
-          null;
-
-      }
-
-    }
-
-
-    /* =========================
-       إغلاق الإشعارات عند الضغط خارجها
-    ========================== */
-
-    document.addEventListener(
-      "click",
-      function(event) {
-
-        if (
-          notificationPanel &&
-          notificationButton &&
-          !notificationPanel.contains(
-            event.target
-          ) &&
-          !notificationButton.contains(
-            event.target
-          )
-        ) {
-
-          closeNotifications();
-
         }
-
       }
     );
+  }
 
+  document.addEventListener(
+    "click",
+    (event) => {
+      if (
+        notificationPanel &&
+        notificationBtn &&
+        !notificationPanel.contains(
+          event.target
+        ) &&
+        !notificationBtn.contains(
+          event.target
+        )
+      ) {
+        notificationPanel.classList.remove(
+          "show"
+        );
+      }
+    }
+  );
 
-    /* =========================
-       بدء التحقق
-    ========================== */
-
-    checkLogin();
-
-  </script>
+  checkLogin();
+</script>
 
 </body>
 </html>
