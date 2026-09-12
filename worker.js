@@ -324,8 +324,9 @@ async function register(request, env) {
   const email = cleanEmail(body.email);
   const password = String(body.password || "");
 
-  // الحسابات الجديدة موحدة
-  const role = "user";
+  // role محفوظ فقط للتوافق مع قاعدة البيانات القديمة.
+  // الحساب نفسه موحد ويمكنه استخدام جميع وظائف المنصة.
+  const role = cleanText(body.role);
 
   if (!fullName) {
     return json({
@@ -355,6 +356,16 @@ async function register(request, env) {
     }, 400);
   }
 
+  if (
+    role !== "client" &&
+    role !== "freelancer"
+  ) {
+    return json({
+      success: false,
+      error: "نوع الحساب غير صحيح"
+    }, 400);
+  }
+
   const existing = await env.DB
     .prepare(`
       SELECT id
@@ -372,7 +383,8 @@ async function register(request, env) {
     }, 409);
   }
 
-  const passwordData = await createPasswordHash(password);
+  const passwordData =
+    await createPasswordHash(password);
 
   const result = await env.DB
     .prepare(`
@@ -410,6 +422,7 @@ async function register(request, env) {
     }
   }, 201);
 }
+
 
 
 // ================================
