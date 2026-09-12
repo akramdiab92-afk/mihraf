@@ -1601,25 +1601,27 @@
             ‹
           </div>
 
-     </a>
+        </a>
 
-      <a
-        href="portfolio.html"
-        class="menu-item">
 
-        <div class="menu-icon">
-         🖼️
-        </div>
+        <a
+          href="portfolio.html"
+          class="menu-item">
 
-        <div class="menu-item-text">
-          تصفح الأعمال
-        </div>
+          <div class="menu-icon">
+            🖼️
+          </div>
 
-        <div class="menu-item-arrow">
-          ‹
-        </div>
+          <div class="menu-item-text">
+            تصفح الأعمال
+          </div>
+
+          <div class="menu-item-arrow">
+            ‹
+          </div>
 
         </a>
+
 
         <a
           href="#featuredServices"
@@ -1661,10 +1663,11 @@
         </a>
 
 
+        <!-- تم تفعيل الدليل الإرشادي -->
+
         <a
-          href="#"
-          class="menu-item"
-          onclick="return false;">
+          href="guides.html"
+          class="menu-item">
 
           <div class="menu-icon">
             📖
@@ -1681,10 +1684,11 @@
         </a>
 
 
+        <!-- تم تفعيل الدعم الفني -->
+
         <a
-          href="#"
-          class="menu-item"
-          onclick="return false;">
+          href="support.html"
+          class="menu-item">
 
           <div class="menu-icon">
             🛟
@@ -1726,10 +1730,11 @@
           class="more-menu"
           id="moreMenu">
 
+          <!-- تم تفعيل ضمان الحقوق -->
+
           <a
-            href="#"
-            class="menu-item"
-            onclick="return false;">
+            href="rights.html"
+            class="menu-item">
 
             <div class="menu-icon">
               🛡️
@@ -1741,6 +1746,8 @@
 
           </a>
 
+
+          <!-- التسويق بالعمولة بقي كما هو -->
 
           <a
             href="#"
@@ -1758,10 +1765,11 @@
           </a>
 
 
+          <!-- تم تفعيل الأسئلة الشائعة -->
+
           <a
-            href="#"
-            class="menu-item"
-            onclick="return false;">
+            href="faq.html"
+            class="menu-item">
 
             <div class="menu-icon">
               ❓
@@ -1774,10 +1782,11 @@
           </a>
 
 
+          <!-- تم تفعيل مدونة مهراف -->
+
           <a
-            href="#"
-            class="menu-item"
-            onclick="return false;">
+            href="blog.html"
+            class="menu-item">
 
             <div class="menu-icon">
               📝
@@ -1790,10 +1799,11 @@
           </a>
 
 
+          <!-- تم تفعيل سياسة الخصوصية -->
+
           <a
-            href="#"
-            class="menu-item"
-            onclick="return false;">
+            href="privacy.html"
+            class="menu-item">
 
             <div class="menu-icon">
               🔒
@@ -1806,10 +1816,11 @@
           </a>
 
 
+          <!-- تم تفعيل شروط الاستخدام -->
+
           <a
-            href="#"
-            class="menu-item"
-            onclick="return false;">
+            href="terms.html"
+            class="menu-item">
 
             <div class="menu-icon">
               📄
@@ -3176,7 +3187,8 @@
       }
 
 
-      grid.innerHTML = "";
+      grid.innerHTML =
+        "";
 
 
       if (!services.length) {
@@ -3737,8 +3749,7 @@
 
     }
 
-
-    async function openNotification(
+        async function openNotification(
       notificationId,
       actionUrl
     ) {
