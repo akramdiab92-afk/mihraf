@@ -1933,7 +1933,9 @@
       </div>
 
     </section>
-        <section id="actions">
+        </section>
+
+    <section id="actions">
 
       <div class="container">
 
@@ -1944,7 +1946,7 @@
           </h2>
 
           <p>
-            اختر ما تريد إنجازه على مِهراف
+            ابدأ الآن بالطريقة التي تناسبك
           </p>
 
         </div>
@@ -1960,16 +1962,16 @@
             </div>
 
             <h3>
-              تصفح الخدمات
+              أريد طلب خدمة
             </h3>
 
             <p>
-              اكتشف الخدمات المنشورة واختر الخدمة
-              المناسبة لاحتياجك.
+              تصفح الخدمات المتاحة واختر المنفذ المناسب
+              لتنفيذ ما تحتاج إليه باحترافية.
             </p>
 
             <span class="action-card-arrow">
-              استكشف الخدمات ←
+              تصفح الخدمات ←
             </span>
 
           </a>
@@ -1983,16 +1985,16 @@
             </div>
 
             <h3>
-              تصفح المشاريع
+              أريد نشر مشروع
             </h3>
 
             <p>
-              شاهد المشاريع المنشورة واختر المشروع
-              الذي يناسب مهاراتك وخبرتك.
+              انشر مشروعك واستقبل عروض المحترفين
+              واختر العرض الأنسب لك.
             </p>
 
             <span class="action-card-arrow">
-              استكشف المشاريع ←
+              تصفح المشاريع ←
             </span>
 
           </a>
@@ -2010,7 +2012,7 @@
         <div class="section-title">
 
           <h2>
-            المحترفون
+            المحترفون في مِهراف
           </h2>
 
           <p>
@@ -2026,12 +2028,13 @@
           </div>
 
           <h3>
-            ابحث عن أصحاب المهارات والخبرات
+            اكتشف أعمال المحترفين
           </h3>
 
           <p>
-            مِهراف يجمع أصحاب المهارات في مختلف المجالات،
-            ويمكنك اكتشاف أعمالهم وخدماتهم من خلال المنصة.
+            تصفح الأعمال والمهارات المعروضة من
+            المحترفين على منصة مِهراف واختر من يناسب
+            احتياجك.
           </p>
 
           <a href="portfolio.html">
@@ -2049,22 +2052,18 @@
       <div class="container">
 
         <h2>
-          هل لديك مهارة أو مشروع؟
+          ابدأ رحلتك مع مِهراف
         </h2>
 
         <p>
-          ابدأ من لوحة التحكم وأنشئ خدمتك أو مشروعك
-          وتابع أعمالك من مكان واحد.
+          سواء كنت تبحث عن خدمة أو تريد تقديم مهارتك،
+          مِهراف تجمعك بالطرف المناسب.
         </p>
 
         <div class="cta-actions">
 
-          <a
-            href="dashboard.html"
-            id="ctaDashboard">
-
-            الانتقال إلى لوحة التحكم
-
+          <a href="dashboard.html">
+            لوحة التحكم
           </a>
 
           <a
@@ -2096,20 +2095,19 @@
       </strong>
 
       <p>
-        منصة للخدمات والمشاريع والمستقلين
+        منصة تجمع أصحاب المشاريع بالمستقلين والمحترفين.
       </p>
 
       <p>
-        © 2026 MIHRAF
+        جميع الحقوق محفوظة © مِهراف
       </p>
 
     </footer>
 
   </div>
 
-  <!-- JAVASCRIPT -->
-
   <script>
+
     let currentUser = null;
     let notificationTimer = null;
 
@@ -2160,55 +2158,77 @@
 
 
     function escapeHtml(value) {
+
       return String(value ?? "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+
     }
 
 
     function formatDate(value) {
+
       if (!value) {
         return "";
       }
 
-      const date = new Date(value);
+      const date =
+        new Date(value);
 
       if (Number.isNaN(date.getTime())) {
         return "";
       }
 
-      return date.toLocaleDateString("ar-SY", {
-        year: "numeric",
-        month: "short",
-        day: "numeric"
-      });
+      return date.toLocaleString(
+        "ar-SY",
+        {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      );
+
     }
 
 
     function getUserDisplayName(user) {
+
+      if (!user) {
+        return "المستخدم";
+      }
+
       return (
-        user?.full_name ||
-        user?.name ||
-        user?.username ||
-        "مستخدم مهراف"
+        user.full_name ||
+        user.name ||
+        user.email ||
+        "المستخدم"
       );
+
     }
 
 
     function getUserAvatar(user) {
-      return (
-        user?.avatar ||
-        user?.avatar_url ||
-        user?.profile_image ||
-        ""
-      );
+
+      const name =
+        getUserDisplayName(user)
+          .trim();
+
+      if (!name) {
+        return "م";
+      }
+
+      return name.charAt(0);
+
     }
 
 
     function showLoggedInState(user) {
+
       currentUser = user;
 
       if (authGate) {
@@ -2224,105 +2244,81 @@
           "[data-user-name]"
         );
 
-      userNameElements.forEach((element) => {
-        element.textContent =
-          getUserDisplayName(user);
-      });
+      userNameElements.forEach(
+        (element) => {
+
+          element.textContent =
+            getUserDisplayName(user);
+
+        }
+      );
 
 
-      const roleElements =
-        document.querySelectorAll(
-          "[data-user-role]"
-        );
-
-      roleElements.forEach((element) => {
-        element.textContent =
-          "حساب مِهراف";
-      });
-
-
-      const avatarElements =
+      const userAvatarElements =
         document.querySelectorAll(
           "[data-user-avatar]"
         );
 
-      avatarElements.forEach((element) => {
-        const avatar =
-          getUserAvatar(user);
-
-        if (avatar) {
-
-          if (
-            element.tagName &&
-            element.tagName.toLowerCase() === "img"
-          ) {
-            element.src = avatar;
-            element.style.display = "block";
-          } else {
-            element.textContent =
-              getUserDisplayName(user)
-                .charAt(0)
-                .toUpperCase();
-          }
-
-        } else {
-
-          element.style.display = "flex";
+      userAvatarElements.forEach(
+        (element) => {
 
           element.textContent =
-            getUserDisplayName(user)
-              .charAt(0)
-              .toUpperCase();
+            getUserAvatar(user);
 
         }
-      });
+      );
 
 
-      if (menuBtn) {
-        menuBtn.style.display = "flex";
-      }
+      const userRoleElements =
+        document.querySelectorAll(
+          "[data-user-role]"
+        );
 
+      userRoleElements.forEach(
+        (element) => {
 
-      loadNotifications();
-      startNotificationPolling();
+          element.textContent =
+            "حساب مِهراف";
+
+        }
+      );
+
     }
 
 
     function showLoggedOutState() {
-      currentUser = null;
 
-      if (authGate) {
-        authGate.style.display = "flex";
-      }
+      currentUser = null;
 
       if (appContent) {
         appContent.style.display = "none";
       }
 
-      if (menuBtn) {
-        menuBtn.style.display = "none";
+      if (authGate) {
+        authGate.style.display = "flex";
       }
 
-      stopNotificationPolling();
     }
 
 
     async function checkLogin() {
+
       try {
 
         const response =
-          await fetch("/api/me", {
-            method: "GET",
-            credentials: "include",
-            cache: "no-store"
-          });
+          await fetch(
+            "/api/me",
+            {
+              method: "GET",
+              credentials: "include"
+            }
+          );
 
         const data =
           await response.json();
 
         if (
           response.ok &&
-          data &&
           data.success &&
           data.user
         ) {
@@ -2330,6 +2326,14 @@
           showLoggedInState(
             data.user
           );
+
+          await loadNotifications();
+
+          notificationTimer =
+            setInterval(
+              loadNotifications,
+              30000
+            );
 
         } else {
 
@@ -2340,7 +2344,7 @@
       } catch (error) {
 
         console.error(
-          "Login check error:",
+          "Auth check error:",
           error
         );
 
@@ -2348,39 +2352,37 @@
 
       } finally {
 
-        const loading =
+        const authLoading =
           document.getElementById(
             "authLoading"
           );
 
-        if (loading) {
-          loading.style.display = "none";
+        if (authLoading) {
+          authLoading.style.display =
+            "none";
         }
 
       }
+
     }
 
 
     function openMenu() {
 
-      if (sideMenu) {
-
-        sideMenu.classList.add(
-          "active"
-        );
-
-        sideMenu.setAttribute(
-          "aria-hidden",
-          "false"
-        );
-
+      if (!sideMenu || !menuOverlay) {
+        return;
       }
 
-      if (menuOverlay) {
-        menuOverlay.classList.add(
-          "active"
-        );
-      }
+      sideMenu.classList.add("active");
+
+      menuOverlay.classList.add(
+        "active"
+      );
+
+      sideMenu.setAttribute(
+        "aria-hidden",
+        "false"
+      );
 
       if (menuBtn) {
 
@@ -2394,31 +2396,28 @@
       document.body.classList.add(
         "menu-open"
       );
+
     }
 
 
     function closeMenu() {
 
-      if (sideMenu) {
-
-        sideMenu.classList.remove(
-          "active"
-        );
-
-        sideMenu.setAttribute(
-          "aria-hidden",
-          "true"
-        );
-
+      if (!sideMenu || !menuOverlay) {
+        return;
       }
 
-      if (menuOverlay) {
+      sideMenu.classList.remove(
+        "active"
+      );
 
-        menuOverlay.classList.remove(
-          "active"
-        );
+      menuOverlay.classList.remove(
+        "active"
+      );
 
-      }
+      sideMenu.setAttribute(
+        "aria-hidden",
+        "true"
+      );
 
       if (menuBtn) {
 
@@ -2440,24 +2439,7 @@
 
       menuBtn.addEventListener(
         "click",
-        () => {
-
-          if (
-            sideMenu &&
-            sideMenu.classList.contains(
-              "active"
-            )
-          ) {
-
-            closeMenu();
-
-          } else {
-
-            openMenu();
-
-          }
-
-        }
+        openMenu
       );
 
     }
@@ -2467,9 +2449,7 @@
 
       closeMenuBtn.addEventListener(
         "click",
-        () => {
-          closeMenu();
-        }
+        closeMenu
       );
 
     }
@@ -2479,9 +2459,7 @@
 
       menuOverlay.addEventListener(
         "click",
-        () => {
-          closeMenu();
-        }
+        closeMenu
       );
 
     }
@@ -2491,42 +2469,24 @@
 
       moreMenuBtn.addEventListener(
         "click",
-        (event) => {
+        () => {
 
-          event.stopPropagation();
+          if (!moreMenu) {
+            return;
+          }
 
-          if (moreMenu) {
-
+          const active =
             moreMenu.classList.toggle(
               "active"
             );
 
-            moreMenuBtn.classList.toggle(
-              "active"
-            );
-
-          }
+          moreMenuBtn.classList.toggle(
+            "active",
+            active
+          );
 
         }
       );
-
-    }
-
-
-    if (moreMenu) {
-
-      moreMenu
-        .querySelectorAll("a")
-        .forEach((link) => {
-
-          link.addEventListener(
-            "click",
-            () => {
-              closeMenu();
-            }
-          );
-
-        });
 
     }
 
@@ -2558,11 +2518,8 @@
 
           }
 
-          closeMenu();
-
-          showLoggedOutState();
-
-          logoutBtn.disabled = false;
+          window.location.href =
+            "login.html";
 
         }
       );
@@ -2577,16 +2534,14 @@
           "searchInput"
         );
 
+      if (!searchInput) {
+        return;
+      }
+
       const query =
-        searchInput
-          ? searchInput.value.trim()
-          : "";
+        searchInput.value.trim();
 
       if (!query) {
-
-        window.location.href =
-          "services.html";
-
         return;
       }
 
@@ -2597,14 +2552,14 @@
     }
 
 
-    const searchInput =
-      document.getElementById(
-        "searchInput"
-      );
-
     const searchButton =
       document.getElementById(
         "searchButton"
+      );
+
+    const searchInput =
+      document.getElementById(
+        "searchInput"
       );
 
 
@@ -2624,9 +2579,7 @@
         "keydown",
         (event) => {
 
-          if (
-            event.key === "Enter"
-          ) {
+          if (event.key === "Enter") {
 
             event.preventDefault();
 
@@ -2642,7 +2595,10 @@
 
     async function loadNotifications() {
 
-      if (!notificationList) {
+      if (
+        !notificationList ||
+        !notificationBadge
+      ) {
         return;
       }
 
@@ -2653,70 +2609,63 @@
             "/api/notifications",
             {
               method: "GET",
-              credentials: "include",
-              cache: "no-store"
+              credentials: "include"
             }
           );
 
+        if (!response.ok) {
+          return;
+        }
 
         const data =
           await response.json();
 
-
         if (
-          !response.ok ||
-          !data.success
+          !data.success ||
+          !Array.isArray(
+            data.notifications
+          )
         ) {
           return;
         }
 
-
         const notifications =
-          Array.isArray(
-            data.notifications
-          )
-            ? data.notifications
-            : [];
+          data.notifications;
 
 
         const unreadCount =
           notifications.filter(
             (notification) =>
-              !notification.is_read &&
-              !notification.read
+              !notification.is_read
           ).length;
 
 
-        if (notificationBadge) {
+        if (unreadCount > 0) {
 
-          if (unreadCount > 0) {
+          notificationBadge.textContent =
+            unreadCount > 99
+              ? "99+"
+              : unreadCount;
 
-            notificationBadge.textContent =
-              unreadCount > 99
-                ? "99+"
-                : String(
-                    unreadCount
-                  );
+          notificationBadge.style.display =
+            "flex";
 
-            notificationBadge.style.display =
-              "flex";
+        } else {
 
-          } else {
-
-            notificationBadge.style.display =
-              "none";
-
-          }
+          notificationBadge.style.display =
+            "none";
 
         }
 
 
-        if (!notifications.length) {
+        if (notifications.length === 0) {
 
           notificationList.innerHTML = `
             <div
               class="notification-empty">
+
               لا توجد إشعارات
+
             </div>
           `;
 
@@ -2730,104 +2679,91 @@
 
 
         if (markAllReadBtn) {
+
           markAllReadBtn.disabled =
             unreadCount === 0;
+
         }
 
 
         notificationList.innerHTML =
           notifications
-            .map((notification) => {
+            .map(
+              (notification) => {
 
-              const isRead =
-                Boolean(
-                  notification.is_read ||
-                  notification.read
-                );
+                const isUnread =
+                  !notification.is_read;
 
+                return `
+                  <button
+                    type="button"
+                    class="notification-item ${
+                      isUnread
+                        ? "unread"
+                        : "read"
+                    }"
+                    data-notification-id="${
+                      Number(notification.id)
+                    }">
 
-              const notificationId =
-                Number(
-                  notification.id
-                );
+                    <div
+                      class="notification-item-icon">
 
+                      🔔
 
-              const title =
-                escapeHtml(
-                  notification.title ||
-                  "إشعار جديد"
-                );
+                    </div>
 
+                    <div
+                      class="notification-item-content">
 
-              const message =
-                escapeHtml(
-                  notification.message ||
-                  notification.content ||
-                  ""
-                );
+                      <span
+                        class="notification-item-title">
 
+                        ${escapeHtml(
+                          notification.title ||
+                          "إشعار جديد"
+                        )}
 
-              const date =
-                formatDate(
-                  notification.created_at ||
-                  notification.createdAt
-                );
+                      </span>
 
+                      <span
+                        class="notification-item-message">
 
-              return `
-                <div
-                  class="notification-item ${
-                    isRead
-                      ? "read"
-                      : "unread"
-                  }"
-                  data-notification-id="${notificationId}">
+                        ${escapeHtml(
+                          notification.message ||
+                          ""
+                        )}
 
-                  <div
-                    class="notification-item-icon">
-                    🔔
-                  </div>
+                      </span>
 
-                  <div
-                    class="notification-item-content">
+                      <span
+                        class="notification-item-time">
 
-                    <span
-                      class="notification-item-title">
-                      ${title}
-                    </span>
+                        ${escapeHtml(
+                          formatDate(
+                            notification.created_at
+                          )
+                        )}
 
-                    <span
-                      class="notification-item-message">
-                      ${message}
-                    </span>
+                      </span>
+
+                    </div>
 
                     ${
-                      date
+                      isUnread
                         ? `
                           <span
-                            class="notification-item-time">
-                            ${date}
+                            class="notification-unread-dot">
                           </span>
                         `
                         : ""
                     }
 
-                  </div>
+                  </button>
+                `;
 
-                  ${
-                    !isRead
-                      ? `
-                        <span
-                          class="notification-unread-dot">
-                        </span>
-                      `
-                      : ""
-                  }
-
-                </div>
-              `;
-
-            })
+              }
+            )
             .join("");
 
 
@@ -2847,7 +2783,6 @@
                       .notificationId
                   );
 
-
                 if (
                   !Number.isFinite(id) ||
                   id <= 0
@@ -2855,7 +2790,14 @@
                   return;
                 }
 
+                // العثور على بيانات الإشعار
+                const notification =
+                  notifications.find(
+                    (n) =>
+                      Number(n.id) === id
+                  );
 
+                // تحديد الإشعار كمقروء
                 try {
 
                   await fetch(
@@ -2866,18 +2808,6 @@
                     }
                   );
 
-
-                  item.classList.remove(
-                    "unread"
-                  );
-
-                  item.classList.add(
-                    "read"
-                  );
-
-
-                  loadNotifications();
-
                 } catch (error) {
 
                   console.error(
@@ -2886,6 +2816,61 @@
                   );
 
                 }
+
+                // تحديث شكل الإشعار
+                item.classList.remove(
+                  "unread"
+                );
+
+                item.classList.add(
+                  "read"
+                );
+
+                // إغلاق لوحة الإشعارات
+                if (notificationPanel) {
+
+                  notificationPanel.classList.remove(
+                    "active"
+                  );
+
+                  notificationPanel.setAttribute(
+                    "aria-hidden",
+                    "true"
+                  );
+
+                }
+
+                if (notificationBtn) {
+
+                  notificationBtn.setAttribute(
+                    "aria-expanded",
+                    "false"
+                  );
+
+                }
+
+                // تحديث الإشعارات
+                loadNotifications();
+
+                // الانتقال إلى المشروع
+                if (
+                  notification &&
+                  notification.project_id
+                ) {
+
+                  window.location.href =
+                    "project-details.html?id=" +
+                    encodeURIComponent(
+                      notification.project_id
+                    );
+
+                  return;
+                }
+
+                console.log(
+                  "Notification has no navigation target:",
+                  notification
+                );
 
               }
             );
@@ -2905,37 +2890,6 @@
     }
 
 
-    function startNotificationPolling() {
-
-      stopNotificationPolling();
-
-      notificationTimer =
-        setInterval(() => {
-
-          if (currentUser) {
-            loadNotifications();
-          }
-
-        }, 30000);
-
-    }
-
-
-    function stopNotificationPolling() {
-
-      if (notificationTimer) {
-
-        clearInterval(
-          notificationTimer
-        );
-
-        notificationTimer = null;
-
-      }
-
-    }
-
-
     if (notificationBtn) {
 
       notificationBtn.addEventListener(
@@ -2944,39 +2898,42 @@
 
           event.stopPropagation();
 
-          if (notificationPanel) {
+          if (!notificationPanel) {
+            return;
+          }
 
+          const active =
             notificationPanel.classList.toggle(
               "active"
             );
 
-            const isOpen =
-              notificationPanel.classList.contains(
-                "active"
-              );
+          notificationPanel.setAttribute(
+            "aria-hidden",
+            active
+              ? "false"
+              : "true"
+          );
+
+          notificationBtn.setAttribute(
+            "aria-expanded",
+            active
+              ? "true"
+              : "false"
+          );
+
+        }
+      );
+
+    }
 
 
-            notificationBtn.setAttribute(
-              "aria-expanded",
-              isOpen
-                ? "true"
-                : "false"
-            );
+    if (notificationPanel) {
 
+      notificationPanel.addEventListener(
+        "click",
+        (event) => {
 
-            notificationPanel.setAttribute(
-              "aria-hidden",
-              isOpen
-                ? "false"
-                : "true"
-            );
-
-
-            if (isOpen) {
-              loadNotifications();
-            }
-
-          }
+          event.stopPropagation();
 
         }
       );
@@ -2990,23 +2947,27 @@
         "click",
         async () => {
 
-          if (markAllReadBtn.disabled) {
-            return;
-          }
-
-          markAllReadBtn.disabled = true;
-
           try {
 
-            await fetch(
-              "/api/notifications/read-all",
-              {
-                method: "POST",
-                credentials: "include"
-              }
-            );
+            markAllReadBtn.disabled =
+              true;
 
-            loadNotifications();
+            const response =
+              await fetch(
+                "/api/notifications/read-all",
+                {
+                  method: "POST",
+                  credentials: "include"
+                }
+              );
+
+            if (!response.ok) {
+              throw new Error(
+                "Failed to mark all notifications as read"
+              );
+            }
+
+            await loadNotifications();
 
           } catch (error) {
 
@@ -3014,9 +2975,6 @@
               "Mark all notifications read error:",
               error
             );
-
-            markAllReadBtn.disabled =
-              false;
 
           }
 
@@ -3045,36 +3003,14 @@
             "active"
           );
 
-          notificationBtn.setAttribute(
-            "aria-expanded",
-            "false"
-          );
-
           notificationPanel.setAttribute(
             "aria-hidden",
             "true"
           );
 
-        }
-
-
-        if (
-          moreMenu &&
-          moreMenuBtn &&
-          !moreMenu.contains(
-            event.target
-          ) &&
-          !moreMenuBtn.contains(
-            event.target
-          )
-        ) {
-
-          moreMenu.classList.remove(
-            "active"
-          );
-
-          moreMenuBtn.classList.remove(
-            "active"
+          notificationBtn.setAttribute(
+            "aria-expanded",
+            "false"
           );
 
         }
@@ -3093,19 +3029,7 @@
           "click",
           () => {
 
-            const href =
-              link.getAttribute(
-                "href"
-              );
-
-            if (
-              href &&
-              href !== "#"
-            ) {
-
-              closeMenu();
-
-            }
+            closeMenu();
 
           }
         );
@@ -3114,6 +3038,7 @@
 
 
     checkLogin();
+
   </script>
 
 </body>
