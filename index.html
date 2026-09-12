@@ -1147,6 +1147,48 @@
       opacity: .8;
     }
 
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 30px 15px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: #22272e;
+    }
+
+    .search-results {
+      width: 100%;
+      max-width: 760px;
+      margin: 15px auto 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .search-result-item {
+      padding: 14px;
+      background: #22272e;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .search-result-item h3 {
+      color: var(--text);
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .search-result-item p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .search-result-item span {
+      color: var(--blue);
+      font-size: 10px;
+    }
+
     /* =========================
        CTA
     ========================== */
@@ -1299,34 +1341,20 @@
 
 <body>
 
-  <!-- شاشة التحميل -->
-
   <div id="authLoading">
     <div class="loading-box">
-      <div class="loading-logo">
-        مِهراف
-      </div>
-
-      <div class="loading-text">
-        جاري التحقق من الحساب...
-      </div>
+      <div class="loading-logo">مِهراف</div>
+      <div class="loading-text">جاري التحقق من الحساب...</div>
     </div>
   </div>
-
-
-  <!-- صفحة الزائر -->
 
   <div id="authGate">
 
     <div class="auth-gate-card">
 
-      <div class="auth-gate-logo">
-        مِهراف
-      </div>
+      <div class="auth-gate-logo">مِهراف</div>
 
-      <h1>
-        أهلاً بك في مِهراف
-      </h1>
+      <h1>أهلاً بك في مِهراف</h1>
 
       <p>
         منصة تجمع أصحاب المشاريع بالمستقلين والمحترفين
@@ -1335,15 +1363,11 @@
 
       <div class="auth-gate-buttons">
 
-        <a
-          href="login.html"
-          class="auth-gate-login">
+        <a href="login.html" class="auth-gate-login">
           تسجيل الدخول
         </a>
 
-        <a
-          href="register.html"
-          class="auth-gate-register">
+        <a href="register.html" class="auth-gate-register">
           إنشاء حساب
         </a>
 
@@ -1357,20 +1381,13 @@
 
   </div>
 
-
-  <!-- التطبيق الرئيسي -->
-
   <div id="appContent">
-
-    <!-- HEADER -->
 
     <header>
 
       <div class="container nav">
 
-        <a
-          href="index.html"
-          class="logo">
+        <a href="index.html" class="logo">
           مِهراف
         </a>
 
@@ -1392,17 +1409,14 @@
 
         <div class="auth-area">
 
-          <!-- الإشعارات -->
-
           <div class="notification-wrapper">
 
             <button
               type="button"
               class="notification-button"
-              id="notificationButton"
+              id="notificationBtn"
               aria-label="الإشعارات"
-              aria-expanded="false"
-              onclick="toggleNotifications()">
+              aria-expanded="false">
 
               🔔
 
@@ -1422,14 +1436,11 @@
 
               <div class="notification-panel-header">
 
-                <strong>
-                  الإشعارات
-                </strong>
+                <strong>الإشعارات</strong>
 
                 <button
                   type="button"
-                  id="markAllNotificationsButton"
-                  onclick="markAllNotificationsRead()">
+                  id="markAllReadBtn">
 
                   تحديد الكل كمقروء
 
@@ -1441,8 +1452,12 @@
                 class="notification-list"
                 id="notificationList">
 
-                <div class="notification-empty">
+                <div
+                  class="notification-empty"
+                  id="notificationEmpty">
+
                   لا توجد إشعارات
+
                 </div>
 
               </div>
@@ -1451,16 +1466,12 @@
 
           </div>
 
-
-          <!-- القائمة -->
-
           <button
             type="button"
             class="menu-button"
-            id="menuButton"
+            id="menuBtn"
             aria-label="فتح القائمة"
-            aria-expanded="false"
-            onclick="openSideMenu()">
+            aria-expanded="false">
 
             ☰
 
@@ -1472,17 +1483,10 @@
 
     </header>
 
-
-    <!-- OVERLAY -->
-
     <div
       class="menu-overlay"
-      id="menuOverlay"
-      onclick="closeSideMenu()">
+      id="menuOverlay">
     </div>
-
-
-    <!-- SIDE MENU -->
 
     <aside
       class="side-menu"
@@ -1500,7 +1504,7 @@
           <button
             type="button"
             class="close-menu"
-            onclick="closeSideMenu()"
+            id="closeMenuBtn"
             aria-label="إغلاق القائمة">
 
             ×
@@ -1513,19 +1517,17 @@
 
           <div
             class="user-avatar"
-            id="userAvatar">
-
+            data-user-avatar>
             م
-
           </div>
 
           <div class="user-details">
 
-            <strong id="menuUserName">
+            <strong data-user-name>
               المستخدم
             </strong>
 
-            <span id="menuUserRole">
+            <span data-user-role>
               حساب مِهراف
             </span>
 
@@ -1534,7 +1536,6 @@
         </div>
 
       </div>
-
 
       <div class="side-menu-content">
 
@@ -1546,9 +1547,7 @@
           href="dashboard.html"
           class="menu-item dashboard-menu-item">
 
-          <div class="menu-icon">
-            📊
-          </div>
+          <div class="menu-icon">📊</div>
 
           <div class="menu-item-text">
             لوحة التحكم
@@ -1560,19 +1559,15 @@
 
         </a>
 
-
         <div class="menu-section-title">
           استكشف مِهراف
         </div>
-
 
         <a
           href="projects.html"
           class="menu-item">
 
-          <div class="menu-icon">
-            📁
-          </div>
+          <div class="menu-icon">📁</div>
 
           <div class="menu-item-text">
             تصفح المشاريع
@@ -1584,15 +1579,11 @@
 
         </a>
 
-
         <a
           href="#professionals"
-          class="menu-item"
-          onclick="closeSideMenu()">
+          class="menu-item">
 
-          <div class="menu-icon">
-            👥
-          </div>
+          <div class="menu-icon">👥</div>
 
           <div class="menu-item-text">
             تصفح المنفذين
@@ -1604,14 +1595,11 @@
 
         </a>
 
-
         <a
           href="portfolio.html"
           class="menu-item">
 
-          <div class="menu-icon">
-            🖼️
-          </div>
+          <div class="menu-icon">🖼️</div>
 
           <div class="menu-item-text">
             تصفح الأعمال
@@ -1623,15 +1611,11 @@
 
         </a>
 
-
         <a
           href="#featuredServices"
-          class="menu-item"
-          onclick="closeSideMenu()">
+          class="menu-item">
 
-          <div class="menu-icon">
-            💼
-          </div>
+          <div class="menu-icon">💼</div>
 
           <div class="menu-item-text">
             تصفح الخدمات
@@ -1643,15 +1627,12 @@
 
         </a>
 
-
         <a
           href="#"
           class="menu-item community-item"
           onclick="return false;">
 
-          <div class="menu-icon">
-            💬
-          </div>
+          <div class="menu-icon">💬</div>
 
           <div class="menu-item-text">
             مجتمع مهراف
@@ -1663,14 +1644,11 @@
 
         </a>
 
-
         <a
           href="guides.html"
           class="menu-item">
 
-          <div class="menu-icon">
-            📖
-          </div>
+          <div class="menu-icon">📖</div>
 
           <div class="menu-item-text">
             الدليل الإرشادي
@@ -1682,14 +1660,11 @@
 
         </a>
 
-
         <a
           href="support.html"
           class="menu-item">
 
-          <div class="menu-icon">
-            🛟
-          </div>
+          <div class="menu-icon">🛟</div>
 
           <div class="menu-item-text">
             الدعم الفني
@@ -1701,16 +1676,12 @@
 
         </a>
 
-
         <button
           type="button"
           class="menu-item more-toggle"
-          id="moreToggle"
-          onclick="toggleMoreMenu()">
+          id="moreMenuBtn">
 
-          <div class="menu-icon">
-            ⋯
-          </div>
+          <div class="menu-icon">⋯</div>
 
           <div class="menu-item-text">
             عرض المزيد
@@ -1722,7 +1693,6 @@
 
         </button>
 
-
         <div
           class="more-menu"
           id="moreMenu">
@@ -1731,9 +1701,7 @@
             href="rights.html"
             class="menu-item">
 
-            <div class="menu-icon">
-              🛡️
-            </div>
+            <div class="menu-icon">🛡️</div>
 
             <div class="menu-item-text">
               ضمان الحقوق
@@ -1741,15 +1709,12 @@
 
           </a>
 
-
           <a
             href="#"
             class="menu-item"
             onclick="return false;">
 
-            <div class="menu-icon">
-              📣
-            </div>
+            <div class="menu-icon">📣</div>
 
             <div class="menu-item-text">
               التسويق بالعمولة
@@ -1757,14 +1722,11 @@
 
           </a>
 
-
           <a
             href="faq.html"
             class="menu-item">
 
-            <div class="menu-icon">
-              ❓
-            </div>
+            <div class="menu-icon">❓</div>
 
             <div class="menu-item-text">
               الأسئلة الشائعة
@@ -1772,14 +1734,11 @@
 
           </a>
 
-
           <a
             href="blog.html"
             class="menu-item">
 
-            <div class="menu-icon">
-              📝
-            </div>
+            <div class="menu-icon">📝</div>
 
             <div class="menu-item-text">
               مدونة مهراف
@@ -1787,14 +1746,11 @@
 
           </a>
 
-
           <a
             href="privacy.html"
             class="menu-item">
 
-            <div class="menu-icon">
-              🔒
-            </div>
+            <div class="menu-icon">🔒</div>
 
             <div class="menu-item-text">
               سياسة الخصوصية
@@ -1802,14 +1758,11 @@
 
           </a>
 
-
           <a
             href="terms.html"
             class="menu-item">
 
-            <div class="menu-icon">
-              📄
-            </div>
+            <div class="menu-icon">📄</div>
 
             <div class="menu-item-text">
               شروط الاستخدام
@@ -1819,19 +1772,14 @@
 
         </div>
 
-
         <div class="menu-divider"></div>
-
 
         <button
           type="button"
           class="logout-menu-btn"
-          id="logoutMenuButton"
-          onclick="logoutUser()">
+          id="logoutBtn">
 
-          <div class="menu-icon">
-            🚪
-          </div>
+          <div class="menu-icon">🚪</div>
 
           <div class="menu-item-text">
             تسجيل الخروج
@@ -1839,13 +1787,9 @@
 
         </button>
 
-
       </div>
 
     </aside>
-
-
-    <!-- HERO -->
 
     <section class="hero">
 
@@ -1853,9 +1797,7 @@
 
         <h1>
           مِهراف —
-          <span>
-            مهارتك تستحق الفرصة
-          </span>
+          <span>مهارتك تستحق الفرصة</span>
         </h1>
 
         <p>
@@ -1866,9 +1808,6 @@
       </div>
 
     </section>
-
-
-    <!-- SEARCH -->
 
     <section class="search-section">
 
@@ -1883,21 +1822,22 @@
           <input
             type="text"
             id="searchInput"
-            placeholder="ابحث عن خدمة أو مشروع..."
-            onkeydown="handleSearchKey(event)">
+            placeholder="ابحث عن خدمة أو مشروع...">
 
-          <button onclick="searchSite()">
+          <button id="searchButton">
             بحث
           </button>
 
         </div>
 
+        <div
+          class="search-results"
+          id="searchResults">
+        </div>
+
       </div>
 
     </section>
-
-
-    <!-- SERVICE CATEGORIES -->
 
     <section id="services">
 
@@ -1915,101 +1855,117 @@
 
         </div>
 
-
         <div class="categories">
 
-          <!-- تصميم -->
           <a
             href="services.html?category=تصميم"
             class="category">
 
             <div class="category-icon">🎨</div>
+
             <h3>تصميم</h3>
-            <p>تصميمات إبداعية واحترافية</p>
+
+            <p>
+              تصميمات إبداعية واحترافية
+            </p>
 
           </a>
 
-
-          <!-- كتابة وترجمة -->
           <a
             href="services.html?category=كتابة%20وترجمة"
             class="category">
 
             <div class="category-icon">✍️</div>
+
             <h3>كتابة وترجمة</h3>
-            <p>محتوى وترجمة بمختلف اللغات</p>
+
+            <p>
+              محتوى وترجمة بمختلف اللغات
+            </p>
 
           </a>
 
-
-          <!-- برمجة وتقنية -->
           <a
             href="services.html?category=برمجة%20وتقنية"
             class="category">
 
             <div class="category-icon">💻</div>
+
             <h3>برمجة وتقنية</h3>
-            <p>مواقع وتطبيقات وحلول تقنية</p>
+
+            <p>
+              مواقع وتطبيقات وحلول تقنية
+            </p>
 
           </a>
 
-
-          <!-- تسويق وأعمال -->
           <a
             href="services.html?category=تسويق%20وأعمال"
             class="category">
 
             <div class="category-icon">📊</div>
+
             <h3>تسويق وأعمال</h3>
-            <p>تسويق وإدارة وتطوير الأعمال</p>
+
+            <p>
+              تسويق وإدارة وتطوير الأعمال
+            </p>
 
           </a>
 
-
-          <!-- إدخال بيانات -->
           <a
             href="services.html?category=إدخال%20بيانات"
             class="category">
 
             <div class="category-icon">📁</div>
+
             <h3>إدخال بيانات</h3>
-            <p>تنظيم وتنسيق البيانات</p>
+
+            <p>
+              تنظيم وتنسيق البيانات
+            </p>
 
           </a>
 
-
-          <!-- فيديو وصوت -->
           <a
             href="services.html?category=فيديو%20وصوت"
             class="category">
 
             <div class="category-icon">🎬</div>
+
             <h3>فيديو وصوت</h3>
-            <p>مونتاج وتحرير وإنتاج المحتوى</p>
+
+            <p>
+              مونتاج وتحرير وإنتاج المحتوى
+            </p>
 
           </a>
 
-
-          <!-- استشارات -->
           <a
             href="services.html?category=استشارات"
             class="category">
 
             <div class="category-icon">⚖️</div>
+
             <h3>استشارات</h3>
-            <p>خبرات واستشارات متخصصة</p>
+
+            <p>
+              خبرات واستشارات متخصصة
+            </p>
 
           </a>
 
-
-          <!-- خدمات أخرى -->
           <a
             href="services.html?category=خدمات%20أخرى"
             class="category">
 
             <div class="category-icon">🛠️</div>
+
             <h3>خدمات أخرى</h3>
-            <p>خدمات متنوعة حسب احتياجك</p>
+
+            <p>
+              خدمات متنوعة حسب احتياجك
+            </p>
 
           </a>
 
@@ -2018,9 +1974,6 @@
       </div>
 
     </section>
-
-
-    <!-- FEATURED REAL SERVICES -->
 
     <section id="featuredServices">
 
@@ -2038,7 +1991,6 @@
 
         </div>
 
-
         <div
           class="cards"
           id="featuredServicesGrid">
@@ -2052,9 +2004,6 @@
       </div>
 
     </section>
-
-
-    <!-- PROJECTS -->
 
     <section id="projects">
 
@@ -2072,29 +2021,7 @@
 
         </div>
 
-
         <div class="cards">
-
-          <div class="card">
-
-            <div class="card-content">
-
-              <h3>
-                تصميم هوية بصرية
-              </h3>
-
-              <p>
-                أبحث عن مصمم لإنشاء هوية بصرية لمشروع جديد.
-              </p>
-
-              <div class="price">
-                $50 - $100
-              </div>
-
-            </div>
-
-          </div>
-
 
           <div class="card">
 
@@ -2115,7 +2042,6 @@
             </div>
 
           </div>
-
 
           <div class="card">
 
@@ -2143,9 +2069,6 @@
 
     </section>
 
-
-    <!-- PROFESSIONALS -->
-
     <section id="professionals">
 
       <div class="container">
@@ -2161,7 +2084,6 @@
           </p>
 
         </div>
-
 
         <div class="cards">
 
@@ -2181,7 +2103,6 @@
 
           </div>
 
-
           <div class="card">
 
             <div class="card-content">
@@ -2197,7 +2118,6 @@
             </div>
 
           </div>
-
 
           <div class="card">
 
@@ -2221,9 +2141,6 @@
 
     </section>
 
-
-    <!-- CTA -->
-
     <section class="cta">
 
       <h2>
@@ -2244,9 +2161,6 @@
 
     </section>
 
-
-    <!-- FOOTER -->
-
     <footer>
 
       <strong>
@@ -2263,754 +2177,1244 @@
 
     </footer>
 
-
   </div>
 
-
   <!-- JAVASCRIPT -->
+    
+  <script>
+    let currentUser = null;
+    let notificationTimer = null;
 
-    <script>
-  let currentUser = null;
-  let notificationTimer = null;
+    const authGate =
+      document.getElementById("authGate");
 
-  const authGate = document.getElementById("authGate");
-  const appContent = document.getElementById("appContent");
-  const menuBtn = document.getElementById("menuBtn");
-  const sideMenu = document.getElementById("sideMenu");
-  const menuOverlay = document.getElementById("menuOverlay");
-  const closeMenuBtn = document.getElementById("closeMenuBtn");
-  const moreMenuBtn = document.getElementById("moreMenuBtn");
-  const moreMenu = document.getElementById("moreMenu");
-  const logoutBtn = document.getElementById("logoutBtn");
+    const appContent =
+      document.getElementById("appContent");
 
-  const notificationBtn =
-    document.getElementById("notificationBtn");
-  const notificationPanel =
-    document.getElementById("notificationPanel");
-  const notificationList =
-    document.getElementById("notificationList");
-  const notificationBadge =
-    document.getElementById("notificationBadge");
-  const notificationEmpty =
-    document.getElementById("notificationEmpty");
-  const markAllReadBtn =
-    document.getElementById("markAllReadBtn");
+    const menuBtn =
+      document.getElementById("menuBtn");
 
-  function escapeHtml(value) {
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
+    const sideMenu =
+      document.getElementById("sideMenu");
 
-  function formatDate(value) {
-    if (!value) {
-      return "";
+    const menuOverlay =
+      document.getElementById("menuOverlay");
+
+    const closeMenuBtn =
+      document.getElementById("closeMenuBtn");
+
+    const moreMenuBtn =
+      document.getElementById("moreMenuBtn");
+
+    const moreMenu =
+      document.getElementById("moreMenu");
+
+    const logoutBtn =
+      document.getElementById("logoutBtn");
+
+    const notificationBtn =
+      document.getElementById("notificationBtn");
+
+    const notificationPanel =
+      document.getElementById("notificationPanel");
+
+    const notificationList =
+      document.getElementById("notificationList");
+
+    const notificationBadge =
+      document.getElementById("notificationBadge");
+
+    const notificationEmpty =
+      document.getElementById("notificationEmpty");
+
+    const markAllReadBtn =
+      document.getElementById("markAllReadBtn");
+
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
 
-    const date = new Date(value);
 
-    if (Number.isNaN(date.getTime())) {
-      return "";
-    }
-
-    return date.toLocaleDateString("ar-SY", {
-      year: "numeric",
-      month: "short",
-      day: "numeric"
-    });
-  }
-
-  function getUserDisplayName(user) {
-    return (
-      user?.full_name ||
-      user?.name ||
-      user?.username ||
-      "مستخدم مهراف"
-    );
-  }
-
-  function getUserAvatar(user) {
-    return (
-      user?.avatar ||
-      user?.avatar_url ||
-      user?.profile_image ||
-      ""
-    );
-  }
-
-  function showLoggedInState(user) {
-    currentUser = user;
-
-    if (authGate) {
-      authGate.style.display = "none";
-    }
-
-    if (appContent) {
-      appContent.style.display = "block";
-    }
-
-    const userNameElements =
-      document.querySelectorAll("[data-user-name]");
-
-    userNameElements.forEach((element) => {
-      element.textContent = getUserDisplayName(user);
-    });
-
-    const roleElements =
-      document.querySelectorAll("[data-user-role]");
-
-    roleElements.forEach((element) => {
-      element.textContent =
-        user?.role === "freelancer"
-          ? "منفذ خدمات"
-          : "عضو في مهراف";
-    });
-
-    const avatarElements =
-      document.querySelectorAll("[data-user-avatar]");
-
-    avatarElements.forEach((element) => {
-      const avatar = getUserAvatar(user);
-
-      if (avatar) {
-        element.src = avatar;
-        element.style.display = "block";
-      } else {
-        element.style.display = "none";
+    function formatDate(value) {
+      if (!value) {
+        return "";
       }
-    });
 
-    if (menuBtn) {
-      menuBtn.style.display = "flex";
-    }
+      const date = new Date(value);
 
-    loadNotifications();
-    startNotificationPolling();
-    loadFeaturedServices();
-  }
+      if (Number.isNaN(date.getTime())) {
+        return "";
+      }
 
-  function showLoggedOutState() {
-    currentUser = null;
-
-    if (authGate) {
-      authGate.style.display = "flex";
-    }
-
-    if (appContent) {
-      appContent.style.display = "none";
-    }
-
-    if (menuBtn) {
-      menuBtn.style.display = "none";
-    }
-
-    stopNotificationPolling();
-  }
-
-  async function checkLogin() {
-    try {
-      const response = await fetch("/api/me", {
-        method: "GET",
-        credentials: "include",
-        cache: "no-store"
+      return date.toLocaleDateString("ar-SY", {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
       });
-
-      const data = await response.json();
-
-      if (
-        response.ok &&
-        data &&
-        data.success &&
-        data.user
-      ) {
-        showLoggedInState(data.user);
-      } else {
-        showLoggedOutState();
-      }
-    } catch (error) {
-      console.error("Login check error:", error);
-      showLoggedOutState();
-    }
-  }
-
-  function openMenu() {
-    if (sideMenu) {
-      sideMenu.classList.add("open");
     }
 
-    if (menuOverlay) {
-      menuOverlay.classList.add("show");
-    }
 
-    document.body.classList.add("menu-open");
-  }
-
-  function closeMenu() {
-    if (sideMenu) {
-      sideMenu.classList.remove("open");
-    }
-
-    if (menuOverlay) {
-      menuOverlay.classList.remove("show");
-    }
-
-    document.body.classList.remove("menu-open");
-  }
-
-  if (menuBtn) {
-    menuBtn.addEventListener("click", () => {
-      openMenu();
-    });
-  }
-
-  if (closeMenuBtn) {
-    closeMenuBtn.addEventListener("click", () => {
-      closeMenu();
-    });
-  }
-
-  if (menuOverlay) {
-    menuOverlay.addEventListener("click", () => {
-      closeMenu();
-    });
-  }
-
-  if (moreMenuBtn) {
-    moreMenuBtn.addEventListener("click", (event) => {
-      event.stopPropagation();
-
-      if (moreMenu) {
-        moreMenu.classList.toggle("show");
-      }
-    });
-  }
-
-  document.addEventListener("click", (event) => {
-    if (
-      moreMenu &&
-      !moreMenu.contains(event.target) &&
-      event.target !== moreMenuBtn
-    ) {
-      moreMenu.classList.remove("show");
-    }
-  });
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", async () => {
-      try {
-        await fetch("/api/logout", {
-          method: "POST",
-          credentials: "include"
-        });
-      } catch (error) {
-        console.error("Logout error:", error);
-      }
-
-      closeMenu();
-      showLoggedOutState();
-    });
-  }
-
-  async function loadFeaturedServices() {
-    const container =
-      document.getElementById("featuredServices");
-
-    if (!container) {
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/services", {
-        method: "GET",
-        credentials: "include",
-        cache: "no-store"
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        return;
-      }
-
-      const services = Array.isArray(data.services)
-        ? data.services
-        : [];
-
-      const featured = services.slice(0, 6);
-
-      if (!featured.length) {
-        container.innerHTML = `
-          <div class="empty-state">
-            لا توجد خدمات منشورة حاليا
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = featured
-        .map((service) => {
-          const title =
-            escapeHtml(service.title || "خدمة بدون عنوان");
-
-          const description =
-            escapeHtml(
-              service.description || "لا يوجد وصف للخدمة"
-            );
-
-          const category =
-            escapeHtml(service.category || "خدمات أخرى");
-
-          const provider =
-            escapeHtml(
-              service.provider_name ||
-              service.full_name ||
-              service.provider ||
-              "منفذ مهراف"
-            );
-
-          const price =
-            service.price !== undefined &&
-            service.price !== null
-              ? escapeHtml(service.price)
-              : "";
-
-          return `
-            <div class="service-card">
-              <div class="service-card-category">
-                ${category}
-              </div>
-
-              <h3>${title}</h3>
-
-              <p>${description}</p>
-
-              <div class="service-card-footer">
-                <span>${provider}</span>
-
-                ${
-                  price
-                    ? `<strong>${price}</strong>`
-                    : ""
-                }
-              </div>
-            </div>
-          `;
-        })
-        .join("");
-
-      container
-        .querySelectorAll(".service-card")
-        .forEach((card) => {
-          card.addEventListener("click", () => {
-            window.location.hash = "featuredServices";
-          });
-        });
-    } catch (error) {
-      console.error(
-        "Load featured services error:",
-        error
+    function getUserDisplayName(user) {
+      return (
+        user?.full_name ||
+        user?.name ||
+        user?.username ||
+        "مستخدم مهراف"
       );
     }
-  }
 
-  async function searchServices() {
-    const input =
-      document.getElementById("searchInput");
 
-    const results =
-      document.getElementById("searchResults");
-
-    if (!input || !results) {
-      return;
+    function getUserAvatar(user) {
+      return (
+        user?.avatar ||
+        user?.avatar_url ||
+        user?.profile_image ||
+        ""
+      );
     }
 
-    const query =
-      input.value.trim().toLowerCase();
 
-    if (!query) {
-      results.innerHTML = "";
-      return;
-    }
+    function showLoggedInState(user) {
+      currentUser = user;
 
-    try {
-      const response = await fetch("/api/services", {
-        method: "GET",
-        credentials: "include",
-        cache: "no-store"
+      if (authGate) {
+        authGate.style.display = "none";
+      }
+
+      if (appContent) {
+        appContent.style.display = "block";
+      }
+
+      const userNameElements =
+        document.querySelectorAll(
+          "[data-user-name]"
+        );
+
+      userNameElements.forEach((element) => {
+        element.textContent =
+          getUserDisplayName(user);
       });
 
-      const data = await response.json();
 
-      if (!response.ok || !data.success) {
+      const roleElements =
+        document.querySelectorAll(
+          "[data-user-role]"
+        );
+
+      roleElements.forEach((element) => {
+        element.textContent =
+          user?.role === "freelancer"
+            ? "منفذ خدمات"
+            : "عضو في مهراف";
+      });
+
+
+      const avatarElements =
+        document.querySelectorAll(
+          "[data-user-avatar]"
+        );
+
+      avatarElements.forEach((element) => {
+        const avatar =
+          getUserAvatar(user);
+
+        if (avatar) {
+          element.src = avatar;
+          element.style.display = "block";
+        } else {
+          element.style.display = "flex";
+          element.textContent =
+            getUserDisplayName(user)
+              .charAt(0)
+              .toUpperCase();
+        }
+      });
+
+
+      if (menuBtn) {
+        menuBtn.style.display = "flex";
+      }
+
+
+      loadNotifications();
+      startNotificationPolling();
+      loadFeaturedServices();
+    }
+
+
+    function showLoggedOutState() {
+      currentUser = null;
+
+      if (authGate) {
+        authGate.style.display = "flex";
+      }
+
+      if (appContent) {
+        appContent.style.display = "none";
+      }
+
+      if (menuBtn) {
+        menuBtn.style.display = "none";
+      }
+
+      stopNotificationPolling();
+    }
+
+
+    async function checkLogin() {
+      try {
+        const response =
+          await fetch("/api/me", {
+            method: "GET",
+            credentials: "include",
+            cache: "no-store"
+          });
+
+        const data =
+          await response.json();
+
+        if (
+          response.ok &&
+          data &&
+          data.success &&
+          data.user
+        ) {
+          showLoggedInState(data.user);
+        } else {
+          showLoggedOutState();
+        }
+
+      } catch (error) {
+        console.error(
+          "Login check error:",
+          error
+        );
+
+        showLoggedOutState();
+      } finally {
+        const loading =
+          document.getElementById(
+            "authLoading"
+          );
+
+        if (loading) {
+          loading.style.display = "none";
+        }
+      }
+    }
+
+
+    function openMenu() {
+      if (sideMenu) {
+        sideMenu.classList.add("active");
+        sideMenu.setAttribute(
+          "aria-hidden",
+          "false"
+        );
+      }
+
+      if (menuOverlay) {
+        menuOverlay.classList.add("active");
+      }
+
+      if (menuBtn) {
+        menuBtn.setAttribute(
+          "aria-expanded",
+          "true"
+        );
+      }
+
+      document.body.classList.add(
+        "menu-open"
+      );
+    }
+
+
+    function closeMenu() {
+      if (sideMenu) {
+        sideMenu.classList.remove("active");
+        sideMenu.setAttribute(
+          "aria-hidden",
+          "true"
+        );
+      }
+
+      if (menuOverlay) {
+        menuOverlay.classList.remove("active");
+      }
+
+      if (menuBtn) {
+        menuBtn.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+      }
+
+      document.body.classList.remove(
+        "menu-open"
+      );
+    }
+
+
+    if (menuBtn) {
+      menuBtn.addEventListener(
+        "click",
+        () => {
+          if (
+            sideMenu &&
+            sideMenu.classList.contains(
+              "active"
+            )
+          ) {
+            closeMenu();
+          } else {
+            openMenu();
+          }
+        }
+      );
+    }
+
+
+    if (closeMenuBtn) {
+      closeMenuBtn.addEventListener(
+        "click",
+        () => {
+          closeMenu();
+        }
+      );
+    }
+
+
+    if (menuOverlay) {
+      menuOverlay.addEventListener(
+        "click",
+        () => {
+          closeMenu();
+        }
+      );
+    }
+
+
+    if (moreMenuBtn) {
+      moreMenuBtn.addEventListener(
+        "click",
+        (event) => {
+          event.stopPropagation();
+
+          if (moreMenu) {
+            moreMenu.classList.toggle(
+              "active"
+            );
+
+            moreMenuBtn.classList.toggle(
+              "active"
+            );
+          }
+        }
+      );
+    }
+
+
+    if (moreMenu) {
+      moreMenu
+        .querySelectorAll("a")
+        .forEach((link) => {
+          link.addEventListener(
+            "click",
+            () => {
+              closeMenu();
+            }
+          );
+        });
+    }
+
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener(
+        "click",
+        async () => {
+
+          logoutBtn.disabled = true;
+
+          try {
+            await fetch(
+              "/api/logout",
+              {
+                method: "POST",
+                credentials: "include"
+              }
+            );
+
+          } catch (error) {
+            console.error(
+              "Logout error:",
+              error
+            );
+          }
+
+          closeMenu();
+          showLoggedOutState();
+
+          logoutBtn.disabled = false;
+        }
+      );
+    }
+
+
+    async function loadFeaturedServices() {
+      const container =
+        document.getElementById(
+          "featuredServicesGrid"
+        );
+
+      if (!container) {
+        return;
+      }
+
+      try {
+        const response =
+          await fetch(
+            "/api/services",
+            {
+              method: "GET",
+              credentials: "include",
+              cache: "no-store"
+            }
+          );
+
+        const data =
+          await response.json();
+
+        if (
+          !response.ok ||
+          !data.success
+        ) {
+          container.innerHTML = `
+            <div class="services-error">
+              تعذر تحميل الخدمات حاليا
+            </div>
+          `;
+          return;
+        }
+
+        const services =
+          Array.isArray(data.services)
+            ? data.services
+            : [];
+
+        const featured =
+          services.slice(0, 6);
+
+
+        if (!featured.length) {
+          container.innerHTML = `
+            <div class="services-empty">
+              لا توجد خدمات منشورة حاليا
+            </div>
+          `;
+
+          return;
+        }
+
+
+        container.innerHTML =
+          featured
+            .map((service) => {
+
+              const title =
+                escapeHtml(
+                  service.title ||
+                  "خدمة بدون عنوان"
+                );
+
+              const description =
+                escapeHtml(
+                  service.description ||
+                  "لا يوجد وصف للخدمة"
+                );
+
+              const category =
+                escapeHtml(
+                  service.category ||
+                  "خدمات أخرى"
+                );
+
+              const provider =
+                escapeHtml(
+                  service.provider_name ||
+                  service.full_name ||
+                  service.provider ||
+                  "منفذ مهراف"
+                );
+
+              const price =
+                service.price !== undefined &&
+                service.price !== null
+                  ? escapeHtml(
+                      service.price
+                    )
+                  : "";
+
+
+              return `
+                <div
+                  class="card service-card"
+                  data-service-id="${Number(
+                    service.id || 0
+                  )}">
+
+                  <div class="card-image">
+
+                    <span
+                      class="service-image-icon">
+                      💼
+                    </span>
+
+                  </div>
+
+                  <div class="card-content">
+
+                    <h3>
+                      ${title}
+                    </h3>
+
+                    <p>
+                      ${description}
+                    </p>
+
+                    <div class="service-meta">
+
+                      <span
+                        class="service-category">
+                        ${category}
+                      </span>
+
+                      <span
+                        class="service-provider">
+                        ${provider}
+                      </span>
+
+                    </div>
+
+                    ${
+                      price
+                        ? `
+                          <div class="price">
+                            ${price}
+                          </div>
+                        `
+                        : ""
+                    }
+
+                  </div>
+
+                </div>
+              `;
+            })
+            .join("");
+
+
+        container
+          .querySelectorAll(
+            ".service-card"
+          )
+          .forEach((card) => {
+
+            card.addEventListener(
+              "click",
+              () => {
+
+                const id =
+                  Number(
+                    card.dataset.serviceId
+                  );
+
+                if (
+                  Number.isFinite(id) &&
+                  id > 0
+                ) {
+                  window.location.href =
+                    "service-details.html?id=" +
+                    encodeURIComponent(id);
+                }
+
+              }
+            );
+
+          });
+
+      } catch (error) {
+
+        console.error(
+          "Load featured services error:",
+          error
+        );
+
+        container.innerHTML = `
+          <div class="services-error">
+            حدث خطأ أثناء تحميل الخدمات
+          </div>
+        `;
+      }
+    }
+
+
+    async function searchServices() {
+      const input =
+        document.getElementById(
+          "searchInput"
+        );
+
+      const results =
+        document.getElementById(
+          "searchResults"
+        );
+
+      if (!input || !results) {
+        return;
+      }
+
+      const query =
+        input.value
+          .trim()
+          .toLowerCase();
+
+
+      if (!query) {
         results.innerHTML = "";
         return;
       }
 
-      const services = Array.isArray(data.services)
-        ? data.services
-        : [];
 
-      const filtered = services.filter((service) => {
-        const title =
-          String(service.title || "").toLowerCase();
-
-        const description =
-          String(
-            service.description || ""
-          ).toLowerCase();
-
-        const category =
-          String(
-            service.category || ""
-          ).toLowerCase();
-
-        const provider =
-          String(
-            service.provider_name ||
-            service.full_name ||
-            service.provider ||
-            ""
-          ).toLowerCase();
-
-        return (
-          title.includes(query) ||
-          description.includes(query) ||
-          category.includes(query) ||
-          provider.includes(query)
-        );
-      });
-
-      const limited = filtered.slice(0, 6);
-
-      if (!limited.length) {
-        results.innerHTML = `
-          <div class="empty-state">
-            لم يتم العثور على خدمات مطابقة
-          </div>
-        `;
-        return;
-      }
-
-      results.innerHTML = limited
-        .map((service) => {
-          return `
-            <div class="search-result-item">
-              <h3>
-                ${escapeHtml(
-                  service.title ||
-                  "خدمة بدون عنوان"
-                )}
-              </h3>
-
-              <p>
-                ${escapeHtml(
-                  service.description ||
-                  ""
-                )}
-              </p>
-
-              <span>
-                ${escapeHtml(
-                  service.category ||
-                  "خدمات أخرى"
-                )}
-              </span>
-            </div>
-          `;
-        })
-        .join("");
-    } catch (error) {
-      console.error(
-        "Search services error:",
-        error
-      );
-
-      results.innerHTML = `
-        <div class="empty-state">
-          حدث خطأ أثناء البحث
-        </div>
-      `;
-    }
-  }
-
-  const searchInput =
-    document.getElementById("searchInput");
-
-  if (searchInput) {
-    let searchTimeout = null;
-
-    searchInput.addEventListener(
-      "input",
-      () => {
-        clearTimeout(searchTimeout);
-
-        searchTimeout = setTimeout(() => {
-          searchServices();
-        }, 300);
-      }
-    );
-  }
-
-  async function loadNotifications() {
-    if (!notificationList) {
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        "/api/notifications",
-        {
-          method: "GET",
-          credentials: "include",
-          cache: "no-store"
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        return;
-      }
-
-      const notifications =
-        Array.isArray(data.notifications)
-          ? data.notifications
-          : [];
-
-      const unreadCount =
-        notifications.filter(
-          (notification) =>
-            !notification.is_read &&
-            !notification.read
-        ).length;
-
-      if (notificationBadge) {
-        if (unreadCount > 0) {
-          notificationBadge.textContent =
-            unreadCount > 99
-              ? "99+"
-              : String(unreadCount);
-
-          notificationBadge.style.display =
-            "flex";
-        } else {
-          notificationBadge.style.display =
-            "none";
-        }
-      }
-
-      if (!notifications.length) {
-        notificationList.innerHTML = "";
-        if (notificationEmpty) {
-          notificationEmpty.style.display =
-            "block";
-        }
-        return;
-      }
-
-      if (notificationEmpty) {
-        notificationEmpty.style.display =
-          "none";
-      }
-
-      notificationList.innerHTML =
-        notifications
-          .map((notification) => {
-            const isRead =
-              Boolean(
-                notification.is_read ||
-                notification.read
-              );
-
-            const notificationId =
-              Number(notification.id);
-
-            const title =
-              escapeHtml(
-                notification.title ||
-                "إشعار جديد"
-              );
-
-            const message =
-              escapeHtml(
-                notification.message ||
-                notification.content ||
-                ""
-              );
-
-            const date =
-              formatDate(
-                notification.created_at ||
-                notification.createdAt
-              );
-
-            return `
-              <div
-                class="notification-item ${
-                  isRead ? "read" : "unread"
-                }"
-                data-notification-id="${notificationId}"
-              >
-                <div class="notification-content">
-                  <strong>${title}</strong>
-
-                  <p>${message}</p>
-
-                  ${
-                    date
-                      ? `<small>${date}</small>`
-                      : ""
-                  }
-                </div>
-              </div>
-            `;
-          })
-          .join("");
-
-      notificationList
-        .querySelectorAll(
-          ".notification-item"
-        )
-        .forEach((item) => {
-          item.addEventListener(
-            "click",
-            async () => {
-              const id =
-                Number(
-                  item.dataset.notificationId
-                );
-
-              if (
-                !Number.isFinite(id) ||
-                id <= 0
-              ) {
-                return;
-              }
-
-              try {
-                await fetch(
-                  `/api/notifications/${id}/read`,
-                  {
-                    method: "POST",
-                    credentials: "include"
-                  }
-                );
-
-                item.classList.remove(
-                  "unread"
-                );
-
-                item.classList.add("read");
-
-                loadNotifications();
-              } catch (error) {
-                console.error(
-                  "Mark notification read error:",
-                  error
-                );
-              }
+      try {
+        const response =
+          await fetch(
+            "/api/services",
+            {
+              method: "GET",
+              credentials: "include",
+              cache: "no-store"
             }
           );
-        });
-    } catch (error) {
-      console.error(
-        "Load notifications error:",
-        error
+
+        const data =
+          await response.json();
+
+
+        if (
+          !response.ok ||
+          !data.success
+        ) {
+          results.innerHTML = "";
+          return;
+        }
+
+
+        const services =
+          Array.isArray(data.services)
+            ? data.services
+            : [];
+
+
+        const filtered =
+          services.filter(
+            (service) => {
+
+              const title =
+                String(
+                  service.title || ""
+                ).toLowerCase();
+
+              const description =
+                String(
+                  service.description || ""
+                ).toLowerCase();
+
+              const category =
+                String(
+                  service.category || ""
+                ).toLowerCase();
+
+              const provider =
+                String(
+                  service.provider_name ||
+                  service.full_name ||
+                  service.provider ||
+                  ""
+                ).toLowerCase();
+
+
+              return (
+                title.includes(query) ||
+                description.includes(query) ||
+                category.includes(query) ||
+                provider.includes(query)
+              );
+            }
+          );
+
+
+        const limited =
+          filtered.slice(0, 6);
+
+
+        if (!limited.length) {
+          results.innerHTML = `
+            <div class="empty-state">
+              لم يتم العثور على خدمات مطابقة
+            </div>
+          `;
+
+          return;
+        }
+
+
+        results.innerHTML =
+          limited
+            .map((service) => {
+
+              return `
+                <div
+                  class="search-result-item">
+
+                  <h3>
+                    ${escapeHtml(
+                      service.title ||
+                      "خدمة بدون عنوان"
+                    )}
+                  </h3>
+
+                  <p>
+                    ${escapeHtml(
+                      service.description ||
+                      ""
+                    )}
+                  </p>
+
+                  <span>
+                    ${escapeHtml(
+                      service.category ||
+                      "خدمات أخرى"
+                    )}
+                  </span>
+
+                </div>
+              `;
+            })
+            .join("");
+
+      } catch (error) {
+
+        console.error(
+          "Search services error:",
+          error
+        );
+
+        results.innerHTML = `
+          <div class="empty-state">
+            حدث خطأ أثناء البحث
+          </div>
+        `;
+      }
+    }
+
+
+    const searchInput =
+      document.getElementById(
+        "searchInput"
+      );
+
+    const searchButton =
+      document.getElementById(
+        "searchButton"
+      );
+
+
+    if (searchInput) {
+
+      let searchTimeout = null;
+
+      searchInput.addEventListener(
+        "input",
+        () => {
+
+          clearTimeout(
+            searchTimeout
+          );
+
+          searchTimeout =
+            setTimeout(() => {
+              searchServices();
+            }, 300);
+
+        }
+      );
+
+      searchInput.addEventListener(
+        "keydown",
+        (event) => {
+
+          if (
+            event.key === "Enter"
+          ) {
+            event.preventDefault();
+            searchServices();
+          }
+
+        }
       );
     }
-  }
 
-  function startNotificationPolling() {
-    stopNotificationPolling();
 
-    notificationTimer =
-      setInterval(() => {
-        if (currentUser) {
-          loadNotifications();
+    if (searchButton) {
+      searchButton.addEventListener(
+        "click",
+        () => {
+          searchServices();
         }
-      }, 30000);
-  }
-
-  function stopNotificationPolling() {
-    if (notificationTimer) {
-      clearInterval(notificationTimer);
-      notificationTimer = null;
+      );
     }
-  }
 
-  if (notificationBtn) {
-    notificationBtn.addEventListener(
+
+    async function loadNotifications() {
+      if (!notificationList) {
+        return;
+      }
+
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/notifications",
+            {
+              method: "GET",
+              credentials: "include",
+              cache: "no-store"
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (
+          !response.ok ||
+          !data.success
+        ) {
+          return;
+        }
+
+
+        const notifications =
+          Array.isArray(
+            data.notifications
+          )
+            ? data.notifications
+            : [];
+
+
+        const unreadCount =
+          notifications.filter(
+            (notification) =>
+              !notification.is_read &&
+              !notification.read
+          ).length;
+
+
+        if (notificationBadge) {
+
+          if (unreadCount > 0) {
+
+            notificationBadge.textContent =
+              unreadCount > 99
+                ? "99+"
+                : String(
+                    unreadCount
+                  );
+
+            notificationBadge.style.display =
+              "flex";
+
+          } else {
+
+            notificationBadge.style.display =
+              "none";
+          }
+        }
+
+
+        if (!notifications.length) {
+
+          notificationList.innerHTML = "";
+
+          if (notificationEmpty) {
+            notificationEmpty.style.display =
+              "block";
+          }
+
+          return;
+        }
+
+
+        if (notificationEmpty) {
+          notificationEmpty.style.display =
+            "none";
+        }
+
+
+        notificationList.innerHTML =
+          notifications
+            .map((notification) => {
+
+              const isRead =
+                Boolean(
+                  notification.is_read ||
+                  notification.read
+                );
+
+
+              const notificationId =
+                Number(
+                  notification.id
+                );
+
+
+              const title =
+                escapeHtml(
+                  notification.title ||
+                  "إشعار جديد"
+                );
+
+
+              const message =
+                escapeHtml(
+                  notification.message ||
+                  notification.content ||
+                  ""
+                );
+
+
+              const date =
+                formatDate(
+                  notification.created_at ||
+                  notification.createdAt
+                );
+
+
+              return `
+                <div
+                  class="notification-item ${
+                    isRead
+                      ? "read"
+                      : "unread"
+                  }"
+                  data-notification-id="${notificationId}">
+
+                  <div
+                    class="notification-item-icon">
+                    🔔
+                  </div>
+
+                  <div
+                    class="notification-item-content">
+
+                    <span
+                      class="notification-item-title">
+                      ${title}
+                    </span>
+
+                    <span
+                      class="notification-item-message">
+                      ${message}
+                    </span>
+
+                    ${
+                      date
+                        ? `
+                          <span
+                            class="notification-item-time">
+                            ${date}
+                          </span>
+                        `
+                        : ""
+                    }
+
+                  </div>
+
+                  ${
+                    !isRead
+                      ? `
+                        <span
+                          class="notification-unread-dot">
+                        </span>
+                      `
+                      : ""
+                  }
+
+                </div>
+              `;
+            })
+            .join("");
+
+
+        notificationList
+          .querySelectorAll(
+            ".notification-item"
+          )
+          .forEach((item) => {
+
+            item.addEventListener(
+              "click",
+              async () => {
+
+                const id =
+                  Number(
+                    item.dataset
+                      .notificationId
+                  );
+
+
+                if (
+                  !Number.isFinite(id) ||
+                  id <= 0
+                ) {
+                  return;
+                }
+
+
+                try {
+
+                  await fetch(
+                    `/api/notifications/${id}/read`,
+                    {
+                      method: "POST",
+                      credentials: "include"
+                    }
+                  );
+
+
+                  item.classList.remove(
+                    "unread"
+                  );
+
+                  item.classList.add(
+                    "read"
+                  );
+
+
+                  loadNotifications();
+
+                } catch (error) {
+
+                  console.error(
+                    "Mark notification read error:",
+                    error
+                  );
+                }
+
+              }
+            );
+
+          });
+
+      } catch (error) {
+
+        console.error(
+          "Load notifications error:",
+          error
+        );
+      }
+    }
+
+
+    function startNotificationPolling() {
+      stopNotificationPolling();
+
+      notificationTimer =
+        setInterval(() => {
+
+          if (currentUser) {
+            loadNotifications();
+          }
+
+        }, 30000);
+    }
+
+
+    function stopNotificationPolling() {
+      if (notificationTimer) {
+        clearInterval(
+          notificationTimer
+        );
+
+        notificationTimer = null;
+      }
+    }
+
+
+    if (notificationBtn) {
+
+      notificationBtn.addEventListener(
+        "click",
+        (event) => {
+
+          event.stopPropagation();
+
+          if (notificationPanel) {
+
+            notificationPanel.classList.toggle(
+              "active"
+            );
+
+            const isOpen =
+              notificationPanel.classList.contains(
+                "active"
+              );
+
+            notificationBtn.setAttribute(
+              "aria-expanded",
+              isOpen
+                ? "true"
+                : "false"
+            );
+
+            notificationPanel.setAttribute(
+              "aria-hidden",
+              isOpen
+                ? "false"
+                : "true"
+            );
+
+
+            if (isOpen) {
+              loadNotifications();
+            }
+          }
+        }
+      );
+    }
+
+
+    if (markAllReadBtn) {
+
+      markAllReadBtn.addEventListener(
+        "click",
+        async () => {
+
+          try {
+
+            await fetch(
+              "/api/notifications/read-all",
+              {
+                method: "POST",
+                credentials: "include"
+              }
+            );
+
+            loadNotifications();
+
+          } catch (error) {
+
+            console.error(
+              "Mark all notifications read error:",
+              error
+            );
+          }
+
+        }
+      );
+    }
+
+
+    document.addEventListener(
       "click",
       (event) => {
-        event.stopPropagation();
-
-        if (notificationPanel) {
-          notificationPanel.classList.toggle(
-            "show"
-          );
-        }
 
         if (
           notificationPanel &&
-          notificationPanel.classList.contains(
-            "show"
+          notificationBtn &&
+          !notificationPanel.contains(
+            event.target
+          ) &&
+          !notificationBtn.contains(
+            event.target
           )
         ) {
-          loadNotifications();
+
+          notificationPanel.classList.remove(
+            "active"
+          );
+
+          notificationBtn.setAttribute(
+            "aria-expanded",
+            "false"
+          );
+
+          notificationPanel.setAttribute(
+            "aria-hidden",
+            "true"
+          );
         }
+
+
+        if (
+          moreMenu &&
+          moreMenuBtn &&
+          !moreMenu.contains(
+            event.target
+          ) &&
+          !moreMenuBtn.contains(
+            event.target
+          )
+        ) {
+
+          moreMenu.classList.remove(
+            "active"
+          );
+
+          moreMenuBtn.classList.remove(
+            "active"
+          );
+        }
+
       }
     );
-  }
 
-  if (markAllReadBtn) {
-    markAllReadBtn.addEventListener(
-      "click",
-      async () => {
-        try {
-          await fetch(
-            "/api/notifications/read-all",
-            {
-              method: "POST",
-              credentials: "include"
+
+    document
+      .querySelectorAll(
+        ".side-menu a"
+      )
+      .forEach((link) => {
+
+        link.addEventListener(
+          "click",
+          () => {
+
+            if (
+              link.getAttribute(
+                "href"
+              ) !== "#"
+            ) {
+              closeMenu();
             }
-          );
 
-          loadNotifications();
-        } catch (error) {
-          console.error(
-            "Mark all notifications read error:",
-            error
-          );
-        }
-      }
-    );
-  }
-
-  document.addEventListener(
-    "click",
-    (event) => {
-      if (
-        notificationPanel &&
-        notificationBtn &&
-        !notificationPanel.contains(
-          event.target
-        ) &&
-        !notificationBtn.contains(
-          event.target
-        )
-      ) {
-        notificationPanel.classList.remove(
-          "show"
+          }
         );
-      }
-    }
-  );
 
-  checkLogin();
-</script>
+      });
+
+
+    checkLogin();
+  </script>
 
 </body>
 </html>
