@@ -1,7 +1,12 @@
-<!DOCTYPE html><html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>الخدمات | مِهراف</title>  <style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>الخدمات | مِهراف</title>
+
+  <style>
     * {
       box-sizing: border-box;
       margin: 0;
@@ -9,21 +14,16 @@
     }
 
     body {
-      font-family: Tahoma, Arial, sans-serif;
-      background: #f5f7fb;
-      color: #1f2937;
+      font-family: Arial, Tahoma, sans-serif;
+      background: #f6f7fb;
+      color: #222;
       min-height: 100vh;
     }
 
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    /* Header */
-    .header {
+    header {
       background: #ffffff;
       border-bottom: 1px solid #e5e7eb;
+      padding: 16px 20px;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -32,61 +32,51 @@
     .header-inner {
       max-width: 1200px;
       margin: auto;
-      min-height: 70px;
-      padding: 0 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
+      gap: 15px;
     }
 
     .logo {
-      font-size: 25px;
+      text-decoration: none;
+      color: #111827;
+      font-size: 24px;
       font-weight: bold;
-      color: #2563eb;
       white-space: nowrap;
     }
 
-    .nav {
+    .logo span {
+      color: #6d28d9;
+    }
+
+    nav {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 18px;
       flex-wrap: wrap;
     }
 
-    .nav a {
-      padding: 9px 14px;
-      border-radius: 8px;
-      color: #4b5563;
-      font-size: 14px;
-      transition: 0.2s;
+    nav a {
+      color: #374151;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
     }
 
-    .nav a:hover {
-      background: #eff6ff;
-      color: #2563eb;
+    nav a:hover {
+      color: #6d28d9;
     }
 
-    .nav .login {
-      background: #2563eb;
-      color: #ffffff;
-    }
-
-    .nav .login:hover {
-      background: #1d4ed8;
-      color: #ffffff;
-    }
-
-    /* Main */
-    .container {
+    main {
       max-width: 1200px;
-      margin: auto;
+      margin: 0 auto;
       padding: 35px 20px 60px;
     }
 
     .page-title {
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       font-size: 30px;
       color: #111827;
     }
@@ -94,59 +84,116 @@
     .page-description {
       text-align: center;
       color: #6b7280;
-      font-size: 15px;
       margin-bottom: 30px;
+      font-size: 15px;
     }
 
-    /* Filters */
     .filters {
       background: #ffffff;
       border: 1px solid #e5e7eb;
       border-radius: 14px;
-      padding: 16px;
+      padding: 18px;
       margin-bottom: 25px;
-      display: flex;
-      align-items: center;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
       gap: 12px;
-      flex-wrap: wrap;
     }
 
-    .filters label {
-      font-size: 14px;
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .filter-group label {
+      font-size: 13px;
       font-weight: bold;
       color: #374151;
     }
 
-    .category-select {
-      min-width: 210px;
-      padding: 11px 13px;
+    input,
+    select {
+      width: 100%;
+      height: 44px;
       border: 1px solid #d1d5db;
       border-radius: 9px;
-      background: #ffffff;
-      color: #374151;
+      background: #fff;
+      padding: 0 12px;
       font-size: 14px;
       outline: none;
     }
 
-    .category-select:focus {
-      border-color: #2563eb;
+    input:focus,
+    select:focus {
+      border-color: #7c3aed;
     }
 
-    .refresh-btn {
-      border: none;
-      background: #2563eb;
-      color: #ffffff;
-      padding: 11px 18px;
-      border-radius: 9px;
+    .category-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 25px;
+    }
+
+    .category-btn {
+      border: 1px solid #ddd6fe;
+      background: #ffffff;
+      color: #5b21b6;
+      border-radius: 20px;
+      padding: 8px 15px;
       cursor: pointer;
+      font-size: 13px;
+      transition: 0.2s;
+    }
+
+    .category-btn:hover {
+      background: #f5f3ff;
+    }
+
+    .category-btn.active {
+      background: #6d28d9;
+      color: white;
+      border-color: #6d28d9;
+    }
+
+    .services-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      gap: 10px;
+    }
+
+    .services-count {
+      color: #6b7280;
       font-size: 14px;
     }
 
-    .refresh-btn:hover {
-      background: #1d4ed8;
+    .loading {
+      text-align: center;
+      padding: 50px 20px;
+      color: #6b7280;
     }
 
-    /* Services Grid */
+    .error {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .empty {
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 50px 20px;
+      text-align: center;
+      color: #6b7280;
+    }
+
     .services-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -157,10 +204,10 @@
       background: #ffffff;
       border: 1px solid #e5e7eb;
       border-radius: 15px;
-      padding: 20px;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      min-height: 285px;
+      min-height: 330px;
       transition: transform 0.2s, box-shadow 0.2s;
     }
 
@@ -169,20 +216,26 @@
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
     }
 
+    .service-content {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
     .service-category {
       display: inline-block;
       width: fit-content;
-      background: #eff6ff;
-      color: #2563eb;
-      padding: 6px 10px;
+      background: #f3e8ff;
+      color: #6d28d9;
       border-radius: 20px;
+      padding: 5px 10px;
       font-size: 12px;
       margin-bottom: 12px;
     }
 
     .service-title {
       font-size: 19px;
-      font-weight: bold;
       color: #111827;
       margin-bottom: 10px;
       line-height: 1.5;
@@ -191,432 +244,752 @@
     .service-description {
       color: #6b7280;
       font-size: 14px;
-      line-height: 1.8;
-      flex: 1;
+      line-height: 1.7;
+      margin-bottom: 15px;
+
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .service-owner {
+      color: #4b5563;
+      font-size: 13px;
       margin-bottom: 15px;
     }
 
-    .service-footer {
+    .service-bottom {
+      margin-top: auto;
+      padding-top: 15px;
       border-top: 1px solid #f0f0f0;
-      padding-top: 14px;
-    }
-
-    .freelancer {
-      color: #4b5563;
-      font-size: 13px;
-      margin-bottom: 12px;
-    }
-
-    .freelancer strong {
-      color: #111827;
-    }
-
-    .bottom-row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       gap: 10px;
     }
 
-    .price {
-      color: #16a34a;
+    .service-price {
       font-size: 19px;
       font-weight: bold;
+      color: #111827;
+      white-space: nowrap;
     }
 
-    .price-label {
+    .service-price span {
       font-size: 12px;
       color: #6b7280;
       font-weight: normal;
     }
 
     .view-btn {
-      background: #2563eb;
-      color: #ffffff;
       border: none;
-      padding: 9px 15px;
-      border-radius: 8px;
-      font-size: 13px;
+      background: #6d28d9;
+      color: white;
+      border-radius: 9px;
+      padding: 10px 15px;
       cursor: pointer;
+      font-size: 13px;
+      font-weight: bold;
+      transition: 0.2s;
     }
 
     .view-btn:hover {
-      background: #1d4ed8;
+      background: #5b21b6;
     }
 
-    /* Loading */
-    .loading {
-      grid-column: 1 / -1;
-      text-align: center;
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 45px 20px;
-      color: #6b7280;
-    }
-
-    .loader {
-      width: 35px;
-      height: 35px;
-      border: 4px solid #e5e7eb;
-      border-top-color: #2563eb;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 15px;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* Empty */
-    .empty {
-      grid-column: 1 / -1;
-      text-align: center;
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 14px;
-      padding: 50px 20px;
-      color: #6b7280;
-    }
-
-    .empty-icon {
-      font-size: 42px;
-      margin-bottom: 12px;
-    }
-
-    .empty h3 {
-      color: #374151;
-      margin-bottom: 8px;
-    }
-
-    /* Error */
-    .error {
-      grid-column: 1 / -1;
-      background: #fff1f2;
-      border: 1px solid #fecdd3;
-      color: #be123c;
-      border-radius: 14px;
-      padding: 20px;
-      text-align: center;
-      line-height: 1.8;
-    }
-
-    /* Footer */
-    .footer {
-      border-top: 1px solid #e5e7eb;
-      background: #ffffff;
-      text-align: center;
-      padding: 22px 15px;
-      color: #6b7280;
-      font-size: 13px;
-      margin-top: 30px;
-    }
-
-    /* Responsive */
     @media (max-width: 900px) {
       .services-grid {
         grid-template-columns: repeat(2, 1fr);
       }
+
+      .filters {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     @media (max-width: 650px) {
-      .header-inner {
-        flex-direction: column;
-        justify-content: center;
-        padding-top: 12px;
-        padding-bottom: 12px;
+      header {
+        padding: 13px 15px;
       }
 
-      .nav {
+      .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      nav {
         justify-content: center;
+      }
+
+      main {
+        padding: 25px 12px 40px;
       }
 
       .page-title {
         font-size: 25px;
       }
 
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
       .services-grid {
         grid-template-columns: 1fr;
       }
 
-      .filters {
-        align-items: stretch;
-        flex-direction: column;
-      }
-
-      .category-select,
-      .refresh-btn {
-        width: 100%;
-      }
-
-      .bottom-row {
-        align-items: flex-start;
+      .service-bottom {
+        align-items: center;
       }
     }
-  </style></head><body>  <header class="header">
-    <div class="header-inner">  <a href="index.html" class="logo">
-    مِهراف
-  </a>
+  </style>
+</head>
 
-  <nav class="nav">
-    <a href="index.html">الرئيسية</a>
-    <a href="services.html">الخدمات</a>
-    <a href="projects.html">المشاريع</a>
-    <a href="login.html" class="login">تسجيل الدخول</a>
-  </nav>
+<body>
 
-</div>
+<header>
+  <div class="header-inner">
 
-  </header>  <main class="container"><h1 class="page-title">الخدمات</h1>
+    <a href="index.html" class="logo">
+      مِهراف <span>MIHRAF</span>
+    </a>
 
-<p class="page-description">
-  تصفح الخدمات التي يقدمها المستقلون على منصة مِهراف
-</p>
+    <nav>
+      <a href="index.html">الرئيسية</a>
+      <a href="services.html">الخدمات</a>
+      <a href="projects.html">المشاريع</a>
+      <a href="my-services.html">خدماتي</a>
+      <a href="dashboard.html">لوحة التحكم</a>
+    </nav>
 
-<section class="filters">
+  </div>
+</header>
 
-  <label for="category">
-    التصنيف:
-  </label>
+<main>
 
-  <select id="category" class="category-select">
-    <option value="">جميع التصنيفات</option>
-  </select>
+  <h1 class="page-title">الخدمات</h1>
 
-  <button class="refresh-btn" id="refreshBtn">
-    تحديث الخدمات
-  </button>
+  <p class="page-description">
+    تصفح الخدمات المقدمة من المستقلين واختر الخدمة المناسبة لك
+  </p>
 
-</section>
+  <div class="filters">
 
-<section id="servicesGrid" class="services-grid">
+    <div class="filter-group">
+      <label for="searchInput">بحث</label>
 
-  <div class="loading">
-    <div class="loader"></div>
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="ابحث عن خدمة..."
+        autocomplete="off"
+      >
+    </div>
+
+    <div class="filter-group">
+      <label for="categoryFilter">التصنيف</label>
+
+      <select id="categoryFilter">
+        <option value="">كل التصنيفات</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="sortFilter">ترتيب الخدمات</label>
+
+      <select id="sortFilter">
+        <option value="newest">الأحدث</option>
+        <option value="price-low">السعر: من الأقل للأعلى</option>
+        <option value="price-high">السعر: من الأعلى للأقل</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div id="categoryButtons" class="category-buttons"></div>
+
+  <div class="services-info">
+    <div id="servicesCount" class="services-count">
+      جاري تحميل الخدمات...
+    </div>
+  </div>
+
+  <div id="errorBox"></div>
+
+  <div id="loading" class="loading">
     جاري تحميل الخدمات...
   </div>
 
-</section>
+  <div
+    id="servicesGrid"
+    class="services-grid"
+    style="display:none;"
+  ></div>
 
-  </main>  <footer class="footer">
-    © 2026 مِهراف | MIHRAF - منصة الخدمات والمشاريع
-  </footer>  <script>
-    const API_URL = "/api/services";
+  <div
+    id="emptyBox"
+    class="empty"
+    style="display:none;"
+  >
+    لا توجد خدمات متاحة حاليا.
+  </div>
 
-    const servicesGrid = document.getElementById("servicesGrid");
-    const categorySelect = document.getElementById("category");
-    const refreshBtn = document.getElementById("refreshBtn");
+</main>
 
-    let allServices = [];
+<script>
 
-    async function loadServices(category = "") {
-      servicesGrid.innerHTML = `
-        <div class="loading">
-          <div class="loader"></div>
-          جاري تحميل الخدمات...
-        </div>
-      `;
+  const API_URL = "/api/services";
+
+  let allServices = [];
+  let currentCategory = "";
+
+  const searchInput = document.getElementById("searchInput");
+  const categoryFilter = document.getElementById("categoryFilter");
+  const sortFilter = document.getElementById("sortFilter");
+
+  const categoryButtons =
+    document.getElementById("categoryButtons");
+
+  const servicesGrid =
+    document.getElementById("servicesGrid");
+
+  const loading =
+    document.getElementById("loading");
+
+  const emptyBox =
+    document.getElementById("emptyBox");
+
+  const errorBox =
+    document.getElementById("errorBox");
+
+  const servicesCount =
+    document.getElementById("servicesCount");
+
+
+  async function loadServices(category = "") {
+
+    currentCategory = category;
+
+    loading.style.display = "block";
+    servicesGrid.style.display = "none";
+    emptyBox.style.display = "none";
+    errorBox.innerHTML = "";
+
+    try {
+
+      let url = API_URL;
+
+      if (category) {
+        url += "?category=" +
+          encodeURIComponent(category);
+      }
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Accept": "application/json"
+        }
+      });
+
+      let data = null;
 
       try {
-        let url = API_URL;
+        data = await response.json();
+      } catch (e) {
+        data = null;
+      }
 
-        if (category) {
-          url += "?category=" + encodeURIComponent(category);
-        }
+      if (!response.ok) {
 
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Accept": "application/json"
-          }
-        });
+        throw new Error(
+          data?.error ||
+          data?.message ||
+          "تعذر تحميل الخدمات"
+        );
+      }
 
-        if (!response.ok) {
-          throw new Error("HTTP " + response.status);
-        }
-
-        const data = await response.json();
-
-        if (!data || data.success !== true) {
-          throw new Error("استجابة غير صحيحة من الخادم");
-        }
-
-        allServices = Array.isArray(data.services)
+      allServices =
+        Array.isArray(data?.services)
           ? data.services
           : [];
 
-        if (!category) {
-          buildCategories(allServices);
-        }
-
-        renderServices(allServices);
-
-      } catch (error) {
-        console.error("Services error:", error);
-
-        servicesGrid.innerHTML = `
-          <div class="error">
-            حدث خطأ أثناء تحميل الخدمات.<br>
-            يرجى المحاولة مرة أخرى.
-          </div>
-        `;
+      if (!category) {
+        buildCategories(allServices);
       }
-    }
 
-    function buildCategories(services) {
-      const currentValue = categorySelect.value;
+      renderServices(allServices);
 
-      const categories = [
-        ...new Set(
-          services
-            .map(service => service.category)
-            .filter(category => category)
-        )
-      ];
+    } catch (error) {
 
-      categories.sort((a, b) => a.localeCompare(b, "ar"));
+      console.error("Services error:", error);
 
-      categorySelect.innerHTML = `
-        <option value="">جميع التصنيفات</option>
+      loading.style.display = "none";
+      servicesGrid.style.display = "none";
+
+      errorBox.innerHTML = `
+        <div class="error">
+          ${escapeHtml(
+            error.message ||
+            "حدث خطأ أثناء تحميل الخدمات"
+          )}
+        </div>
       `;
 
-      categories.forEach(category => {
-        const option = document.createElement("option");
-        option.value = category;
-        option.textContent = category;
-        categorySelect.appendChild(option);
+      servicesCount.textContent =
+        "تعذر تحميل الخدمات";
+
+    }
+  }
+
+
+  function buildCategories(services) {
+
+    const categories = [
+      ...new Set(
+        services
+          .map(service => cleanValue(service.category))
+          .filter(Boolean)
+      )
+    ];
+
+    categories.sort((a, b) =>
+      a.localeCompare(b, "ar")
+    );
+
+    categoryFilter.innerHTML = `
+      <option value="">كل التصنيفات</option>
+    `;
+
+    categories.forEach(category => {
+
+      const option =
+        document.createElement("option");
+
+      option.value = category;
+      option.textContent = category;
+
+      categoryFilter.appendChild(option);
+
+    });
+
+    renderCategoryButtons(categories);
+  }
+
+
+  function renderCategoryButtons(categories) {
+
+    categoryButtons.innerHTML = "";
+
+    const allButton =
+      document.createElement("button");
+
+    allButton.type = "button";
+    allButton.className =
+      "category-btn" +
+      (!currentCategory ? " active" : "");
+
+    allButton.textContent = "الكل";
+
+    allButton.onclick = () => {
+
+      currentCategory = "";
+
+      categoryFilter.value = "";
+
+      updateCategoryButtons();
+
+      loadServices("");
+
+    };
+
+    categoryButtons.appendChild(allButton);
+
+
+    categories.forEach(category => {
+
+      const button =
+        document.createElement("button");
+
+      button.type = "button";
+      button.className =
+        "category-btn" +
+        (
+          currentCategory === category
+            ? " active"
+            : ""
+        );
+
+      button.textContent = category;
+
+      button.onclick = () => {
+
+        currentCategory = category;
+
+        categoryFilter.value = category;
+
+        updateCategoryButtons();
+
+        loadServices(category);
+
+      };
+
+      categoryButtons.appendChild(button);
+
+    });
+  }
+
+
+  function updateCategoryButtons() {
+
+    const buttons =
+      categoryButtons.querySelectorAll(
+        ".category-btn"
+      );
+
+    buttons.forEach(button => {
+
+      const value = button.textContent;
+
+      if (
+        (value === "الكل" && !currentCategory) ||
+        value === currentCategory
+      ) {
+        button.classList.add("active");
+      } else {
+        button.classList.remove("active");
+      }
+
+    });
+  }
+
+
+  function renderServices(services) {
+
+    loading.style.display = "none";
+
+    let filtered =
+      Array.isArray(services)
+        ? [...services]
+        : [];
+
+
+    const search =
+      searchInput.value
+        .trim()
+        .toLowerCase();
+
+
+    if (search) {
+
+      filtered = filtered.filter(service => {
+
+        const title =
+          cleanValue(service.title)
+            .toLowerCase();
+
+        const description =
+          cleanValue(service.description)
+            .toLowerCase();
+
+        const category =
+          cleanValue(service.category)
+            .toLowerCase();
+
+        const owner =
+          getOwnerName(service)
+            .toLowerCase();
+
+        return (
+          title.includes(search) ||
+          description.includes(search) ||
+          category.includes(search) ||
+          owner.includes(search)
+        );
+
       });
 
-      if (categories.includes(currentValue)) {
-        categorySelect.value = currentValue;
-      }
     }
 
-    function renderServices(services) {
 
-      if (!services.length) {
-        servicesGrid.innerHTML = `
-          <div class="empty">
-            <div class="empty-icon">📭</div>
-            <h3>لا توجد خدمات حاليا</h3>
-            <p>
-              لم يتم العثور على خدمات منشورة في هذا التصنيف.
-            </p>
-          </div>
-        `;
+    const selectedCategory =
+      categoryFilter.value;
 
-        return;
-      }
+    if (selectedCategory) {
 
-      servicesGrid.innerHTML = "";
+      filtered = filtered.filter(service =>
+        cleanValue(service.category) ===
+        selectedCategory
+      );
 
-      services.forEach(service => {
+    }
 
-        const card = document.createElement("article");
-        card.className = "service-card";
 
-        const title = escapeHtml(service.title || "خدمة بدون عنوان");
-        const description = escapeHtml(
-          service.description || "لا يوجد وصف للخدمة."
-        );
-        const category = escapeHtml(
-          service.category || "عام"
-        );
-        const freelancerName = escapeHtml(
-          service.freelancer_name || "مستقل"
-        );
+    const sortValue =
+      sortFilter.value;
 
-        const price = Number(service.price);
 
-        let formattedPrice = "غير محدد";
+    if (sortValue === "price-low") {
 
-        if (Number.isFinite(price)) {
-          formattedPrice = formatPrice(price);
-        }
+      filtered.sort((a, b) =>
+        getPrice(a) - getPrice(b)
+      );
 
-        card.innerHTML = `
+    } else if (sortValue === "price-high") {
+
+      filtered.sort((a, b) =>
+        getPrice(b) - getPrice(a)
+      );
+
+    } else {
+
+      filtered.sort((a, b) => {
+
+        const dateA =
+          new Date(
+            a.created_at ||
+            a.createdAt ||
+            a.updated_at ||
+            0
+          ).getTime();
+
+        const dateB =
+          new Date(
+            b.created_at ||
+            b.createdAt ||
+            b.updated_at ||
+            0
+          ).getTime();
+
+        return dateB - dateA;
+
+      });
+
+    }
+
+
+    servicesCount.textContent =
+      `عدد الخدمات: ${filtered.length}`;
+
+
+    servicesGrid.innerHTML = "";
+
+
+    if (!filtered.length) {
+
+      servicesGrid.style.display = "none";
+      emptyBox.style.display = "block";
+
+      return;
+    }
+
+
+    emptyBox.style.display = "none";
+    servicesGrid.style.display = "grid";
+
+
+    filtered.forEach(service => {
+
+      const id =
+        Number(service.id);
+
+      const title =
+        cleanValue(service.title) ||
+        "خدمة بدون عنوان";
+
+      const description =
+        cleanValue(service.description) ||
+        "لا يوجد وصف للخدمة.";
+
+      const category =
+        cleanValue(service.category) ||
+        "عام";
+
+      const owner =
+        getOwnerName(service) ||
+        "مستخدم مِهراف";
+
+      const price =
+        getPrice(service);
+
+
+      const card =
+        document.createElement("div");
+
+      card.className = "service-card";
+
+
+      card.innerHTML = `
+
+        <div class="service-content">
+
           <div class="service-category">
-            ${category}
+            ${escapeHtml(category)}
           </div>
 
           <h2 class="service-title">
-            ${title}
+            ${escapeHtml(title)}
           </h2>
 
           <p class="service-description">
-            ${description}
+            ${escapeHtml(description)}
           </p>
 
-          <div class="service-footer">
+          <div class="service-owner">
+            مقدم الخدمة:
+            <strong>
+              ${escapeHtml(owner)}
+            </strong>
+          </div>
 
-            <div class="freelancer">
-              المستقل:
-              <strong>${freelancerName}</strong>
+          <div class="service-bottom">
+
+            <div class="service-price">
+              ${formatPrice(price)}
+              <span>دولار</span>
             </div>
 
-            <div class="bottom-row">
-
-              <div class="price">
-                ${formattedPrice}
-                <span class="price-label">USD</span>
-              </div>
-
-              <button
-                class="view-btn"
-                type="button"
-                onclick="viewService(${Number(service.id)})"
-              >
-                عرض الخدمة
-              </button>
-
-            </div>
+            <button
+              class="view-btn"
+              type="button"
+              onclick="viewService(${id})"
+            >
+              عرض الخدمة
+            </button>
 
           </div>
-        `;
 
-        servicesGrid.appendChild(card);
-      });
+        </div>
+      `;
+
+
+      servicesGrid.appendChild(card);
+
+    });
+
+  }
+
+
+  function viewService(serviceId) {
+
+    const id = Number(serviceId);
+
+    if (!Number.isFinite(id) || id <= 0) {
+      return;
     }
 
-    function formatPrice(price) {
-      return new Intl.NumberFormat("en-US", {
-        maximumFractionDigits: 2
-      }).format(price);
-    }
+    window.location.href =
+      "service-details.html?id=" +
+      encodeURIComponent(id);
+  }
 
-    function escapeHtml(value) {
-      return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
 
-    function viewService(serviceId) {
-      /*
-        صفحة تفاصيل الخدمة سيتم ربطها لاحقا
-        بعد إنشاء service-details.html.
-      */
+  function getOwnerName(service) {
 
-      alert(
-        "تم اختيار الخدمة رقم " +
-        serviceId +
-        ". سيتم إضافة صفحة تفاصيل الخدمة في الخطوة القادمة."
+    return cleanValue(
+      service.user_name ||
+      service.username ||
+      service.owner_name ||
+      service.ownerName ||
+      service.freelancer_name ||
+      service.freelancerName ||
+      service.name
+    );
+
+  }
+
+
+  function getPrice(service) {
+
+    const value =
+      Number(
+        service.price ??
+        service.amount ??
+        0
       );
+
+    return Number.isFinite(value)
+      ? value
+      : 0;
+
+  }
+
+
+  function formatPrice(price) {
+
+    const number =
+      Number(price);
+
+    if (!Number.isFinite(number)) {
+      return "0";
     }
 
-    categorySelect.addEventListener("change", function () {
-      loadServices(this.value);
+    return number.toLocaleString("en-US", {
+      maximumFractionDigits: 2
     });
 
-    refreshBtn.addEventListener("click", function () {
-      loadServices(categorySelect.value);
-    });
+  }
 
-    loadServices();
-  </script></body>
+
+  function cleanValue(value) {
+
+    if (
+      value === null ||
+      value === undefined
+    ) {
+      return "";
+    }
+
+    return String(value).trim();
+
+  }
+
+
+  function escapeHtml(value) {
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  searchInput.addEventListener(
+    "input",
+    () => {
+      renderServices(allServices);
+    }
+  );
+
+
+  categoryFilter.addEventListener(
+    "change",
+    () => {
+
+      currentCategory =
+        categoryFilter.value;
+
+      updateCategoryButtons();
+
+      renderServices(allServices);
+
+    }
+  );
+
+
+  sortFilter.addEventListener(
+    "change",
+    () => {
+      renderServices(allServices);
+    }
+  );
+
+
+  loadServices();
+
+</script>
+
+</body>
 </html>
